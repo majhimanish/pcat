@@ -1,0 +1,4 @@
+# Every change under catalog/ needs review from the owning team.
+# "@platform-team" is a placeholder: replace it with your GitHub team
+# (e.g. @your-org/platform). See README.md, "Review workflow".
+/catalog/ @platform-team

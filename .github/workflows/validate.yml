@@ -1,0 +1,33 @@
+# Validates the catalog. Merged to main = approved, so main must always pass.
+# Steps are plain shell commands so they port to any CI system (see README).
+name: validate
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history so --base can read the approved catalog
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install
+        run: pip install -e .[dev]
+
+      - name: Tool tests
+        run: pytest tests/
+
+      - name: Validate catalog
+        run: pcat validate
+
+      - name: Approved patterns unchanged
+        if: github.event_name == 'pull_request'
+        run: pcat validate --skip-tests --base "origin/${{ github.base_ref }}"
