@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pcat"
+version = "0.1.0"
+description = "Organization-specific catalog of verified Python code patterns: canonicalizer, CLI and validation."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12",
+    "pyyaml>=6.0",
+    "pydantic>=2.5,<3",
+    # pytest is a runtime dependency: `pcat validate` runs each pattern's tests.
+    "pytest>=7.4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+pcat = "pcat.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+# Only the tool's own tests. Catalog pattern tests all import a module named
+# `impl`, so they must run one folder at a time (`pcat validate` does that).
+testpaths = ["tests"]
