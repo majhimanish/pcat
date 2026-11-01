@@ -350,3 +350,24 @@ def test_extract_function_with_transitive_helpers_and_used_imports():
 def test_extract_function_unknown_name():
     with pytest.raises(CanonicalizationError, match="no top-level function"):
         extract_function(BASE, "missing")
+
+
+def test_match_and_async_constructs_are_renamed_in_reading_order():
+    code = src(
+        """
+        async def f(cmd, **opts):
+            match cmd:
+                case {"go": where, **rest}:
+                    return where, rest
+                case [first, *others]:
+                    return first, others
+            async with opts["x"] as ctx:
+                async for item in ctx:
+                    await item
+        """
+    )
+    result = analyze(code)
+    assert "case {'go': v2, **v3}:" in result.text
+    assert "case [v4, *v5]:" in result.text
+    assert "async for v7 in v6:" in result.text
+    assert canonicalize(render(result.text, result.name_map)) == result.text

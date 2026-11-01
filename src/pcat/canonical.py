@@ -413,14 +413,14 @@ def _identifiers(node: ast.AST) -> Iterator[str]:
         yield node.name
     elif isinstance(node, (ast.MatchAs, ast.MatchStar)) and node.name:
         yield node.name
-    elif isinstance(node, ast.MatchMapping) and node.rest:
-        yield node.rest
     elif isinstance(node, (ast.Nonlocal, ast.Global)):
         yield from node.names
     elif isinstance(node, ast.alias):
         yield _alias_bound_name(node)
     for child in ast.iter_child_nodes(node):
         yield from _identifiers(child)
+    if isinstance(node, ast.MatchMapping) and node.rest:
+        yield node.rest  # `**rest` comes after the keys' captures, as it reads
 
 
 def _function_identifiers(func: ast.FunctionDef) -> Iterator[str]:
