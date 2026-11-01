@@ -1,0 +1,17 @@
+id: search.binary_search.recursive
+version: 1
+title: Binary search (recursive)
+summary: Return index of target in a sorted list, or -1 if absent, using recursion over index bounds.
+category: search
+variant_of: search.binary_search
+behavior:
+  style: recursive
+  on_missing: -1
+  duplicates: any_index
+  midpoint: overflow_safe
+entry_point: binary_search
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: f19b87a5616bf85332fe97ca1057a3c00bb7fe3f3a31200ffe3f7437505ddd7c

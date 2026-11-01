@@ -388,7 +388,12 @@ def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) 
         ok, summary = run_pattern_tests(pattern.folder)
         if not ok:
             out.append(
-                Problem("8", label, f"tests failed ({summary}); run: pytest {pattern.test_path}")
+                Problem(
+                    "8",
+                    label,
+                    f"tests failed ({summary}); run: pytest "
+                    f"{pattern.test_path.relative_to(pattern.root).as_posix()}",
+                )
             )
     return out
 

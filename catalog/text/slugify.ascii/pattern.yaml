@@ -1,0 +1,19 @@
+id: text.slugify.ascii
+version: 1
+title: Slugify (ASCII)
+summary: Turn text into a lowercase ASCII slug of letters and digits joined by a separator.
+category: text
+variant_of: text.slugify
+behavior:
+  charset: ascii
+  case: lower
+  non_ascii: transliterate_or_drop
+  separator: configurable_default_hyphen
+  collapse_separators: true
+  strip_edges: true
+entry_point: slugify
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 3a2864bbf5feb3ef52129e3db1e8a4f1ec123d6ce0e99c9ae5cebd7c1f83a5ec

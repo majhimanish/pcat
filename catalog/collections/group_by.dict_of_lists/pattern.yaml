@@ -1,0 +1,17 @@
+id: collections.group_by.dict_of_lists
+version: 1
+title: Group by key (dict of lists)
+summary: Group items into a dict mapping key(item) to the list of items with that key.
+category: collections
+variant_of: collections.group_by
+behavior:
+  result: dict_of_lists
+  key_order: first_seen
+  item_order: preserved
+  input: any_iterable
+entry_point: group_by
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 68a881fa849c71ad539062fde96eb18497ec0f064acc007636aded7f84c6e441

@@ -1,0 +1,102 @@
+[
+  {
+    "behavior": {
+      "input": "any_iterable",
+      "item_order": "preserved",
+      "key_order": "first_seen",
+      "result": "dict_of_lists"
+    },
+    "category": "collections",
+    "fingerprint": "68a881fa849c71ad539062fde96eb18497ec0f064acc007636aded7f84c6e441",
+    "id": "collections.group_by.dict_of_lists",
+    "path": "catalog/collections/group_by.dict_of_lists",
+    "status": "active",
+    "title": "Group by key (dict of lists)",
+    "variant_of": "collections.group_by",
+    "version": 1
+  },
+  {
+    "behavior": {
+      "delay": "exponential",
+      "delay_cap": "max_delay",
+      "jitter": "none",
+      "on_exhausted": "reraise_last",
+      "retry_on": "configurable_exception_types",
+      "sleep": "injectable"
+    },
+    "category": "retry",
+    "fingerprint": "ba244d247458e8dfb0e5c79174e368ffb70b83553a5487743925d398b9c3c0de",
+    "id": "retry.with_exponential_backoff",
+    "path": "catalog/retry/with_exponential_backoff",
+    "status": "active",
+    "title": "Retry with exponential backoff",
+    "variant_of": null,
+    "version": 1
+  },
+  {
+    "behavior": {
+      "duplicates": "any_index",
+      "midpoint": "overflow_safe",
+      "on_missing": -1,
+      "style": "iterative"
+    },
+    "category": "search",
+    "fingerprint": "67f21b9d7bc1f6a3b2cd0ab253d49a40537e6e9f197ae6524bf874c62bb3488c",
+    "id": "search.binary_search.iterative",
+    "path": "catalog/search/binary_search.iterative",
+    "status": "active",
+    "title": "Binary search (iterative)",
+    "variant_of": "search.binary_search",
+    "version": 1
+  },
+  {
+    "behavior": {
+      "duplicates": "any_index",
+      "midpoint": "overflow_safe",
+      "on_missing": -1,
+      "style": "recursive"
+    },
+    "category": "search",
+    "fingerprint": "f19b87a5616bf85332fe97ca1057a3c00bb7fe3f3a31200ffe3f7437505ddd7c",
+    "id": "search.binary_search.recursive",
+    "path": "catalog/search/binary_search.recursive",
+    "status": "active",
+    "title": "Binary search (recursive)",
+    "variant_of": "search.binary_search",
+    "version": 1
+  },
+  {
+    "behavior": {
+      "in_place": false,
+      "order": "ascending",
+      "stable": true,
+      "style": "recursive"
+    },
+    "category": "sort",
+    "fingerprint": "cf06bfe1351b06a8bf0def374666a64d11a3439a90dc5cc99d3e53adc8458576",
+    "id": "sort.merge_sort.recursive",
+    "path": "catalog/sort/merge_sort.recursive",
+    "status": "active",
+    "title": "Merge sort (recursive)",
+    "variant_of": "sort.merge_sort",
+    "version": 1
+  },
+  {
+    "behavior": {
+      "case": "lower",
+      "charset": "ascii",
+      "collapse_separators": true,
+      "non_ascii": "transliterate_or_drop",
+      "separator": "configurable_default_hyphen",
+      "strip_edges": true
+    },
+    "category": "text",
+    "fingerprint": "3a2864bbf5feb3ef52129e3db1e8a4f1ec123d6ce0e99c9ae5cebd7c1f83a5ec",
+    "id": "text.slugify.ascii",
+    "path": "catalog/text/slugify.ascii",
+    "status": "active",
+    "title": "Slugify (ASCII)",
+    "variant_of": "text.slugify",
+    "version": 1
+  }
+]

@@ -1,0 +1,17 @@
+id: search.binary_search.iterative
+version: 1
+title: Binary search (iterative)
+summary: Return index of target in a sorted list, or -1 if absent.
+category: search
+variant_of: search.binary_search
+behavior:
+  style: iterative
+  on_missing: -1
+  duplicates: any_index
+  midpoint: overflow_safe
+entry_point: binary_search
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 67f21b9d7bc1f6a3b2cd0ab253d49a40537e6e9f197ae6524bf874c62bb3488c

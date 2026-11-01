@@ -1,0 +1,19 @@
+id: retry.with_exponential_backoff
+version: 1
+title: Retry with exponential backoff
+summary: Call a function until it succeeds, sleeping base_delay * factor**n (capped) between attempts, re-raising the last error when attempts run out.
+category: retry
+variant_of: null
+behavior:
+  delay: exponential
+  delay_cap: max_delay
+  jitter: none
+  retry_on: configurable_exception_types
+  on_exhausted: reraise_last
+  sleep: injectable
+entry_point: retry_with_exponential_backoff
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: ba244d247458e8dfb0e5c79174e368ffb70b83553a5487743925d398b9c3c0de
