@@ -1,0 +1,58 @@
+{
+  "csv_import": {
+    "condition": "B",
+    "exact_fingerprint": "4c4b973a38675efb9a5a28412cea0c1b63ed7c55d65a9880b986864bf1b357c6",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "11d5fdcf7bab2ebfa53c7c8697bd2dc555a3005a8d9ceb192b1ee4e64f3dfe4f"
+  },
+  "env_config": {
+    "condition": "B",
+    "exact_fingerprint": "9ae14fb3fcabf560c7d5dd427684b2762a2d67e98731fba67b171957cf7ee300",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "2c3588cab2ed2810b7f875eef2398ce05ab5d307e06bcafb16a51ed95abf153d"
+  },
+  "fastapi_create_user": {
+    "condition": "B",
+    "exact_fingerprint": "0d3eca407290a8201b66861b8060e2924c494ff1094373f3b52461b756f19b33",
+    "run_id": "main",
+    "sample": 2,
+    "shape_fingerprint": "2ef7b9d4cd2416539353873afa9f0137983ee5cdb99bf37a4c30e44178dec6b4"
+  },
+  "http_retry": {
+    "condition": "B",
+    "exact_fingerprint": "6980556b6d12caa1e8cf2c6eea2a07a4b969176fc68a0998edaaca1f205fd045",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "eeb26b39cf5d63bad10813da4b9c8baf0da1e5056c25f1a687671cc79c22c330"
+  },
+  "jwt_create": {
+    "condition": "B",
+    "exact_fingerprint": "ff36f59374697f56e2cda435f2bd4cc79a7f3809ab2b1233fe7835e604cd29b8",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "4d6c9c100c849386cbf3e4f8c6899f53eb17baab14ec044f5f0c1381fce98093"
+  },
+  "paginate_query": {
+    "condition": "B",
+    "exact_fingerprint": "9f5ac33618def85e492f97f1729bb7757cfe4c573a2b9c25a870f5e8822a8c30",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "a79078360981d5bfa16fee942cfdbbef493cc0ccd20785c8ef06a48086268699"
+  },
+  "password_hash": {
+    "condition": "B",
+    "exact_fingerprint": "26987eb3cdbd109d5b9a4e6ccceb305c6aa6f7af014bebf89d8fbdb6d2e85417",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "4c58e1aec9cfcbb03ace5a0e73e620d00450e4a95c9a4e07c12dd1d324480d9a"
+  },
+  "token_bucket": {
+    "condition": "B",
+    "exact_fingerprint": "03e019f12a0280449e3f7a46b3772bf595cf5ecdac0a5d460bda6b47cd830025",
+    "run_id": "main",
+    "sample": 1,
+    "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686"
+  }
+}
