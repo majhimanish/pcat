@@ -8,6 +8,9 @@ from pathlib import Path
 import pytest
 import yaml
 
+# Miner fixtures include files named test_*.py and conftest.py on purpose.
+collect_ignore = ["fixtures"]
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SEED_IDS = [
     "collections.group_by.dict_of_lists",
