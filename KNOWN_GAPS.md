@@ -91,3 +91,37 @@ when you fix it; add one whenever you take a shortcut.
   `render_checked()` library function for the future MCP server.
 - **Windows is untested.** Paths are handled with `pathlib` and files are
   written with `\n`, but CI runs only on Linux.
+
+## Miner (v2)
+
+- **Docs and example code dominate results.** In the benchmark every default-run
+  cluster came from FastAPI's `docs_src/`. *Fix:* skip `docs/`, `docs_src/`,
+  `examples/` by default and report byte-identical files once, separately.
+- **Annotation spelling splits shapes** (`Union[X, None]` vs `X | None` vs
+  `Annotated[...]`). *Fix:* an annotation-insensitive shape level (strip or
+  normalize annotations before blanking).
+- **`test_*` functions in non-test files are mined.** *Fix:* also filter by
+  function name, switchable with `--include-tests`.
+- **Free names must match exactly** (called functions, attributes, globals), so
+  idioms that differ only in which API they call never cluster; 54 of 55
+  benchmark clusters were plain exact copies. *Fix:* an optional looser level
+  that abstracts free names, reported separately.
+- **Only top-level functions can be promoted.** Methods (12 of 15 library-only
+  benchmark clusters), nested functions and fragments must be extracted by hand.
+  *Fix:* class support in patterns; a fragment-to-function extractor.
+- **`index.json` has no shape or entry-point fingerprints**, so the miner reads
+  pattern folders. *Fix:* add `entry_fingerprint`, `shape_fingerprint`,
+  `entry_shape_fingerprint` and `shape_version` to the index before building
+  the out-of-process linter.
+- **Inputs are stored as given**, so `pcat promote` must run from the directory
+  where `pcat mine` ran when relative paths were used. *Fix:* store paths relative
+  to the report, or accept a `--base-dir`.
+- **The cache is never pruned** and lives in the working directory. *Fix:*
+  `pcat mine --prune-cache`, or an LRU limit.
+- **Reports list every member**, which gets large on big corpora (the benchmark's
+  report.json is ~300 KB for 55+7 clusters). *Fix:* cap members shown per
+  cluster in HTML, add paging.
+- **Score ignores spread**: 23 copies in one folder outrank a shape repeated across
+  teams. *Fix:* weight by distinct inputs/files.
+- **Fragment normalization does not check placeholder collisions** (a free name
+  like `v0` can merge shapes), and `else: if` is treated as `elif`. Both are rare.

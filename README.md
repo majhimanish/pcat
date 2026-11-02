@@ -9,9 +9,11 @@ self-contained function with metadata and tests, plus a **fingerprint** of its
 canonical form, so tools can tell when a piece of code *is* a catalog pattern
 no matter how its variables are named or commented.
 
-v1 (this repository) is the catalog and its review workflow: the file format,
-the canonicalizer, the `pcat` CLI, validation and CI. Mining, an MCP server
-and a linter are planned next (see [Planned extensions](#planned-extensions)).
+This repository has the catalog and its review workflow (file format,
+canonicalizer, `pcat` CLI, validation, CI) and a **miner** that measures how much
+code repeats and promotes repeated functions into patterns (see
+[Mining](#mining-finding-candidate-patterns)). An MCP server and a linter are
+planned next (see [Planned extensions](#planned-extensions)).
 
 ## Quick start
 
@@ -106,6 +108,8 @@ Other commands:
 | `pcat render <id> --names f0=find_user v0=users` | render with your own names |
 | `pcat find <file.py>` | which pattern (if any) each top-level function in a file is |
 | `pcat migrate-fingerprints` | recompute all fingerprints after a rules change (see below) |
+| `pcat mine <path>… --out DIR` | find repeated function/fragment shapes; report coverage (see Mining) |
+| `pcat promote <fn-id> --report DIR/report.json --id <id>` | turn a mined function cluster into a pattern |
 
 A bare `<id>` means its highest version; use `<id>@v<N>` for a specific one.
 
@@ -181,17 +185,43 @@ A rule change can alter fingerprints of untouched patterns, so it is explicit:
 
 Plus `immutable` problems when `--base` is given.
 
+## Mining: finding candidate patterns
+
+```bash
+pcat mine path/to/repo another/repo --out mine-report --jobs 4
+open mine-report/report.html          # or read mine-report/report.json
+pcat promote fn-1a2b3c4d5e6f --report mine-report/report.json --id auth.create_token.jwt
+```
+
+`pcat mine` canonicalizes every function (top-level, methods, nested, async) on
+its own and computes a **shape fingerprint**: the canonical form with literal
+values blanked (`0`, `""`, `b""`; `True`/`False`/`None`/`...` kept). Functions
+with the same shape form a **cluster** (`fn-…`), split into exact sub-groups;
+blocks inside functions (`for`, `while`, `try`, `with`, `if`, `match`) are
+clustered the same way as **fragments** (`fr-…`). Clusters are ranked by
+`(occurrences − 1) × nodes`. The report also shows **catalog coverage**: mined
+functions that exactly match a pattern (covered) or only its shape
+(near-covered).
+
+Defaults skip tests, generated files, vendored/build directories and trivial
+functions; each filter has a switch (`--include-tests`, `--include-generated`,
+`--no-skip-dirs`, `--include-trivial`, `--min-nodes 0`, `--exclude GLOB`).
+Results are cached in `.pcat-cache/` and identical for any `--jobs`.
+`pcat promote` creates a pattern from a function cluster's representative (or
+`--member N`) through the same flow as `pcat add`; it does not approve anything.
+Run it from the directory where you ran `pcat mine`.
+
+`scripts/benchmark.py` mines requests, Flask and FastAPI at pinned tags; see
+[`docs/benchmarks/v2-results.md`](docs/benchmarks/v2-results.md) for what it found.
+
 ## Planned extensions
 
-All future tools read **only `catalog/index.json`**: `{"canonical_version": N,
+Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
 "patterns": [...]}`, where each entry has `id, version, title, category,
 variant_of, behavior, status, fingerprint, path` (sorted by id and version). A
 tool that fingerprints code must use the same rules version. The catalog's
 internals can change without breaking these tools.
 
-- **Miner** (`docs/specs/v2-miner.md`, planned): scan repositories, canonicalize
-  every function, cluster identical or near-identical fingerprints, and propose
-  the most common shapes as candidate patterns (via `pcat add`).
 - **MCP server** (`v3-mcp.md`, planned): serve the catalog to coding agents —
   search by summary/behavior, fetch rendered code with the caller's names
   (`render`), so agents reuse approved code instead of improvising.
@@ -202,6 +232,7 @@ internals can change without breaking these tools.
 ## Further reading
 
 - `CLAUDE.md` — handoff and invariants for future sessions
-- `DECISIONS.md` — every assumption made while building v1
+- `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
-- `docs/specs/` — phase specs (`v1-catalog.md` is the spec for this build)
+- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`)
+- `docs/benchmarks/` — miner benchmark results

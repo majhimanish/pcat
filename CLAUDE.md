@@ -21,9 +21,15 @@ approved patterns instead of producing a new variation per prompt.
   `index.json` records `canonical_version`; `--base` allows fingerprint changes
   only with a rules bump and byte-identical `impl.py`. Spec:
   `docs/specs/v1.1-canonicalizer-fix.md`. Seed fingerprints did not change.
-- **Planned next:** v2 miner (find candidate patterns in repos), v3 MCP server
-  (serve the catalog to coding agents), v4 linter (flag application code that
-  reimplements or uses deprecated patterns). Specs will go in `docs/specs/`.
+- **v2 (done):** pattern miner. `pcat mine` clusters repeated function shapes
+  and block fragments across repos, reports catalog coverage (`report.json` +
+  `report.html`); `pcat promote` turns a function cluster into a pattern via the
+  `pcat add` flow. Spec: `docs/specs/v2-miner.md`. Benchmark on
+  requests/flask/fastapi: `docs/benchmarks/v2-results.md` (0% coverage; all
+  default clusters were FastAPI tutorial copies; library code barely repeats).
+- **Planned next:** v3 MCP server (serve the catalog to coding agents), v4 linter
+  (flag application code that reimplements or uses deprecated patterns). Before
+  v4, re-run the benchmark on application code (see the results doc).
 
 ## Setup and commands
 
@@ -37,6 +43,9 @@ pcat validate --skip-tests --base origin/main   # approved versions unchanged
 pcat index                  # regenerate catalog/index.json (commit it)
 pcat fingerprint <id> --write
 pcat migrate-fingerprints   # after bumping CANONICAL_VERSION; prints old/new table
+pcat mine <path>... --out <dir> [--jobs N]   # report.json + report.html; cache in .pcat-cache/
+pcat promote <fn-cluster-id> --report <dir>/report.json --id <pattern-id> [--member N]
+python scripts/benchmark.py # clones pinned OSS repos into .bench/ and mines them (not in CI)
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -58,13 +67,22 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `src/pcat/catalog.py` — on-disk layout, loading, `index.json` generation,
   all validation checks (`validate`), per-pattern pytest runner, `--base` git
   check, `migrate_fingerprints`.
-- `src/pcat/cli.py` — typer app; thin layer over the two modules above; errors
+- `src/pcat/shape.py` — `SHAPE_VERSION`; shape text = canonical text with literal
+  values blanked (True/False/None/... kept). Never changes canonical fingerprints.
+- `src/pcat/miner.py` — `MINER_VERSION` (cache format); file discovery and
+  filters, per-file analysis (functions + fragments, cached by content hash and
+  rule versions, process pool), clustering, coverage, report JSON, promotion
+  target selection.
+- `src/pcat/report_html.py` — renders report.json data as one self-contained page.
+- `src/pcat/cli.py` — typer app; thin layer over the modules above; errors
   become `error: …` + exit 1.
 - `src/pcat/errors.py` — `PcatError` and subclasses.
 - `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml`, `impl.py`,
   `test_impl.py`; `catalog/index.json` is generated.
 - `tests/` — tool tests; `conftest.py` gives a `root` fixture with a temp copy
-  of the seed catalog.
+  of the seed catalog; `tests/fixtures/miner/` holds miner fixture code
+  (excluded from collection).
+- `scripts/benchmark.py`, `docs/benchmarks/` — miner benchmark and its results.
 
 ## Invariants (never break these)
 
@@ -78,11 +96,15 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
    `main`; its `fingerprint` changes only via a rules migration.
    Changes go in `<pattern_id>@v<N+1>/`; the old one becomes
    `status: deprecated` + `replaced_by`.
-3. **`catalog/index.json` is the only interface for future tools** (miner, MCP,
-   linter). Add fields compatibly; never require tools to read pattern folders.
+3. **`catalog/index.json` is the only interface for out-of-process tools** (MCP
+   server, linter). Add fields compatibly; never require them to read pattern
+   folders. In-package commands (`validate`, `mine`) may read folders via
+   `catalog.py`; the miner does, because the index lacks shape fingerprints.
 4. **Output is deterministic and byte-identical across machines**: sorted
    iteration everywhere, `\n` line endings, `json.dumps(sort_keys=True,
-   indent=2)`, no timestamps, no absolute paths in generated files.
+   indent=2)`, no timestamps, no absolute paths in generated files. Miner
+   reports must not depend on `--jobs` or cache state; bump `SHAPE_VERSION` /
+   `MINER_VERSION` when shape rules / per-file analysis output change.
 
 ## Conventions
 
@@ -100,8 +122,9 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 
 - `DECISIONS.md` — every assumption made so far (read before changing behavior)
 - `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
-- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`;
-  later `v2-miner.md`, `v3-mcp.md`, `v4-linter.md`)
+- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`,
+  `v2-miner.md`; later `v3-mcp.md`, `v4-linter.md`)
+- `docs/benchmarks/v2-results.md` — what mining real code found
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
 ## Rule for later sessions

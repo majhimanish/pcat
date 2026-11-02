@@ -241,3 +241,98 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 64. **Seed migration:** 0 of 6 seed fingerprints changed under rules v2 (no seed
     calls its own functions with keywords or uses constants); verified on
     Python 3.11 and 3.13.
+
+## v2 — pattern miner (`docs/specs/v2-miner.md`)
+
+65. **v1.1 CI** (run #2 on `d8a5889`) had passed on GitHub before v2 work began;
+    nothing to fix.
+66. **Modules:** `shape.py` (literal blanking, `SHAPE_VERSION = 1`), `miner.py`
+    (discovery, per-file analysis, cache, clustering, coverage, promotion target),
+    `report_html.py` (renderer). Existing canonicalization is untouched; the miner
+    reuses `canonical`'s internal scope/rename helpers read-only for fragments.
+67. **Mined function canonicalization:** decorators removed, the function unparsed
+    alone as a module and run through `canonical.analyze` with itself as entry
+    point and `keep_annotations=True`. Qualified names follow Python's
+    `__qualname__` (`Cart.describe.<locals>.label`); kinds are `function`,
+    `method` (directly in a class body) and `nested` (inside a function); a
+    `top_level` flag marks functions directly in the module body.
+68. **`node_count`** is the number of AST nodes of the shape tree (the `def` node
+    or fragment statement included). It drives `--min-nodes`,
+    `--min-fragment-nodes` and the score; all members of a cluster share it.
+69. **Trivial body:** after docstring removal, exactly one statement that is
+    `pass`, `return` (with any value), `raise` or `...`.
+70. **A function that cannot be canonicalized on its own** (class inside it,
+    placeholder-like free name) is counted under `functions_filtered.cannot_canonicalize`;
+    its file is not skipped.
+71. **File discovery:** only `*.py`; directories in the skip list are pruned
+    during the walk and their files are not counted. `files_seen` counts the rest;
+    `files_mined = files_seen − skipped`. Skip reasons: `test`, `excluded`,
+    `generated`, `parse_error`.
+72. **Tests:** a path component `tests`/`test`, or a file named `test_*.py`,
+    `*_test.py`, `conftest.py`. Functions named `test_*` in other files are not
+    filtered (see KNOWN_GAPS).
+73. **`--exclude GLOB`** is matched (`fnmatchcase`, `*` crosses `/`) against the
+    path relative to its input and against the file name.
+74. **Extra flags so every filter can be switched off:** `--include-generated`,
+    `--include-trivial`, `--no-skip-dirs` (plus `--min-nodes 0`), and
+    `--min-fragment-nodes`, `--cache-dir`, `--no-cache`.
+75. **Generated files are always analyzed and flagged by the worker**; skipping is
+    decided afterwards, so the cache does not depend on `--include-generated`.
+76. **`settings` in the report excludes `jobs` and cache options**: the spec
+    requires identical bytes for `--jobs 1` and `--jobs 4`, and neither changes
+    results.
+77. **Inputs are recorded as given** (POSIX form), not resolved, so reports do not
+    embed absolute machine paths when relative inputs are used. Git info
+    (`commit`, exact-match `tag`) is recorded only when the input is the top level
+    of a work tree; a subfolder of a repository gets `git: null`.
+78. **Clusters:** members sorted by (input, path, line, column, qualname) and given
+    a 0-based `index`; `exact_groups` sorted by size, then first member; clusters
+    sorted by score desc, then id, then full shape fingerprint. Per-cluster fields
+    (shape text, node count) are not repeated on members.
+79. **Coverage** uses every pattern with valid metadata (any status): exact = the
+    whole pattern's canonical fingerprint or its entry point mined like any
+    function; shape = the same two after literal blanking. Covered wins over
+    near-covered; percentages are of mined functions, rounded to 2 decimals.
+    A cluster's `catalog_matches` lists pattern keys with `exact` if any member
+    exactly matches that pattern, else `shape`.
+80. **The miner reads pattern folders (via `catalog.py`) rather than only
+    `index.json`**, because the index has no shape or entry-point fingerprints.
+    CLAUDE.md invariant 3 now says in-package commands may do this; out-of-process
+    tools must still use only `index.json` (adding these fingerprints to the index
+    is in KNOWN_GAPS).
+81. **Fragments** belong to the innermost enclosing function (the walk does not
+    enter nested functions, classes or lambdas). Candidates include `try*` on
+    Python 3.11+. An `if` that is the only statement of its parent `if`'s `else`
+    is treated as `elif` (this also matches `else:` + nested `if`). The
+    whole-body check ignores a leading docstring.
+82. **Fragment renaming** uses the enclosing function's flat scope (as in
+    canonicalization): parameters and locals become `v0…` in order of first
+    appearance in the fragment; keyword names at call sites are not renamed.
+83. **Redundancy suppression:** a fragment cluster is dropped if some other cluster
+    with more nodes and the same occurrences has, for every member, a member whose
+    (line, column) span strictly contains it. Containment chains collapse to the
+    largest cluster.
+84. **Cache:** one JSON file per analyzed file content in `.pcat-cache/` (relative
+    to the working directory), named `<sha256>-c<CANONICAL>-s<SHAPE>-m<MINER>-fr<N>.json`,
+    written atomically. `MINER_VERSION` (now 2) versions the per-file format; it
+    was bumped when fragments were added. The cache is never pruned.
+85. **`--jobs N`** uses a process pool (`map`, chunksize 8) whose order-preserving
+    results are merged exactly as in the sequential path.
+86. **Promote:** representative = members of the largest exact sub-group(s), then
+    shortest relative path, then path, then lowest line. `--member` takes the
+    0-based `index` from the report. Refused: fragment clusters (with the
+    location to extract by hand), methods, nested/non-top-level functions, a
+    missing source file (paths resolve like the recorded input, i.e. relative to
+    the directory `pcat mine` ran in), and a source file whose SHA-256 differs
+    from the mined `file_hash`. Then it runs the same code as `pcat add`.
+87. **HTML** uses `<details>` rows (no JavaScript) and inline CSS with a
+    phone layout; it is rendered from the JSON text just written.
+88. **Benchmark:** tags all existed (no fallback). The script also runs a
+    library-only pass (`--exclude 'docs_src/*' --min-occurrences 2`) because the
+    default run is dominated by FastAPI tutorial copies; timings are from a cold
+    cache with `--jobs` = CPU count.
+89. **Changed tests:** none of the v1/v1.1 tests changed. `tests/conftest.py` sets
+    `collect_ignore = ["fixtures"]` because miner fixtures include files named
+    `test_*.py` and `conftest.py`.
+90. Parse-error messages come from the running Python and can differ between
+    versions; reports are byte-identical per interpreter version.
