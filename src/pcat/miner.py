@@ -708,6 +708,86 @@ def postprocess_fragments(fragments: list[dict], settings: MineSettings) -> list
     return kept
 
 
+# --------------------------------------------------------------------------- #
+# Promotion (Part C)
+# --------------------------------------------------------------------------- #
+
+
+@dataclass(frozen=True)
+class PromotionTarget:
+    member: dict
+    source: Path
+
+
+def _member_source(report: dict, member: dict) -> Path:
+    base = Path(report["inputs"][member["input"]]["path"])
+    return base if base.is_file() or base.suffix == ".py" else base / member["path"]
+
+
+def _location(report: dict, member: dict) -> str:
+    return f"{_member_source(report, member).as_posix()}:{member['lineno']}-{member['end_lineno']}"
+
+
+def representative(cluster: dict) -> dict:
+    """Largest exact sub-group, then shortest file path, then lowest line number."""
+    largest = max(g["count"] for g in cluster["exact_groups"])
+    indices = {i for g in cluster["exact_groups"] if g["count"] == largest for i in g["members"]}
+    candidates = [m for m in cluster["members"] if m["index"] in indices]
+    return min(candidates, key=lambda m: (len(m["path"]), m["path"], m["lineno"], m["input"]))
+
+
+def promotion_target(report_path: Path, cluster_id: str, member_index: int | None) -> PromotionTarget:
+    """Validate a promote request and return the member and its source file."""
+    if not report_path.is_file():
+        raise PcatError(f"report {report_path} not found; run `pcat mine` first")
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    clusters = {c["id"]: c for c in report.get("function_clusters", [])}
+    fragments = {c["id"]: c for c in report.get("fragment_clusters", [])}
+    cluster = clusters.get(cluster_id) or fragments.get(cluster_id)
+    if cluster is None:
+        raise PcatError(f"cluster {cluster_id!r} is not in {report_path}")
+
+    if member_index is None:
+        member = representative(cluster)
+    elif 0 <= member_index < len(cluster["members"]):
+        member = cluster["members"][member_index]
+    else:
+        raise PcatError(
+            f"--member {member_index} is out of range; {cluster_id} has "
+            f"{len(cluster['members'])} members (0-{len(cluster['members']) - 1})"
+        )
+
+    where = _location(report, member)
+    if cluster_id in fragments:
+        raise PcatError(
+            f"{cluster_id} is a fragment cluster; fragments can't be promoted yet. Extract the "
+            f"fragment at {where} ({member['qualname']}) into a function by hand, then use "
+            "`pcat add`"
+        )
+    if member["kind"] == "method":
+        raise PcatError(
+            f"{member['qualname']} at {where} is a method; methods can't be promoted because "
+            "classes aren't supported in patterns. Pick another member with --member, or move "
+            "the logic into a top-level function and use `pcat add`"
+        )
+    if member["kind"] == "nested" or not member["top_level"]:
+        raise PcatError(
+            f"{member['qualname']} at {where} is not a top-level function; only top-level "
+            "functions can be promoted. Pick another member with --member"
+        )
+    source = _member_source(report, member)
+    if not source.is_file():
+        raise PcatError(
+            f"source file {source.as_posix()} not found; run `pcat promote` from the directory "
+            "where `pcat mine` was run, or re-run `pcat mine`"
+        )
+    if hashlib.sha256(source.read_bytes()).hexdigest() != member["file_hash"]:
+        raise PcatError(
+            f"{source.as_posix()} changed since it was mined; re-run `pcat mine` and try again"
+        )
+    return PromotionTarget(member=member, source=source)
+
+
 def report_json_text(report: dict) -> str:
     return json.dumps(report, sort_keys=True, indent=2, ensure_ascii=False) + "\n"
 

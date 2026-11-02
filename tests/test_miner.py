@@ -368,3 +368,93 @@ def test_min_fragment_nodes(report):
     rep = run(settings=MineSettings(min_occurrences=2, min_fragment_nodes=1000)).report
     assert rep["fragment_clusters"] == []
     assert report["stats"]["fragments_mined"] > 0
+
+
+# Part C: promote ------------------------------------------------------------ #
+@pytest.fixture
+def mined(tree, tmp_path, root):
+    """A report over a temp copy of the fixtures, plus a temp catalog root."""
+    rep = run([str(tree)], catalog_root=root).report
+    json_path, _ = miner.write_report(rep, tmp_path / "out")
+    return rep, json_path, root
+
+
+def promote(root, *args):
+    return CliRunner().invoke(app, ["--root", str(root), "promote", *map(str, args)])
+
+
+def total_cluster(rep):
+    return clusters_by_member(rep)[frozenset(TOTAL_SHAPE_MEMBERS)]
+
+
+def test_promote_creates_valid_pattern_from_representative(mined):
+    rep, json_path, root = mined
+    cluster = total_cluster(rep)
+    assert miner.representative(cluster)["qualname"] == "total_price"  # orders.py is shortest
+    result = promote(root, cluster["id"], "--report", json_path, "--id", "billing.total_price.doubled")
+    assert result.exit_code == 0, result.output
+    assert "promoting total_price" in result.output
+    folder = root / "catalog" / "billing" / "total_price.doubled"
+    impl = (folder / "impl.py").read_text()
+    assert canonical.list_functions(impl) == ["total_price"]
+    assert "import asyncio" not in impl  # only what the function uses
+    (folder / "test_impl.py").write_text(
+        "from types import SimpleNamespace as N\n\nfrom impl import total_price\n\n\n"
+        "def test_total():\n    assert total_price([N(price=150), N(price=50)]) == 300\n\n\n"
+        "def test_empty():\n    assert total_price([]) == 0\n"
+    )
+    assert CliRunner().invoke(app, ["--root", str(root), "index"]).exit_code == 0
+    result = CliRunner().invoke(app, ["--root", str(root), "validate", "billing.total_price.doubled"])
+    assert result.exit_code == 0, result.output
+
+
+def test_promote_specific_member(mined):
+    rep, json_path, root = mined
+    cluster = total_cluster(rep)
+    idx = next(m["index"] for m in cluster["members"] if m["qualname"] == "sum_large")
+    result = promote(root, cluster["id"], "--report", json_path, "--id", "billing.sum_large.x", "--member", idx)
+    assert result.exit_code == 0, result.output
+    impl = (root / "catalog" / "billing" / "sum_large.x" / "impl.py").read_text()
+    assert "def sum_large(rows):" in impl
+    bad = promote(root, cluster["id"], "--report", json_path, "--id", "billing.y.z", "--member", 99)
+    assert bad.exit_code == 1 and "out of range" in bad.output
+
+
+def test_promote_rejects_fragment_cluster_with_location(mined):
+    rep, json_path, root = mined
+    frag = next(c for c in rep["fragment_clusters"] if c["members"][0]["statement"] == "for")
+    result = promote(root, frag["id"], "--report", json_path, "--id", "text.x.y")
+    assert result.exit_code == 1
+    assert "fragments can't be promoted yet" in result.output
+    assert "app/config.py:" in result.output  # where to extract it by hand
+    assert not (root / "catalog" / "text" / "x.y").exists()
+
+
+def test_promote_rejects_methods(tmp_path, root):
+    method = "    def total(self, items):\n        t = 0\n        for i in items:\n            if i.p > 1:\n                t += i.p * 2\n        return t\n"
+    src = tmp_path / "methods"
+    src.mkdir()
+    (src / "m.py").write_text("".join(f"class C{i}:\n{method}\n\n" for i in range(3)))
+    rep = run([str(src)], catalog_root=root).report
+    json_path, _ = miner.write_report(rep, tmp_path / "out")
+    (cluster,) = rep["function_clusters"]
+    result = promote(root, cluster["id"], "--report", json_path, "--id", "x.y.z")
+    assert result.exit_code == 1
+    assert "C0.total" in result.output and "is a method" in result.output
+
+
+def test_promote_rejects_changed_source(mined, tree):
+    rep, json_path, root = mined
+    orders = tree / "app" / "orders.py"
+    orders.write_text(orders.read_text() + "\n# touched\n")
+    result = promote(root, total_cluster(rep)["id"], "--report", json_path, "--id", "billing.a.b")
+    assert result.exit_code == 1 and "changed since it was mined" in result.output
+    assert "re-run `pcat mine`" in result.output
+
+
+def test_promote_missing_report_or_cluster(mined, tmp_path):
+    _, json_path, root = mined
+    missing = promote(root, "fn-000000000000", "--report", tmp_path / "nope.json", "--id", "a.b.c")
+    assert missing.exit_code == 1 and "not found" in missing.output
+    unknown = promote(root, "fn-000000000000", "--report", json_path, "--id", "a.b.c")
+    assert unknown.exit_code == 1 and "is not in" in unknown.output

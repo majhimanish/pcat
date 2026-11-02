@@ -193,6 +193,11 @@ def add(
     pattern_id: str = typer.Option(..., "--id", help="New pattern id."),
 ) -> None:
     """Import a function (and the helpers it calls) from existing code into a new pattern."""
+    _add_pattern(file, function, pattern_id)
+
+
+def _add_pattern(file: Path, function: str, pattern_id: str) -> None:
+    """Shared by `add` and `promote`: create a pattern folder from a source function."""
     root = _root()
     folder = _check_new_id(root, pattern_id)
     source = file.read_text(encoding="utf-8")
@@ -387,6 +392,25 @@ def find(file: Path = typer.Argument(..., exists=True, dir_okay=False)) -> None:
                 if label not in matches:
                     matches.append(label)
         typer.echo(f"{name}: {', '.join(matches) if matches else 'no match'}")
+
+
+@app.command()
+@_guard
+def promote(
+    cluster_id: str = typer.Argument(..., metavar="CLUSTER-ID"),
+    report: Path = typer.Option(..., "--report", help="report.json written by pcat mine."),
+    pattern_id: str = typer.Option(..., "--id", help="New pattern id."),
+    member: Optional[int] = typer.Option(
+        None, "--member", help="Member index in the report (default: representative)."
+    ),
+) -> None:
+    """Create a pattern from a mined function cluster (same flow as pcat add)."""
+    target = miner.promotion_target(report, cluster_id, member)
+    typer.echo(
+        f"promoting {target.member['qualname']} from {target.source} "
+        f"(member #{target.member['index']} of {cluster_id})"
+    )
+    _add_pattern(target.source, target.member["name"], pattern_id)
 
 
 def _catalog_root_or_none() -> Optional[Path]:
