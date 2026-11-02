@@ -39,7 +39,7 @@ bottom; add to this file whenever you make a call the spec does not dictate.
     point is given (e.g. `pcat canonical` without `--entry`) the first top-level
     function is the entry point.
 11. **Output order:** sorted imports, then `f0` (entry point), then helpers in
-    source order. So moving a helper above or below the entry point does not
+    source order (v1.1: literal constants go between imports and functions, #54). So moving a helper above or below the entry point does not
     change the fingerprint, but reordering helpers does.
 12. **Imports** are split to one name per statement (`import a, b` → two
     statements; same for `from x import a, b`), deduplicated by their unparsed
@@ -58,8 +58,10 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 16. **Never renamed:** free/global names, names declared `global`, names bound by
     imports (top level or inside functions), `self`, `cls`, dunder names,
     attribute names and keyword-argument names at call sites.
-17. **Keyword names at call sites are never renamed, even for calls to helpers in
-    the same snippet** (the spec is explicit). See KNOWN_GAPS.
+    *(v1.1: keyword names at calls to the pattern's own functions are renamed,
+    #51; `global` names that refer to constants/functions are renamed, #57.)*
+17. ~~Keyword names at call sites are never renamed, even for calls to helpers in
+    the same snippet.~~ *Superseded in v1.1 by #51.*
 18. **Decorators, default values and signature annotations of a top-level
     function** are treated as module scope (as Python evaluates them): only
     function names are renamed there.
@@ -74,7 +76,8 @@ bottom; add to this file whenever you make a call the spec does not dictate.
     `x: T` is dropped (empty bodies get `pass`).
 22. **Rejected constructs:** anything at top level other than imports, functions
     and a module docstring; classes inside functions; duplicate top-level
-    function names. Async functions are allowed.
+    function names. Async functions are allowed. *(v1.1: literal constants are
+    allowed at top level, #53.)*
 23. **Name map keys:** `fN` for functions, `vM` for locals of `f0`, `fN.vM` for
     locals of helper `fN`. The spec's flat example (`"v0": "items"`) cannot
     represent per-function numbering, so helper locals are qualified. `f0.vM` is
@@ -171,3 +174,70 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 50. Work is committed on the session's designated branch
     (`claude/new-session-woele0`) rather than `main`; merging it to `main` is
     the first "approval".
+
+## v1.1 — canonicalizer fixes (`docs/specs/v1.1-canonicalizer-fix.md`)
+
+51. **Keyword arguments at calls to snippet functions** are renamed to the
+    callee's placeholder when the call's `func` is a bare name that resolves to a
+    top-level function of the snippet (not shadowed by a local or a local
+    import), including recursive calls. All functions are analysed before any
+    renaming, so definition order does not matter. `render` does the reverse.
+52. **Positional-only parameters are not matched by keywords** (deviation from
+    the spec's list "positional, positional-only, keyword-only"). In Python a
+    keyword never binds a positional-only parameter; with `**kwargs` it lands in
+    kwargs under its literal name (`def b(a, /, **kw)`; `b(1, a=2)` gives
+    `kw == {"a": 2}`), so renaming it would change behaviour.
+53. **Literal constants:** a top-level `NAME = value` or `NAME: T = value` with a
+    single plain name target, where `ast.literal_eval(value)` succeeds. Rejected
+    with a clear error: other assignments (non-literal values, tuple targets,
+    chained `A = B = 1`, augmented assignment, bare `NAME: T`), and a name bound
+    twice. Constants are renamed `c0, c1, …` in source order; name-map key `cN`.
+54. **Constants are placed right after the imports, in source order, before all
+    functions** (deviation from "constants keep their source position relative
+    to functions"). With v1's entry-point-first ordering, keeping positions puts
+    a function above a constant its default uses (`def f(limit=LIMITS[1])` moved
+    into an earlier slot), and canonical and rendered text then fail with
+    `NameError` at import. Constants are dependency-free literals, so hoisting
+    them is always safe; it also makes the fingerprint independent of where in
+    the file constants sit.
+55. **`pcat add` / `extract_function`** copy every literal constant used by the
+    function or its helpers (transitively), in source order, as their source
+    segment (inline comments after the value are dropped). A used module-level
+    name bound by anything else (non-literal assignment, class, loop target,
+    rebinding, `A += 1`) fails with a message naming it. Helpers and constants are
+    now found by real free-name analysis, so a local that shadows a module name
+    no longer pulls that module name in.
+56. **Placeholder namespace now includes `cN`**: a free name like `c0` that is
+    not renamed is rejected, as `f0`/`v0` were.
+57. **`global NAME`** inside a function now resolves `NAME` through the module
+    map, so `global COUNT` + `COUNT += 1` becomes `global c0` + `c0 += 1`.
+    Before, global names were never renamed (no constants existed, so this only
+    changes code that declared a top-level function name `global`).
+58. **`CANONICAL_VERSION = 2`** lives in `canonical.py`. v1 rules = 1.
+59. **`index.json` is now an object** `{"canonical_version": N, "patterns":
+    [...]}` (spec: "write `canonical_version` at the top level"). A bare list
+    (v1 format) is read as `canonical_version: 1`. The entries are unchanged.
+60. **`pcat migrate-fingerprints`** is all-or-nothing (any load/canonicalization
+    error aborts before writing), rewrites only the `fingerprint:` line of
+    changed files, regenerates the index, and prints every pattern as
+    `id@vN  old  new  changed|unchanged` with full fingerprints plus a summary.
+61. **`validate --base` rules:** `impl.py` of an approved version must be
+    byte-identical to the base (stricter than v1: comment-only edits now fail
+    under `--base`, though they still pass check 4); a changed `fingerprint` is
+    allowed only if `impl.py` is unchanged and `CANONICAL_VERSION` is greater
+    than the version recorded in the base's `catalog/index.json` (1 if absent or
+    in v1 format). The base version is read from the catalog's index rather than
+    from `src/` so it works for catalogs whose code lives elsewhere. An `impl.py`
+    change is reported once (not also as a fingerprint change).
+62. **Multi-problem errors** from library calls (e.g. a failed migration) are
+    printed as one `error: …` line per problem.
+63. **Changed v1 test expectations** (none deleted; each still asserts the same
+    rejection): `X = 1` / `CACHE = {}` as examples of forbidden top-level
+    statements became `X = make()` / `CACHE = dict()` because literals are now
+    legal; error-message substrings now say "only imports, function definitions
+    and literal constants"; `test_index_format` reads `doc["patterns"]`; the
+    `--base` rewritten-fingerprint test now matches the more precise
+    "impl.py changed" message.
+64. **Seed migration:** 0 of 6 seed fingerprints changed under rules v2 (no seed
+    calls its own functions with keywords or uses constants); verified on
+    Python 3.11 and 3.13.

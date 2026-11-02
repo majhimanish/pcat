@@ -29,11 +29,29 @@ pcat show search.binary_search.iterative
 |---|---|
 | Pattern | One verified function (plus helpers it calls) with `pattern.yaml`, `impl.py`, `test_impl.py`. |
 | Variant | A separate pattern per behavior-relevant difference, e.g. `search.binary_search.iterative` vs `.recursive`. Variants share `variant_of` and must differ in `behavior`. |
-| Canonical form | `impl.py` with docstrings, comments, formatting and local names removed: functions become `f0, f1, …` (entry point is `f0`), parameters/locals become `v0, v1, …` per function. Imports are sorted. |
+| Canonical form | `impl.py` with docstrings, comments, formatting and local names removed: functions become `f0, f1, …` (entry point is `f0`), constants `c0, c1, …`, parameters/locals `v0, v1, …` per function. Imports are sorted. |
 | Fingerprint | SHA-256 of the canonical form. Same code with different names/comments ⇒ same fingerprint. |
-| Name map | Placeholder → real name (`{"f0": "binary_search", "v0": "items", "f1.v0": …}`). Canonical form + name map renders readable code. |
+| Name map | Placeholder → real name (`{"f0": "binary_search", "v0": "items", "f1.v0": …, "c0": …}`). Canonical form + name map renders readable code. |
 
 Try it: `pcat canonical some_file.py --entry my_function`.
+
+### Canonicalization rules (version 2)
+
+`canonical.CANONICAL_VERSION` (recorded in `index.json`) names the rule set.
+
+- Output: sorted, one-name-per-line imports; then literal constants in source
+  order; then the entry point `f0`; then helpers in source order.
+- Renamed: top-level functions (`fN`), literal constants (`cN`), and each
+  function's parameters and locals (`vM`, restarting per function).
+- Never renamed: builtins and other free names, imported names, attribute
+  names, `self`/`cls`, dunder names, and keyword-argument names at call sites —
+  **except at calls to functions defined in the pattern**, where keywords
+  follow the callee's parameter placeholders (`f1(v0, v2=True)`), so canonical
+  text is runnable and custom renders keep calls working. A keyword that matches
+  no named parameter (it goes into `**kwargs`) is left alone.
+- Allowed at top level: imports, functions (incl. async), and literal
+  constants `NAME = <literal>` / `NAME: T = <literal>` (anything
+  `ast.literal_eval` accepts). Everything else is rejected with a clear error.
 
 ## Layout
 
@@ -68,9 +86,13 @@ pcat add path/to/module.py --function top_words --id text.top_words.counter
 pcat index && pcat validate text.top_words.counter
 ```
 
+`pcat add` also copies every literal constant those functions use. If a used
+module-level name is anything else (e.g. `PATTERN = re.compile(...)`), it fails
+and names it; move that value into the function or make it a literal.
+
 The templates deliberately fail validation (failing test, `TODO` fields) until
-you finish them. Rules for `impl.py`: only imports and functions at top level
-(no module constants or classes); the entry point is named in `entry_point`.
+you finish them. Rules for `impl.py`: only imports, functions and literal
+constants at top level (no classes); the entry point is named in `entry_point`.
 
 Other commands:
 
@@ -83,6 +105,7 @@ Other commands:
 | `pcat show <id>` | metadata + rendered code |
 | `pcat render <id> --names f0=find_user v0=users` | render with your own names |
 | `pcat find <file.py>` | which pattern (if any) each top-level function in a file is |
+| `pcat migrate-fingerprints` | recompute all fingerprints after a rules change (see below) |
 
 A bare `<id>` means its highest version; use `<id>@v<N>` for a specific one.
 
@@ -117,8 +140,9 @@ Port them to GitLab CI, Jenkins, Buildkite, etc. as-is. Use Python 3.11 in CI
 ## Versioning
 
 Approved patterns are **immutable**. Editing `impl.py` of an existing version
-changes its fingerprint and fails check 4 (and rewriting the fingerprint fails
-the `--base` check in CI). To change code or behavior:
+changes its fingerprint and fails check 4, and in CI the `--base` check fails on
+*any* byte change to an approved `impl.py` (even a comment). To change code or
+behavior:
 
 1. Copy `catalog/<category>/<pattern_id>/` to `<pattern_id>@v2/` and set
    `version: 2`; make the change; `pcat fingerprint <id>@v2 --write`.
@@ -126,14 +150,26 @@ the `--base` check in CI). To change code or behavior:
    `<id>@v2`). Only `status` and `replaced_by` may change on an approved version.
 3. `pcat index`, `pcat validate`, open a PR.
 
-Comment-only or docstring-only edits do not change fingerprints and pass.
+Comment-only or docstring-only edits do not change fingerprints (they pass
+check 4), but they are still rejected by `--base` for approved versions.
+
+### Changing the canonicalization rules
+
+A rule change can alter fingerprints of untouched patterns, so it is explicit:
+
+1. Change `src/pcat/canonical.py` and bump `CANONICAL_VERSION`.
+2. Run `pcat migrate-fingerprints`: it recomputes every fingerprint, rewrites
+   the changed `pattern.yaml` lines, regenerates `index.json` and prints an
+   `id / old / new` table for the PR description.
+3. In CI, `--base` accepts the changed fingerprints only because
+   `CANONICAL_VERSION` went up and every approved `impl.py` is byte-identical.
 
 ## Validation checks
 
 `pcat validate` reports one line per problem, tagged with its check number:
 
 1. `pattern.yaml` matches the schema (unknown keys are errors); `id`/`version` match the folder
-2. `impl.py` parses and contains only imports and functions at top level
+2. `impl.py` parses and contains only imports, functions and literal constants at top level
 3. `entry_point` exists in `impl.py`
 4. stored `fingerprint` equals the computed fingerprint
 5. no two active patterns share a fingerprint
@@ -147,9 +183,11 @@ Plus `immutable` problems when `--base` is given.
 
 ## Planned extensions
 
-All future tools read **only `catalog/index.json`** (sorted list of `id,
-version, title, category, variant_of, behavior, status, fingerprint, path`), so
-the catalog's internals can change without breaking them.
+All future tools read **only `catalog/index.json`**: `{"canonical_version": N,
+"patterns": [...]}`, where each entry has `id, version, title, category,
+variant_of, behavior, status, fingerprint, path` (sorted by id and version). A
+tool that fingerprints code must use the same rules version. The catalog's
+internals can change without breaking these tools.
 
 - **Miner** (`docs/specs/v2-miner.md`, planned): scan repositories, canonicalize
   every function, cluster identical or near-identical fingerprints, and propose

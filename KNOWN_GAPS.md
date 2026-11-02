@@ -1,17 +1,16 @@
 # Known gaps
 
-Honest list of limitations in v1, each with a suggested fix. Remove an entry
+Honest list of limitations (as of v1.1), each with a suggested fix. Remove an entry
 when you fix it; add one whenever you take a shortcut.
 
 ## Canonicalization
 
-- **Keyword arguments to helpers in the same snippet are not renamed.** In
-  `f1(v0, reverse=True)` the keyword stays `reverse` while `f1`'s parameter
-  becomes `v1`, so the canonical text is not runnable code, and
-  `pcat render --names f1.v1=desc` would break the call without the collision
-  check noticing. Rendering with the original name map is correct. Seeds avoid
-  this. *Fix:* when the callee is a snippet function, rename the keyword with the
-  callee's map (needs a deliberate fingerprint migration).
+- **Indirect calls to snippet functions keep keyword names.** Only direct calls
+  `f(key=…)` are rewritten. `functools.partial(f, key=…)`, `f(**{"key": …})`,
+  aliases (`g = f; g(key=…)`) and callbacks invoked with keywords elsewhere keep
+  the real keyword, so their canonical text is not runnable and a custom
+  `render --names` can break them. *Fix:* reject or rewrite these forms when the
+  target resolves to a snippet function.
 - **One flat scope per top-level function.** A comprehension variable that
   shadows an outer local (`x = 1; [x for x in xs]`) gets the same placeholder as
   the outer `x`. Behaviour is preserved, but writing it with a distinct name
@@ -25,11 +24,19 @@ when you fix it; add one whenever you take a shortcut.
 - **No classes.** Classes are rejected at top level and inside functions.
   *Fix:* support class patterns with method-level scopes and leave attribute
   names untouched (class-body bindings must not be renamed).
-- **No module-level constants.** `impl.py` may only contain imports and
-  functions; `pcat add` silently leaves out constants (e.g. a compiled regex)
-  that a function uses, so the pattern's tests then fail. *Fix:* in `add`,
-  detect free names bound by top-level assignments and error, or allow
-  constant assignments in the canonical form.
+- **Only literal constants.** Module-level values that are not
+  `ast.literal_eval` literals (a compiled regex, `frozenset(...)`, a value
+  computed from another constant) still cannot be part of a pattern; `pcat add`
+  now fails naming them instead of dropping them. *Fix:* allow an explicit
+  allowlist of pure constructors (`re.compile`, `frozenset`, `tuple`), or move
+  such values into the function.
+- **Mutable literal constants are shared state.** `CACHE = {}` or `ITEMS = [1]`
+  is accepted and functions can mutate it across calls. *Fix:* accept only
+  immutable literals (numbers, strings, bytes, bools, None, tuples/frozen
+  forms), or have validation warn on list/dict/set constants.
+- **`pcat add` drops inline comments after constants** (`X = 1  # why`): constants
+  are copied as their exact source segment. *Fix:* copy whole source lines when
+  no other statement shares them.
 - **Function order matters beyond the entry point.** Helpers keep source order,
   so swapping two helpers changes the fingerprint. *Fix:* order helpers by first
   reference from `f0` (a migration).
@@ -41,9 +48,6 @@ when you fix it; add one whenever you take a shortcut.
 - **Python 3.12 type parameters** (`def f[T](x: T)`) are not renamed and not
   stripped with `keep_annotations: false`. *Fix:* treat `type_params` as
   module-scope bindings of the function.
-- **Helper detection in `extract_function` ignores shadowing**: a local named
-  like another top-level function pulls that function in as a helper. *Fix:*
-  use the scope analysis from `_scope_names`.
 
 ## Validation and workflow
 

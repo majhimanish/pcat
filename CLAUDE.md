@@ -15,6 +15,12 @@ approved patterns instead of producing a new variation per prompt.
   fingerprint validate index show render find`), 10 validation checks plus an
   optional `--base` immutability check, GitHub Actions CI, CODEOWNERS, 6 seed
   patterns. Spec: `docs/specs/v1-catalog.md`.
+- **v1.1 (done):** canonicalization rules v2 (`CANONICAL_VERSION = 2`):
+  keyword arguments at calls to the pattern's own functions are renamed;
+  literal module constants allowed (`cN`); `pcat migrate-fingerprints`;
+  `index.json` records `canonical_version`; `--base` allows fingerprint changes
+  only with a rules bump and byte-identical `impl.py`. Spec:
+  `docs/specs/v1.1-canonicalizer-fix.md`. Seed fingerprints did not change.
 - **Planned next:** v2 miner (find candidate patterns in repos), v3 MCP server
   (serve the catalog to coding agents), v4 linter (flag application code that
   reimplements or uses deprecated patterns). Specs will go in `docs/specs/`.
@@ -30,18 +36,28 @@ pcat validate --skip-tests  # fast
 pcat validate --skip-tests --base origin/main   # approved versions unchanged
 pcat index                  # regenerate catalog/index.json (commit it)
 pcat fingerprint <id> --write
+pcat migrate-fingerprints   # after bumping CANONICAL_VERSION; prints old/new table
 ```
+
+## Canonicalization rules (version 2, summary)
+
+Imports (sorted, one name each) → literal constants (`c0…`, source order) →
+entry point `f0` → helpers (`f1…`, source order). Parameters/locals are
+`v0…` per function. Never renamed: free names/builtins, imports, attributes,
+`self`/`cls`, dunders, and keyword-argument names at call sites **except at
+calls to functions defined in the pattern** (keywords then follow the callee's
+placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 
 ## Architecture
 
-- `src/pcat/canonical.py` — canonicalization rules, fingerprint, name map,
-  AST-based `render`, `extract_function` (function + helpers + used imports).
-  Owns every fingerprint.
+- `src/pcat/canonical.py` — canonicalization rules and `CANONICAL_VERSION`,
+  fingerprint, name map, AST-based `render`, `extract_function` (function +
+  helpers + used constants + used imports). Owns every fingerprint.
 - `src/pcat/schema.py` — pydantic `PatternMeta` for `pattern.yaml` (unknown keys
   rejected, cross-field rules).
 - `src/pcat/catalog.py` — on-disk layout, loading, `index.json` generation,
   all validation checks (`validate`), per-pattern pytest runner, `--base` git
-  check.
+  check, `migrate_fingerprints`.
 - `src/pcat/cli.py` — typer app; thin layer over the two modules above; errors
   become `error: …` + exit 1.
 - `src/pcat/errors.py` — `PcatError` and subclasses.
@@ -52,13 +68,14 @@ pcat fingerprint <id> --write
 
 ## Invariants (never break these)
 
-1. **Canonical output and fingerprints are stable.** Any change to what
-   `canonical.analyze` produces changes fingerprints of every pattern. That
-   needs a deliberate migration: one PR that changes the rules, re-runs
-   `pcat fingerprint --write` for all patterns, regenerates the index, and
-   explains why in `DECISIONS.md`. Never "fix" a fingerprint casually.
-2. **Approved patterns are immutable.** Never edit `impl.py`, `behavior`,
-   `entry_point`, `keep_annotations` or `fingerprint` of a version on `main`.
+1. **Canonical output and fingerprints are stable.** Any change that can alter
+   what `canonical.analyze` produces must, in one PR: bump `CANONICAL_VERSION`,
+   run `pcat migrate-fingerprints` (paste its table in the PR), and explain why
+   in `DECISIONS.md`. Never edit `impl.py` in the same PR. Never "fix" a
+   fingerprint casually.
+2. **Approved patterns are immutable.** Never edit `impl.py` (not even
+   comments), `behavior`, `entry_point` or `keep_annotations` of a version on
+   `main`; its `fingerprint` changes only via a rules migration.
    Changes go in `<pattern_id>@v<N+1>/`; the old one becomes
    `status: deprecated` + `replaced_by`.
 3. **`catalog/index.json` is the only interface for future tools** (miner, MCP,
@@ -83,8 +100,8 @@ pcat fingerprint <id> --write
 
 - `DECISIONS.md` — every assumption made so far (read before changing behavior)
 - `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
-- `docs/specs/` — phase specs (`v1-catalog.md`; later `v2-miner.md`,
-  `v3-mcp.md`, `v4-linter.md`)
+- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`;
+  later `v2-miner.md`, `v3-mcp.md`, `v4-linter.md`)
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
 ## Rule for later sessions
