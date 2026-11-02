@@ -1,0 +1,811 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pattern mining report</title><style>
+:root { --bg:#fbfbfa; --fg:#1d1d1b; --muted:#6b6b66; --line:#e2e1dc; --card:#ffffff;
+        --accent:#2f5d8a; --code:#f3f2ee; --ok:#2e7d4f; --warn:#9a6a00; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#151614; --fg:#e8e7e2; --muted:#9a9993; --line:#2c2d2a; --card:#1d1e1b;
+          --accent:#8db4dc; --code:#232421; --ok:#6fc28f; --warn:#e0b44c; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+.sub { color: var(--muted); margin: 0 0 20px; overflow-wrap: anywhere; }
+.grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+.stat b { display:block; font-size:1.3rem; font-variant-numeric: tabular-nums; }
+.stat span { color:var(--muted); font-size:.85rem; }
+.rows { border:1px solid var(--line); border-radius:8px; background:var(--card); }
+.head, summary { display:grid; gap:8px; align-items:center; padding:8px 12px;
+  grid-template-columns: 3rem minmax(9rem,1.4fr) repeat(4, minmax(3.5rem,.6fr)) minmax(6rem,1.2fr); }
+.head { color:var(--muted); font-size:.8rem; border-bottom:1px solid var(--line); }
+details { border-bottom:1px solid var(--line); }
+details:last-child { border-bottom:0; }
+summary { cursor:pointer; list-style:none; font-variant-numeric: tabular-nums; }
+summary::-webkit-details-marker { display:none; }
+summary:hover { background: var(--code); }
+.id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9rem;
+      color:var(--accent); overflow-wrap:anywhere; }
+.num { text-align:right; }
+.match { font-size:.85rem; overflow-wrap:anywhere; }
+.match .exact { color: var(--ok); } .match .shape { color: var(--warn); }
+.body { padding: 4px 12px 14px; }
+pre { background:var(--code); border-radius:6px; padding:10px; overflow-x:auto; margin:8px 0;
+      font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+ul.members { margin: 6px 0 0; padding-left: 1.1rem; font-size:.9rem; }
+ul.members li { overflow-wrap:anywhere; }
+.muted { color: var(--muted); }
+table.cov { border-collapse: collapse; width:100%; font-size:.9rem; }
+table.cov td, table.cov th { border-bottom:1px solid var(--line); padding:4px 8px; text-align:left; }
+.empty { padding: 12px; color: var(--muted); }
+@media (max-width: 640px) {
+  .head { display:none; }
+  summary { grid-template-columns: 2.2rem 1fr 1fr 1fr; }
+  summary .lbl::before { content: attr(data-l) " "; color: var(--muted); font-size:.75rem; }
+  summary .id { grid-column: 2 / -1; }
+  summary .match { grid-column: 1 / -1; }
+  .num { text-align:left; }
+}
+</style></head><body><main><h1>Pattern mining report</h1><p class="sub">experiments/variance/runs/smoke/jwt_create/B, experiments/variance/runs/smoke/password_hash/B, experiments/variance/runs/smoke/paginate_query/B, experiments/variance/runs/smoke/http_retry/B, experiments/variance/runs/smoke/env_config/B, experiments/variance/runs/smoke/token_bucket/B, experiments/variance/runs/smoke/csv_import/B, experiments/variance/runs/smoke/fastapi_create_user/B · canonical v2 · shape v1</p><div class="grid"><div class="stat"><b>16</b><span>files seen</span></div><div class="stat"><b>16</b><span>files mined</span></div><div class="stat"><b>0</b><span>files skipped</span></div><div class="stat"><b>45</b><span>functions mined</span></div><div class="stat"><b>4</b><span>functions filtered</span></div><div class="stat"><b>55</b><span>fragments mined</span></div><div class="stat"><b>44</b><span>function clusters</span></div><div class="stat"><b>33</b><span>fragment clusters</span></div><div class="stat"><b>0.0%</b><span>covered (0)</span></div><div class="stat"><b>0.0%</b><span>near-covered (0)</span></div></div><p class="sub" style="margin-top:10px">too_small: 4</p><p class="sub">settings: excludes=[], fragments=True, include_generated=False, include_tests=False, include_trivial=True, min_fragment_nodes=25, min_nodes=20, min_occurrences=1, skip_dirs=True</p><h2>Catalog coverage</h2><table class="cov"><tr><th>pattern</th><th>covered</th><th>near-covered</th></tr><tr><td class="id">collections.group_by.dict_of_lists@v1</td><td>0</td><td>0</td></tr><tr><td class="id">retry.with_exponential_backoff@v1</td><td>0</td><td>0</td></tr><tr><td class="id">search.binary_search.iterative@v1</td><td>0</td><td>0</td></tr><tr><td class="id">search.binary_search.recursive@v1</td><td>0</td><td>0</td></tr><tr><td class="id">sort.merge_sort.recursive@v1</td><td>0</td><td>0</td></tr><tr><td class="id">text.slugify.ascii@v1</td><td>0</td><td>0</td></tr></table><h2>Function clusters (44)</h2><div class="rows"><div class="head"><span>#</span><span>cluster</span><span class="num">score</span><span class="num">occ.</span><span class="num">nodes</span><span class="num">files</span><span>catalog</span></div><details id="fn-07ae19e3124a"><summary><span class="muted">1</span><span class="id">fn-07ae19e3124a</span><span class="num lbl" data-l="score">61</span><span class="num lbl" data-l="occ.">2</span><span class="num lbl" data-l="nodes">61</span><span class="num lbl" data-l="files">2</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× 1b374e783943; inputs: 1</div><pre>def f0(v0: str) -&gt; str:
+    import hashlib
+    import os
+    v1 = os.urandom(0)
+    v2 = hashlib.scrypt(v0.encode(), salt=v1, n=0 ** 0, r=0, p=0)
+    return v1.hex() + &#x27;&#x27; + v2.hex()
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_01.py:30-36</span> hash_password<span class="muted"> [#0, exact 1b374e783943]</span></li><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:42-48</span> hash_password<span class="muted"> [#1, exact 1b374e783943]</span></li></ul></div></details><details id="fn-05f131a098e1"><summary><span class="muted">2</span><span class="id">fn-05f131a098e1</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">62</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 349ab5109fae; inputs: 1</div><pre>def f0(v0, v1=None, v2=False):
+    v3 = os.environ.get(v0)
+    if v3 is None or v3.strip() == &#x27;&#x27;:
+        if v2 and v1 is None:
+            raise ValueError(f&#x27;{v0}&#x27;)
+        return v1
+    return v3.strip()
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:4-10</span> _get_str<span class="muted"> [#0, exact 349ab5109fae]</span></li></ul></div></details><details id="fn-07414b5f2df3"><summary><span class="muted">3</span><span class="id">fn-07414b5f2df3</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">136</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 5fa2371881ed; inputs: 1</div><pre>def f0(v0, v1, v2, v3, v4=0, v5=None):
+    if v5 is None:
+        v5 = time.monotonic()
+    v6 = v0.get(v1)
+    if v6 is None:
+        v6 = {&#x27;&#x27;: float(v2), &#x27;&#x27;: v5}
+        v0[v1] = v6
+    v7 = max(0, v5 - v6[&#x27;&#x27;])
+    v6[&#x27;&#x27;] = min(float(v2), v6[&#x27;&#x27;] + v7 * v3)
+    v6[&#x27;&#x27;] = v5
+    if v6[&#x27;&#x27;] &gt;= v4:
+        v6[&#x27;&#x27;] -= v4
+        return True
+    return False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/token_bucket/B/sample_02.py:4-35</span> allow_request<span class="muted"> [#0, exact 5fa2371881ed]</span></li></ul></div></details><details id="fn-0ba18984ffe2"><summary><span class="muted">4</span><span class="id">fn-0ba18984ffe2</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">227</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 4fbc48fb85d2; inputs: 1</div><pre>def f0(v0, v1=0, v2=None, v3=&#x27;&#x27;, v4=None, v5=None, v6=None):
+    if v0 is None or str(v0).strip() == &#x27;&#x27;:
+        raise ValueError(&#x27;&#x27;)
+    if not isinstance(v1, (int, float)) or isinstance(v1, bool):
+        raise ValueError(&#x27;&#x27;)
+    if v1 &lt;= 0:
+        raise ValueError(&#x27;&#x27;)
+    v7 = v2 or os.environ.get(&#x27;&#x27;)
+    if not v7:
+        raise ValueError(&#x27;&#x27;)
+    v8 = datetime.now(timezone.utc)
+    v9 = {}
+    if v6:
+        v9.update(v6)
+    v9.update({&#x27;&#x27;: str(v0), &#x27;&#x27;: v8, &#x27;&#x27;: v8, &#x27;&#x27;: v8 + timedelta(seconds=v1), &#x27;&#x27;: uuid.uuid4().hex, &#x27;&#x27;: &#x27;&#x27;})
+    if v4:
+        v9[&#x27;&#x27;] = v4
+    if v5:
+        v9[&#x27;&#x27;] = v5
+    v10 = jwt.encode(v9, v7, algorithm=v3)
+    if isinstance(v10, bytes):
+        v10 = v10.decode(&#x27;&#x27;)
+    return v10
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/jwt_create/B/sample_01.py:9-76</span> generate_access_token<span class="muted"> [#0, exact 4fbc48fb85d2]</span></li></ul></div></details><details id="fn-2372b5dfdb03"><summary><span class="muted">5</span><span class="id">fn-2372b5dfdb03</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">67</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× a41a938873d1; inputs: 1</div><pre>def f0(v0: str, v1: Optional[float]=None) -&gt; float:
+    try:
+        v2 = float(v0.strip())
+    except ValueError:
+        raise ValueError(f&#x27;{v0!r}&#x27;) from None
+    if v1 is not None and v2 &lt; v1:
+        raise ValueError(f&#x27;{v1}{v2}&#x27;)
+    return v2
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:36-43</span> _parse_float<span class="muted"> [#0, exact a41a938873d1]</span></li></ul></div></details><details id="fn-2a202f46fa5f"><summary><span class="muted">6</span><span class="id">fn-2a202f46fa5f</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">40</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 0d7584b52e41; inputs: 1</div><pre>def f0(v0, v1=0, v2=0, v3=True):
+    v4 = min(v2, v1 * 0 ** v0)
+    return random.uniform(0, v4) if v3 else v4
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_02.py:29-32</span> compute_backoff<span class="muted"> [#0, exact 0d7584b52e41]</span></li></ul></div></details><details id="fn-2af7cbe8ff68"><summary><span class="muted">7</span><span class="id">fn-2af7cbe8ff68</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">66</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× cdf6eb6f054d; inputs: 1</div><pre>def f0(v0: str, v1: tuple, v2: str=&#x27;&#x27;) -&gt; str:
+    v3 = v0.strip()
+    v3 = v3.upper() if v2 == &#x27;&#x27; else v3.lower()
+    if v3 not in v1:
+        raise ValueError(f&quot;{&#x27;&#x27;.join(v1)}{v0!r}&quot;)
+    return v3
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:46-51</span> _parse_choice<span class="muted"> [#0, exact cdf6eb6f054d]</span></li></ul></div></details><details id="fn-3a00ffbdc956"><summary><span class="muted">8</span><span class="id">fn-3a00ffbdc956</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">214</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 696dfc45fcf8; inputs: 1</div><pre>def f0(v0, v1=None, v2=None, v3=0, v4=0, v5=0, v6=0, v7=True, v8=RETRY_STATUS_CODES, v9=None, **v10):
+    if v4 &lt; 0:
+        raise ValueError(&#x27;&#x27;)
+    v11 = v9.get if v9 is not None else requests.get
+    v12 = None
+    for v13 in range(v4 + 0):
+        v14 = None
+        try:
+            v15 = v11(v0, params=v1, headers=v2, timeout=v3, **v10)
+            if v15.status_code not in v8:
+                return v15
+            if v13 == v4:
+                return v15
+            v14 = parse_retry_after(v15.headers.get(&#x27;&#x27;))
+            v15.close()
+        except (requests.ConnectionError, requests.Timeout) as v16:
+            v12 = v16
+            if v13 == v4:
+                raise
+        v17 = compute_backoff(v13, v5, v6, v7)
+        if v14 is not None:
+            v17 = min(max(v17, v14), v6)
+        time.sleep(v17)
+    if v12 is not None:
+        raise v12
+    raise RuntimeError(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_02.py:35-88</span> http_get_with_retry<span class="muted"> [#0, exact 696dfc45fcf8]</span></li></ul></div></details><details id="fn-3ddfedecf23b"><summary><span class="muted">9</span><span class="id">fn-3ddfedecf23b</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">175</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× f1fb0356c642; inputs: 1</div><pre>def f0(v0, v1=0, v2=0, v3=0, v4=0, v5=(0, 0, 0, 0, 0), **v6):
+    v7 = None
+    for v8 in range(v1 + 0):
+        try:
+            v9 = requests.get(v0, timeout=v4, **v6)
+            if v9.status_code in v5:
+                v9.raise_for_status()
+            v9.raise_for_status()
+            return v9
+        except (requests.ConnectionError, requests.Timeout) as v10:
+            v7 = v10
+        except requests.HTTPError as v10:
+            v11 = v10.response.status_code if v10.response is not None else None
+            if v11 not in v5:
+                raise
+            v7 = v10
+        if v8 == v1:
+            break
+        v12 = min(v3, v2 * 0 ** v8)
+        v12 = random.uniform(0, v12)
+        time.sleep(v12)
+    raise v7
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_01.py:7-47</span> fetch_with_retry<span class="muted"> [#0, exact f1fb0356c642]</span></li></ul></div></details><details id="fn-44d05d1038b1"><summary><span class="muted">10</span><span class="id">fn-44d05d1038b1</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">177</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 49a118f80663; inputs: 1</div><pre>def f0(v0):
+    v1 = []
+    v2 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip()
+    v3 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip()
+    v4 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip()
+    if not v2:
+        v1.append(&#x27;&#x27;)
+    if not v3:
+        v1.append(&#x27;&#x27;)
+    elif not EMAIL_RE.match(v3):
+        v1.append(f&#x27;{v3!r}&#x27;)
+    v5 = None
+    if not v4:
+        v1.append(&#x27;&#x27;)
+    else:
+        try:
+            v5 = int(v4)
+        except ValueError:
+            v1.append(f&#x27;{v4!r}&#x27;)
+        else:
+            if v5 &lt; 0 or v5 &gt; 0:
+                v1.append(f&#x27;{v5}&#x27;)
+                v5 = None
+    return (v1, {&#x27;&#x27;: v2, &#x27;&#x27;: v3, &#x27;&#x27;: v5})
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_02.py:7-36</span> validate_row<span class="muted"> [#0, exact 49a118f80663]</span></li></ul></div></details><details id="fn-4a0933b246fe"><summary><span class="muted">11</span><span class="id">fn-4a0933b246fe</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">275</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 9f1ae8b624c2; inputs: 1</div><pre>def f0(v0: dict, v1: int, v2: set) -&gt; tuple:
+    v3 = []
+    v4 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip()
+    v5 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip().lower()
+    v6 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip().lower() or &#x27;&#x27;
+    v7 = (v0.get(&#x27;&#x27;) or &#x27;&#x27;).strip()
+    if not v4:
+        v3.append(&#x27;&#x27;)
+    elif len(v4) &gt; 0:
+        v3.append(&#x27;&#x27;)
+    if not v5:
+        v3.append(&#x27;&#x27;)
+    elif not EMAIL_RE.match(v5):
+        v3.append(f&#x27;{v5!r}&#x27;)
+    elif v5 in v2:
+        v3.append(f&#x27;{v5!r}&#x27;)
+    if v6 not in ALLOWED_ROLES:
+        v3.append(f&quot;{v6!r}{&#x27;&#x27;.join(sorted(ALLOWED_ROLES))}&quot;)
+    v8 = None
+    if v7:
+        try:
+            v8 = int(v7)
+            if not 0 &lt; v8 &lt; 0:
+                v3.append(f&#x27;{v8}&#x27;)
+        except ValueError:
+            v3.append(f&#x27;{v7!r}&#x27;)
+    if v3:
+        return (None, v3)
+    v2.add(v5)
+    return ({&#x27;&#x27;: v4, &#x27;&#x27;: v5, &#x27;&#x27;: v6, &#x27;&#x27;: v8}, [])
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:10-47</span> validate_user_row<span class="muted"> [#0, exact 9f1ae8b624c2]</span></li></ul></div></details><details id="fn-55b646b50abe"><summary><span class="muted">12</span><span class="id">fn-55b646b50abe</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">44</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 5859db8a9ead; inputs: 1</div><pre>def f0(v0: str) -&gt; bool:
+    v1 = v0.strip().lower()
+    if v1 in _TRUE_VALUES:
+        return True
+    if v1 in _FALSE_VALUES:
+        return False
+    raise ValueError(f&#x27;{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:15-21</span> _parse_bool<span class="muted"> [#0, exact 5859db8a9ead]</span></li></ul></div></details><details id="fn-5a1608308c04"><summary><span class="muted">13</span><span class="id">fn-5a1608308c04</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">249</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 1b89c5bb394f; inputs: 1</div><pre>def f0(v0: str, v1: str) -&gt; bool:
+    try:
+        if not isinstance(v0, str) or not isinstance(v1, str):
+            return False
+        v2, v3, v4, v5, v6, v7 = v1.split(&#x27;&#x27;)
+        if v2 != _SCHEME:
+            return False
+        v3, v4, v5 = (int(v3), int(v4), int(v5))
+        if not 0 ** 0 &lt;= v3 &lt;= 0 ** 0 or v3 &amp; v3 - 0 or (not 0 &lt;= v4 &lt;= 0) or (not 0 &lt;= v5 &lt;= 0):
+            return False
+        v8 = _b64d(v6)
+        v9 = _b64d(v7)
+        if not v9 or len(v8) &lt; 0:
+            return False
+        v10 = max(_MAXMEM, 0 * v3 * v4 * v5)
+        v11 = hashlib.scrypt(v0.encode(&#x27;&#x27;), salt=v8, n=v3, r=v4, p=v5, maxmem=v10, dklen=len(v9))
+        return hmac.compare_digest(v11, v9)
+    except (ValueError, TypeError, MemoryError, OverflowError):
+        return False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_02.py:44-76</span> verify_password<span class="muted"> [#0, exact 1b89c5bb394f]</span></li></ul></div></details><details id="fn-5ec41ae6e590"><summary><span class="muted">14</span><span class="id">fn-5ec41ae6e590</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">27</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 834c48e70b30; inputs: 1</div><pre>def f0(cls, v0: str) -&gt; str:
+    if not re.fullmatch(&#x27;&#x27;, v0):
+        raise ValueError(&#x27;&#x27;)
+    return v0
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:22-25</span> UserCreate.validate_username<span class="muted"> @field_validator(&#x27;username&#x27;) @classmethod [#0, exact 834c48e70b30]</span></li></ul></div></details><details id="fn-5faf9e9c5294"><summary><span class="muted">15</span><span class="id">fn-5faf9e9c5294</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">104</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 93f312f54a4b; inputs: 1</div><pre>def f0(v0: str, v1, v2: Any=None, v3: bool=False) -&gt; None:
+    v4 = v0.lower()
+    v5 = get(v0)
+    if v5 is None:
+        if v3:
+            errors.append(f&#x27;{prefix}{v0}&#x27;)
+        config[v4] = v2
+        return
+    try:
+        config[v4] = v1(v5)
+    except ValueError as v6:
+        errors.append(f&#x27;{prefix}{v0}{v6}&#x27;)
+        config[v4] = v2
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:103-115</span> load_config.&lt;locals&gt;.read<span class="muted"> [#0, exact 93f312f54a4b]</span></li></ul></div></details><details id="fn-65f3eb323458"><summary><span class="muted">16</span><span class="id">fn-65f3eb323458</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 06f0b26b156c; inputs: 1</div><pre>def f0(v0: str) -&gt; list:
+    return [v1.strip() for v1 in v0.split(&#x27;&#x27;) if v1.strip()]
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:68-69</span> _parse_list<span class="muted"> [#0, exact 06f0b26b156c]</span></li></ul></div></details><details id="fn-6b3dc9a760b8"><summary><span class="muted">17</span><span class="id">fn-6b3dc9a760b8</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">113</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 55c0f0b836d3; inputs: 1</div><pre>def f0(v0, v1=0, v2=0):
+    v1 = max(int(v1), 0)
+    v2 = max(int(v2), 0)
+    if not isinstance(v0, Query):
+        raise TypeError(&#x27;&#x27;)
+    v3 = v0.order_by(None).with_entities(func.count()).select_from(v0.order_by(None).subquery()).scalar() or 0
+    v4 = v0.limit(v2).offset((v1 - 0) * v2).all()
+    return (v4, v3)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/paginate_query/B/sample_02.py:5-24</span> paginate<span class="muted"> [#0, exact 55c0f0b836d3]</span></li></ul></div></details><details id="fn-701724f06115"><summary><span class="muted">18</span><span class="id">fn-701724f06115</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">51</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c96cc58bc2c1; inputs: 1</div><pre>def f0(cls, v0: str) -&gt; str:
+    if not any((v1.isdigit() for v1 in v0)) or not any((v1.isalpha() for v1 in v0)):
+        raise ValueError(&#x27;&#x27;)
+    return v0
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_01.py:17-20</span> UserCreate.password_strength<span class="muted"> @field_validator(&#x27;password&#x27;) @classmethod [#0, exact c96cc58bc2c1]</span></li></ul></div></details><details id="fn-7d3f976858ef"><summary><span class="muted">19</span><span class="id">fn-7d3f976858ef</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">100</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 661719dbe0b4; inputs: 1</div><pre>def f0(v0: str, v1: Optional[int]=None, v2: Optional[int]=None) -&gt; int:
+    try:
+        v3 = int(v0.strip())
+    except ValueError:
+        raise ValueError(f&#x27;{v0!r}&#x27;) from None
+    if v1 is not None and v3 &lt; v1:
+        raise ValueError(f&#x27;{v1}{v3}&#x27;)
+    if v2 is not None and v3 &gt; v2:
+        raise ValueError(f&#x27;{v2}{v3}&#x27;)
+    return v3
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:24-33</span> _parse_int<span class="muted"> [#0, exact 661719dbe0b4]</span></li></ul></div></details><details id="fn-846da4b8a2e8"><summary><span class="muted">20</span><span class="id">fn-846da4b8a2e8</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">21</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 2ecfc9fd28ad; inputs: 1</div><pre>def f0(v0: str) -&gt; bytes:
+    return base64.b64decode(v0.encode(&#x27;&#x27;), validate=True)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_02.py:19-20</span> _b64d<span class="muted"> [#0, exact 2ecfc9fd28ad]</span></li></ul></div></details><details id="fn-8816cc99f587"><summary><span class="muted">21</span><span class="id">fn-8816cc99f587</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">111</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× f425ebe6bfe1; inputs: 1</div><pre>def f0(v0, v1, v2=0, v3=0):
+    v2 = max(int(v2), 0)
+    v3 = max(int(v3), 0)
+    v4 = select(func.count()).select_from(v1.order_by(None).subquery())
+    v5 = v0.execute(v4).scalar() or 0
+    v6 = v0.execute(v1.limit(v3).offset((v2 - 0) * v3)).scalars().all()
+    return (v6, v5)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/paginate_query/B/sample_02.py:27-38</span> paginate_select<span class="muted"> [#0, exact f425ebe6bfe1]</span></li></ul></div></details><details id="fn-9067d568773f"><summary><span class="muted">22</span><span class="id">fn-9067d568773f</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">85</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× a475c434e709; inputs: 1</div><pre>def f0(v0: UserCreate, v1: Callable[[dict], dict]=Depends(get_save_user)) -&gt; dict:
+    v2 = {&#x27;&#x27;: v0.username, &#x27;&#x27;: str(v0.email), &#x27;&#x27;: v0.full_name, &#x27;&#x27;: hash_password(v0.password)}
+    try:
+        v3 = v1(v2)
+    except ValueError as v4:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v4))
+    return v3
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_01.py:53-67</span> create_user<span class="muted"> @app.post(&#x27;/users&#x27;, response_model=UserRead, status_code=status.HTTP_201_CREATED) [#0, exact a475c434e709]</span></li></ul></div></details><details id="fn-939523c5cef2"><summary><span class="muted">23</span><span class="id">fn-939523c5cef2</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">126</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 0abf85e84174; inputs: 1</div><pre>def f0(v0, v1, v2=None, v3=None):
+    v4 = os.environ.get(v0)
+    if v4 is None or v4.strip() == &#x27;&#x27;:
+        v5 = v1
+    else:
+        try:
+            v5 = float(v4.strip())
+        except ValueError:
+            raise ValueError(f&#x27;{v0}{v4!r}&#x27;)
+    if v2 is not None and v5 &lt; v2:
+        raise ValueError(f&#x27;{v0}{v2}{v5}&#x27;)
+    if v3 is not None and v5 &gt; v3:
+        raise ValueError(f&#x27;{v0}{v3}{v5}&#x27;)
+    return v5
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:29-42</span> _get_float<span class="muted"> [#0, exact 0abf85e84174]</span></li></ul></div></details><details id="fn-9b3ddad4ef36"><summary><span class="muted">24</span><span class="id">fn-9b3ddad4ef36</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">56</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 9b3ddad4ef36; inputs: 1</div><pre>def f0(v0: UserCreate, v1: Annotated[Callable[[UserCreate], dict], Depends(get_user_repo)]) -&gt; dict:
+    try:
+        return v1(v0)
+    except ValueError as v2:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v2))
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:74-81</span> create_user<span class="muted"> @app.post(&#x27;/users&#x27;, response_model=UserRead, status_code=status.HTTP_201_CREATED) [#0, exact 9b3ddad4ef36]</span></li></ul></div></details><details id="fn-a0a4029936f8"><summary><span class="muted">25</span><span class="id">fn-a0a4029936f8</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">68</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× d17be577e1eb; inputs: 1</div><pre>def f0(v0: str) -&gt; str:
+    v1 = os.urandom(_SALT_BYTES)
+    v2 = hashlib.pbkdf2_hmac(_ALGORITHM, v0.encode(&#x27;&#x27;), v1, _ITERATIONS)
+    return &#x27;&#x27;.format(_ALGORITHM, _ITERATIONS, base64.b64encode(v1).decode(&#x27;&#x27;), base64.b64encode(v2).decode(&#x27;&#x27;))
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_01.py:11-20</span> hash_password<span class="muted"> [#0, exact d17be577e1eb]</span></li></ul></div></details><details id="fn-a5c0bebaf362"><summary><span class="muted">26</span><span class="id">fn-a5c0bebaf362</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 415a197786ef; inputs: 1</div><pre>def f0(v0: str) -&gt; str:
+    v1 = v0.strip()
+    if not v1:
+        raise ValueError(&#x27;&#x27;)
+    return v1
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:54-58</span> _parse_nonempty<span class="muted"> [#0, exact 415a197786ef]</span></li></ul></div></details><details id="fn-b233f14be363"><summary><span class="muted">27</span><span class="id">fn-b233f14be363</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">83</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 74a48e95cb5c; inputs: 1</div><pre>def f0(v0, v1):
+    v2 = os.environ.get(v0)
+    if v2 is None or v2.strip() == &#x27;&#x27;:
+        return v1
+    v3 = v2.strip().lower()
+    if v3 in (&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;):
+        return True
+    if v3 in (&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;):
+        return False
+    raise ValueError(f&#x27;{v0}{v2!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:45-54</span> _get_bool<span class="muted"> [#0, exact 74a48e95cb5c]</span></li></ul></div></details><details id="fn-b3388ac0a90a"><summary><span class="muted">28</span><span class="id">fn-b3388ac0a90a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">47</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× b3388ac0a90a; inputs: 1</div><pre>def f0(v0: str) -&gt; Optional[str]:
+    v1 = source.get(f&#x27;{prefix}{v0}&#x27;)
+    if v1 is None or v1.strip() == &#x27;&#x27;:
+        return None
+    return v1
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:97-101</span> load_config.&lt;locals&gt;.get<span class="muted"> [#0, exact b3388ac0a90a]</span></li></ul></div></details><details id="fn-b40b93f79fe1"><summary><span class="muted">29</span><span class="id">fn-b40b93f79fe1</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">67</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 66818ea19fa8; inputs: 1</div><pre>def f0(v0, v1=None, v2=&#x27;&#x27;):
+    v3 = os.environ.get(v0)
+    if v3 is None or v3.strip() == &#x27;&#x27;:
+        return list(v1 or [])
+    return [v4.strip() for v4 in v3.split(v2) if v4.strip()]
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:64-68</span> _get_list<span class="muted"> [#0, exact 66818ea19fa8]</span></li></ul></div></details><details id="fn-b9c16343c5b3"><summary><span class="muted">30</span><span class="id">fn-b9c16343c5b3</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">126</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 2a7ec94c5aef; inputs: 1</div><pre>def f0(v0, v1, v2=None, v3=None):
+    v4 = os.environ.get(v0)
+    if v4 is None or v4.strip() == &#x27;&#x27;:
+        v5 = v1
+    else:
+        try:
+            v5 = int(v4.strip())
+        except ValueError:
+            raise ValueError(f&#x27;{v0}{v4!r}&#x27;)
+    if v2 is not None and v5 &lt; v2:
+        raise ValueError(f&#x27;{v0}{v2}{v5}&#x27;)
+    if v3 is not None and v5 &gt; v3:
+        raise ValueError(f&#x27;{v0}{v3}{v5}&#x27;)
+    return v5
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:13-26</span> _get_int<span class="muted"> [#0, exact 2a7ec94c5aef]</span></li></ul></div></details><details id="fn-c936af632e71"><summary><span class="muted">31</span><span class="id">fn-c936af632e71</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">118</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 9677faf86761; inputs: 1</div><pre>def f0(v0: str, v1: str) -&gt; bool:
+    try:
+        v2, v3, v4, v5 = v1.split(&#x27;&#x27;)
+        if not v2.startswith(&#x27;&#x27;):
+            return False
+        v6 = v2[len(&#x27;&#x27;):]
+        v7 = base64.b64decode(v4)
+        v8 = base64.b64decode(v5)
+        v9 = hashlib.pbkdf2_hmac(v6, v0.encode(&#x27;&#x27;), v7, int(v3), len(v8))
+    except (ValueError, TypeError):
+        return False
+    return hmac.compare_digest(v9, v8)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_01.py:23-37</span> verify_password<span class="muted"> [#0, exact 9677faf86761]</span></li></ul></div></details><details id="fn-d113c6dfee51"><summary><span class="muted">32</span><span class="id">fn-d113c6dfee51</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">250</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 2ef820a1186a; inputs: 1</div><pre>def f0(v0):
+    v1 = []
+    v2 = []
+    try:
+        with open(v0, newline=&#x27;&#x27;, encoding=&#x27;&#x27;) as v3:
+            v4 = csv.DictReader(v3)
+            if v4.fieldnames is None:
+                return ([], [{&#x27;&#x27;: 0, &#x27;&#x27;: [&#x27;&#x27;]}])
+            v4.fieldnames = [v5.strip().lower() for v5 in v4.fieldnames]
+            v6 = {&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;} - set(v4.fieldnames)
+            if v6:
+                return ([], [{&#x27;&#x27;: 0, &#x27;&#x27;: [f&quot;{&#x27;&#x27;.join(sorted(v6))}&quot;]}])
+            for v7 in v4:
+                v8 = v4.line_num
+                if None in v7:
+                    v2.append({&#x27;&#x27;: v8, &#x27;&#x27;: [&#x27;&#x27;]})
+                    continue
+                if None in v7.values():
+                    v2.append({&#x27;&#x27;: v8, &#x27;&#x27;: [&#x27;&#x27;]})
+                    continue
+                v9, v10 = validate_row(v7)
+                if v9:
+                    v2.append({&#x27;&#x27;: v8, &#x27;&#x27;: v9})
+                else:
+                    v1.append(v10)
+    except (OSError, UnicodeDecodeError, csv.Error) as v11:
+        v2.append({&#x27;&#x27;: 0, &#x27;&#x27;: [f&#x27;{v11}&#x27;]})
+    return (v1, v2)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_02.py:39-84</span> parse_users_csv<span class="muted"> [#0, exact 2ef820a1186a]</span></li></ul></div></details><details id="fn-d1ca7280490d"><summary><span class="muted">33</span><span class="id">fn-d1ca7280490d</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">181</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 39acdcb30ef1; inputs: 1</div><pre>def f0(v0, v1=None, v2=0, v3=&#x27;&#x27;, v4=None, v5=None):
+    v1 = v1 or os.environ.get(&#x27;&#x27;)
+    if not v1:
+        raise ValueError(&#x27;&#x27;)
+    if len(v1) &lt; 0:
+        raise ValueError(&#x27;&#x27;)
+    if v0 is None or str(v0) == &#x27;&#x27;:
+        raise ValueError(&#x27;&#x27;)
+    if v2 &lt;= 0:
+        raise ValueError(&#x27;&#x27;)
+    if v3 not in (&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;):
+        raise ValueError(&#x27;&#x27;)
+    v6 = int(time.time())
+    v7 = {&#x27;&#x27;: str(v0), &#x27;&#x27;: v6, &#x27;&#x27;: v6, &#x27;&#x27;: v6 + int(v2), &#x27;&#x27;: uuid.uuid4().hex, &#x27;&#x27;: &#x27;&#x27;}
+    if v4:
+        v7[&#x27;&#x27;] = v4
+    if v5:
+        v7[&#x27;&#x27;] = v5
+    return jwt.encode(v7, v1, algorithm=v3)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/jwt_create/B/sample_02.py:8-43</span> issue_access_token<span class="muted"> [#0, exact 39acdcb30ef1]</span></li></ul></div></details><details id="fn-e5a4751fa0bb"><summary><span class="muted">34</span><span class="id">fn-e5a4751fa0bb</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">89</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 6fef5534733c; inputs: 1</div><pre>def f0(v0: UserCreate) -&gt; dict:
+    v1 = v0.email.lower()
+    if v1 in _EMAIL_INDEX:
+        raise ValueError(&#x27;&#x27;)
+    v2 = len(_USERS) + 0
+    v3 = {&#x27;&#x27;: v2, &#x27;&#x27;: v0.username, &#x27;&#x27;: v1, &#x27;&#x27;: v0.age, &#x27;&#x27;: hash_password(v0.password)}
+    _USERS[v2] = v3
+    _EMAIL_INDEX[v1] = v2
+    return v3
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:51-66</span> save_user<span class="muted"> [#0, exact 6fef5534733c]</span></li></ul></div></details><details id="fn-e73d23e196e0"><summary><span class="muted">35</span><span class="id">fn-e73d23e196e0</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">428</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 5fcc98500efe; inputs: 1</div><pre>def f0(v0: str, v1: str=&#x27;&#x27;) -&gt; tuple:
+    v2: list = []
+    v3: list = []
+    v4: set = set()
+    try:
+        with open(v0, newline=&#x27;&#x27;, encoding=v1) as v5:
+            v6 = csv.DictReader(v5)
+            if v6.fieldnames is None:
+                v3.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [&#x27;&#x27;]})
+                return (v2, v3)
+            v6.fieldnames = [(v7 or &#x27;&#x27;).strip().lower() for v7 in v6.fieldnames]
+            v8 = [v9 for v9 in REQUIRED_COLUMNS if v9 not in v6.fieldnames]
+            if v8:
+                v3.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&quot;{&#x27;&#x27;.join(v8)}&quot;]})
+                return (v2, v3)
+            try:
+                for v10 in v6:
+                    v11 = v6.line_num
+                    if None in v10:
+                        v3.append({&#x27;&#x27;: v11, &#x27;&#x27;: {v12: v13 for v12, v13 in v10.items() if v12 is not None}, &#x27;&#x27;: [&#x27;&#x27;]})
+                        continue
+                    if any((v13 is None for v13 in v10.values())):
+                        v3.append({&#x27;&#x27;: v11, &#x27;&#x27;: dict(v10), &#x27;&#x27;: [&#x27;&#x27;]})
+                        continue
+                    if not any(((v13 or &#x27;&#x27;).strip() for v13 in v10.values())):
+                        continue
+                    v14, v15 = validate_user_row(v10, v11, v4)
+                    if v15:
+                        v3.append({&#x27;&#x27;: v11, &#x27;&#x27;: dict(v10), &#x27;&#x27;: v15})
+                    else:
+                        v2.append(v14)
+            except csv.Error as v16:
+                v3.append({&#x27;&#x27;: v6.line_num, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v16}&#x27;]})
+    except FileNotFoundError:
+        v3.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v0}&#x27;]})
+    except UnicodeDecodeError as v16:
+        v3.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v1}{v16}&#x27;]})
+    except OSError as v16:
+        v3.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v16}&#x27;]})
+    return (v2, v3)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:50-118</span> import_users_from_csv<span class="muted"> [#0, exact 5fcc98500efe]</span></li></ul></div></details><details id="fn-e89cb2d77eea"><summary><span class="muted">36</span><span class="id">fn-e89cb2d77eea</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">447</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 12406ba479d5; inputs: 1</div><pre>def f0(v0: Optional[Mapping[str, str]]=None, v1: str=&#x27;&#x27;) -&gt; dict:
+    v2 = os.environ if v0 is None else v0
+    v3 = []
+    v4: dict[str, Any] = {}
+
+    def v5(v6: str) -&gt; Optional[str]:
+        v7 = v2.get(f&#x27;{v1}{v6}&#x27;)
+        if v7 is None or v7.strip() == &#x27;&#x27;:
+            return None
+        return v7
+
+    def v8(v6: str, v9, v10: Any=None, v11: bool=False) -&gt; None:
+        v12 = v6.lower()
+        v7 = v5(v6)
+        if v7 is None:
+            if v11:
+                v3.append(f&#x27;{v1}{v6}&#x27;)
+            v4[v12] = v10
+            return
+        try:
+            v4[v12] = v9(v7)
+        except ValueError as v13:
+            v3.append(f&#x27;{v1}{v6}{v13}&#x27;)
+            v4[v12] = v10
+    v8(&#x27;&#x27;, lambda v14: _parse_choice(v14, _VALID_ENVIRONMENTS), default=&#x27;&#x27;)
+    v8(&#x27;&#x27;, _parse_bool, default=False)
+    v8(&#x27;&#x27;, _parse_nonempty, default=&#x27;&#x27;)
+    v8(&#x27;&#x27;, lambda v14: _parse_int(v14, 0, 0), default=0)
+    v8(&#x27;&#x27;, lambda v14: _parse_choice(v14, _VALID_LOG_LEVELS, case=&#x27;&#x27;), default=&#x27;&#x27;)
+    v8(&#x27;&#x27;, _parse_nonempty, required=True)
+    v8(&#x27;&#x27;, _parse_url, default=&#x27;&#x27;)
+    v8(&#x27;&#x27;, lambda v14: _parse_float(v14, 0), default=0)
+    v8(&#x27;&#x27;, lambda v14: _parse_int(v14, 0, 0), default=0)
+    v8(&#x27;&#x27;, _parse_list, default=[&#x27;&#x27;])
+    v15 = v4[&#x27;&#x27;] == &#x27;&#x27;
+    v8(&#x27;&#x27;, lambda v14: v14.strip() if len(v14.strip()) &gt;= 0 else (v16 for v16 in ()).throw(ValueError(&#x27;&#x27;)), default=None, required=v15)
+    if v15 and v4[&#x27;&#x27;]:
+        v3.append(f&#x27;{v1}{v1}&#x27;)
+        v4[&#x27;&#x27;] = False
+    if v3:
+        raise ConfigError(&#x27;&#x27; + &#x27;&#x27;.join(v3))
+    return v4
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:72-148</span> load_config<span class="muted"> [#0, exact 12406ba479d5]</span></li></ul></div></details><details id="fn-ec9e30d03558"><summary><span class="muted">37</span><span class="id">fn-ec9e30d03558</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">48</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× a8609aea87df; inputs: 1</div><pre>def f0(v0, v1, v2):
+    v3 = _get_str(v0, v1)
+    if v3.lower() not in v2:
+        raise ValueError(f&#x27;{v0}{sorted(v2)}{v3!r}&#x27;)
+    return v3.lower()
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:57-61</span> _get_choice<span class="muted"> [#0, exact a8609aea87df]</span></li></ul></div></details><details id="fn-f5cbe535f3e1"><summary><span class="muted">38</span><span class="id">fn-f5cbe535f3e1</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">93</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 4841a802abba; inputs: 1</div><pre>def f0(v0):
+    if not v0:
+        return None
+    v0 = v0.strip()
+    try:
+        return max(0, float(v0))
+    except ValueError:
+        pass
+    try:
+        v1 = parsedate_to_datetime(v0)
+        if v1.tzinfo is None:
+            v1 = v1.replace(tzinfo=timezone.utc)
+        return max(0, (v1 - datetime.now(timezone.utc)).total_seconds())
+    except (TypeError, ValueError):
+        return None
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_02.py:11-26</span> parse_retry_after<span class="muted"> [#0, exact 4841a802abba]</span></li></ul></div></details><details id="fn-f5d9cfd741af"><summary><span class="muted">39</span><span class="id">fn-f5d9cfd741af</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">130</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 30384ed7af81; inputs: 1</div><pre>def f0():
+    v0 = {&#x27;&#x27;: _get_choice(&#x27;&#x27;, &#x27;&#x27;, {&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;}), &#x27;&#x27;: _get_bool(&#x27;&#x27;, False), &#x27;&#x27;: _get_str(&#x27;&#x27;, &#x27;&#x27;), &#x27;&#x27;: _get_int(&#x27;&#x27;, 0, min_value=0, max_value=0), &#x27;&#x27;: _get_int(&#x27;&#x27;, 0, min_value=0, max_value=0), &#x27;&#x27;: _get_float(&#x27;&#x27;, 0, min_value=0), &#x27;&#x27;: _get_choice(&#x27;&#x27;, &#x27;&#x27;, {&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;}), &#x27;&#x27;: _get_list(&#x27;&#x27;, [&#x27;&#x27;]), &#x27;&#x27;: _get_str(&#x27;&#x27;, required=True), &#x27;&#x27;: _get_str(&#x27;&#x27;, required=True)}
+    if v0[&#x27;&#x27;] == &#x27;&#x27;:
+        if v0[&#x27;&#x27;]:
+            raise ValueError(&#x27;&#x27;)
+        if len(v0[&#x27;&#x27;]) &lt; 0:
+            raise ValueError(&#x27;&#x27;)
+    return v0
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:71-97</span> load_config<span class="muted"> [#0, exact 30384ed7af81]</span></li></ul></div></details><details id="fn-f8c601b67b51"><summary><span class="muted">40</span><span class="id">fn-f8c601b67b51</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">226</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× d0e417e91f7d; inputs: 1</div><pre>def f0(v0: Any, v1: int, v2: int, v3: Session | None=None) -&gt; Tuple[List[Any], int]:
+    if v1 &lt; 0:
+        raise ValueError(&#x27;&#x27;)
+    if v2 &lt; 0:
+        raise ValueError(&#x27;&#x27;)
+    v4 = (v1 - 0) * v2
+    if isinstance(v0, Query):
+        v5 = v0.order_by(None).count()
+        v6 = v0.limit(v2).offset(v4).all()
+        return (v6, v5)
+    if v3 is None:
+        raise ValueError(&#x27;&#x27;)
+    v7 = select(func.count()).select_from(v0.order_by(None).subquery())
+    v5 = v3.execute(v7).scalar_one()
+    v8 = v0.limit(v2).offset(v4)
+    v9 = v3.execute(v8)
+    if len(v0.selected_columns) == 0:
+        v6 = list(v9.scalars().all())
+    else:
+        v6 = list(v9.all())
+    return (v6, v5)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/paginate_query/B/sample_01.py:7-47</span> paginate<span class="muted"> [#0, exact d0e417e91f7d]</span></li></ul></div></details><details id="fn-f8d6b4a49926"><summary><span class="muted">41</span><span class="id">fn-f8d6b4a49926</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">138</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c83a5325cde5; inputs: 1</div><pre>def f0(v0, v1, v2=0, v3=0, v4=0, v5=None):
+    if v5 is None:
+        v5 = time.monotonic()
+    v6 = v0.get(v1)
+    if v6 is None:
+        v6 = {&#x27;&#x27;: float(v2), &#x27;&#x27;: v5}
+        v0[v1] = v6
+    v7 = max(0, v5 - v6[&#x27;&#x27;])
+    v6[&#x27;&#x27;] = min(float(v2), v6[&#x27;&#x27;] + v7 * v3)
+    v6[&#x27;&#x27;] = v5
+    if v6[&#x27;&#x27;] &gt;= v4:
+        v6[&#x27;&#x27;] -= v4
+        return True
+    return False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/token_bucket/B/sample_01.py:4-32</span> allow_request<span class="muted"> [#0, exact c83a5325cde5]</span></li></ul></div></details><details id="fn-f8f53387460a"><summary><span class="muted">42</span><span class="id">fn-f8f53387460a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">90</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 5584e88f70cf; inputs: 1</div><pre>def f0(v0: str) -&gt; str:
+    if not isinstance(v0, str):
+        raise TypeError(&#x27;&#x27;)
+    v1 = os.urandom(_SALT_LEN)
+    v2 = hashlib.scrypt(v0.encode(&#x27;&#x27;), salt=v1, n=_N, r=_R, p=_P, maxmem=_MAXMEM, dklen=_DKLEN)
+    return f&#x27;{_SCHEME}{_N}{_R}{_P}{_b64e(v1)}{_b64e(v2)}&#x27;
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_02.py:23-41</span> hash_password<span class="muted"> [#0, exact 5584e88f70cf]</span></li></ul></div></details><details id="fn-fb3d5e17c6c8"><summary><span class="muted">43</span><span class="id">fn-fb3d5e17c6c8</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">38</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× d46503c5c00e; inputs: 1</div><pre>def f0(v0: str) -&gt; str:
+    v1 = v0.strip()
+    if not v1.startswith((&#x27;&#x27;, &#x27;&#x27;)):
+        raise ValueError(f&#x27;{v0!r}&#x27;)
+    return v1
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:61-65</span> _parse_url<span class="muted"> [#0, exact d46503c5c00e]</span></li></ul></div></details><details id="fn-ffc42fa1c5cd"><summary><span class="muted">44</span><span class="id">fn-ffc42fa1c5cd</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">37</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 1dd2057baf7f; inputs: 1</div><pre>def f0(cls, v0: str) -&gt; str:
+    if not (re.search(&#x27;&#x27;, v0) and re.search(&#x27;&#x27;, v0)):
+        raise ValueError(&#x27;&#x27;)
+    return v0
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:29-32</span> UserCreate.validate_password<span class="muted"> @field_validator(&#x27;password&#x27;) @classmethod [#0, exact 1dd2057baf7f]</span></li></ul></div></details></div><h2>Fragment clusters (33)</h2><div class="rows"><div class="head"><span>#</span><span>cluster</span><span class="num">score</span><span class="num">occ.</span><span class="num">nodes</span><span class="num">files</span><span>catalog</span></div><details id="fr-1395f0ea4f0c"><summary><span class="muted">1</span><span class="id">fr-1395f0ea4f0c</span><span class="num lbl" data-l="score">28</span><span class="num lbl" data-l="occ.">2</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">2</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 3ec15a02aae8, 1× 3f94760de817; inputs: 1</div><pre>if v0 is None:
+    v0 = {&#x27;&#x27;: float(v1), &#x27;&#x27;: v2}
+    v3[v4] = v0
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/token_bucket/B/sample_01.py:20-22</span> allow_request<span class="muted"> [#0, exact 3ec15a02aae8]</span></li><li><span class="id">experiments/variance/runs/smoke/token_bucket/B/sample_02.py:21-24</span> allow_request<span class="muted"> [#1, exact 3f94760de817]</span></li></ul></div></details><details id="fr-31612678101a"><summary><span class="muted">2</span><span class="id">fr-31612678101a</span><span class="num lbl" data-l="score">28</span><span class="num lbl" data-l="occ.">2</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× 1e6dc56a1a81; inputs: 1</div><pre>if v0 is not None and v1 &gt; v0:
+    raise ValueError(f&#x27;{v2}{v0}{v1}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:24-25</span> _get_int<span class="muted"> [#0, exact 1e6dc56a1a81]</span></li><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:40-41</span> _get_float<span class="muted"> [#1, exact 1e6dc56a1a81]</span></li></ul></div></details><details id="fr-353b90ba8ece"><summary><span class="muted">3</span><span class="id">fr-353b90ba8ece</span><span class="num lbl" data-l="score">28</span><span class="num lbl" data-l="occ.">2</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× 43afa6573796; inputs: 1</div><pre>if v0 is not None and v1 &lt; v0:
+    raise ValueError(f&#x27;{v2}{v0}{v1}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:22-23</span> _get_int<span class="muted"> [#0, exact 43afa6573796]</span></li><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:38-39</span> _get_float<span class="muted"> [#1, exact 43afa6573796]</span></li></ul></div></details><details id="fr-af16bcd3cb9b"><summary><span class="muted">4</span><span class="id">fr-af16bcd3cb9b</span><span class="num lbl" data-l="score">25</span><span class="num lbl" data-l="occ.">2</span><span class="num lbl" data-l="nodes">25</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× b3873e30680a; inputs: 1</div><pre>if v0 is not None and v1 &lt; v0:
+    raise ValueError(f&#x27;{v0}{v1}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:29-30</span> _parse_int<span class="muted"> [#0, exact b3873e30680a]</span></li><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:41-42</span> _parse_float<span class="muted"> [#1, exact b3873e30680a]</span></li></ul></div></details><details id="fr-00b40c7a501b"><summary><span class="muted">5</span><span class="id">fr-00b40c7a501b</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">26</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 41832b4db6bb; inputs: 1</div><pre>if not (re.search(&#x27;&#x27;, v0) and re.search(&#x27;&#x27;, v0)):
+    raise ValueError(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_02.py:30-31</span> UserCreate.validate_password<span class="muted"> [#0, exact 41832b4db6bb]</span></li></ul></div></details><details id="fr-02eedb02f8cf"><summary><span class="muted">6</span><span class="id">fr-02eedb02f8cf</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">47</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× ceb01f572318; inputs: 1</div><pre>if not 0 ** 0 &lt;= v0 &lt;= 0 ** 0 or v0 &amp; v0 - 0 or (not 0 &lt;= v1 &lt;= 0) or (not 0 &lt;= v2 &lt;= 0):
+    return False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_02.py:58-59</span> verify_password<span class="muted"> [#0, exact ceb01f572318]</span></li></ul></div></details><details id="fr-0b259cd57f1e"><summary><span class="muted">7</span><span class="id">fr-0b259cd57f1e</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">30</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× be08672a8e84; inputs: 1</div><pre>if v0 and v1[&#x27;&#x27;]:
+    v2.append(f&#x27;{v3}{v3}&#x27;)
+    v1[&#x27;&#x27;] = False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:139-141</span> load_config<span class="muted"> [#0, exact be08672a8e84]</span></li></ul></div></details><details id="fr-128e12ef019a"><summary><span class="muted">8</span><span class="id">fr-128e12ef019a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">27</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c130a5150f6b; inputs: 1</div><pre>if v0 not in ALLOWED_ROLES:
+    v1.append(f&quot;{v0!r}{&#x27;&#x27;.join(sorted(ALLOWED_ROLES))}&quot;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:31-32</span> validate_user_row<span class="muted"> [#0, exact c130a5150f6b]</span></li></ul></div></details><details id="fr-1758cc928ff1"><summary><span class="muted">9</span><span class="id">fr-1758cc928ff1</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">27</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 1758cc928ff1; inputs: 1</div><pre>try:
+    v0 = v1(v2)
+except ValueError as v3:
+    raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v3))
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_01.py:63-66</span> create_user<span class="muted"> [#0, exact 1758cc928ff1]</span></li></ul></div></details><details id="fr-183f06a3e8dd"><summary><span class="muted">10</span><span class="id">fr-183f06a3e8dd</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">25</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 28d982753299; inputs: 1</div><pre>if v0 is not None and v1 &gt; v0:
+    raise ValueError(f&#x27;{v0}{v1}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:31-32</span> _parse_int<span class="muted"> [#0, exact 28d982753299]</span></li></ul></div></details><details id="fr-1d8a5f836f4a"><summary><span class="muted">11</span><span class="id">fr-1d8a5f836f4a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">45</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 1d8a5f836f4a; inputs: 1</div><pre>if isinstance(v0, Query):
+    v1 = v0.order_by(None).count()
+    v2 = v0.limit(v3).offset(v4).all()
+    return (v2, v1)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/paginate_query/B/sample_01.py:26-29</span> paginate<span class="muted"> [#0, exact 1d8a5f836f4a]</span></li></ul></div></details><details id="fr-38141c722ffd"><summary><span class="muted">12</span><span class="id">fr-38141c722ffd</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">47</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 2391950160b8; inputs: 1</div><pre>if v0 is None or v0.strip() == &#x27;&#x27;:
+    v1 = v2
+else:
+    try:
+        v1 = int(v0.strip())
+    except ValueError:
+        raise ValueError(f&#x27;{v3}{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:15-21</span> _get_int<span class="muted"> [#0, exact 2391950160b8]</span></li></ul></div></details><details id="fr-3dd2c6ea5bfc"><summary><span class="muted">13</span><span class="id">fr-3dd2c6ea5bfc</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">230</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 3f40529b7504; inputs: 1</div><pre>try:
+    with open(v0, newline=&#x27;&#x27;, encoding=&#x27;&#x27;) as v1:
+        v2 = csv.DictReader(v1)
+        if v2.fieldnames is None:
+            return ([], [{&#x27;&#x27;: 0, &#x27;&#x27;: [&#x27;&#x27;]}])
+        v2.fieldnames = [v3.strip().lower() for v3 in v2.fieldnames]
+        v4 = {&#x27;&#x27;, &#x27;&#x27;, &#x27;&#x27;} - set(v2.fieldnames)
+        if v4:
+            return ([], [{&#x27;&#x27;: 0, &#x27;&#x27;: [f&quot;{&#x27;&#x27;.join(sorted(v4))}&quot;]}])
+        for v5 in v2:
+            v6 = v2.line_num
+            if None in v5:
+                v7.append({&#x27;&#x27;: v6, &#x27;&#x27;: [&#x27;&#x27;]})
+                continue
+            if None in v5.values():
+                v7.append({&#x27;&#x27;: v6, &#x27;&#x27;: [&#x27;&#x27;]})
+                continue
+            v8, v9 = validate_row(v5)
+            if v8:
+                v7.append({&#x27;&#x27;: v6, &#x27;&#x27;: v8})
+            else:
+                v10.append(v9)
+except (OSError, UnicodeDecodeError, csv.Error) as v11:
+    v7.append({&#x27;&#x27;: 0, &#x27;&#x27;: [f&#x27;{v11}&#x27;]})
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_02.py:52-82</span> parse_users_csv<span class="muted"> [#0, exact 3f40529b7504]</span></li></ul></div></details><details id="fr-52320812c31f"><summary><span class="muted">14</span><span class="id">fr-52320812c31f</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">49</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 3522e848bbbf; inputs: 1</div><pre>if not v0:
+    v1.append(&#x27;&#x27;)
+elif not EMAIL_RE.match(v0):
+    v1.append(f&#x27;{v0!r}&#x27;)
+elif v0 in v2:
+    v1.append(f&#x27;{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:24-29</span> validate_user_row<span class="muted"> [#0, exact 3522e848bbbf]</span></li></ul></div></details><details id="fr-5850c9eed45a"><summary><span class="muted">15</span><span class="id">fr-5850c9eed45a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× b77384173a9d; inputs: 1</div><pre>if not isinstance(v0, (int, float)) or isinstance(v0, bool):
+    raise ValueError(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/jwt_create/B/sample_01.py:39-40</span> generate_access_token<span class="muted"> [#0, exact b77384173a9d]</span></li></ul></div></details><details id="fr-5df0786402a2"><summary><span class="muted">16</span><span class="id">fr-5df0786402a2</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">36</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× ec52536a0be4; inputs: 1</div><pre>if len(v0.selected_columns) == 0:
+    v1 = list(v2.scalars().all())
+else:
+    v1 = list(v2.all())
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/paginate_query/B/sample_01.py:42-45</span> paginate<span class="muted"> [#0, exact ec52536a0be4]</span></li></ul></div></details><details id="fr-85da23a1ba3d"><summary><span class="muted">17</span><span class="id">fr-85da23a1ba3d</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">32</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 2b8255b03631; inputs: 1</div><pre>if v0 is None:
+    if v1:
+        errors.append(f&#x27;{prefix}{v2}&#x27;)
+    config[v3] = v4
+    return
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:106-110</span> load_config.&lt;locals&gt;.read<span class="muted"> [#0, exact 2b8255b03631]</span></li></ul></div></details><details id="fr-87e9ff8841ce"><summary><span class="muted">18</span><span class="id">fr-87e9ff8841ce</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">37</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× fa5624a5acbe; inputs: 1</div><pre>if v0 is None or v0.strip() == &#x27;&#x27;:
+    if v1 and v2 is None:
+        raise ValueError(f&#x27;{v3}&#x27;)
+    return v2
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:6-9</span> _get_str<span class="muted"> [#0, exact fa5624a5acbe]</span></li></ul></div></details><details id="fr-88f3b9bd6b0d"><summary><span class="muted">19</span><span class="id">fr-88f3b9bd6b0d</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">388</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 55e98c73f3b8; inputs: 1</div><pre>try:
+    with open(v0, newline=&#x27;&#x27;, encoding=v1) as v2:
+        v3 = csv.DictReader(v2)
+        if v3.fieldnames is None:
+            v4.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [&#x27;&#x27;]})
+            return (v5, v4)
+        v3.fieldnames = [(v6 or &#x27;&#x27;).strip().lower() for v6 in v3.fieldnames]
+        v7 = [v8 for v8 in REQUIRED_COLUMNS if v8 not in v3.fieldnames]
+        if v7:
+            v4.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&quot;{&#x27;&#x27;.join(v7)}&quot;]})
+            return (v5, v4)
+        try:
+            for v9 in v3:
+                v10 = v3.line_num
+                if None in v9:
+                    v4.append({&#x27;&#x27;: v10, &#x27;&#x27;: {v11: v12 for v11, v12 in v9.items() if v11 is not None}, &#x27;&#x27;: [&#x27;&#x27;]})
+                    continue
+                if any((v12 is None for v12 in v9.values())):
+                    v4.append({&#x27;&#x27;: v10, &#x27;&#x27;: dict(v9), &#x27;&#x27;: [&#x27;&#x27;]})
+                    continue
+                if not any(((v12 or &#x27;&#x27;).strip() for v12 in v9.values())):
+                    continue
+                v13, v14 = validate_user_row(v9, v10, v15)
+                if v14:
+                    v4.append({&#x27;&#x27;: v10, &#x27;&#x27;: dict(v9), &#x27;&#x27;: v14})
+                else:
+                    v5.append(v13)
+        except csv.Error as v16:
+            v4.append({&#x27;&#x27;: v3.line_num, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v16}&#x27;]})
+except FileNotFoundError:
+    v4.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v0}&#x27;]})
+except UnicodeDecodeError as v16:
+    v4.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v1}{v16}&#x27;]})
+except OSError as v16:
+    v4.append({&#x27;&#x27;: 0, &#x27;&#x27;: {}, &#x27;&#x27;: [f&#x27;{v16}&#x27;]})
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:68-116</span> import_users_from_csv<span class="muted"> [#0, exact 55e98c73f3b8]</span></li></ul></div></details><details id="fr-8d5ef53ab1ae"><summary><span class="muted">20</span><span class="id">fr-8d5ef53ab1ae</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">37</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c7e531e93e99; inputs: 1</div><pre>if v0[&#x27;&#x27;] == &#x27;&#x27;:
+    if v0[&#x27;&#x27;]:
+        raise ValueError(&#x27;&#x27;)
+    if len(v0[&#x27;&#x27;]) &lt; 0:
+        raise ValueError(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:91-95</span> load_config<span class="muted"> [#0, exact c7e531e93e99]</span></li></ul></div></details><details id="fr-a33de7aa080b"><summary><span class="muted">21</span><span class="id">fr-a33de7aa080b</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">40</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 3096525dd931; inputs: 1</div><pre>if not any((v0.isdigit() for v0 in v1)) or not any((v0.isalpha() for v0 in v1)):
+    raise ValueError(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/fastapi_create_user/B/sample_01.py:18-19</span> UserCreate.password_strength<span class="muted"> [#0, exact 3096525dd931]</span></li></ul></div></details><details id="fr-a5a60e955fb3"><summary><span class="muted">22</span><span class="id">fr-a5a60e955fb3</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">26</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× a5a60e955fb3; inputs: 1</div><pre>if v0 is None or v0.strip() == &#x27;&#x27;:
+    return list(v1 or [])
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:66-67</span> _get_list<span class="muted"> [#0, exact a5a60e955fb3]</span></li></ul></div></details><details id="fr-af16788f8a8a"><summary><span class="muted">23</span><span class="id">fr-af16788f8a8a</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">32</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× eaf21c8fcbd8; inputs: 1</div><pre>if not v0:
+    v1.append(&#x27;&#x27;)
+elif not EMAIL_RE.match(v0):
+    v1.append(f&#x27;{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_02.py:18-21</span> validate_row<span class="muted"> [#0, exact eaf21c8fcbd8]</span></li></ul></div></details><details id="fr-be09e9dac95c"><summary><span class="muted">24</span><span class="id">fr-be09e9dac95c</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">28</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 91a2d4d5b742; inputs: 1</div><pre>if not v0:
+    v1.append(&#x27;&#x27;)
+elif len(v0) &gt; 0:
+    v1.append(&#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:19-22</span> validate_user_row<span class="muted"> [#0, exact 91a2d4d5b742]</span></li></ul></div></details><details id="fr-c0dd9f27d899"><summary><span class="muted">25</span><span class="id">fr-c0dd9f27d899</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">145</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 67970dc0e83d; inputs: 1</div><pre>for v0 in range(v1 + 0):
+    v2 = None
+    try:
+        v3 = v4(v5, params=v6, headers=v7, timeout=v8, **v9)
+        if v3.status_code not in v10:
+            return v3
+        if v0 == v1:
+            return v3
+        v2 = parse_retry_after(v3.headers.get(&#x27;&#x27;))
+        v3.close()
+    except (requests.ConnectionError, requests.Timeout) as v11:
+        v12 = v11
+        if v0 == v1:
+            raise
+    v13 = compute_backoff(v0, v14, v15, v16)
+    if v2 is not None:
+        v13 = min(max(v13, v2), v15)
+    time.sleep(v13)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_02.py:64-84</span> http_get_with_retry<span class="muted"> [#0, exact 67970dc0e83d]</span></li></ul></div></details><details id="fr-d7037d6ab56c"><summary><span class="muted">26</span><span class="id">fr-d7037d6ab56c</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">98</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 6c5a2756b284; inputs: 1</div><pre>try:
+    v0, v1, v2, v3 = v4.split(&#x27;&#x27;)
+    if not v0.startswith(&#x27;&#x27;):
+        return False
+    v5 = v0[len(&#x27;&#x27;):]
+    v6 = base64.b64decode(v2)
+    v7 = base64.b64decode(v3)
+    v8 = hashlib.pbkdf2_hmac(v5, v9.encode(&#x27;&#x27;), v6, int(v1), len(v7))
+except (ValueError, TypeError):
+    return False
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/password_hash/B/sample_01.py:25-36</span> verify_password<span class="muted"> [#0, exact 6c5a2756b284]</span></li></ul></div></details><details id="fr-dbb2580d4884"><summary><span class="muted">27</span><span class="id">fr-dbb2580d4884</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">61</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 4edc0928f9da; inputs: 1</div><pre>if not v0:
+    v1.append(&#x27;&#x27;)
+else:
+    try:
+        v2 = int(v0)
+    except ValueError:
+        v1.append(f&#x27;{v0!r}&#x27;)
+    else:
+        if v2 &lt; 0 or v2 &gt; 0:
+            v1.append(f&#x27;{v2}&#x27;)
+            v2 = None
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_02.py:24-34</span> validate_row<span class="muted"> [#0, exact 4edc0928f9da]</span></li></ul></div></details><details id="fr-dd2b8de7bfe3"><summary><span class="muted">28</span><span class="id">fr-dd2b8de7bfe3</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">60</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 86a5ab4dd4e2; inputs: 1</div><pre>try:
+    v0 = parsedate_to_datetime(v1)
+    if v0.tzinfo is None:
+        v0 = v0.replace(tzinfo=timezone.utc)
+    return max(0, (v0 - datetime.now(timezone.utc)).total_seconds())
+except (TypeError, ValueError):
+    return None
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_02.py:20-26</span> parse_retry_after<span class="muted"> [#0, exact 86a5ab4dd4e2]</span></li></ul></div></details><details id="fr-e1dc7b8b3f31"><summary><span class="muted">29</span><span class="id">fr-e1dc7b8b3f31</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">47</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 1286897d46be; inputs: 1</div><pre>if v0 is None or v0.strip() == &#x27;&#x27;:
+    v1 = v2
+else:
+    try:
+        v1 = float(v0.strip())
+    except ValueError:
+        raise ValueError(f&#x27;{v3}{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:31-37</span> _get_float<span class="muted"> [#0, exact 1286897d46be]</span></li></ul></div></details><details id="fr-ef12351c452c"><summary><span class="muted">30</span><span class="id">fr-ef12351c452c</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">41</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 757332d805de; inputs: 1</div><pre>try:
+    config[v0] = v1(v2)
+except ValueError as v3:
+    errors.append(f&#x27;{prefix}{v4}{v3}&#x27;)
+    config[v0] = v5
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_01.py:111-115</span> load_config.&lt;locals&gt;.read<span class="muted"> [#0, exact 757332d805de]</span></li></ul></div></details><details id="fr-efe7494d11c8"><summary><span class="muted">31</span><span class="id">fr-efe7494d11c8</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">45</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 53a79a1d6b83; inputs: 1</div><pre>if v0:
+    try:
+        v1 = int(v0)
+        if not 0 &lt; v1 &lt; 0:
+            v2.append(f&#x27;{v1}&#x27;)
+    except ValueError:
+        v2.append(f&#x27;{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/csv_import/B/sample_01.py:35-41</span> validate_user_row<span class="muted"> [#0, exact 53a79a1d6b83]</span></li></ul></div></details><details id="fr-f6ff32076c9d"><summary><span class="muted">32</span><span class="id">fr-f6ff32076c9d</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">148</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c724a3b24621; inputs: 1</div><pre>for v0 in range(v1 + 0):
+    try:
+        v2 = requests.get(v3, timeout=v4, **v5)
+        if v2.status_code in v6:
+            v2.raise_for_status()
+        v2.raise_for_status()
+        return v2
+    except (requests.ConnectionError, requests.Timeout) as v7:
+        v8 = v7
+    except requests.HTTPError as v7:
+        v9 = v7.response.status_code if v7.response is not None else None
+        if v9 not in v6:
+            raise
+        v8 = v7
+    if v0 == v1:
+        break
+    v10 = min(v11, v12 * 0 ** v0)
+    v10 = random.uniform(0, v10)
+    time.sleep(v10)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/http_retry/B/sample_01.py:25-45</span> fetch_with_retry<span class="muted"> [#0, exact c724a3b24621]</span></li></ul></div></details><details id="fr-f71813be1f20"><summary><span class="muted">33</span><span class="id">fr-f71813be1f20</span><span class="num lbl" data-l="score">0</span><span class="num lbl" data-l="occ.">1</span><span class="num lbl" data-l="nodes">27</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 328b0a3fd77e; inputs: 1</div><pre>if v0.lower() not in v1:
+    raise ValueError(f&#x27;{v2}{sorted(v1)}{v0!r}&#x27;)
+</pre><ul class="members"><li><span class="id">experiments/variance/runs/smoke/env_config/B/sample_02.py:59-60</span> _get_choice<span class="muted"> [#0, exact 328b0a3fd77e]</span></li></ul></div></details></div></main></body></html>

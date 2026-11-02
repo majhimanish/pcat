@@ -1,0 +1,2981 @@
+{
+  "canonical_version": 2,
+  "coverage": {
+    "catalog_patterns": 6,
+    "covered": 0,
+    "covered_percent": 0.0,
+    "functions": 45,
+    "near_covered": 0,
+    "near_covered_percent": 0.0,
+    "patterns": [
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "collections.group_by.dict_of_lists@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "retry.with_exponential_backoff@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.iterative@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "sort.merge_sort.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "text.slugify.ascii@v1"
+      }
+    ]
+  },
+  "fragment_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "3ec15a02aae81c23c6ba82b3d77bf3ee1d1bb7f423133ece6025e3d5976c874d",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "3f94760de817bdb97bd88846bef166e620947a5c1ed7426204071f50a06f0e56",
+          "members": [
+            1
+          ]
+        }
+      ],
+      "id": "fr-1395f0ea4f0c",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 29,
+          "end_lineno": 22,
+          "exact_fingerprint": "3ec15a02aae81c23c6ba82b3d77bf3ee1d1bb7f423133ece6025e3d5976c874d",
+          "file_hash": "77c69dfa5a29a922ddfcfd33296ccd5c2587eade2369a9c93764201d75075389",
+          "index": 0,
+          "input": 5,
+          "lineno": 20,
+          "path": "sample_01.py",
+          "qualname": "allow_request",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 27,
+          "end_lineno": 24,
+          "exact_fingerprint": "3f94760de817bdb97bd88846bef166e620947a5c1ed7426204071f50a06f0e56",
+          "file_hash": "9b26693b055a3d0b1c8fbe6bafb5bf6369268395925f8f793bfe2f29ca9b3d31",
+          "index": 1,
+          "input": 5,
+          "lineno": 21,
+          "path": "sample_02.py",
+          "qualname": "allow_request",
+          "statement": "if"
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 2,
+      "score": 28,
+      "shape_fingerprint": "1395f0ea4f0c15545e2521f3510e69befd0cadbc53cca66e72bafd84ac9a55c6",
+      "shape_text": "if v0 is None:\n    v0 = {'': float(v1), '': v2}\n    v3[v4] = v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "1e6dc56a1a81091118c75d43438893e430fe6d558fafec9ab6bd1c0e455a4344",
+          "members": [
+            0,
+            1
+          ]
+        }
+      ],
+      "id": "fr-31612678101a",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 71,
+          "end_lineno": 25,
+          "exact_fingerprint": "1e6dc56a1a81091118c75d43438893e430fe6d558fafec9ab6bd1c0e455a4344",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 24,
+          "path": "sample_02.py",
+          "qualname": "_get_int",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 71,
+          "end_lineno": 41,
+          "exact_fingerprint": "1e6dc56a1a81091118c75d43438893e430fe6d558fafec9ab6bd1c0e455a4344",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 1,
+          "input": 4,
+          "lineno": 40,
+          "path": "sample_02.py",
+          "qualname": "_get_float",
+          "statement": "if"
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 2,
+      "score": 28,
+      "shape_fingerprint": "31612678101a8e664fc06f55a8d88dcbb36a818cb55ed510d00e0475bb1b3b9f",
+      "shape_text": "if v0 is not None and v1 > v0:\n    raise ValueError(f'{v2}{v0}{v1}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "43afa6573796c80f913ce79a3348a7d1ce0733b2b4a6745d1b799c18bde55cbf",
+          "members": [
+            0,
+            1
+          ]
+        }
+      ],
+      "id": "fr-353b90ba8ece",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 71,
+          "end_lineno": 23,
+          "exact_fingerprint": "43afa6573796c80f913ce79a3348a7d1ce0733b2b4a6745d1b799c18bde55cbf",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 22,
+          "path": "sample_02.py",
+          "qualname": "_get_int",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 71,
+          "end_lineno": 39,
+          "exact_fingerprint": "43afa6573796c80f913ce79a3348a7d1ce0733b2b4a6745d1b799c18bde55cbf",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 1,
+          "input": 4,
+          "lineno": 38,
+          "path": "sample_02.py",
+          "qualname": "_get_float",
+          "statement": "if"
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 2,
+      "score": 28,
+      "shape_fingerprint": "353b90ba8ece6d0a34d86b9aa1143369ad8dfe6635d501bd58bb1f809a58188f",
+      "shape_text": "if v0 is not None and v1 < v0:\n    raise ValueError(f'{v2}{v0}{v1}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "b3873e30680a7ae9f5fea6691500e60352e1214fdfbece749655211df531c1a5",
+          "members": [
+            0,
+            1
+          ]
+        }
+      ],
+      "id": "fr-af16bcd3cb9b",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 62,
+          "end_lineno": 30,
+          "exact_fingerprint": "b3873e30680a7ae9f5fea6691500e60352e1214fdfbece749655211df531c1a5",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "lineno": 29,
+          "path": "sample_01.py",
+          "qualname": "_parse_int",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 62,
+          "end_lineno": 42,
+          "exact_fingerprint": "b3873e30680a7ae9f5fea6691500e60352e1214fdfbece749655211df531c1a5",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 1,
+          "input": 4,
+          "lineno": 41,
+          "path": "sample_01.py",
+          "qualname": "_parse_float",
+          "statement": "if"
+        }
+      ],
+      "node_count": 25,
+      "occurrences": 2,
+      "score": 25,
+      "shape_fingerprint": "af16bcd3cb9b5d9fe5f71149eadbce297b725e92e98d4ad99d36c7f57a0588cd",
+      "shape_text": "if v0 is not None and v1 < v0:\n    raise ValueError(f'{v0}{v1}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "41832b4db6bba45fcf21b9bbea34c1dc0726f1579463833ea136c23f02131e9b",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-00b40c7a501b",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 87,
+          "end_lineno": 31,
+          "exact_fingerprint": "41832b4db6bba45fcf21b9bbea34c1dc0726f1579463833ea136c23f02131e9b",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 0,
+          "input": 7,
+          "lineno": 30,
+          "path": "sample_02.py",
+          "qualname": "UserCreate.validate_password",
+          "statement": "if"
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "00b40c7a501b9ddba40e4b8ec66d5563a8e0d1dbfea2fa25044f920a9bd991c6",
+      "shape_text": "if not (re.search('', v0) and re.search('', v0)):\n    raise ValueError('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "ceb01f5723182f6ac9dfb0e3e495482dcbca3fb119293addd4be44d7590d73ea",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-02eedb02f8cf",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 24,
+          "end_lineno": 59,
+          "exact_fingerprint": "ceb01f5723182f6ac9dfb0e3e495482dcbca3fb119293addd4be44d7590d73ea",
+          "file_hash": "f4aa9d50c8fae1e3ff9bf80e37935a8abf486834ec58078bc92274666dfd07d7",
+          "index": 0,
+          "input": 1,
+          "lineno": 58,
+          "path": "sample_02.py",
+          "qualname": "verify_password",
+          "statement": "if"
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "02eedb02f8cf9f361f090334920c3eccb066082995346a14a19d1ca902bc07b1",
+      "shape_text": "if not 0 ** 0 <= v0 <= 0 ** 0 or v0 & v0 - 0 or (not 0 <= v1 <= 0) or (not 0 <= v2 <= 0):\n    return False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "be08672a8e84907ee2d6f6ebbbfd2884b5cc43159fa4dcee8f0982a99ce248a1",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-0b259cd57f1e",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 31,
+          "end_lineno": 141,
+          "exact_fingerprint": "be08672a8e84907ee2d6f6ebbbfd2884b5cc43159fa4dcee8f0982a99ce248a1",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "lineno": 139,
+          "path": "sample_01.py",
+          "qualname": "load_config",
+          "statement": "if"
+        }
+      ],
+      "node_count": 30,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "0b259cd57f1e5eb5a3957596571ad6147dc0af53080d039bb1e04a92564c1de8",
+      "shape_text": "if v0 and v1['']:\n    v2.append(f'{v3}{v3}')\n    v1[''] = False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c130a5150f6b0fffef68c68f949e8dee77445701964bdd960d9940799be943ec",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-128e12ef019a",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 94,
+          "end_lineno": 32,
+          "exact_fingerprint": "c130a5150f6b0fffef68c68f949e8dee77445701964bdd960d9940799be943ec",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "lineno": 31,
+          "path": "sample_01.py",
+          "qualname": "validate_user_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "128e12ef019a3ee9e49470c598e6c2696403d364f002378edb9651e8878c93ac",
+      "shape_text": "if v0 not in ALLOWED_ROLES:\n    v1.append(f\"{v0!r}{''.join(sorted(ALLOWED_ROLES))}\")\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "1758cc928ff12e56e18a23ce8e7b542c8ce3640abbb7c82574a96e4561b62091",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-1758cc928ff1",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 82,
+          "end_lineno": 66,
+          "exact_fingerprint": "1758cc928ff12e56e18a23ce8e7b542c8ce3640abbb7c82574a96e4561b62091",
+          "file_hash": "b20fcde70f9dd4d9f2ed8c25d46caadf55b9b5e1fceb8cd1a782479bb1912e92",
+          "index": 0,
+          "input": 7,
+          "lineno": 63,
+          "path": "sample_01.py",
+          "qualname": "create_user",
+          "statement": "try"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "1758cc928ff12e56e18a23ce8e7b542c8ce3640abbb7c82574a96e4561b62091",
+      "shape_text": "try:\n    v0 = v1(v2)\nexcept ValueError as v3:\n    raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v3))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "28d982753299b8dc5561fb5798449b9c3cfa2704d6ca1dd0b33ab5a2567da9db",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-183f06a3e8dd",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 62,
+          "end_lineno": 32,
+          "exact_fingerprint": "28d982753299b8dc5561fb5798449b9c3cfa2704d6ca1dd0b33ab5a2567da9db",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "lineno": 31,
+          "path": "sample_01.py",
+          "qualname": "_parse_int",
+          "statement": "if"
+        }
+      ],
+      "node_count": 25,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "183f06a3e8dd188b07784f7d301fa55aff4d923a17dc63f33d5abacf7a2f7519",
+      "shape_text": "if v0 is not None and v1 > v0:\n    raise ValueError(f'{v0}{v1}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "1d8a5f836f4a91fa77133f8d7741e3a7164f7b50989a63d41c1a7ec59e315150",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-1d8a5f836f4a",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 27,
+          "end_lineno": 29,
+          "exact_fingerprint": "1d8a5f836f4a91fa77133f8d7741e3a7164f7b50989a63d41c1a7ec59e315150",
+          "file_hash": "dd1f3c224472d0a993ef20cfeb867800a52417b1eafb42b4c24f6287033e7ff9",
+          "index": 0,
+          "input": 2,
+          "lineno": 26,
+          "path": "sample_01.py",
+          "qualname": "paginate",
+          "statement": "if"
+        }
+      ],
+      "node_count": 45,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "1d8a5f836f4a91fa77133f8d7741e3a7164f7b50989a63d41c1a7ec59e315150",
+      "shape_text": "if isinstance(v0, Query):\n    v1 = v0.order_by(None).count()\n    v2 = v0.limit(v3).offset(v4).all()\n    return (v2, v1)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "2391950160b8e28e0fa496e015187d2f42b64d27addb0be3c009b3282721bc5a",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-38141c722ffd",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 71,
+          "end_lineno": 21,
+          "exact_fingerprint": "2391950160b8e28e0fa496e015187d2f42b64d27addb0be3c009b3282721bc5a",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 15,
+          "path": "sample_02.py",
+          "qualname": "_get_int",
+          "statement": "if"
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "38141c722ffdd6d02f180797213ad91e82c54116eadfd7a5c7a263c714e44d73",
+      "shape_text": "if v0 is None or v0.strip() == '':\n    v1 = v2\nelse:\n    try:\n        v1 = int(v0.strip())\n    except ValueError:\n        raise ValueError(f'{v3}{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "3f40529b750462c85f0ed6e98bdde819ba604f8ec0951769e03d6f338e1b936c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-3dd2c6ea5bfc",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 76,
+          "end_lineno": 82,
+          "exact_fingerprint": "3f40529b750462c85f0ed6e98bdde819ba604f8ec0951769e03d6f338e1b936c",
+          "file_hash": "90274468a36173d474145e17e4c48d3dab3a238e07cbe4f5851cc9dd1123a6b4",
+          "index": 0,
+          "input": 6,
+          "lineno": 52,
+          "path": "sample_02.py",
+          "qualname": "parse_users_csv",
+          "statement": "try"
+        }
+      ],
+      "node_count": 230,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "3dd2c6ea5bfc4892315ac4e7e76908801209c3ded7502d26476391ab2f03a70f",
+      "shape_text": "try:\n    with open(v0, newline='', encoding='') as v1:\n        v2 = csv.DictReader(v1)\n        if v2.fieldnames is None:\n            return ([], [{'': 0, '': ['']}])\n        v2.fieldnames = [v3.strip().lower() for v3 in v2.fieldnames]\n        v4 = {'', '', ''} - set(v2.fieldnames)\n        if v4:\n            return ([], [{'': 0, '': [f\"{''.join(sorted(v4))}\"]}])\n        for v5 in v2:\n            v6 = v2.line_num\n            if None in v5:\n                v7.append({'': v6, '': ['']})\n                continue\n            if None in v5.values():\n                v7.append({'': v6, '': ['']})\n                continue\n            v8, v9 = validate_row(v5)\n            if v8:\n                v7.append({'': v6, '': v8})\n            else:\n                v10.append(v9)\nexcept (OSError, UnicodeDecodeError, csv.Error) as v11:\n    v7.append({'': 0, '': [f'{v11}']})\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "3522e848bbbfbe68ea0f66478bf7c1f218cf4af18ccfcc5096fc5008b520d64c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-52320812c31f",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 52,
+          "end_lineno": 29,
+          "exact_fingerprint": "3522e848bbbfbe68ea0f66478bf7c1f218cf4af18ccfcc5096fc5008b520d64c",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "lineno": 24,
+          "path": "sample_01.py",
+          "qualname": "validate_user_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 49,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "52320812c31f286383c447d27d73adedb588d6f2507586d6611905c55b33fbfe",
+      "shape_text": "if not v0:\n    v1.append('')\nelif not EMAIL_RE.match(v0):\n    v1.append(f'{v0!r}')\nelif v0 in v2:\n    v1.append(f'{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "b77384173a9dd7aa07393e6cc81199a81fc57ce302418af3758b2c3bf3d7ddbf",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-5850c9eed45a",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 63,
+          "end_lineno": 40,
+          "exact_fingerprint": "b77384173a9dd7aa07393e6cc81199a81fc57ce302418af3758b2c3bf3d7ddbf",
+          "file_hash": "f274ee57ece26105e6842cc1a83f6301ca79ecec7dfc087f191416d5be30e9d9",
+          "index": 0,
+          "input": 0,
+          "lineno": 39,
+          "path": "sample_01.py",
+          "qualname": "generate_access_token",
+          "statement": "if"
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "5850c9eed45a2130bd26246704296379c356a2c8b779bd82fa3f53457d752410",
+      "shape_text": "if not isinstance(v0, (int, float)) or isinstance(v0, bool):\n    raise ValueError('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "ec52536a0be4d281e6817ef76b653df6d1dab05860e2e0d120b788cd65c50396",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-5df0786402a2",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 34,
+          "end_lineno": 45,
+          "exact_fingerprint": "ec52536a0be4d281e6817ef76b653df6d1dab05860e2e0d120b788cd65c50396",
+          "file_hash": "dd1f3c224472d0a993ef20cfeb867800a52417b1eafb42b4c24f6287033e7ff9",
+          "index": 0,
+          "input": 2,
+          "lineno": 42,
+          "path": "sample_01.py",
+          "qualname": "paginate",
+          "statement": "if"
+        }
+      ],
+      "node_count": 36,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "5df0786402a2eec011a3e3b2e2538ac4e78e36fe1110e0203f0b914df918d576",
+      "shape_text": "if len(v0.selected_columns) == 0:\n    v1 = list(v2.scalars().all())\nelse:\n    v1 = list(v2.all())\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "2b8255b03631bd180db95171d1d6f149fab0f2145197f3ec60c832143649946c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-85da23a1ba3d",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 18,
+          "end_lineno": 110,
+          "exact_fingerprint": "2b8255b03631bd180db95171d1d6f149fab0f2145197f3ec60c832143649946c",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "lineno": 106,
+          "path": "sample_01.py",
+          "qualname": "load_config.<locals>.read",
+          "statement": "if"
+        }
+      ],
+      "node_count": 32,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "85da23a1ba3d17dc1a18810cbf000368356e046c0ba36df47fe3f64ce90be022",
+      "shape_text": "if v0 is None:\n    if v1:\n        errors.append(f'{prefix}{v2}')\n    config[v3] = v4\n    return\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "fa5624a5acbefe3efa1a4c8c0c4321fcc82c9fb8615375b63c058aa854651f32",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-87e9ff8841ce",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 22,
+          "end_lineno": 9,
+          "exact_fingerprint": "fa5624a5acbefe3efa1a4c8c0c4321fcc82c9fb8615375b63c058aa854651f32",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 6,
+          "path": "sample_02.py",
+          "qualname": "_get_str",
+          "statement": "if"
+        }
+      ],
+      "node_count": 37,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "87e9ff8841ce545e31ee9392da3d39fbf851b1e684152dbc9ff20023fcb10014",
+      "shape_text": "if v0 is None or v0.strip() == '':\n    if v1 and v2 is None:\n        raise ValueError(f'{v3}')\n    return v2\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "55e98c73f3b8eb9baf41944c3a029b93deca9dade872721cdee8873fe156cfba",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-88f3b9bd6b0d",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 85,
+          "end_lineno": 116,
+          "exact_fingerprint": "55e98c73f3b8eb9baf41944c3a029b93deca9dade872721cdee8873fe156cfba",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "lineno": 68,
+          "path": "sample_01.py",
+          "qualname": "import_users_from_csv",
+          "statement": "try"
+        }
+      ],
+      "node_count": 388,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "88f3b9bd6b0d7e08cf0e3fd48e4a340c4cb929373943ae92301b11201c60c2ea",
+      "shape_text": "try:\n    with open(v0, newline='', encoding=v1) as v2:\n        v3 = csv.DictReader(v2)\n        if v3.fieldnames is None:\n            v4.append({'': 0, '': {}, '': ['']})\n            return (v5, v4)\n        v3.fieldnames = [(v6 or '').strip().lower() for v6 in v3.fieldnames]\n        v7 = [v8 for v8 in REQUIRED_COLUMNS if v8 not in v3.fieldnames]\n        if v7:\n            v4.append({'': 0, '': {}, '': [f\"{''.join(v7)}\"]})\n            return (v5, v4)\n        try:\n            for v9 in v3:\n                v10 = v3.line_num\n                if None in v9:\n                    v4.append({'': v10, '': {v11: v12 for v11, v12 in v9.items() if v11 is not None}, '': ['']})\n                    continue\n                if any((v12 is None for v12 in v9.values())):\n                    v4.append({'': v10, '': dict(v9), '': ['']})\n                    continue\n                if not any(((v12 or '').strip() for v12 in v9.values())):\n                    continue\n                v13, v14 = validate_user_row(v9, v10, v15)\n                if v14:\n                    v4.append({'': v10, '': dict(v9), '': v14})\n                else:\n                    v5.append(v13)\n        except csv.Error as v16:\n            v4.append({'': v3.line_num, '': {}, '': [f'{v16}']})\nexcept FileNotFoundError:\n    v4.append({'': 0, '': {}, '': [f'{v0}']})\nexcept UnicodeDecodeError as v16:\n    v4.append({'': 0, '': {}, '': [f'{v1}{v16}']})\nexcept OSError as v16:\n    v4.append({'': 0, '': {}, '': [f'{v16}']})\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c7e531e93e99b4821d7026884f468e9a03527ceefb8e024424e6010d26326fe2",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-8d5ef53ab1ae",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 91,
+          "end_lineno": 95,
+          "exact_fingerprint": "c7e531e93e99b4821d7026884f468e9a03527ceefb8e024424e6010d26326fe2",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 91,
+          "path": "sample_02.py",
+          "qualname": "load_config",
+          "statement": "if"
+        }
+      ],
+      "node_count": 37,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "8d5ef53ab1aebf810c2565e0ca5b2589dc43031d700045df1508346b6733e666",
+      "shape_text": "if v0[''] == '':\n    if v0['']:\n        raise ValueError('')\n    if len(v0['']) < 0:\n        raise ValueError('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "3096525dd9316aa748c8c56c9d024ed453f69b2e7c19a971d5b707e36d0a47b9",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-a33de7aa080b",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 87,
+          "end_lineno": 19,
+          "exact_fingerprint": "3096525dd9316aa748c8c56c9d024ed453f69b2e7c19a971d5b707e36d0a47b9",
+          "file_hash": "b20fcde70f9dd4d9f2ed8c25d46caadf55b9b5e1fceb8cd1a782479bb1912e92",
+          "index": 0,
+          "input": 7,
+          "lineno": 18,
+          "path": "sample_01.py",
+          "qualname": "UserCreate.password_strength",
+          "statement": "if"
+        }
+      ],
+      "node_count": 40,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "a33de7aa080b529dfe9b600d90b5335b4cfdcfc8424c904d12f7e7d73ce55be7",
+      "shape_text": "if not any((v0.isdigit() for v0 in v1)) or not any((v0.isalpha() for v0 in v1)):\n    raise ValueError('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "a5a60e955fb3fbdca58469eb8f2e2f5153e3b5add2893c758c523db3806d89ae",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-a5a60e955fb3",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 34,
+          "end_lineno": 67,
+          "exact_fingerprint": "a5a60e955fb3fbdca58469eb8f2e2f5153e3b5add2893c758c523db3806d89ae",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 66,
+          "path": "sample_02.py",
+          "qualname": "_get_list",
+          "statement": "if"
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "a5a60e955fb3fbdca58469eb8f2e2f5153e3b5add2893c758c523db3806d89ae",
+      "shape_text": "if v0 is None or v0.strip() == '':\n    return list(v1 or [])\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "eaf21c8fcbd87f5fb042d747ffb4e29ddf87f432183273a864d04995efbcaac4",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-af16788f8a8a",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 50,
+          "end_lineno": 21,
+          "exact_fingerprint": "eaf21c8fcbd87f5fb042d747ffb4e29ddf87f432183273a864d04995efbcaac4",
+          "file_hash": "90274468a36173d474145e17e4c48d3dab3a238e07cbe4f5851cc9dd1123a6b4",
+          "index": 0,
+          "input": 6,
+          "lineno": 18,
+          "path": "sample_02.py",
+          "qualname": "validate_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 32,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "af16788f8a8a4894daddd6dbf3fda4c9e7e4789cce51c08e34c6d9c662f2aac9",
+      "shape_text": "if not v0:\n    v1.append('')\nelif not EMAIL_RE.match(v0):\n    v1.append(f'{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "91a2d4d5b74284c3120cd3e7425d6cef406ae91ee75fa5ad3915e11c09dd671a",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-be09e9dac95c",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 52,
+          "end_lineno": 22,
+          "exact_fingerprint": "91a2d4d5b74284c3120cd3e7425d6cef406ae91ee75fa5ad3915e11c09dd671a",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "lineno": 19,
+          "path": "sample_01.py",
+          "qualname": "validate_user_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "be09e9dac95cbb00ae7af2bd376811cf285702773f6aa36b73fc1cd7108a78b1",
+      "shape_text": "if not v0:\n    v1.append('')\nelif len(v0) > 0:\n    v1.append('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "67970dc0e83d2d61684c8a5182c222bc31bcffaed5345a0f2ef3ad3d9a5686ed",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-c0dd9f27d899",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 25,
+          "end_lineno": 84,
+          "exact_fingerprint": "67970dc0e83d2d61684c8a5182c222bc31bcffaed5345a0f2ef3ad3d9a5686ed",
+          "file_hash": "7a6606dd7d26f1e8df792e8623d0d753abca0f0bb4c746b1a404fcff8647059a",
+          "index": 0,
+          "input": 3,
+          "lineno": 64,
+          "path": "sample_02.py",
+          "qualname": "http_get_with_retry",
+          "statement": "for"
+        }
+      ],
+      "node_count": 145,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "c0dd9f27d899f529f94a6447aa6aa814e5e44536d3667fd84bb8499e70f9c4b9",
+      "shape_text": "for v0 in range(v1 + 0):\n    v2 = None\n    try:\n        v3 = v4(v5, params=v6, headers=v7, timeout=v8, **v9)\n        if v3.status_code not in v10:\n            return v3\n        if v0 == v1:\n            return v3\n        v2 = parse_retry_after(v3.headers.get(''))\n        v3.close()\n    except (requests.ConnectionError, requests.Timeout) as v11:\n        v12 = v11\n        if v0 == v1:\n            raise\n    v13 = compute_backoff(v0, v14, v15, v16)\n    if v2 is not None:\n        v13 = min(max(v13, v2), v15)\n    time.sleep(v13)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "6c5a2756b2840ba60495c2ff1cf913391d1e23c542a12b923ecdd7a8997552c6",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-d7037d6ab56c",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 20,
+          "end_lineno": 36,
+          "exact_fingerprint": "6c5a2756b2840ba60495c2ff1cf913391d1e23c542a12b923ecdd7a8997552c6",
+          "file_hash": "f32f87a75efe81f6c295e8493b9eacb629fecf981850e71d5031b050d01bfad8",
+          "index": 0,
+          "input": 1,
+          "lineno": 25,
+          "path": "sample_01.py",
+          "qualname": "verify_password",
+          "statement": "try"
+        }
+      ],
+      "node_count": 98,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "d7037d6ab56c8b89de9eeeb09cf80f9ee27f824371f50f0937d5d070c1404b5f",
+      "shape_text": "try:\n    v0, v1, v2, v3 = v4.split('')\n    if not v0.startswith(''):\n        return False\n    v5 = v0[len(''):]\n    v6 = base64.b64decode(v2)\n    v7 = base64.b64decode(v3)\n    v8 = hashlib.pbkdf2_hmac(v5, v9.encode(''), v6, int(v1), len(v7))\nexcept (ValueError, TypeError):\n    return False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "4edc0928f9dad5fa60569fd0e574e44410599602f8366d49753833f4b358882b",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-dbb2580d4884",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 26,
+          "end_lineno": 34,
+          "exact_fingerprint": "4edc0928f9dad5fa60569fd0e574e44410599602f8366d49753833f4b358882b",
+          "file_hash": "90274468a36173d474145e17e4c48d3dab3a238e07cbe4f5851cc9dd1123a6b4",
+          "index": 0,
+          "input": 6,
+          "lineno": 24,
+          "path": "sample_02.py",
+          "qualname": "validate_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 61,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "dbb2580d48847781dfb33c01d32e27a3efaa35099e4ad463e11a5e8732c23ba1",
+      "shape_text": "if not v0:\n    v1.append('')\nelse:\n    try:\n        v2 = int(v0)\n    except ValueError:\n        v1.append(f'{v0!r}')\n    else:\n        if v2 < 0 or v2 > 0:\n            v1.append(f'{v2}')\n            v2 = None\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "86a5ab4dd4e2a9610cd4b18c4dbf1fb78a9cee11c03027f31aab5036053e0eb6",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-dd2b8de7bfe3",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 19,
+          "end_lineno": 26,
+          "exact_fingerprint": "86a5ab4dd4e2a9610cd4b18c4dbf1fb78a9cee11c03027f31aab5036053e0eb6",
+          "file_hash": "7a6606dd7d26f1e8df792e8623d0d753abca0f0bb4c746b1a404fcff8647059a",
+          "index": 0,
+          "input": 3,
+          "lineno": 20,
+          "path": "sample_02.py",
+          "qualname": "parse_retry_after",
+          "statement": "try"
+        }
+      ],
+      "node_count": 60,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "dd2b8de7bfe3886954d674f183be7c61a677b2490173190b8ac1a711869b7868",
+      "shape_text": "try:\n    v0 = parsedate_to_datetime(v1)\n    if v0.tzinfo is None:\n        v0 = v0.replace(tzinfo=timezone.utc)\n    return max(0, (v0 - datetime.now(timezone.utc)).total_seconds())\nexcept (TypeError, ValueError):\n    return None\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "1286897d46be8f279235630b8996d15b451ac55dc62551e0b28c2d44cdc50c4a",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-e1dc7b8b3f31",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 69,
+          "end_lineno": 37,
+          "exact_fingerprint": "1286897d46be8f279235630b8996d15b451ac55dc62551e0b28c2d44cdc50c4a",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 31,
+          "path": "sample_02.py",
+          "qualname": "_get_float",
+          "statement": "if"
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "e1dc7b8b3f315061d9c2a612eafd3db926402761a8aae2737ece0c78366c299e",
+      "shape_text": "if v0 is None or v0.strip() == '':\n    v1 = v2\nelse:\n    try:\n        v1 = float(v0.strip())\n    except ValueError:\n        raise ValueError(f'{v3}{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "757332d805dec236a3c2af28ad541c9e4e128741524ecd052184738c8b9039b5",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-ef12351c452c",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 33,
+          "end_lineno": 115,
+          "exact_fingerprint": "757332d805dec236a3c2af28ad541c9e4e128741524ecd052184738c8b9039b5",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "lineno": 111,
+          "path": "sample_01.py",
+          "qualname": "load_config.<locals>.read",
+          "statement": "try"
+        }
+      ],
+      "node_count": 41,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "ef12351c452c1a7b37b8c5cfffbd8e214c2df122dcb35dcb2c9427c305cc52da",
+      "shape_text": "try:\n    config[v0] = v1(v2)\nexcept ValueError as v3:\n    errors.append(f'{prefix}{v4}{v3}')\n    config[v0] = v5\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "53a79a1d6b83d28771c7ecce088d01e0088e36205b9c35e3b79af6e0df7764d7",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-efe7494d11c8",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 64,
+          "end_lineno": 41,
+          "exact_fingerprint": "53a79a1d6b83d28771c7ecce088d01e0088e36205b9c35e3b79af6e0df7764d7",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "lineno": 35,
+          "path": "sample_01.py",
+          "qualname": "validate_user_row",
+          "statement": "if"
+        }
+      ],
+      "node_count": 45,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "efe7494d11c8ffce95fa4239cdce3ccb28b087f9767e6f667986ffeb4728b228",
+      "shape_text": "if v0:\n    try:\n        v1 = int(v0)\n        if not 0 < v1 < 0:\n            v2.append(f'{v1}')\n    except ValueError:\n        v2.append(f'{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c724a3b246217002873cb3fba04f89431d646b61530c673b9ecb819a9835d28e",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-f6ff32076c9d",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 25,
+          "end_lineno": 45,
+          "exact_fingerprint": "c724a3b246217002873cb3fba04f89431d646b61530c673b9ecb819a9835d28e",
+          "file_hash": "1d8bb48cbc6e611128c1c970569fef802d4e03b5eed5fa1d7d47b8c82087bf17",
+          "index": 0,
+          "input": 3,
+          "lineno": 25,
+          "path": "sample_01.py",
+          "qualname": "fetch_with_retry",
+          "statement": "for"
+        }
+      ],
+      "node_count": 148,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f6ff32076c9d979c77050ff716c9e7a0b24e75aa8b0d814434eb4cff9a5579cc",
+      "shape_text": "for v0 in range(v1 + 0):\n    try:\n        v2 = requests.get(v3, timeout=v4, **v5)\n        if v2.status_code in v6:\n            v2.raise_for_status()\n        v2.raise_for_status()\n        return v2\n    except (requests.ConnectionError, requests.Timeout) as v7:\n        v8 = v7\n    except requests.HTTPError as v7:\n        v9 = v7.response.status_code if v7.response is not None else None\n        if v9 not in v6:\n            raise\n        v8 = v7\n    if v0 == v1:\n        break\n    v10 = min(v11, v12 * 0 ** v0)\n    v10 = random.uniform(0, v10)\n    time.sleep(v10)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "328b0a3fd77e6316ce960a876c04d6423b80d02f51f6d48977a0ee5370407c49",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-f71813be1f20",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 83,
+          "end_lineno": 60,
+          "exact_fingerprint": "328b0a3fd77e6316ce960a876c04d6423b80d02f51f6d48977a0ee5370407c49",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "lineno": 59,
+          "path": "sample_02.py",
+          "qualname": "_get_choice",
+          "statement": "if"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f71813be1f2016ff763fa7320ad82b4008bda0097acb5eefea96e1294e0cf65c",
+      "shape_text": "if v0.lower() not in v1:\n    raise ValueError(f'{v2}{sorted(v1)}{v0!r}')\n"
+    }
+  ],
+  "function_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "1b374e78394365396cf275d4aaacd05cd388d8e700d323ea19ba02fb764a9655",
+          "members": [
+            0,
+            1
+          ]
+        }
+      ],
+      "id": "fn-07ae19e3124a",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 36,
+          "exact_fingerprint": "1b374e78394365396cf275d4aaacd05cd388d8e700d323ea19ba02fb764a9655",
+          "file_hash": "b20fcde70f9dd4d9f2ed8c25d46caadf55b9b5e1fceb8cd1a782479bb1912e92",
+          "index": 0,
+          "input": 7,
+          "kind": "function",
+          "lineno": 30,
+          "name": "hash_password",
+          "path": "sample_01.py",
+          "qualname": "hash_password",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 48,
+          "exact_fingerprint": "1b374e78394365396cf275d4aaacd05cd388d8e700d323ea19ba02fb764a9655",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 1,
+          "input": 7,
+          "kind": "function",
+          "lineno": 42,
+          "name": "hash_password",
+          "path": "sample_02.py",
+          "qualname": "hash_password",
+          "top_level": true
+        }
+      ],
+      "node_count": 61,
+      "occurrences": 2,
+      "score": 61,
+      "shape_fingerprint": "07ae19e3124ae39adddaaea441e19fadeb766a8ad3deed4bbc056282a4593aa8",
+      "shape_text": "def f0(v0: str) -> str:\n    import hashlib\n    import os\n    v1 = os.urandom(0)\n    v2 = hashlib.scrypt(v0.encode(), salt=v1, n=0 ** 0, r=0, p=0)\n    return v1.hex() + '' + v2.hex()\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "349ab5109fae9f864d6e937917b8e9df2de02b378196093ff90a8f5ed6e309f2",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-05f131a098e1",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 10,
+          "exact_fingerprint": "349ab5109fae9f864d6e937917b8e9df2de02b378196093ff90a8f5ed6e309f2",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 4,
+          "name": "_get_str",
+          "path": "sample_02.py",
+          "qualname": "_get_str",
+          "top_level": true
+        }
+      ],
+      "node_count": 62,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "05f131a098e10bede4c999934f01fedff3d0971baec3aabfcbc69cb0dc3c69ad",
+      "shape_text": "def f0(v0, v1=None, v2=False):\n    v3 = os.environ.get(v0)\n    if v3 is None or v3.strip() == '':\n        if v2 and v1 is None:\n            raise ValueError(f'{v0}')\n        return v1\n    return v3.strip()\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "5fa2371881ed843361dde28538aae1161b65616d0b52152af77f982545d49a81",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-07414b5f2df3",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 35,
+          "exact_fingerprint": "5fa2371881ed843361dde28538aae1161b65616d0b52152af77f982545d49a81",
+          "file_hash": "9b26693b055a3d0b1c8fbe6bafb5bf6369268395925f8f793bfe2f29ca9b3d31",
+          "index": 0,
+          "input": 5,
+          "kind": "function",
+          "lineno": 4,
+          "name": "allow_request",
+          "path": "sample_02.py",
+          "qualname": "allow_request",
+          "top_level": true
+        }
+      ],
+      "node_count": 136,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "07414b5f2df30df307eb7dc6949131e134212f802ab338bb469734abc4cd979e",
+      "shape_text": "def f0(v0, v1, v2, v3, v4=0, v5=None):\n    if v5 is None:\n        v5 = time.monotonic()\n    v6 = v0.get(v1)\n    if v6 is None:\n        v6 = {'': float(v2), '': v5}\n        v0[v1] = v6\n    v7 = max(0, v5 - v6[''])\n    v6[''] = min(float(v2), v6[''] + v7 * v3)\n    v6[''] = v5\n    if v6[''] >= v4:\n        v6[''] -= v4\n        return True\n    return False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "4fbc48fb85d2986d3e595361428f2bc63804c507d2194472c3d4a573f4baaf57",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-0ba18984ffe2",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 76,
+          "exact_fingerprint": "4fbc48fb85d2986d3e595361428f2bc63804c507d2194472c3d4a573f4baaf57",
+          "file_hash": "f274ee57ece26105e6842cc1a83f6301ca79ecec7dfc087f191416d5be30e9d9",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 9,
+          "name": "generate_access_token",
+          "path": "sample_01.py",
+          "qualname": "generate_access_token",
+          "top_level": true
+        }
+      ],
+      "node_count": 227,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "0ba18984ffe209ecd3bdf0bf62136cdbb67d577a08933b5517bb1c8a46b42179",
+      "shape_text": "def f0(v0, v1=0, v2=None, v3='', v4=None, v5=None, v6=None):\n    if v0 is None or str(v0).strip() == '':\n        raise ValueError('')\n    if not isinstance(v1, (int, float)) or isinstance(v1, bool):\n        raise ValueError('')\n    if v1 <= 0:\n        raise ValueError('')\n    v7 = v2 or os.environ.get('')\n    if not v7:\n        raise ValueError('')\n    v8 = datetime.now(timezone.utc)\n    v9 = {}\n    if v6:\n        v9.update(v6)\n    v9.update({'': str(v0), '': v8, '': v8, '': v8 + timedelta(seconds=v1), '': uuid.uuid4().hex, '': ''})\n    if v4:\n        v9[''] = v4\n    if v5:\n        v9[''] = v5\n    v10 = jwt.encode(v9, v7, algorithm=v3)\n    if isinstance(v10, bytes):\n        v10 = v10.decode('')\n    return v10\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "a41a938873d1088ddfa58781354bc99e931e98bf30bbe0da10c094012b9a86a9",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-2372b5dfdb03",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 43,
+          "exact_fingerprint": "a41a938873d1088ddfa58781354bc99e931e98bf30bbe0da10c094012b9a86a9",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 36,
+          "name": "_parse_float",
+          "path": "sample_01.py",
+          "qualname": "_parse_float",
+          "top_level": true
+        }
+      ],
+      "node_count": 67,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "2372b5dfdb03cdce5d2fa26b6b7facc3545502468058025765c17ab9e58272a4",
+      "shape_text": "def f0(v0: str, v1: Optional[float]=None) -> float:\n    try:\n        v2 = float(v0.strip())\n    except ValueError:\n        raise ValueError(f'{v0!r}') from None\n    if v1 is not None and v2 < v1:\n        raise ValueError(f'{v1}{v2}')\n    return v2\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "0d7584b52e41ca62b0697e33dab2fb2af068ae8f000d883e2ed647f86094c92c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-2a202f46fa5f",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 32,
+          "exact_fingerprint": "0d7584b52e41ca62b0697e33dab2fb2af068ae8f000d883e2ed647f86094c92c",
+          "file_hash": "7a6606dd7d26f1e8df792e8623d0d753abca0f0bb4c746b1a404fcff8647059a",
+          "index": 0,
+          "input": 3,
+          "kind": "function",
+          "lineno": 29,
+          "name": "compute_backoff",
+          "path": "sample_02.py",
+          "qualname": "compute_backoff",
+          "top_level": true
+        }
+      ],
+      "node_count": 40,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "2a202f46fa5f9a882d59813f16c7e987a72216dfab0cf27ffa836bb3eca2d6c1",
+      "shape_text": "def f0(v0, v1=0, v2=0, v3=True):\n    v4 = min(v2, v1 * 0 ** v0)\n    return random.uniform(0, v4) if v3 else v4\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "cdf6eb6f054db205d346ccc85be119927bdd5ce2854418cef969423248033d00",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-2af7cbe8ff68",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 51,
+          "exact_fingerprint": "cdf6eb6f054db205d346ccc85be119927bdd5ce2854418cef969423248033d00",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 46,
+          "name": "_parse_choice",
+          "path": "sample_01.py",
+          "qualname": "_parse_choice",
+          "top_level": true
+        }
+      ],
+      "node_count": 66,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "2af7cbe8ff689dece35ffebbc22d644b0132b32ea832728bd70705119b0d74ca",
+      "shape_text": "def f0(v0: str, v1: tuple, v2: str='') -> str:\n    v3 = v0.strip()\n    v3 = v3.upper() if v2 == '' else v3.lower()\n    if v3 not in v1:\n        raise ValueError(f\"{''.join(v1)}{v0!r}\")\n    return v3\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "696dfc45fcf8b854e00d6ddf5c0aa30c32031f81d58d8667f0076c427cfa57dc",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-3a00ffbdc956",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 88,
+          "exact_fingerprint": "696dfc45fcf8b854e00d6ddf5c0aa30c32031f81d58d8667f0076c427cfa57dc",
+          "file_hash": "7a6606dd7d26f1e8df792e8623d0d753abca0f0bb4c746b1a404fcff8647059a",
+          "index": 0,
+          "input": 3,
+          "kind": "function",
+          "lineno": 35,
+          "name": "http_get_with_retry",
+          "path": "sample_02.py",
+          "qualname": "http_get_with_retry",
+          "top_level": true
+        }
+      ],
+      "node_count": 214,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "3a00ffbdc9560e46ab270e09fd088db4ed370ef6589f081b47062b428ce70759",
+      "shape_text": "def f0(v0, v1=None, v2=None, v3=0, v4=0, v5=0, v6=0, v7=True, v8=RETRY_STATUS_CODES, v9=None, **v10):\n    if v4 < 0:\n        raise ValueError('')\n    v11 = v9.get if v9 is not None else requests.get\n    v12 = None\n    for v13 in range(v4 + 0):\n        v14 = None\n        try:\n            v15 = v11(v0, params=v1, headers=v2, timeout=v3, **v10)\n            if v15.status_code not in v8:\n                return v15\n            if v13 == v4:\n                return v15\n            v14 = parse_retry_after(v15.headers.get(''))\n            v15.close()\n        except (requests.ConnectionError, requests.Timeout) as v16:\n            v12 = v16\n            if v13 == v4:\n                raise\n        v17 = compute_backoff(v13, v5, v6, v7)\n        if v14 is not None:\n            v17 = min(max(v17, v14), v6)\n        time.sleep(v17)\n    if v12 is not None:\n        raise v12\n    raise RuntimeError('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "f1fb0356c6422243685d7059f7b030b8e171517a46786e063fd4346264beb33d",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-3ddfedecf23b",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 47,
+          "exact_fingerprint": "f1fb0356c6422243685d7059f7b030b8e171517a46786e063fd4346264beb33d",
+          "file_hash": "1d8bb48cbc6e611128c1c970569fef802d4e03b5eed5fa1d7d47b8c82087bf17",
+          "index": 0,
+          "input": 3,
+          "kind": "function",
+          "lineno": 7,
+          "name": "fetch_with_retry",
+          "path": "sample_01.py",
+          "qualname": "fetch_with_retry",
+          "top_level": true
+        }
+      ],
+      "node_count": 175,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "3ddfedecf23ba8343a7efac21c6bc324848d0366d9c95b245281ab8c0994a1f1",
+      "shape_text": "def f0(v0, v1=0, v2=0, v3=0, v4=0, v5=(0, 0, 0, 0, 0), **v6):\n    v7 = None\n    for v8 in range(v1 + 0):\n        try:\n            v9 = requests.get(v0, timeout=v4, **v6)\n            if v9.status_code in v5:\n                v9.raise_for_status()\n            v9.raise_for_status()\n            return v9\n        except (requests.ConnectionError, requests.Timeout) as v10:\n            v7 = v10\n        except requests.HTTPError as v10:\n            v11 = v10.response.status_code if v10.response is not None else None\n            if v11 not in v5:\n                raise\n            v7 = v10\n        if v8 == v1:\n            break\n        v12 = min(v3, v2 * 0 ** v8)\n        v12 = random.uniform(0, v12)\n        time.sleep(v12)\n    raise v7\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "49a118f806634f52229260f023005360a87f7c9066684b31157fff225f059e2b",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-44d05d1038b1",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 36,
+          "exact_fingerprint": "49a118f806634f52229260f023005360a87f7c9066684b31157fff225f059e2b",
+          "file_hash": "90274468a36173d474145e17e4c48d3dab3a238e07cbe4f5851cc9dd1123a6b4",
+          "index": 0,
+          "input": 6,
+          "kind": "function",
+          "lineno": 7,
+          "name": "validate_row",
+          "path": "sample_02.py",
+          "qualname": "validate_row",
+          "top_level": true
+        }
+      ],
+      "node_count": 177,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "44d05d1038b12006abb4c825bee775daa65fe550ceae5f0a93de9fd6c63824d0",
+      "shape_text": "def f0(v0):\n    v1 = []\n    v2 = (v0.get('') or '').strip()\n    v3 = (v0.get('') or '').strip()\n    v4 = (v0.get('') or '').strip()\n    if not v2:\n        v1.append('')\n    if not v3:\n        v1.append('')\n    elif not EMAIL_RE.match(v3):\n        v1.append(f'{v3!r}')\n    v5 = None\n    if not v4:\n        v1.append('')\n    else:\n        try:\n            v5 = int(v4)\n        except ValueError:\n            v1.append(f'{v4!r}')\n        else:\n            if v5 < 0 or v5 > 0:\n                v1.append(f'{v5}')\n                v5 = None\n    return (v1, {'': v2, '': v3, '': v5})\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "9f1ae8b624c27cb4ba8f81632fb3e85341057e58a8db069d67f396fae7b1d721",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-4a0933b246fe",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 47,
+          "exact_fingerprint": "9f1ae8b624c27cb4ba8f81632fb3e85341057e58a8db069d67f396fae7b1d721",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "kind": "function",
+          "lineno": 10,
+          "name": "validate_user_row",
+          "path": "sample_01.py",
+          "qualname": "validate_user_row",
+          "top_level": true
+        }
+      ],
+      "node_count": 275,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "4a0933b246fe00cb2a262350a768f6cef4e4605943bc9918521398e110a2a77b",
+      "shape_text": "def f0(v0: dict, v1: int, v2: set) -> tuple:\n    v3 = []\n    v4 = (v0.get('') or '').strip()\n    v5 = (v0.get('') or '').strip().lower()\n    v6 = (v0.get('') or '').strip().lower() or ''\n    v7 = (v0.get('') or '').strip()\n    if not v4:\n        v3.append('')\n    elif len(v4) > 0:\n        v3.append('')\n    if not v5:\n        v3.append('')\n    elif not EMAIL_RE.match(v5):\n        v3.append(f'{v5!r}')\n    elif v5 in v2:\n        v3.append(f'{v5!r}')\n    if v6 not in ALLOWED_ROLES:\n        v3.append(f\"{v6!r}{''.join(sorted(ALLOWED_ROLES))}\")\n    v8 = None\n    if v7:\n        try:\n            v8 = int(v7)\n            if not 0 < v8 < 0:\n                v3.append(f'{v8}')\n        except ValueError:\n            v3.append(f'{v7!r}')\n    if v3:\n        return (None, v3)\n    v2.add(v5)\n    return ({'': v4, '': v5, '': v6, '': v8}, [])\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "5859db8a9eadb5a44d477845cc9ad5a2d40b61ed027a5cc0e7e228f0b4232889",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-55b646b50abe",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 21,
+          "exact_fingerprint": "5859db8a9eadb5a44d477845cc9ad5a2d40b61ed027a5cc0e7e228f0b4232889",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 15,
+          "name": "_parse_bool",
+          "path": "sample_01.py",
+          "qualname": "_parse_bool",
+          "top_level": true
+        }
+      ],
+      "node_count": 44,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "55b646b50abe27359452a3fef9029d29f5e1ee14433fc549cac3e785d5949050",
+      "shape_text": "def f0(v0: str) -> bool:\n    v1 = v0.strip().lower()\n    if v1 in _TRUE_VALUES:\n        return True\n    if v1 in _FALSE_VALUES:\n        return False\n    raise ValueError(f'{v0!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "1b89c5bb394f0e8836ec57310d78b8eb197de706266dd44de445a5aba661edba",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-5a1608308c04",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 76,
+          "exact_fingerprint": "1b89c5bb394f0e8836ec57310d78b8eb197de706266dd44de445a5aba661edba",
+          "file_hash": "f4aa9d50c8fae1e3ff9bf80e37935a8abf486834ec58078bc92274666dfd07d7",
+          "index": 0,
+          "input": 1,
+          "kind": "function",
+          "lineno": 44,
+          "name": "verify_password",
+          "path": "sample_02.py",
+          "qualname": "verify_password",
+          "top_level": true
+        }
+      ],
+      "node_count": 249,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "5a1608308c043ff1ce1ef25dc9a9ff5e17a5b59416ccfca23880952a26fcbb04",
+      "shape_text": "def f0(v0: str, v1: str) -> bool:\n    try:\n        if not isinstance(v0, str) or not isinstance(v1, str):\n            return False\n        v2, v3, v4, v5, v6, v7 = v1.split('')\n        if v2 != _SCHEME:\n            return False\n        v3, v4, v5 = (int(v3), int(v4), int(v5))\n        if not 0 ** 0 <= v3 <= 0 ** 0 or v3 & v3 - 0 or (not 0 <= v4 <= 0) or (not 0 <= v5 <= 0):\n            return False\n        v8 = _b64d(v6)\n        v9 = _b64d(v7)\n        if not v9 or len(v8) < 0:\n            return False\n        v10 = max(_MAXMEM, 0 * v3 * v4 * v5)\n        v11 = hashlib.scrypt(v0.encode(''), salt=v8, n=v3, r=v4, p=v5, maxmem=v10, dklen=len(v9))\n        return hmac.compare_digest(v11, v9)\n    except (ValueError, TypeError, MemoryError, OverflowError):\n        return False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "834c48e70b308fc316ac7dab23f0eb012311bf922ca1354c2f797ca9fbf82480",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-5ec41ae6e590",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "field_validator('username')",
+            "classmethod"
+          ],
+          "end_lineno": 25,
+          "exact_fingerprint": "834c48e70b308fc316ac7dab23f0eb012311bf922ca1354c2f797ca9fbf82480",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 0,
+          "input": 7,
+          "kind": "method",
+          "lineno": 22,
+          "name": "validate_username",
+          "path": "sample_02.py",
+          "qualname": "UserCreate.validate_username",
+          "top_level": false
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "5ec41ae6e59008703cab100b79d606c79d5d22f5afe5931ccee8c94f6eabd04e",
+      "shape_text": "def f0(cls, v0: str) -> str:\n    if not re.fullmatch('', v0):\n        raise ValueError('')\n    return v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "93f312f54a4bed610bd44d07c8b729ae2d813c487d4c553f0937a3cd95268a7b",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-5faf9e9c5294",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 115,
+          "exact_fingerprint": "93f312f54a4bed610bd44d07c8b729ae2d813c487d4c553f0937a3cd95268a7b",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "nested",
+          "lineno": 103,
+          "name": "read",
+          "path": "sample_01.py",
+          "qualname": "load_config.<locals>.read",
+          "top_level": false
+        }
+      ],
+      "node_count": 104,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "5faf9e9c5294ad72f50020d875e56d2dc186ebed3489034407f32b491e30c7c8",
+      "shape_text": "def f0(v0: str, v1, v2: Any=None, v3: bool=False) -> None:\n    v4 = v0.lower()\n    v5 = get(v0)\n    if v5 is None:\n        if v3:\n            errors.append(f'{prefix}{v0}')\n        config[v4] = v2\n        return\n    try:\n        config[v4] = v1(v5)\n    except ValueError as v6:\n        errors.append(f'{prefix}{v0}{v6}')\n        config[v4] = v2\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "06f0b26b156c4e54f14fd0870724bf676e3cb4418d87c5222659a7466ada7334",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-65f3eb323458",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 69,
+          "exact_fingerprint": "06f0b26b156c4e54f14fd0870724bf676e3cb4418d87c5222659a7466ada7334",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 68,
+          "name": "_parse_list",
+          "path": "sample_01.py",
+          "qualname": "_parse_list",
+          "top_level": true
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "65f3eb32345879bf6848643e28145cacb80bacab0104b02ef895503986b1dcbf",
+      "shape_text": "def f0(v0: str) -> list:\n    return [v1.strip() for v1 in v0.split('') if v1.strip()]\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "55c0f0b836d3aa96e355f6af290ffc14a7dfc103d7251aa212160783d835e057",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-6b3dc9a760b8",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 24,
+          "exact_fingerprint": "55c0f0b836d3aa96e355f6af290ffc14a7dfc103d7251aa212160783d835e057",
+          "file_hash": "321e593bdb45f0b3d14b4668958e9124922f28b3e691d57f80a67f885342af3e",
+          "index": 0,
+          "input": 2,
+          "kind": "function",
+          "lineno": 5,
+          "name": "paginate",
+          "path": "sample_02.py",
+          "qualname": "paginate",
+          "top_level": true
+        }
+      ],
+      "node_count": 113,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "6b3dc9a760b81667178ee1936e638fd77bb1b5b62f7f8342074308781002557d",
+      "shape_text": "def f0(v0, v1=0, v2=0):\n    v1 = max(int(v1), 0)\n    v2 = max(int(v2), 0)\n    if not isinstance(v0, Query):\n        raise TypeError('')\n    v3 = v0.order_by(None).with_entities(func.count()).select_from(v0.order_by(None).subquery()).scalar() or 0\n    v4 = v0.limit(v2).offset((v1 - 0) * v2).all()\n    return (v4, v3)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c96cc58bc2c17d80d70587288e166e27087e5bad98b88fe94f93b9edae46f2d6",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-701724f06115",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "field_validator('password')",
+            "classmethod"
+          ],
+          "end_lineno": 20,
+          "exact_fingerprint": "c96cc58bc2c17d80d70587288e166e27087e5bad98b88fe94f93b9edae46f2d6",
+          "file_hash": "b20fcde70f9dd4d9f2ed8c25d46caadf55b9b5e1fceb8cd1a782479bb1912e92",
+          "index": 0,
+          "input": 7,
+          "kind": "method",
+          "lineno": 17,
+          "name": "password_strength",
+          "path": "sample_01.py",
+          "qualname": "UserCreate.password_strength",
+          "top_level": false
+        }
+      ],
+      "node_count": 51,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "701724f06115cf4891e9de50816bd9a9817d39078ef9537d33dd0f6622be1cf3",
+      "shape_text": "def f0(cls, v0: str) -> str:\n    if not any((v1.isdigit() for v1 in v0)) or not any((v1.isalpha() for v1 in v0)):\n        raise ValueError('')\n    return v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "661719dbe0b4af94cfc66274a29518d7efdf1249c4f422f0ad0a598eff571a75",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-7d3f976858ef",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 33,
+          "exact_fingerprint": "661719dbe0b4af94cfc66274a29518d7efdf1249c4f422f0ad0a598eff571a75",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 24,
+          "name": "_parse_int",
+          "path": "sample_01.py",
+          "qualname": "_parse_int",
+          "top_level": true
+        }
+      ],
+      "node_count": 100,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "7d3f976858ef03fcf48cde8c10a37e12e34f52607cf9b5459a966b3c5405c4b7",
+      "shape_text": "def f0(v0: str, v1: Optional[int]=None, v2: Optional[int]=None) -> int:\n    try:\n        v3 = int(v0.strip())\n    except ValueError:\n        raise ValueError(f'{v0!r}') from None\n    if v1 is not None and v3 < v1:\n        raise ValueError(f'{v1}{v3}')\n    if v2 is not None and v3 > v2:\n        raise ValueError(f'{v2}{v3}')\n    return v3\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "2ecfc9fd28ada653ce99fe99eb8aa27ce73cc0b23c34265101f086eb11419f74",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-846da4b8a2e8",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 20,
+          "exact_fingerprint": "2ecfc9fd28ada653ce99fe99eb8aa27ce73cc0b23c34265101f086eb11419f74",
+          "file_hash": "f4aa9d50c8fae1e3ff9bf80e37935a8abf486834ec58078bc92274666dfd07d7",
+          "index": 0,
+          "input": 1,
+          "kind": "function",
+          "lineno": 19,
+          "name": "_b64d",
+          "path": "sample_02.py",
+          "qualname": "_b64d",
+          "top_level": true
+        }
+      ],
+      "node_count": 21,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "846da4b8a2e86522bd245c557ae7b0845b239d75e9ff47ca8dc95a7f90573a1b",
+      "shape_text": "def f0(v0: str) -> bytes:\n    return base64.b64decode(v0.encode(''), validate=True)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "f425ebe6bfe18aafe74fa515fe5585f8c0af1e226c589cad8edf7bb50ef7b0e7",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-8816cc99f587",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 38,
+          "exact_fingerprint": "f425ebe6bfe18aafe74fa515fe5585f8c0af1e226c589cad8edf7bb50ef7b0e7",
+          "file_hash": "321e593bdb45f0b3d14b4668958e9124922f28b3e691d57f80a67f885342af3e",
+          "index": 0,
+          "input": 2,
+          "kind": "function",
+          "lineno": 27,
+          "name": "paginate_select",
+          "path": "sample_02.py",
+          "qualname": "paginate_select",
+          "top_level": true
+        }
+      ],
+      "node_count": 111,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "8816cc99f58773ec930ece57ac11682904c21e972222a929c1f48bce4fd853e5",
+      "shape_text": "def f0(v0, v1, v2=0, v3=0):\n    v2 = max(int(v2), 0)\n    v3 = max(int(v3), 0)\n    v4 = select(func.count()).select_from(v1.order_by(None).subquery())\n    v5 = v0.execute(v4).scalar() or 0\n    v6 = v0.execute(v1.limit(v3).offset((v2 - 0) * v3)).scalars().all()\n    return (v6, v5)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "a475c434e709d8924ace9fe556fdb0b987a852395c414615c42252c87a516232",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-9067d568773f",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "app.post('/users', response_model=UserRead, status_code=status.HTTP_201_CREATED)"
+          ],
+          "end_lineno": 67,
+          "exact_fingerprint": "a475c434e709d8924ace9fe556fdb0b987a852395c414615c42252c87a516232",
+          "file_hash": "b20fcde70f9dd4d9f2ed8c25d46caadf55b9b5e1fceb8cd1a782479bb1912e92",
+          "index": 0,
+          "input": 7,
+          "kind": "function",
+          "lineno": 53,
+          "name": "create_user",
+          "path": "sample_01.py",
+          "qualname": "create_user",
+          "top_level": true
+        }
+      ],
+      "node_count": 85,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "9067d568773fce1ba5fa6c83bcdfb298b27a8ebe9d68880e73f72e4753d62a5f",
+      "shape_text": "def f0(v0: UserCreate, v1: Callable[[dict], dict]=Depends(get_save_user)) -> dict:\n    v2 = {'': v0.username, '': str(v0.email), '': v0.full_name, '': hash_password(v0.password)}\n    try:\n        v3 = v1(v2)\n    except ValueError as v4:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v4))\n    return v3\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "0abf85e84174b3f92f194860628604dfe9bcc259f907a98b578447124f0b0e03",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-939523c5cef2",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 42,
+          "exact_fingerprint": "0abf85e84174b3f92f194860628604dfe9bcc259f907a98b578447124f0b0e03",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 29,
+          "name": "_get_float",
+          "path": "sample_02.py",
+          "qualname": "_get_float",
+          "top_level": true
+        }
+      ],
+      "node_count": 126,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "939523c5cef2d06c9b84d898adfc95e39063101f1ccd18f58714d84fc2d21386",
+      "shape_text": "def f0(v0, v1, v2=None, v3=None):\n    v4 = os.environ.get(v0)\n    if v4 is None or v4.strip() == '':\n        v5 = v1\n    else:\n        try:\n            v5 = float(v4.strip())\n        except ValueError:\n            raise ValueError(f'{v0}{v4!r}')\n    if v2 is not None and v5 < v2:\n        raise ValueError(f'{v0}{v2}{v5}')\n    if v3 is not None and v5 > v3:\n        raise ValueError(f'{v0}{v3}{v5}')\n    return v5\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "9b3ddad4ef369af2e6ba3c598166018d71453175205ab262a5d580141f19b2ed",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-9b3ddad4ef36",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "app.post('/users', response_model=UserRead, status_code=status.HTTP_201_CREATED)"
+          ],
+          "end_lineno": 81,
+          "exact_fingerprint": "9b3ddad4ef369af2e6ba3c598166018d71453175205ab262a5d580141f19b2ed",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 0,
+          "input": 7,
+          "kind": "function",
+          "lineno": 74,
+          "name": "create_user",
+          "path": "sample_02.py",
+          "qualname": "create_user",
+          "top_level": true
+        }
+      ],
+      "node_count": 56,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "9b3ddad4ef369af2e6ba3c598166018d71453175205ab262a5d580141f19b2ed",
+      "shape_text": "def f0(v0: UserCreate, v1: Annotated[Callable[[UserCreate], dict], Depends(get_user_repo)]) -> dict:\n    try:\n        return v1(v0)\n    except ValueError as v2:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(v2))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "d17be577e1eb766e5a67dc3dcab7684888dce4fcb151ea48e6a11c80cb5714cf",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-a0a4029936f8",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 20,
+          "exact_fingerprint": "d17be577e1eb766e5a67dc3dcab7684888dce4fcb151ea48e6a11c80cb5714cf",
+          "file_hash": "f32f87a75efe81f6c295e8493b9eacb629fecf981850e71d5031b050d01bfad8",
+          "index": 0,
+          "input": 1,
+          "kind": "function",
+          "lineno": 11,
+          "name": "hash_password",
+          "path": "sample_01.py",
+          "qualname": "hash_password",
+          "top_level": true
+        }
+      ],
+      "node_count": 68,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "a0a4029936f8581b86232d63a01038ba8989f4cc8cffd6b32a708cef828acd01",
+      "shape_text": "def f0(v0: str) -> str:\n    v1 = os.urandom(_SALT_BYTES)\n    v2 = hashlib.pbkdf2_hmac(_ALGORITHM, v0.encode(''), v1, _ITERATIONS)\n    return ''.format(_ALGORITHM, _ITERATIONS, base64.b64encode(v1).decode(''), base64.b64encode(v2).decode(''))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "415a197786ef920672def61dae352d28b2ec50f1e745ab259d79662a0a6bda15",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-a5c0bebaf362",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 58,
+          "exact_fingerprint": "415a197786ef920672def61dae352d28b2ec50f1e745ab259d79662a0a6bda15",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 54,
+          "name": "_parse_nonempty",
+          "path": "sample_01.py",
+          "qualname": "_parse_nonempty",
+          "top_level": true
+        }
+      ],
+      "node_count": 28,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "a5c0bebaf3623f5612faa58b2e8198686e4accf3fa67b97184fd32be2f009c42",
+      "shape_text": "def f0(v0: str) -> str:\n    v1 = v0.strip()\n    if not v1:\n        raise ValueError('')\n    return v1\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "74a48e95cb5cc554e9be930b9a550229858a119f7869a4d7505c2a79a8e5080f",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-b233f14be363",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 54,
+          "exact_fingerprint": "74a48e95cb5cc554e9be930b9a550229858a119f7869a4d7505c2a79a8e5080f",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 45,
+          "name": "_get_bool",
+          "path": "sample_02.py",
+          "qualname": "_get_bool",
+          "top_level": true
+        }
+      ],
+      "node_count": 83,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "b233f14be363027116a9693adb427d7cff8d1ec8724812a972a4755fd0fa3a3a",
+      "shape_text": "def f0(v0, v1):\n    v2 = os.environ.get(v0)\n    if v2 is None or v2.strip() == '':\n        return v1\n    v3 = v2.strip().lower()\n    if v3 in ('', '', '', ''):\n        return True\n    if v3 in ('', '', '', ''):\n        return False\n    raise ValueError(f'{v0}{v2!r}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "b3388ac0a90a927d050ae1b71ec1d8abac21bffaaf2ce0e2e3b408fc135459ba",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-b3388ac0a90a",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 101,
+          "exact_fingerprint": "b3388ac0a90a927d050ae1b71ec1d8abac21bffaaf2ce0e2e3b408fc135459ba",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "nested",
+          "lineno": 97,
+          "name": "get",
+          "path": "sample_01.py",
+          "qualname": "load_config.<locals>.get",
+          "top_level": false
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "b3388ac0a90a927d050ae1b71ec1d8abac21bffaaf2ce0e2e3b408fc135459ba",
+      "shape_text": "def f0(v0: str) -> Optional[str]:\n    v1 = source.get(f'{prefix}{v0}')\n    if v1 is None or v1.strip() == '':\n        return None\n    return v1\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "66818ea19fa842971337a4bce9769fcabf273861894f6fdfd346a14d67334c6c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-b40b93f79fe1",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 68,
+          "exact_fingerprint": "66818ea19fa842971337a4bce9769fcabf273861894f6fdfd346a14d67334c6c",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 64,
+          "name": "_get_list",
+          "path": "sample_02.py",
+          "qualname": "_get_list",
+          "top_level": true
+        }
+      ],
+      "node_count": 67,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "b40b93f79fe17f6f9c4adc4f2f8971b5e81c9e6ff8e71fedffe05d2d7ab65f70",
+      "shape_text": "def f0(v0, v1=None, v2=''):\n    v3 = os.environ.get(v0)\n    if v3 is None or v3.strip() == '':\n        return list(v1 or [])\n    return [v4.strip() for v4 in v3.split(v2) if v4.strip()]\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "2a7ec94c5aef331cc0448a02b9e7eaa72f3afa62a3c57a9f4b9ae2376ba094b4",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-b9c16343c5b3",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 26,
+          "exact_fingerprint": "2a7ec94c5aef331cc0448a02b9e7eaa72f3afa62a3c57a9f4b9ae2376ba094b4",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 13,
+          "name": "_get_int",
+          "path": "sample_02.py",
+          "qualname": "_get_int",
+          "top_level": true
+        }
+      ],
+      "node_count": 126,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "b9c16343c5b3e5eff42f60514027f1cda90fb07c6f901ba2f6b80afa7f299834",
+      "shape_text": "def f0(v0, v1, v2=None, v3=None):\n    v4 = os.environ.get(v0)\n    if v4 is None or v4.strip() == '':\n        v5 = v1\n    else:\n        try:\n            v5 = int(v4.strip())\n        except ValueError:\n            raise ValueError(f'{v0}{v4!r}')\n    if v2 is not None and v5 < v2:\n        raise ValueError(f'{v0}{v2}{v5}')\n    if v3 is not None and v5 > v3:\n        raise ValueError(f'{v0}{v3}{v5}')\n    return v5\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "9677faf867612eb16d0788f92853248f8aaa0e28c845f2349cbe6ecf6037d5ff",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-c936af632e71",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 37,
+          "exact_fingerprint": "9677faf867612eb16d0788f92853248f8aaa0e28c845f2349cbe6ecf6037d5ff",
+          "file_hash": "f32f87a75efe81f6c295e8493b9eacb629fecf981850e71d5031b050d01bfad8",
+          "index": 0,
+          "input": 1,
+          "kind": "function",
+          "lineno": 23,
+          "name": "verify_password",
+          "path": "sample_01.py",
+          "qualname": "verify_password",
+          "top_level": true
+        }
+      ],
+      "node_count": 118,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "c936af632e71df703e68fe7f907fb201468da8842415186aa4034be299586771",
+      "shape_text": "def f0(v0: str, v1: str) -> bool:\n    try:\n        v2, v3, v4, v5 = v1.split('')\n        if not v2.startswith(''):\n            return False\n        v6 = v2[len(''):]\n        v7 = base64.b64decode(v4)\n        v8 = base64.b64decode(v5)\n        v9 = hashlib.pbkdf2_hmac(v6, v0.encode(''), v7, int(v3), len(v8))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(v9, v8)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "2ef820a1186af7f06171c56d59d595b9658f257baf9e5a2bde94f2deb99e7567",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-d113c6dfee51",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 84,
+          "exact_fingerprint": "2ef820a1186af7f06171c56d59d595b9658f257baf9e5a2bde94f2deb99e7567",
+          "file_hash": "90274468a36173d474145e17e4c48d3dab3a238e07cbe4f5851cc9dd1123a6b4",
+          "index": 0,
+          "input": 6,
+          "kind": "function",
+          "lineno": 39,
+          "name": "parse_users_csv",
+          "path": "sample_02.py",
+          "qualname": "parse_users_csv",
+          "top_level": true
+        }
+      ],
+      "node_count": 250,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "d113c6dfee516e644a2495c8be2eaaa9b28c7b14aebeec8a5423a1c7ed80d291",
+      "shape_text": "def f0(v0):\n    v1 = []\n    v2 = []\n    try:\n        with open(v0, newline='', encoding='') as v3:\n            v4 = csv.DictReader(v3)\n            if v4.fieldnames is None:\n                return ([], [{'': 0, '': ['']}])\n            v4.fieldnames = [v5.strip().lower() for v5 in v4.fieldnames]\n            v6 = {'', '', ''} - set(v4.fieldnames)\n            if v6:\n                return ([], [{'': 0, '': [f\"{''.join(sorted(v6))}\"]}])\n            for v7 in v4:\n                v8 = v4.line_num\n                if None in v7:\n                    v2.append({'': v8, '': ['']})\n                    continue\n                if None in v7.values():\n                    v2.append({'': v8, '': ['']})\n                    continue\n                v9, v10 = validate_row(v7)\n                if v9:\n                    v2.append({'': v8, '': v9})\n                else:\n                    v1.append(v10)\n    except (OSError, UnicodeDecodeError, csv.Error) as v11:\n        v2.append({'': 0, '': [f'{v11}']})\n    return (v1, v2)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "39acdcb30ef1f29adc040b53d276d7ebf5e0e933fb46402594130bcce5695a70",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-d1ca7280490d",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 43,
+          "exact_fingerprint": "39acdcb30ef1f29adc040b53d276d7ebf5e0e933fb46402594130bcce5695a70",
+          "file_hash": "045efcb86113c6a29a6715330316ef7d6ab05328731bf3dc164474ee6ec5d359",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 8,
+          "name": "issue_access_token",
+          "path": "sample_02.py",
+          "qualname": "issue_access_token",
+          "top_level": true
+        }
+      ],
+      "node_count": 181,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "d1ca7280490d6ce5c759498da259f27ce4e9fe6d6bf02d68113496644709d5c0",
+      "shape_text": "def f0(v0, v1=None, v2=0, v3='', v4=None, v5=None):\n    v1 = v1 or os.environ.get('')\n    if not v1:\n        raise ValueError('')\n    if len(v1) < 0:\n        raise ValueError('')\n    if v0 is None or str(v0) == '':\n        raise ValueError('')\n    if v2 <= 0:\n        raise ValueError('')\n    if v3 not in ('', '', ''):\n        raise ValueError('')\n    v6 = int(time.time())\n    v7 = {'': str(v0), '': v6, '': v6, '': v6 + int(v2), '': uuid.uuid4().hex, '': ''}\n    if v4:\n        v7[''] = v4\n    if v5:\n        v7[''] = v5\n    return jwt.encode(v7, v1, algorithm=v3)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "6fef5534733ccdeda8930f73af9c5404a884e249de47be0820c2703f33739fb1",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-e5a4751fa0bb",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 66,
+          "exact_fingerprint": "6fef5534733ccdeda8930f73af9c5404a884e249de47be0820c2703f33739fb1",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 0,
+          "input": 7,
+          "kind": "function",
+          "lineno": 51,
+          "name": "save_user",
+          "path": "sample_02.py",
+          "qualname": "save_user",
+          "top_level": true
+        }
+      ],
+      "node_count": 89,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "e5a4751fa0bb948c156f8d1352b3ff6214e66e6ce42705f95302148c0defbb03",
+      "shape_text": "def f0(v0: UserCreate) -> dict:\n    v1 = v0.email.lower()\n    if v1 in _EMAIL_INDEX:\n        raise ValueError('')\n    v2 = len(_USERS) + 0\n    v3 = {'': v2, '': v0.username, '': v1, '': v0.age, '': hash_password(v0.password)}\n    _USERS[v2] = v3\n    _EMAIL_INDEX[v1] = v2\n    return v3\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "5fcc98500efe0e2cba12c0a06aab30b8596ef7dffa6b3428113ea8a64ccc3cf0",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-e73d23e196e0",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 118,
+          "exact_fingerprint": "5fcc98500efe0e2cba12c0a06aab30b8596ef7dffa6b3428113ea8a64ccc3cf0",
+          "file_hash": "cfc22103ec38668296db67d8f56425160cb471006738224cb39ad2f22fe56808",
+          "index": 0,
+          "input": 6,
+          "kind": "function",
+          "lineno": 50,
+          "name": "import_users_from_csv",
+          "path": "sample_01.py",
+          "qualname": "import_users_from_csv",
+          "top_level": true
+        }
+      ],
+      "node_count": 428,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "e73d23e196e00df0a707349896108605851e85084e40fc63df0e94502148646e",
+      "shape_text": "def f0(v0: str, v1: str='') -> tuple:\n    v2: list = []\n    v3: list = []\n    v4: set = set()\n    try:\n        with open(v0, newline='', encoding=v1) as v5:\n            v6 = csv.DictReader(v5)\n            if v6.fieldnames is None:\n                v3.append({'': 0, '': {}, '': ['']})\n                return (v2, v3)\n            v6.fieldnames = [(v7 or '').strip().lower() for v7 in v6.fieldnames]\n            v8 = [v9 for v9 in REQUIRED_COLUMNS if v9 not in v6.fieldnames]\n            if v8:\n                v3.append({'': 0, '': {}, '': [f\"{''.join(v8)}\"]})\n                return (v2, v3)\n            try:\n                for v10 in v6:\n                    v11 = v6.line_num\n                    if None in v10:\n                        v3.append({'': v11, '': {v12: v13 for v12, v13 in v10.items() if v12 is not None}, '': ['']})\n                        continue\n                    if any((v13 is None for v13 in v10.values())):\n                        v3.append({'': v11, '': dict(v10), '': ['']})\n                        continue\n                    if not any(((v13 or '').strip() for v13 in v10.values())):\n                        continue\n                    v14, v15 = validate_user_row(v10, v11, v4)\n                    if v15:\n                        v3.append({'': v11, '': dict(v10), '': v15})\n                    else:\n                        v2.append(v14)\n            except csv.Error as v16:\n                v3.append({'': v6.line_num, '': {}, '': [f'{v16}']})\n    except FileNotFoundError:\n        v3.append({'': 0, '': {}, '': [f'{v0}']})\n    except UnicodeDecodeError as v16:\n        v3.append({'': 0, '': {}, '': [f'{v1}{v16}']})\n    except OSError as v16:\n        v3.append({'': 0, '': {}, '': [f'{v16}']})\n    return (v2, v3)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "12406ba479d5c6f1934d2a00177e485cc2c28e408010738732ff9ef87f581763",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-e89cb2d77eea",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 148,
+          "exact_fingerprint": "12406ba479d5c6f1934d2a00177e485cc2c28e408010738732ff9ef87f581763",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 72,
+          "name": "load_config",
+          "path": "sample_01.py",
+          "qualname": "load_config",
+          "top_level": true
+        }
+      ],
+      "node_count": 447,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "e89cb2d77eea78b379c33a3fa71c653b5a6df5eeab8ddfa1f82b676b28d4ac85",
+      "shape_text": "def f0(v0: Optional[Mapping[str, str]]=None, v1: str='') -> dict:\n    v2 = os.environ if v0 is None else v0\n    v3 = []\n    v4: dict[str, Any] = {}\n\n    def v5(v6: str) -> Optional[str]:\n        v7 = v2.get(f'{v1}{v6}')\n        if v7 is None or v7.strip() == '':\n            return None\n        return v7\n\n    def v8(v6: str, v9, v10: Any=None, v11: bool=False) -> None:\n        v12 = v6.lower()\n        v7 = v5(v6)\n        if v7 is None:\n            if v11:\n                v3.append(f'{v1}{v6}')\n            v4[v12] = v10\n            return\n        try:\n            v4[v12] = v9(v7)\n        except ValueError as v13:\n            v3.append(f'{v1}{v6}{v13}')\n            v4[v12] = v10\n    v8('', lambda v14: _parse_choice(v14, _VALID_ENVIRONMENTS), default='')\n    v8('', _parse_bool, default=False)\n    v8('', _parse_nonempty, default='')\n    v8('', lambda v14: _parse_int(v14, 0, 0), default=0)\n    v8('', lambda v14: _parse_choice(v14, _VALID_LOG_LEVELS, case=''), default='')\n    v8('', _parse_nonempty, required=True)\n    v8('', _parse_url, default='')\n    v8('', lambda v14: _parse_float(v14, 0), default=0)\n    v8('', lambda v14: _parse_int(v14, 0, 0), default=0)\n    v8('', _parse_list, default=[''])\n    v15 = v4[''] == ''\n    v8('', lambda v14: v14.strip() if len(v14.strip()) >= 0 else (v16 for v16 in ()).throw(ValueError('')), default=None, required=v15)\n    if v15 and v4['']:\n        v3.append(f'{v1}{v1}')\n        v4[''] = False\n    if v3:\n        raise ConfigError('' + ''.join(v3))\n    return v4\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "a8609aea87dfe6c6c83899f3de3683eab0ccdd9caef24117c64068cea802b499",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-ec9e30d03558",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 61,
+          "exact_fingerprint": "a8609aea87dfe6c6c83899f3de3683eab0ccdd9caef24117c64068cea802b499",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 57,
+          "name": "_get_choice",
+          "path": "sample_02.py",
+          "qualname": "_get_choice",
+          "top_level": true
+        }
+      ],
+      "node_count": 48,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "ec9e30d03558b60f14631cb77d379dc17ffbd0901bb3d51c99f5bcd53c019062",
+      "shape_text": "def f0(v0, v1, v2):\n    v3 = _get_str(v0, v1)\n    if v3.lower() not in v2:\n        raise ValueError(f'{v0}{sorted(v2)}{v3!r}')\n    return v3.lower()\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "4841a802abba69f1c3c3751be891008bfe5182d92049e0cc68ca672d5e72117e",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-f5cbe535f3e1",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 26,
+          "exact_fingerprint": "4841a802abba69f1c3c3751be891008bfe5182d92049e0cc68ca672d5e72117e",
+          "file_hash": "7a6606dd7d26f1e8df792e8623d0d753abca0f0bb4c746b1a404fcff8647059a",
+          "index": 0,
+          "input": 3,
+          "kind": "function",
+          "lineno": 11,
+          "name": "parse_retry_after",
+          "path": "sample_02.py",
+          "qualname": "parse_retry_after",
+          "top_level": true
+        }
+      ],
+      "node_count": 93,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f5cbe535f3e14ef1dfb39f7c281bc4418d4613fa00c2022ceedc441ffcdc7291",
+      "shape_text": "def f0(v0):\n    if not v0:\n        return None\n    v0 = v0.strip()\n    try:\n        return max(0, float(v0))\n    except ValueError:\n        pass\n    try:\n        v1 = parsedate_to_datetime(v0)\n        if v1.tzinfo is None:\n            v1 = v1.replace(tzinfo=timezone.utc)\n        return max(0, (v1 - datetime.now(timezone.utc)).total_seconds())\n    except (TypeError, ValueError):\n        return None\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "30384ed7af81def008c984f2d89bb1efe51ae5229c7c4e3746c0d6dfd50fff34",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-f5d9cfd741af",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 97,
+          "exact_fingerprint": "30384ed7af81def008c984f2d89bb1efe51ae5229c7c4e3746c0d6dfd50fff34",
+          "file_hash": "1620c54b50977f07f98ce7dbec697ff09be8d42a3f27fd0cf9ffa17303f831b6",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 71,
+          "name": "load_config",
+          "path": "sample_02.py",
+          "qualname": "load_config",
+          "top_level": true
+        }
+      ],
+      "node_count": 130,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f5d9cfd741af6a7f763c1e076b0015f2824fe5f23883a5e29e88493f6db4e470",
+      "shape_text": "def f0():\n    v0 = {'': _get_choice('', '', {'', '', ''}), '': _get_bool('', False), '': _get_str('', ''), '': _get_int('', 0, min_value=0, max_value=0), '': _get_int('', 0, min_value=0, max_value=0), '': _get_float('', 0, min_value=0), '': _get_choice('', '', {'', '', '', '', ''}), '': _get_list('', ['']), '': _get_str('', required=True), '': _get_str('', required=True)}\n    if v0[''] == '':\n        if v0['']:\n            raise ValueError('')\n        if len(v0['']) < 0:\n            raise ValueError('')\n    return v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "d0e417e91f7d0f93e41f2f2cde08f8e826c4768b000af1ca508cdb46054781a2",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-f8c601b67b51",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 47,
+          "exact_fingerprint": "d0e417e91f7d0f93e41f2f2cde08f8e826c4768b000af1ca508cdb46054781a2",
+          "file_hash": "dd1f3c224472d0a993ef20cfeb867800a52417b1eafb42b4c24f6287033e7ff9",
+          "index": 0,
+          "input": 2,
+          "kind": "function",
+          "lineno": 7,
+          "name": "paginate",
+          "path": "sample_01.py",
+          "qualname": "paginate",
+          "top_level": true
+        }
+      ],
+      "node_count": 226,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f8c601b67b514f520b8719b6ea18548e7939659656dedbf7a78c55215c4f0253",
+      "shape_text": "def f0(v0: Any, v1: int, v2: int, v3: Session | None=None) -> Tuple[List[Any], int]:\n    if v1 < 0:\n        raise ValueError('')\n    if v2 < 0:\n        raise ValueError('')\n    v4 = (v1 - 0) * v2\n    if isinstance(v0, Query):\n        v5 = v0.order_by(None).count()\n        v6 = v0.limit(v2).offset(v4).all()\n        return (v6, v5)\n    if v3 is None:\n        raise ValueError('')\n    v7 = select(func.count()).select_from(v0.order_by(None).subquery())\n    v5 = v3.execute(v7).scalar_one()\n    v8 = v0.limit(v2).offset(v4)\n    v9 = v3.execute(v8)\n    if len(v0.selected_columns) == 0:\n        v6 = list(v9.scalars().all())\n    else:\n        v6 = list(v9.all())\n    return (v6, v5)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c83a5325cde5f97cd92796286f93c411032c937e356b62db1d60c3da6faf050c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-f8d6b4a49926",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 32,
+          "exact_fingerprint": "c83a5325cde5f97cd92796286f93c411032c937e356b62db1d60c3da6faf050c",
+          "file_hash": "77c69dfa5a29a922ddfcfd33296ccd5c2587eade2369a9c93764201d75075389",
+          "index": 0,
+          "input": 5,
+          "kind": "function",
+          "lineno": 4,
+          "name": "allow_request",
+          "path": "sample_01.py",
+          "qualname": "allow_request",
+          "top_level": true
+        }
+      ],
+      "node_count": 138,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f8d6b4a499269b48f0449237fd183199486643ffdcdf4d0e01f7422953d2800e",
+      "shape_text": "def f0(v0, v1, v2=0, v3=0, v4=0, v5=None):\n    if v5 is None:\n        v5 = time.monotonic()\n    v6 = v0.get(v1)\n    if v6 is None:\n        v6 = {'': float(v2), '': v5}\n        v0[v1] = v6\n    v7 = max(0, v5 - v6[''])\n    v6[''] = min(float(v2), v6[''] + v7 * v3)\n    v6[''] = v5\n    if v6[''] >= v4:\n        v6[''] -= v4\n        return True\n    return False\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "5584e88f70cf75db3eb359186fdeef89cddbd9c14b0ef85908a829b6fa06605c",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-f8f53387460a",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 41,
+          "exact_fingerprint": "5584e88f70cf75db3eb359186fdeef89cddbd9c14b0ef85908a829b6fa06605c",
+          "file_hash": "f4aa9d50c8fae1e3ff9bf80e37935a8abf486834ec58078bc92274666dfd07d7",
+          "index": 0,
+          "input": 1,
+          "kind": "function",
+          "lineno": 23,
+          "name": "hash_password",
+          "path": "sample_02.py",
+          "qualname": "hash_password",
+          "top_level": true
+        }
+      ],
+      "node_count": 90,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "f8f53387460ae7dddd249a82c964e091d1a9bd8095c811f4e33b7a1d457d4e2e",
+      "shape_text": "def f0(v0: str) -> str:\n    if not isinstance(v0, str):\n        raise TypeError('')\n    v1 = os.urandom(_SALT_LEN)\n    v2 = hashlib.scrypt(v0.encode(''), salt=v1, n=_N, r=_R, p=_P, maxmem=_MAXMEM, dklen=_DKLEN)\n    return f'{_SCHEME}{_N}{_R}{_P}{_b64e(v1)}{_b64e(v2)}'\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "d46503c5c00ea43c07bedd47247efbc12879160e6c7e92e41a91d5affccc2119",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-fb3d5e17c6c8",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 65,
+          "exact_fingerprint": "d46503c5c00ea43c07bedd47247efbc12879160e6c7e92e41a91d5affccc2119",
+          "file_hash": "ec9dd8de130c8fa23f7b084a4ea74adc22bc41814e48100c8a7b95a19370d04b",
+          "index": 0,
+          "input": 4,
+          "kind": "function",
+          "lineno": 61,
+          "name": "_parse_url",
+          "path": "sample_01.py",
+          "qualname": "_parse_url",
+          "top_level": true
+        }
+      ],
+      "node_count": 38,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "fb3d5e17c6c8820b397ec3b402cc0822c9811c8e1584fdad71bbde81782a6ba5",
+      "shape_text": "def f0(v0: str) -> str:\n    v1 = v0.strip()\n    if not v1.startswith(('', '')):\n        raise ValueError(f'{v0!r}')\n    return v1\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "1dd2057baf7fd9d348616693693228850f2a005db4f95580134435fec301bfa4",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fn-ffc42fa1c5cd",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "field_validator('password')",
+            "classmethod"
+          ],
+          "end_lineno": 32,
+          "exact_fingerprint": "1dd2057baf7fd9d348616693693228850f2a005db4f95580134435fec301bfa4",
+          "file_hash": "62c7e3157a663d789807b02fc414fd6a1ed052349fe376cc8a82e5aadf72d844",
+          "index": 0,
+          "input": 7,
+          "kind": "method",
+          "lineno": 29,
+          "name": "validate_password",
+          "path": "sample_02.py",
+          "qualname": "UserCreate.validate_password",
+          "top_level": false
+        }
+      ],
+      "node_count": 37,
+      "occurrences": 1,
+      "score": 0,
+      "shape_fingerprint": "ffc42fa1c5cd29136c51ec3a1d6a8d8e1b3ecac196ad2461e444647c5078621e",
+      "shape_text": "def f0(cls, v0: str) -> str:\n    if not (re.search('', v0) and re.search('', v0)):\n        raise ValueError('')\n    return v0\n"
+    }
+  ],
+  "inputs": [
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/jwt_create/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/password_hash/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/paginate_query/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/http_retry/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/env_config/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/token_bucket/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/csv_import/B"
+    },
+    {
+      "git": null,
+      "path": "experiments/variance/runs/smoke/fastapi_create_user/B"
+    }
+  ],
+  "settings": {
+    "excludes": [],
+    "fragments": true,
+    "include_generated": false,
+    "include_tests": false,
+    "include_trivial": true,
+    "min_fragment_nodes": 25,
+    "min_nodes": 20,
+    "min_occurrences": 1,
+    "skip_dirs": true
+  },
+  "shape_version": 1,
+  "skipped_files": [],
+  "stats": {
+    "files_mined": 16,
+    "files_seen": 16,
+    "files_skipped": {},
+    "fragment_clusters": 33,
+    "fragments_mined": 55,
+    "function_clusters": 44,
+    "functions_filtered": {
+      "too_small": 4
+    },
+    "functions_found": 49,
+    "functions_mined": 45
+  }
+}

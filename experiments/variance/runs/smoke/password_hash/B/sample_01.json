@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_ALGORITHM = \"sha256\"\n_ITERATIONS = 600_000\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Return a self-describing PBKDF2-HMAC-SHA256 hash string for storage.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.pbkdf2_hmac(_ALGORITHM, password.encode(\"utf-8\"), salt, _ITERATIONS)\n    return \"pbkdf2_{}${}${}${}\".format(\n        _ALGORITHM,\n        _ITERATIONS,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login password against a stored hash using constant-time comparison.\"\"\"\n    try:\n        scheme, iterations, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if not scheme.startswith(\"pbkdf2_\"):\n            return False\n        algorithm = scheme[len(\"pbkdf2_\"):]\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n        dk = hashlib.pbkdf2_hmac(\n            algorithm, password.encode(\"utf-8\"), salt, int(iterations), len(expected)\n        )\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(dk, expected)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.03759,
+    "duration_ms": 9365,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need two functions: one that hashes a user's password for storage and one that checks a login password against the stored hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_ALGORITHM = \"sha256\"\n_ITERATIONS = 600_000\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Return a self-describing PBKDF2-HMAC-SHA256 hash string for storage.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.pbkdf2_hmac(_ALGORITHM, password.encode(\"utf-8\"), salt, _ITERATIONS)\n    return \"pbkdf2_{}${}${}${}\".format(\n        _ALGORITHM,\n        _ITERATIONS,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login password against a stored hash using constant-time comparison.\"\"\"\n    try:\n        scheme, iterations, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if not scheme.startswith(\"pbkdf2_\"):\n            return False\n        algorithm = scheme[len(\"pbkdf2_\"):]\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n        dk = hashlib.pbkdf2_hmac(\n            algorithm, password.encode(\"utf-8\"), salt, int(iterations), len(expected)\n        )\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(dk, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 1,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:55:35+00:00",
+  "valid": true
+}

@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef issue_access_token(\n    user_id,\n    secret_key=None,\n    expires_in_seconds=900,\n    algorithm=\"HS256\",\n    issuer=None,\n    audience=None,\n):\n    \"\"\"Issue a signed JWT access token containing the user's id and an expiration.\"\"\"\n    secret_key = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret_key:\n        raise ValueError(\"A signing secret is required (pass secret_key or set JWT_SECRET_KEY).\")\n    if len(secret_key) < 32:\n        raise ValueError(\"Signing secret must be at least 32 characters.\")\n    if user_id is None or str(user_id) == \"\":\n        raise ValueError(\"user_id is required.\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive.\")\n    if algorithm not in (\"HS256\", \"HS384\", \"HS512\"):\n        raise ValueError(\"Unsupported algorithm.\")\n\n    now = int(time.time())\n    claims = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in_seconds),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        claims[\"iss\"] = issuer\n    if audience:\n        claims[\"aud\"] = audience\n\n    return jwt.encode(claims, secret_key, algorithm=algorithm)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.041636599999999996,
+    "duration_ms": 13359,
+    "num_turns": 2
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Python: function to issue a signed access token (JWT) containing the user's id and an expiration.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2",
+  "raw_response": "```python\nimport os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef issue_access_token(\n    user_id,\n    secret_key=None,\n    expires_in_seconds=900,\n    algorithm=\"HS256\",\n    issuer=None,\n    audience=None,\n):\n    \"\"\"Issue a signed JWT access token containing the user's id and an expiration.\"\"\"\n    secret_key = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret_key:\n        raise ValueError(\"A signing secret is required (pass secret_key or set JWT_SECRET_KEY).\")\n    if len(secret_key) < 32:\n        raise ValueError(\"Signing secret must be at least 32 characters.\")\n    if user_id is None or str(user_id) == \"\":\n        raise ValueError(\"user_id is required.\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive.\")\n    if algorithm not in (\"HS256\", \"HS384\", \"HS512\"):\n        raise ValueError(\"Unsupported algorithm.\")\n\n    now = int(time.time())\n    claims = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in_seconds),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        claims[\"iss\"] = issuer\n    if audience:\n        claims[\"aud\"] = audience\n\n    return jwt.encode(claims, secret_key, algorithm=algorithm)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 2,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:55:38+00:00",
+  "valid": true
+}

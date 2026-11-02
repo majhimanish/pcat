@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\n\n\ndef paginate(\n    query: Any,\n    page: int,\n    page_size: int,\n    session: Session | None = None,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a SQLAlchemy query.\n\n    Works with both legacy ``Query`` objects and 2.0-style ``Select``\n    statements. Pages are 1-indexed. For ``Select`` statements, a\n    ``session`` is required.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    offset = (page - 1) * page_size\n\n    if isinstance(query, Query):\n        total = query.order_by(None).count()\n        items = query.limit(page_size).offset(offset).all()\n        return items, total\n\n    if session is None:\n        raise ValueError(\"session is required when paginating a Select statement\")\n\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = query.limit(page_size).offset(offset)\n    result = session.execute(page_stmt)\n    # Single-entity selects return scalars; multi-column selects return rows.\n    if len(query.selected_columns) == 1:\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0374385,
+    "duration_ms": 6904,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a pagination helper for SQLAlchemy: given a query, a page number and a page size, return the items on that page and the total number of results.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nfrom typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\n\n\ndef paginate(\n    query: Any,\n    page: int,\n    page_size: int,\n    session: Session | None = None,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a SQLAlchemy query.\n\n    Works with both legacy ``Query`` objects and 2.0-style ``Select``\n    statements. Pages are 1-indexed. For ``Select`` statements, a\n    ``session`` is required.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    offset = (page - 1) * page_size\n\n    if isinstance(query, Query):\n        total = query.order_by(None).count()\n        items = query.limit(page_size).offset(offset).all()\n        return items, total\n\n    if session is None:\n        raise ValueError(\"session is required when paginating a Select statement\")\n\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = query.limit(page_size).offset(offset)\n    result = session.execute(page_stmt)\n    # Single-entity selects return scalars; multi-column selects return rows.\n    if len(query.selected_columns) == 1:\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 1,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:55:34+00:00",
+  "valid": true
+}

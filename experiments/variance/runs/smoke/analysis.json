@@ -1,0 +1,1173 @@
+{
+  "canonical_version": 2,
+  "shape_version": 1,
+  "tasks": {
+    "csv_import": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "c7d7a8544a85613178968bc467aea05e528333ed477296f7eb9105930dfcf170"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "aa2597a5a1e3ae2e9bd6da27cd5ac81c7c2161892df38f89dca5bae283b729bd",
+            "functions": 2,
+            "imports": [
+              "csv",
+              "re",
+              "typing"
+            ],
+            "module_statements": 1,
+            "sample": 1,
+            "shape_fingerprint": "c7d7a8544a85613178968bc467aea05e528333ed477296f7eb9105930dfcf170",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "3abf8910f97d6f3a5cbb0098517dd333dfbce9b26b3d8a4c1990b56fb979191a"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "e88b7a7a8ce651db785a9bf693b9c74b7fffce091b7041b60c328da785412e97",
+            "functions": 2,
+            "imports": [
+              "csv",
+              "datetime",
+              "io",
+              "re"
+            ],
+            "module_statements": 1,
+            "sample": 2,
+            "shape_fingerprint": "3abf8910f97d6f3a5cbb0098517dd333dfbce9b26b3d8a4c1990b56fb979191a",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "1": 2
+          },
+          "function_counts": {
+            "2": 2
+          },
+          "import_sets": {
+            "csv+datetime+io+re": 1,
+            "csv+re+typing": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 2
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "b8aecd879794d3e3e06c57c6d427eeb0214dcb38775851d630bf6c72e2cd03cd"
+            },
+            "entry_params": 3,
+            "exact_fingerprint": "2fbb4ca63a10e03a0aabe8659b3a19a36e2c3098e19d91b6c929fc4a1e65cc5d",
+            "functions": 2,
+            "imports": [
+              "csv",
+              "re",
+              "typing"
+            ],
+            "module_statements": 1,
+            "sample": 1,
+            "shape_fingerprint": "b8aecd879794d3e3e06c57c6d427eeb0214dcb38775851d630bf6c72e2cd03cd",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "d666cf9dbf35d8ce773c9ef25f1c58bc4436c2da48218a2fe0cdfb7361940685"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "3a17458888e21e6d7cd33748c47a7e3a09afcd8cce8b834bc4528148fdbf7fc8",
+            "functions": 2,
+            "imports": [
+              "csv",
+              "re"
+            ],
+            "module_statements": 1,
+            "sample": 2,
+            "shape_fingerprint": "d666cf9dbf35d8ce773c9ef25f1c58bc4436c2da48218a2fe0cdfb7361940685",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "1": 1,
+            "3": 1
+          },
+          "function_counts": {
+            "2": 2
+          },
+          "import_sets": {
+            "csv+re": 1,
+            "csv+re+typing": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 2
+        }
+      }
+    },
+    "env_config": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "0f859319390f687112eed53feeecf33ba2ebce7e14c3d8a2aff7d1e8a861dc0f"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "27c964fed9aae7d9dd4a0cfdbe353b6aa85773959f492fb239d44e4de848fd6f",
+            "functions": 3,
+            "imports": [
+              "os",
+              "typing"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "0f859319390f687112eed53feeecf33ba2ebce7e14c3d8a2aff7d1e8a861dc0f",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 1,
+              "shape_fingerprint": "955719e43875c7dc160920cb5b39e16f0e5c002ca2d6fd0f84d44108f941aebc",
+              "third_party": []
+            },
+            "invalid_reason": "contains_class",
+            "sample": 2,
+            "status": "ok"
+          }
+        ],
+        "summary": {
+          "distinct_exact": 1,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 1,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 1.0,
+          "entry_param_counts": {
+            "1": 1
+          },
+          "function_counts": {
+            "3": 1
+          },
+          "import_sets": {
+            "os+typing": 1
+          },
+          "invalid": {
+            "contains_class": 1
+          },
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 1
+          },
+          "third_party_sets": {
+            "(none)": 1
+          },
+          "top_shape_share": 1.0,
+          "valid": 1,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 1,
+              "shape_fingerprint": "0b0a7e3bf6218c272332f532d692b4075e572c225a639a37aee91770c3bc0d81",
+              "third_party": []
+            },
+            "invalid_reason": "contains_class",
+            "sample": 1,
+            "status": "ok"
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "5febbc0c937989aa36bc56bc6d6b0ed66ec65d0899459efbf4a885561280ff4d"
+            },
+            "entry_params": 3,
+            "exact_fingerprint": "10c3287a71ddad7a1566614f445f1a4fa4a5b489c08350de2a39e112d29363ab",
+            "functions": 7,
+            "imports": [
+              "os"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "5febbc0c937989aa36bc56bc6d6b0ed66ec65d0899459efbf4a885561280ff4d",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 1,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 1,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 1.0,
+          "entry_param_counts": {
+            "3": 1
+          },
+          "function_counts": {
+            "7": 1
+          },
+          "import_sets": {
+            "os": 1
+          },
+          "invalid": {
+            "contains_class": 1
+          },
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 1
+          },
+          "third_party_sets": {
+            "(none)": 1
+          },
+          "top_shape_share": 1.0,
+          "valid": 1,
+          "with_module_statements": 0
+        }
+      }
+    },
+    "fastapi_create_user": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 2,
+              "shape_fingerprint": "dcad33f79c118b8e12b1fb0c9372a82b4b45d7dfc926fbac219f7424b984af03",
+              "third_party": [
+                "fastapi",
+                "pydantic"
+              ]
+            },
+            "invalid_reason": "contains_class",
+            "sample": 1,
+            "status": "ok"
+          },
+          {
+            "classes_removed": {
+              "classes": 2,
+              "shape_fingerprint": "100b91fd72da9a144b908c72daec2a4b694a1a6f2adfb88385d202d7e58919d1",
+              "third_party": [
+                "fastapi",
+                "pydantic"
+              ]
+            },
+            "invalid_reason": "contains_class",
+            "sample": 2,
+            "status": "ok"
+          }
+        ],
+        "summary": {
+          "distinct_exact": 0,
+          "distinct_import_sets": 0,
+          "distinct_shapes": 0,
+          "distinct_third_party_sets": 0,
+          "effective_shapes": 0.0,
+          "entry_param_counts": {},
+          "function_counts": {},
+          "import_sets": {},
+          "invalid": {
+            "contains_class": 2
+          },
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 2
+          },
+          "third_party_sets": {},
+          "top_shape_share": 0.0,
+          "valid": 0,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 2,
+              "shape_fingerprint": "d9da7d41a9ebf031776b96038858fc6896a5183bda85396090ec3334517706db",
+              "third_party": [
+                "fastapi",
+                "pydantic"
+              ]
+            },
+            "invalid_reason": "contains_class",
+            "sample": 1,
+            "status": "ok"
+          },
+          {
+            "classes_removed": {
+              "classes": 2,
+              "shape_fingerprint": "711fb84630abddd5c89a0f3b581d83861b0eeaf0212971870ab0aa00cd4729c9",
+              "third_party": [
+                "fastapi",
+                "pydantic"
+              ]
+            },
+            "invalid_reason": "contains_class",
+            "sample": 2,
+            "status": "ok"
+          }
+        ],
+        "summary": {
+          "distinct_exact": 0,
+          "distinct_import_sets": 0,
+          "distinct_shapes": 0,
+          "distinct_third_party_sets": 0,
+          "effective_shapes": 0.0,
+          "entry_param_counts": {},
+          "function_counts": {},
+          "import_sets": {},
+          "invalid": {
+            "contains_class": 2
+          },
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 2
+          },
+          "third_party_sets": {},
+          "top_shape_share": 0.0,
+          "valid": 0,
+          "with_module_statements": 0
+        }
+      }
+    },
+    "http_retry": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "ea909aed3abaa5ca8029225dec28039f221ac933dd366276c32a7138070130a6"
+            },
+            "entry_params": 7,
+            "exact_fingerprint": "bc5d2e403ea7f6c14b07b13d458e9496a05c117da43da14839c3399265d73adc",
+            "functions": 1,
+            "imports": [
+              "random",
+              "requests",
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "ea909aed3abaa5ca8029225dec28039f221ac933dd366276c32a7138070130a6",
+            "status": "ok",
+            "third_party": [
+              "requests"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "4663b1f302abe65465b0035a3ca62d570e84db011c159f323e96e1f9ee2585f9"
+            },
+            "entry_params": 7,
+            "exact_fingerprint": "5be6608a97c4c22adfe4e526c64a9aaa6328ffbaa37527ce6dbe92ae10fcb7fa",
+            "functions": 2,
+            "imports": [
+              "random",
+              "requests",
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "4663b1f302abe65465b0035a3ca62d570e84db011c159f323e96e1f9ee2585f9",
+            "status": "ok",
+            "third_party": [
+              "requests"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "7": 2
+          },
+          "function_counts": {
+            "1": 1,
+            "2": 1
+          },
+          "import_sets": {
+            "random+requests+time": 2
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "requests": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "9f3dbb634da658647af76a5fc6cbae74646653b5b4556c2a64088b8cc9197778"
+            },
+            "entry_params": 7,
+            "exact_fingerprint": "cbe45e6300ac274d302f9248e4cbfa1bba367645ec8019fe5927d8166d9a55c3",
+            "functions": 1,
+            "imports": [
+              "random",
+              "requests",
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "9f3dbb634da658647af76a5fc6cbae74646653b5b4556c2a64088b8cc9197778",
+            "status": "ok",
+            "third_party": [
+              "requests"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "1ae28ad693f64aaf64a77ec05f658f2eb6411dc6a9af8f8ff94d476397c2ed24"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "ed404897ae7ef6ac4e6b7f0b173af8f57513dee8340dd0420a30c67091240dbb",
+            "functions": 3,
+            "imports": [
+              "datetime",
+              "email",
+              "random",
+              "requests",
+              "time"
+            ],
+            "module_statements": 1,
+            "sample": 2,
+            "shape_fingerprint": "1ae28ad693f64aaf64a77ec05f658f2eb6411dc6a9af8f8ff94d476397c2ed24",
+            "status": "ok",
+            "third_party": [
+              "requests"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "1": 1,
+            "7": 1
+          },
+          "function_counts": {
+            "1": 1,
+            "3": 1
+          },
+          "import_sets": {
+            "datetime+email+random+requests+time": 1,
+            "random+requests+time": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "requests": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 1
+        }
+      }
+    },
+    "jwt_create": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "d2a4a6440181fba99c91ac246f165f3e6f24a5caf751079d6db6e066c66af008"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "ad2e1c3560828319ab29dcc11000256eb86824a2827a0aa31bef111ec4dac875",
+            "functions": 1,
+            "imports": [
+              "jwt",
+              "os",
+              "time",
+              "uuid"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "d2a4a6440181fba99c91ac246f165f3e6f24a5caf751079d6db6e066c66af008",
+            "status": "ok",
+            "third_party": [
+              "jwt"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "cb616f7f9084c986f3904b72ccd9678d4cda1370fa6557c7e06f818ae8251494"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "c4cd91b207ca5042e843c97b8d7bfa6b61004915c0fca60142c0dd0e92f459ba",
+            "functions": 1,
+            "imports": [
+              "jwt",
+              "time",
+              "uuid"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "cb616f7f9084c986f3904b72ccd9678d4cda1370fa6557c7e06f818ae8251494",
+            "status": "ok",
+            "third_party": [
+              "jwt"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "6": 2
+          },
+          "function_counts": {
+            "1": 2
+          },
+          "import_sets": {
+            "jwt+os+time+uuid": 1,
+            "jwt+time+uuid": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "jwt": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "0ccab34a06b5d9f3877d9cc033d0d6e909a3e191934f94859576ecb3706325aa"
+            },
+            "entry_params": 7,
+            "exact_fingerprint": "c2d2d728a352caa7588499b37c891c8650512e86e9acf73cc1cbdc691d5a63ff",
+            "functions": 1,
+            "imports": [
+              "datetime",
+              "jwt",
+              "os",
+              "time",
+              "uuid"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "0ccab34a06b5d9f3877d9cc033d0d6e909a3e191934f94859576ecb3706325aa",
+            "status": "ok",
+            "third_party": [
+              "jwt"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "e04d3749abb4ca5326a135b05e9b42db0951c171d96fe3a51dd8c67cd78ce796"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "abad4d91a2107a6faca1442025d6d1e16f1fba8e81f975c5e8d66570e2680d15",
+            "functions": 1,
+            "imports": [
+              "jwt",
+              "os",
+              "time",
+              "uuid"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "e04d3749abb4ca5326a135b05e9b42db0951c171d96fe3a51dd8c67cd78ce796",
+            "status": "ok",
+            "third_party": [
+              "jwt"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "6": 1,
+            "7": 1
+          },
+          "function_counts": {
+            "1": 2
+          },
+          "import_sets": {
+            "datetime+jwt+os+time+uuid": 1,
+            "jwt+os+time+uuid": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "jwt": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      }
+    },
+    "paginate_query": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "03c40b021def80b691806970d51917c4786a9be899ff924fa635a0898813bb1f"
+            },
+            "entry_params": 4,
+            "exact_fingerprint": "2261e6dc6ece69a384adb17d13a5cc1346e8b97de1fca51171d0c469d741d0b4",
+            "functions": 2,
+            "imports": [
+              "sqlalchemy",
+              "typing"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "03c40b021def80b691806970d51917c4786a9be899ff924fa635a0898813bb1f",
+            "status": "ok",
+            "third_party": [
+              "sqlalchemy"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "9069b101d31e87ef5b43796117efe805f2e4adfd54006590249692d104872552"
+            },
+            "entry_params": 4,
+            "exact_fingerprint": "dab0fe5c1675f0127c40ce2625eea6b8dab15af7075f91ee91dfcf4368d97868",
+            "functions": 1,
+            "imports": [
+              "sqlalchemy"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "9069b101d31e87ef5b43796117efe805f2e4adfd54006590249692d104872552",
+            "status": "ok",
+            "third_party": [
+              "sqlalchemy"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "4": 2
+          },
+          "function_counts": {
+            "1": 1,
+            "2": 1
+          },
+          "import_sets": {
+            "sqlalchemy": 1,
+            "sqlalchemy+typing": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "sqlalchemy": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "5397113899d023b973f39465ed82ff14ec98376cad4691c3a8d54f8c1f170076"
+            },
+            "entry_params": 4,
+            "exact_fingerprint": "10fd60bc2ce717c5f8ea66988c2333add56e3a94137a6ad8709dcb39a15ff5ef",
+            "functions": 1,
+            "imports": [
+              "sqlalchemy",
+              "typing"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "5397113899d023b973f39465ed82ff14ec98376cad4691c3a8d54f8c1f170076",
+            "status": "ok",
+            "third_party": [
+              "sqlalchemy"
+            ]
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "8fe49d62f7fe998fafbdcdb0aec9f5955c762844607115e8ae76397248474cbd"
+            },
+            "entry_params": 3,
+            "exact_fingerprint": "83d13604bcb36c076eab8bd701f10f9ebbc3982d7afab9bca8884b8765378f35",
+            "functions": 2,
+            "imports": [
+              "sqlalchemy"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "8fe49d62f7fe998fafbdcdb0aec9f5955c762844607115e8ae76397248474cbd",
+            "status": "ok",
+            "third_party": [
+              "sqlalchemy"
+            ]
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 2,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "3": 1,
+            "4": 1
+          },
+          "function_counts": {
+            "1": 1,
+            "2": 1
+          },
+          "import_sets": {
+            "sqlalchemy": 1,
+            "sqlalchemy+typing": 1
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "sqlalchemy": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      }
+    },
+    "password_hash": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "21c62d57223e90097b73933b5b6c7870f07c624ea3d6395182d34644ac5ca1c0"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "e08f77ca3674a19f5c17c16cd9a49515670c84294342d5e692ead7399b72f111",
+            "functions": 2,
+            "imports": [
+              "base64",
+              "hashlib",
+              "hmac",
+              "os"
+            ],
+            "module_statements": 1,
+            "sample": 1,
+            "shape_fingerprint": "21c62d57223e90097b73933b5b6c7870f07c624ea3d6395182d34644ac5ca1c0",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "f2ed2c649b8b124bc2a0636a81d19c176d6b0409a8ceafedc19c1562e36a2bb8"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "ff4b79b474bdc1a263c6e0c04b4b687d3af9823dd420fc8a0e6e530b8d05202a",
+            "functions": 2,
+            "imports": [
+              "base64",
+              "hashlib",
+              "hmac",
+              "os"
+            ],
+            "module_statements": 1,
+            "sample": 2,
+            "shape_fingerprint": "f2ed2c649b8b124bc2a0636a81d19c176d6b0409a8ceafedc19c1562e36a2bb8",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "1": 2
+          },
+          "function_counts": {
+            "2": 2
+          },
+          "import_sets": {
+            "base64+hashlib+hmac+os": 2
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 2
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "e37b40369a0e3e62a7bd9ae98115041fcc1c1656899b36f1c3f3e9e923ae771e"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "c2e65b05c6bf96a61f9dd95ada0235684a1e2de21cefed30bcb4a96460328ac4",
+            "functions": 2,
+            "imports": [
+              "base64",
+              "hashlib",
+              "hmac",
+              "os"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "e37b40369a0e3e62a7bd9ae98115041fcc1c1656899b36f1c3f3e9e923ae771e",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "d5d0e46c3d3ba572364b5fb0610575a2f71086cb9648737a033acf6c7be06fa1"
+            },
+            "entry_params": 1,
+            "exact_fingerprint": "24548d02134c00d98615717d064f12dada8322a7db29129034993e2abe329b48",
+            "functions": 4,
+            "imports": [
+              "base64",
+              "hashlib",
+              "hmac",
+              "os"
+            ],
+            "module_statements": 2,
+            "sample": 2,
+            "shape_fingerprint": "d5d0e46c3d3ba572364b5fb0610575a2f71086cb9648737a033acf6c7be06fa1",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "1": 2
+          },
+          "function_counts": {
+            "2": 1,
+            "4": 1
+          },
+          "import_sets": {
+            "base64+hashlib+hmac+os": 2
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 1
+        }
+      }
+    },
+    "token_bucket": {
+      "A": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "03e019f12a0280449e3f7a46b3772bf595cf5ecdac0a5d460bda6b47cd830025",
+            "functions": 1,
+            "imports": [
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "03e019f12a0280449e3f7a46b3772bf595cf5ecdac0a5d460bda6b47cd830025",
+            "functions": 1,
+            "imports": [
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 1,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 1,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 1.0,
+          "entry_param_counts": {
+            "6": 2
+          },
+          "function_counts": {
+            "1": 2
+          },
+          "import_sets": {
+            "time": 2
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 1,
+            "effective_shapes": 1.0,
+            "samples": 2,
+            "top_shape_share": 1.0,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 1.0,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      },
+      "B": {
+        "samples": [
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "03e019f12a0280449e3f7a46b3772bf595cf5ecdac0a5d460bda6b47cd830025",
+            "functions": 1,
+            "imports": [
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 1,
+            "shape_fingerprint": "ce675c72172f826ce9204c5e3b5ab55c9d6f9d0a2068ce9a63b93650ac0ac686",
+            "status": "ok",
+            "third_party": []
+          },
+          {
+            "classes_removed": {
+              "classes": 0,
+              "shape_fingerprint": "1a7d56b03a50b41b89de4b56a80a5de34f687c2109fdf5dedc075c13cd2b7276"
+            },
+            "entry_params": 6,
+            "exact_fingerprint": "454c7679acaeed37d8a182d81e98a4401f32c7750c3761403453c3cbefcd748d",
+            "functions": 1,
+            "imports": [
+              "time"
+            ],
+            "module_statements": 0,
+            "sample": 2,
+            "shape_fingerprint": "1a7d56b03a50b41b89de4b56a80a5de34f687c2109fdf5dedc075c13cd2b7276",
+            "status": "ok",
+            "third_party": []
+          }
+        ],
+        "summary": {
+          "distinct_exact": 2,
+          "distinct_import_sets": 1,
+          "distinct_shapes": 2,
+          "distinct_third_party_sets": 1,
+          "effective_shapes": 2.0,
+          "entry_param_counts": {
+            "6": 2
+          },
+          "function_counts": {
+            "1": 2
+          },
+          "import_sets": {
+            "time": 2
+          },
+          "invalid": {},
+          "samples": 2,
+          "supplementary_classes_removed": {
+            "distinct_shapes": 2,
+            "effective_shapes": 2.0,
+            "samples": 2,
+            "top_shape_share": 0.5,
+            "with_classes": 0
+          },
+          "third_party_sets": {
+            "(none)": 2
+          },
+          "top_shape_share": 0.5,
+          "valid": 2,
+          "with_module_statements": 0
+        }
+      }
+    }
+  }
+}

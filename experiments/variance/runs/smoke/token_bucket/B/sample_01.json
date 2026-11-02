@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\n\n\ndef allow_request(buckets, key, capacity=10, refill_rate=1.0, cost=1, now=None):\n    \"\"\"Token bucket rate limiter.\n\n    buckets:     plain dict holding state, {key: {\"tokens\": float, \"last\": float}}\n    key:         identifier for the client/resource being limited\n    capacity:    maximum tokens the bucket can hold (burst size)\n    refill_rate: tokens added per second\n    cost:        tokens consumed by this request\n    now:         optional timestamp (seconds); defaults to time.monotonic()\n\n    Returns True if the request is allowed, False otherwise.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = {\"tokens\": float(capacity), \"last\": now}\n        buckets[key] = bucket\n\n    # Refill based on elapsed time, capped at capacity.\n    elapsed = max(0.0, now - bucket[\"last\"])\n    bucket[\"tokens\"] = min(float(capacity), bucket[\"tokens\"] + elapsed * refill_rate)\n    bucket[\"last\"] = now\n\n    if bucket[\"tokens\"] >= cost:\n        bucket[\"tokens\"] -= cost\n        return True\n    return False\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.036427,
+    "duration_ms": 7440,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a rate limiter. Write a function that uses a token bucket, kept in a plain dict, to decide whether a request is allowed.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nimport time\n\n\ndef allow_request(buckets, key, capacity=10, refill_rate=1.0, cost=1, now=None):\n    \"\"\"Token bucket rate limiter.\n\n    buckets:     plain dict holding state, {key: {\"tokens\": float, \"last\": float}}\n    key:         identifier for the client/resource being limited\n    capacity:    maximum tokens the bucket can hold (burst size)\n    refill_rate: tokens added per second\n    cost:        tokens consumed by this request\n    now:         optional timestamp (seconds); defaults to time.monotonic()\n\n    Returns True if the request is allowed, False otherwise.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = {\"tokens\": float(capacity), \"last\": now}\n        buckets[key] = bucket\n\n    # Refill based on elapsed time, capped at capacity.\n    elapsed = max(0.0, now - bucket[\"last\"])\n    bucket[\"tokens\"] = min(float(capacity), bucket[\"tokens\"] + elapsed * refill_rate)\n    bucket[\"last\"] = now\n\n    if bucket[\"tokens\"] >= cost:\n        bucket[\"tokens\"] -= cost\n        return True\n    return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 1,
+  "status": "ok",
+  "task": "token_bucket",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:55:46+00:00",
+  "valid": true
+}

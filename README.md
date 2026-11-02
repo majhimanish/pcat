@@ -214,6 +214,27 @@ Run it from the directory where you ran `pcat mine`.
 `scripts/benchmark.py` mines requests, Flask and FastAPI at pinned tags; see
 [`docs/benchmarks/v2-results.md`](docs/benchmarks/v2-results.md) for what it found.
 
+## Variance experiment: how differently does an LLM write the same thing?
+
+`experiments/variance/` measures the problem the catalog exists to solve. For 8
+everyday tasks (JWT creation, password hashing, pagination, HTTP retry, env
+config, token bucket, CSV import, FastAPI create-user) it generates 20 samples
+per condition, each in a fresh context, and counts structurally different
+answers with the canonicalizer and shape fingerprints:
+
+- **A** — the same prompt 20 times; **B** — 5 paraphrases × 4;
+  **C** — paraphrases plus a reference implementation (simulating a catalog lookup)
+
+```bash
+python scripts/variance.py generate --run-id main --conditions A,B   # needs ANTHROPIC_API_KEY or `claude`
+python scripts/variance.py analyze --run-id main
+python scripts/variance.py reference --run-id main                   # pick C references from B
+python scripts/variance.py generate --run-id main --conditions C
+python scripts/variance.py analyze --run-id main
+```
+
+Results and the write-up: [`docs/benchmarks/v2.1-variance.md`](docs/benchmarks/v2.1-variance.md).
+
 ## Planned extensions
 
 Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
@@ -234,5 +255,6 @@ internals can change without breaking these tools.
 - `CLAUDE.md` — handoff and invariants for future sessions
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
-- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`)
-- `docs/benchmarks/` — miner benchmark results
+- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
+  `v2.1-variance-experiment.md`)
+- `docs/benchmarks/` — miner benchmark and variance experiment results

@@ -336,3 +336,63 @@ bottom; add to this file whenever you make a call the spec does not dictate.
     `test_*.py` and `conftest.py`.
 90. Parse-error messages come from the running Python and can differ between
     versions; reports are byte-identical per interpreter version.
+
+## v2.1 — LLM output variance experiment (`docs/specs/v2.1-variance-experiment.md`)
+
+91. **Backend: headless Claude CLI** (`claude -p`, v2.1.316). `ANTHROPIC_API_KEY` was
+    not set, so the API backend was skipped; the CLI was found and worked. Model
+    requested: `claude-sonnet-5-5`. The CLI exposes no temperature setting, so
+    `temperature` is recorded as `null` (CLI default). The recorded `model` is
+    the one with the most output tokens in the CLI's `modelUsage` (the CLI also
+    makes a small housekeeping call to a Haiku model).
+92. **Isolation per sample:** one `claude -p` process per sample, run in a new
+    empty temporary directory, `--no-session-persistence`, `--strict-mcp-config`
+    (no MCP servers), all file/shell/web/agent tools disallowed (every sample
+    took 1 turn), and `CLAUDE_ADDITIONAL_DIRECTORIES` /
+    `CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD` removed from the environment
+    so no CLAUDE.md is loaded. A probe confirmed no instruction files were
+    seen. Not removable: Claude Code's own system prompt and a small
+    harness-injected context (user e-mail, commit-attribution guidance). Up to
+    8 processes ran in parallel; they share only the server-side prompt cache
+    of that system prompt.
+93. **Logic lives in `src/pcat/variance.py`** (importable and tested like the
+    rest of the package); `scripts/variance.py` is a thin driver.
+94. **Snippet fingerprinting** uses the unchanged canonicalizer and shape rules
+    after an experiment-only normalization: `if __name__ == "__main__":` blocks
+    and a module docstring are dropped; other top-level statements that are not
+    imports, functions or literal constants (`app = FastAPI()`,
+    `ctx = CryptContext(...)`, `SECRET = os.getenv(...)`) are moved in order into
+    a synthetic last function `_module_level`, and the names they bind are
+    renamed `g0, g1, …` everywhere (except where a function binds the same name
+    locally) and declared `global` there. So a global's name does not affect
+    the fingerprint, as with locals.
+95. **Validity:** invalid reasons are `syntax_error`, `contains_class` (any class,
+    as the spec says), `no_function` (added: code with no top-level function),
+    `cannot_fingerprint` (canonicalizer error after normalization) and
+    `generation_failed`. Metrics use valid samples only.
+96. **Supplementary metric (not in the spec):** the smoke run showed every
+    `fastapi_create_user` sample defines Pydantic models, against the
+    instruction. Prompts were frozen, so the spec's rule stands; separately,
+    "classes removed" shape metrics cover valid samples plus samples whose only
+    problem is top-level classes, with those classes dropped and their names
+    treated like renamed globals.
+97. **Extraction:** the first fenced block tagged `python`, `py`, `python3` or
+    untagged; otherwise the whole response.
+98. **Descriptors:** entry point = first top-level function in source order;
+    parameter count includes `*args`/`**kwargs`; function count = top-level
+    functions. Import sets use the root module of every import anywhere in the
+    code (`from jwt import encode` → `jwt`; relative imports ignored);
+    "third-party" = roots not in `sys.stdlib_module_names`.
+99. **Metrics:** effective shapes = `exp(Shannon entropy)` with natural log,
+    rounded to 2 decimals; top-shape share rounded to 4.
+100. **Sampling:** samples numbered from 1; sample *n* in conditions B and C uses
+     paraphrase `((n − 1) mod 5) + 1`. Retries: 3 retries (4 attempts) with 5,
+     10, 20 s waits; permanent failures are stored with `status: failed`.
+101. **References:** chosen from condition B of run `main` by the spec's rule; the
+     most common shape's ties go to the shape containing the lowest sample
+     number, likewise for exact sub-groups. The reference file is the sample's
+     extracted code verbatim (comments and docstrings included). Reference match
+     rate compares shape fingerprints; an exact-match rate is also reported.
+102. **Runs kept:** `runs/smoke` (2 samples per task and condition, the spec's
+     smoke test) and `runs/main`. `pcat mine` reports per condition use
+     `--min-occurrences 1` with trivial functions kept, no cache.

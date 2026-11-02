@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate_query(query, page=1, per_page=20, session=None):\n    \"\"\"Return (items, total) for one page of a SQLAlchemy query.\n\n    Works with legacy `Query` objects and 2.0-style `Select` statements.\n    For `Select` statements, a `session` is required.\n\n    - page is 1-indexed; values < 1 are treated as 1.\n    - per_page values < 1 raise ValueError.\n    - total is the count of all rows matching the query, ignoring pagination.\n    \"\"\"\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n    page = max(1, int(page))\n    offset = (page - 1) * per_page\n\n    if isinstance(query, Query):\n        total = query.order_by(None).count()\n        items = query.limit(per_page).offset(offset).all()\n        return items, total\n\n    if session is None:\n        raise ValueError(\"session is required when paginating a Select statement\")\n\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    items = session.execute(query.limit(per_page).offset(offset)).scalars().all()\n    return items, total\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.03639629999999999,
+    "duration_ms": 8445,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate_query(query, page=1, per_page=20, session=None):\n    \"\"\"Return (items, total) for one page of a SQLAlchemy query.\n\n    Works with legacy `Query` objects and 2.0-style `Select` statements.\n    For `Select` statements, a `session` is required.\n\n    - page is 1-indexed; values < 1 are treated as 1.\n    - per_page values < 1 raise ValueError.\n    - total is the count of all rows matching the query, ignoring pagination.\n    \"\"\"\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n    page = max(1, int(page))\n    offset = (page - 1) * per_page\n\n    if isinstance(query, Query):\n        total = query.order_by(None).count()\n        items = query.limit(per_page).offset(offset).all()\n        return items, total\n\n    if session is None:\n        raise ValueError(\"session is required when paginating a Select statement\")\n\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    items = session.execute(query.limit(per_page).offset(offset)).scalars().all()\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 2,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:55:09+00:00",
+  "valid": true
+}
