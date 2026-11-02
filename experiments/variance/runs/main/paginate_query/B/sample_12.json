@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query, page=1, per_page=20):\n    \"\"\"Return (rows, total) for the requested page of `query`.\n\n    Works with both legacy ``Query`` objects (needs ``.session``) and\n    2.0-style ``Select`` statements (requires a Session passed via\n    ``paginate_select`` below).\n\n    - ``page`` is 1-indexed; values < 1 are clamped to 1.\n    - ``per_page`` values < 1 are clamped to 1.\n    - ``total`` is the count of all rows matching the query, ignoring\n      limit/offset/order_by.\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    if not isinstance(query, Query):\n        raise TypeError(\n            \"paginate() expects a sqlalchemy.orm.Query; \"\n            \"use paginate_select() for 2.0-style select() statements.\"\n        )\n\n    # Count over a subquery so GROUP BY, DISTINCT and joins are counted correctly.\n    total = query.order_by(None).count()\n\n    rows = (\n        query.limit(per_page)\n        .offset((page - 1) * per_page)\n        .all()\n    )\n    return rows, total\n\n\ndef paginate_select(session, stmt, page=1, per_page=20):\n    \"\"\"Return (rows, total) for a 2.0-style ``select()`` statement.\n\n    ``rows`` are ORM entities when the statement selects a single entity\n    (via ``scalars()``), otherwise ``Row`` tuples.\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).limit(None).offset(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    result = session.execute(\n        stmt.limit(per_page).offset((page - 1) * per_page)\n    )\n    if len(stmt.selected_columns) == 1:\n        rows = result.scalars().all()\n    else:\n        rows = result.all()\n    return rows, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0369766,
+    "duration_ms": 8286,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write paginate(query, page, per_page) for SQLAlchemy that returns the page's rows and the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2",
+  "raw_response": "```python\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query, page=1, per_page=20):\n    \"\"\"Return (rows, total) for the requested page of `query`.\n\n    Works with both legacy ``Query`` objects (needs ``.session``) and\n    2.0-style ``Select`` statements (requires a Session passed via\n    ``paginate_select`` below).\n\n    - ``page`` is 1-indexed; values < 1 are clamped to 1.\n    - ``per_page`` values < 1 are clamped to 1.\n    - ``total`` is the count of all rows matching the query, ignoring\n      limit/offset/order_by.\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    if not isinstance(query, Query):\n        raise TypeError(\n            \"paginate() expects a sqlalchemy.orm.Query; \"\n            \"use paginate_select() for 2.0-style select() statements.\"\n        )\n\n    # Count over a subquery so GROUP BY, DISTINCT and joins are counted correctly.\n    total = query.order_by(None).count()\n\n    rows = (\n        query.limit(per_page)\n        .offset((page - 1) * per_page)\n        .all()\n    )\n    return rows, total\n\n\ndef paginate_select(session, stmt, page=1, per_page=20):\n    \"\"\"Return (rows, total) for a 2.0-style ``select()`` statement.\n\n    ``rows`` are ORM entities when the statement selects a single entity\n    (via ``scalars()``), otherwise ``Row`` tuples.\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).limit(None).offset(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    result = session.execute(\n        stmt.limit(per_page).offset((page - 1) * per_page)\n    )\n    if len(stmt.selected_columns) == 1:\n        rows = result.scalars().all()\n    else:\n        rows = result.all()\n    return rows, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:56+00:00",
+  "valid": true
+}

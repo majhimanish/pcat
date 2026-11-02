@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Annotated, Callable\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, EmailStr, Field\n\napp = FastAPI()\n\n\nclass UserCreate(BaseModel):\n    model_config = ConfigDict(str_strip_whitespace=True)\n\n    username: str = Field(min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    full_name: str | None = Field(default=None, max_length=100)\n    age: int | None = Field(default=None, ge=0, le=150)\n\n\nclass UserRead(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n\n    id: int\n    username: str\n    email: EmailStr\n    full_name: str | None = None\n    age: int | None = None\n\n\n_USERS: dict[int, dict] = {}\n\n\ndef create_user_in_db(payload: UserCreate) -> dict:\n    \"\"\"Repository function: persists the user and returns the stored record.\"\"\"\n    for existing in _USERS.values():\n        if existing[\"username\"] == payload.username or existing[\"email\"] == payload.email:\n            raise ValueError(\"User with this username or email already exists\")\n    user_id = len(_USERS) + 1\n    record = {\"id\": user_id, **payload.model_dump()}\n    _USERS[user_id] = record\n    return record\n\n\ndef get_create_user_repo() -> Callable[[UserCreate], dict]:\n    \"\"\"Dependency provider; override in tests or swap for a real DB-backed function.\"\"\"\n    return create_user_in_db\n\n\n@app.post(\"/users\", response_model=UserRead, status_code=status.HTTP_201_CREATED)\ndef create_user(\n    payload: UserCreate,\n    create_user_repo: Annotated[Callable[[UserCreate], dict], Depends(get_create_user_repo)],\n) -> dict:\n    try:\n        return create_user_repo(payload)\n    except ValueError as exc:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0368379,
+    "duration_ms": 6395,
+    "num_turns": 1
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement POST /users in FastAPI: validate the payload, create the user via a repository function injected with Depends, return the created user.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nfrom typing import Annotated, Callable\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, EmailStr, Field\n\napp = FastAPI()\n\n\nclass UserCreate(BaseModel):\n    model_config = ConfigDict(str_strip_whitespace=True)\n\n    username: str = Field(min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    full_name: str | None = Field(default=None, max_length=100)\n    age: int | None = Field(default=None, ge=0, le=150)\n\n\nclass UserRead(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n\n    id: int\n    username: str\n    email: EmailStr\n    full_name: str | None = None\n    age: int | None = None\n\n\n_USERS: dict[int, dict] = {}\n\n\ndef create_user_in_db(payload: UserCreate) -> dict:\n    \"\"\"Repository function: persists the user and returns the stored record.\"\"\"\n    for existing in _USERS.values():\n        if existing[\"username\"] == payload.username or existing[\"email\"] == payload.email:\n            raise ValueError(\"User with this username or email already exists\")\n    user_id = len(_USERS) + 1\n    record = {\"id\": user_id, **payload.model_dump()}\n    _USERS[user_id] = record\n    return record\n\n\ndef get_create_user_repo() -> Callable[[UserCreate], dict]:\n    \"\"\"Dependency provider; override in tests or swap for a real DB-backed function.\"\"\"\n    return create_user_in_db\n\n\n@app.post(\"/users\", response_model=UserRead, status_code=status.HTTP_201_CREATED)\ndef create_user(\n    payload: UserCreate,\n    create_user_repo: Annotated[Callable[[UserCreate], dict], Depends(get_create_user_repo)],\n) -> dict:\n    try:\n        return create_user_repo(payload)\n    except ValueError as exc:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 15,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:03:22+00:00",
+  "valid": false
+}

@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport time\nimport urllib.error\nimport urllib.request\n\n\ndef download_with_retry(\n    url,\n    max_retries=5,\n    base_delay=1.0,\n    max_delay=60.0,\n    backoff_factor=2.0,\n    jitter=True,\n    timeout=30,\n    headers=None,\n):\n    \"\"\"Download a URL, retrying failures with exponentially increasing delays.\n\n    Returns the response body as bytes. Raises the last error if all attempts fail.\n    Client errors (4xx, except 408 and 429) are not retried.\n    \"\"\"\n    retryable_statuses = {408, 429, 500, 502, 503, 504}\n    request = urllib.request.Request(url, headers=headers or {})\n    last_error = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            with urllib.request.urlopen(request, timeout=timeout) as response:\n                return response.read()\n        except urllib.error.HTTPError as e:\n            if e.code not in retryable_statuses:\n                raise\n            last_error = e\n        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:\n            last_error = e\n\n        if attempt == max_retries:\n            break\n\n        delay = min(base_delay * (backoff_factor ** attempt), max_delay)\n        if jitter:\n            delay = random.uniform(0, delay)\n        time.sleep(delay)\n\n    raise last_error\n\n\ndef download_to_file(url, path, **kwargs):\n    \"\"\"Download a URL with retries and save it to the given file path.\"\"\"\n    data = download_with_retry(url, **kwargs)\n    with open(path, \"wb\") as f:\n        f.write(data)\n    return path\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0352925,
+    "duration_ms": 8530,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Give me a function to download a URL that retries failed requests with exponentially increasing delays.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-4",
+  "raw_response": "```python\nimport random\nimport time\nimport urllib.error\nimport urllib.request\n\n\ndef download_with_retry(\n    url,\n    max_retries=5,\n    base_delay=1.0,\n    max_delay=60.0,\n    backoff_factor=2.0,\n    jitter=True,\n    timeout=30,\n    headers=None,\n):\n    \"\"\"Download a URL, retrying failures with exponentially increasing delays.\n\n    Returns the response body as bytes. Raises the last error if all attempts fail.\n    Client errors (4xx, except 408 and 429) are not retried.\n    \"\"\"\n    retryable_statuses = {408, 429, 500, 502, 503, 504}\n    request = urllib.request.Request(url, headers=headers or {})\n    last_error = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            with urllib.request.urlopen(request, timeout=timeout) as response:\n                return response.read()\n        except urllib.error.HTTPError as e:\n            if e.code not in retryable_statuses:\n                raise\n            last_error = e\n        except (urllib.error.URLError, TimeoutError, ConnectionError) as e:\n            last_error = e\n\n        if attempt == max_retries:\n            break\n\n        delay = min(base_delay * (backoff_factor ** attempt), max_delay)\n        if jitter:\n            delay = random.uniform(0, delay)\n        time.sleep(delay)\n\n    raise last_error\n\n\ndef download_to_file(url, path, **kwargs):\n    \"\"\"Download a URL with retries and save it to the given file path.\"\"\"\n    data = download_with_retry(url, **kwargs)\n    with open(path, \"wb\") as f:\n        f.write(data)\n    return path\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 19,
+  "status": "ok",
+  "task": "http_retry",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:34+00:00",
+  "valid": true
+}

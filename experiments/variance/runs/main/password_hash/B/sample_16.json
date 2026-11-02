@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password with scrypt and a random per-user salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str) or not password:\n        raise ValueError(\"password must be a non-empty string\")\n\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        dklen=_SCRYPT_DKLEN,\n        maxmem=128 * _SCRYPT_N * _SCRYPT_R * 2,\n    )\n    return \"$\".join([\n        \"scrypt\",\n        str(_SCRYPT_N),\n        str(_SCRYPT_R),\n        str(_SCRYPT_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login password against a stored hash from hash_password().\n\n    Uses the parameters embedded in the stored hash and a constant-time\n    comparison. Returns False for any malformed hash or mismatch.\n    \"\"\"\n    try:\n        scheme, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n\n        dk = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            dklen=len(expected),\n            maxmem=128 * n * r * 2,\n        )\n        return hmac.compare_digest(dk, expected)\n    except (ValueError, TypeError, AttributeError):\n        return False\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.037795,
+    "duration_ms": 7743,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need two functions: one that hashes a user's password for storage and one that checks a login password against the stored hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password with scrypt and a random per-user salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str) or not password:\n        raise ValueError(\"password must be a non-empty string\")\n\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        dklen=_SCRYPT_DKLEN,\n        maxmem=128 * _SCRYPT_N * _SCRYPT_R * 2,\n    )\n    return \"$\".join([\n        \"scrypt\",\n        str(_SCRYPT_N),\n        str(_SCRYPT_R),\n        str(_SCRYPT_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login password against a stored hash from hash_password().\n\n    Uses the parameters embedded in the stored hash and a constant-time\n    comparison. Returns False for any malformed hash or mismatch.\n    \"\"\"\n    try:\n        scheme, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n\n        dk = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            dklen=len(expected),\n            maxmem=128 * n * r * 2,\n        )\n        return hmac.compare_digest(dk, expected)\n    except (ValueError, TypeError, AttributeError):\n        return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 16,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:35+00:00",
+  "valid": true
+}

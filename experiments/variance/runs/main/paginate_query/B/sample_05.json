@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, Dict, List, Optional\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\nfrom sqlalchemy.sql import Select\n\n\ndef paginate(\n    query: Any,\n    page: int = 1,\n    page_size: int = 20,\n    session: Optional[Session] = None,\n    max_page_size: int = 1000,\n) -> Dict[str, Any]:\n    \"\"\"Paginate a SQLAlchemy query.\n\n    Works with legacy ``Query`` objects (bound to a session) and with\n    2.0-style ``Select`` statements (a ``session`` must then be provided).\n\n    Returns a dict with keys: ``items``, ``total``, ``page`` and ``page_size``.\n    \"\"\"\n    page = max(1, int(page))\n    page_size = min(max(1, int(page_size)), max_page_size)\n    offset = (page - 1) * page_size\n\n    items: List[Any]\n    if isinstance(query, Query):\n        # Count over a subquery so GROUP BY / DISTINCT / joins are handled correctly.\n        total = query.order_by(None).count()\n        items = query.limit(page_size).offset(offset).all()\n    elif isinstance(query, Select):\n        if session is None:\n            raise ValueError(\"A session is required when paginating a Select statement.\")\n        count_stmt = select(func.count()).select_from(\n            query.order_by(None).subquery()\n        )\n        total = session.execute(count_stmt).scalar_one()\n        result = session.execute(query.limit(page_size).offset(offset))\n        # Return ORM entities for single-entity selects, rows otherwise.\n        if len(query.column_descriptions) == 1:\n            items = list(result.scalars().all())\n        else:\n            items = list(result.all())\n    else:\n        raise TypeError(\"query must be a sqlalchemy.orm.Query or sqlalchemy.sql.Select\")\n\n    return {\n        \"items\": items,\n        \"total\": total,\n        \"page\": page,\n        \"page_size\": page_size,\n    }\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0389204,
+    "duration_ms": 13885,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement a generic paginate function for SQLAlchemy queries returning items, total, page and page size.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nfrom typing import Any, Dict, List, Optional\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\nfrom sqlalchemy.sql import Select\n\n\ndef paginate(\n    query: Any,\n    page: int = 1,\n    page_size: int = 20,\n    session: Optional[Session] = None,\n    max_page_size: int = 1000,\n) -> Dict[str, Any]:\n    \"\"\"Paginate a SQLAlchemy query.\n\n    Works with legacy ``Query`` objects (bound to a session) and with\n    2.0-style ``Select`` statements (a ``session`` must then be provided).\n\n    Returns a dict with keys: ``items``, ``total``, ``page`` and ``page_size``.\n    \"\"\"\n    page = max(1, int(page))\n    page_size = min(max(1, int(page_size)), max_page_size)\n    offset = (page - 1) * page_size\n\n    items: List[Any]\n    if isinstance(query, Query):\n        # Count over a subquery so GROUP BY / DISTINCT / joins are handled correctly.\n        total = query.order_by(None).count()\n        items = query.limit(page_size).offset(offset).all()\n    elif isinstance(query, Select):\n        if session is None:\n            raise ValueError(\"A session is required when paginating a Select statement.\")\n        count_stmt = select(func.count()).select_from(\n            query.order_by(None).subquery()\n        )\n        total = session.execute(count_stmt).scalar_one()\n        result = session.execute(query.limit(page_size).offset(offset))\n        # Return ORM entities for single-entity selects, rows otherwise.\n        if len(query.column_descriptions) == 1:\n            items = list(result.scalars().all())\n        else:\n            items = list(result.all())\n    else:\n        raise TypeError(\"query must be a sqlalchemy.orm.Query or sqlalchemy.sql.Select\")\n\n    return {\n        \"items\": items,\n        \"total\": total,\n        \"page\": page,\n        \"page_size\": page_size,\n    }\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 5,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:51+00:00",
+  "valid": true
+}

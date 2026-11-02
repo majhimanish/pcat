@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimum: N=2**17, r=8, p=1)\n_N = 2 ** 17\n_R = 8\n_P = 1\n_SALT_BYTES = 16\n_DKLEN = 32\n_MAXMEM = 256 * 1024 * 1024\n\n\ndef _scrypt(password: bytes, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password, salt=salt, n=n, r=r, p=p, dklen=dklen, maxmem=_MAXMEM\n    )\n\n\ndef hash_password(plain: str) -> str:\n    \"\"\"Hash a password using scrypt with a random per-password salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(plain, str):\n        raise TypeError(\"password must be a str\")\n    salt = os.urandom(_SALT_BYTES)\n    digest = _scrypt(plain.encode(\"utf-8\"), salt, _N, _R, _P, _DKLEN)\n    return \"$\".join(\n        [\n            \"scrypt\",\n            str(_N),\n            str(_R),\n            str(_P),\n            base64.b64encode(salt).decode(\"ascii\"),\n            base64.b64encode(digest).decode(\"ascii\"),\n        ]\n    )\n\n\ndef verify_password(plain: str, hashed: str) -> bool:\n    \"\"\"Verify a password against a hash from hash_password (constant-time compare).\"\"\"\n    try:\n        if not isinstance(plain, str) or not isinstance(hashed, str):\n            return False\n        scheme, n, r, p, salt_b64, hash_b64 = hashed.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        # Guard against maliciously expensive parameters in untrusted hashes\n        if n < 2 or n & (n - 1) or n > 2 ** 20 or r < 1 or r > 32 or p < 1 or p > 16:\n            return False\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(hash_b64, validate=True)\n        if not expected:\n            return False\n        actual = _scrypt(plain.encode(\"utf-8\"), salt, n, r, p, len(expected))\n        return hmac.compare_digest(actual, expected)\n    except (ValueError, TypeError, MemoryError):\n        return False\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0383662,
+    "duration_ms": 8965,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Python password hashing: hash_password(plain) and verify_password(plain, hashed). Make it secure.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimum: N=2**17, r=8, p=1)\n_N = 2 ** 17\n_R = 8\n_P = 1\n_SALT_BYTES = 16\n_DKLEN = 32\n_MAXMEM = 256 * 1024 * 1024\n\n\ndef _scrypt(password: bytes, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password, salt=salt, n=n, r=r, p=p, dklen=dklen, maxmem=_MAXMEM\n    )\n\n\ndef hash_password(plain: str) -> str:\n    \"\"\"Hash a password using scrypt with a random per-password salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(plain, str):\n        raise TypeError(\"password must be a str\")\n    salt = os.urandom(_SALT_BYTES)\n    digest = _scrypt(plain.encode(\"utf-8\"), salt, _N, _R, _P, _DKLEN)\n    return \"$\".join(\n        [\n            \"scrypt\",\n            str(_N),\n            str(_R),\n            str(_P),\n            base64.b64encode(salt).decode(\"ascii\"),\n            base64.b64encode(digest).decode(\"ascii\"),\n        ]\n    )\n\n\ndef verify_password(plain: str, hashed: str) -> bool:\n    \"\"\"Verify a password against a hash from hash_password (constant-time compare).\"\"\"\n    try:\n        if not isinstance(plain, str) or not isinstance(hashed, str):\n            return False\n        scheme, n, r, p, salt_b64, hash_b64 = hashed.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        # Guard against maliciously expensive parameters in untrusted hashes\n        if n < 2 or n & (n - 1) or n > 2 ** 20 or r < 1 or r > 32 or p < 1 or p > 16:\n            return False\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(hash_b64, validate=True)\n        if not expected:\n            return False\n        actual = _scrypt(plain.encode(\"utf-8\"), salt, n, r, p, len(expected))\n        return hmac.compare_digest(actual, expected)\n    except (ValueError, TypeError, MemoryError):\n        return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 2,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:17+00:00",
+  "valid": true
+}

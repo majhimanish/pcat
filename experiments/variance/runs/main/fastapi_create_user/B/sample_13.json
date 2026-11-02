@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Annotated, Awaitable, Callable\n\nfrom fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, EmailStr, Field\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n\nclass UserCreateRequest(BaseModel):\n    model_config = ConfigDict(extra=\"forbid\", str_strip_whitespace=True)\n\n    email: EmailStr\n    username: str = Field(min_length=3, max_length=32, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    password: str = Field(min_length=8, max_length=128)\n    full_name: str | None = Field(default=None, max_length=100)\n\n\nclass UserResponse(BaseModel):\n    id: int\n    email: EmailStr\n    username: str\n    full_name: str | None = None\n\n\nclass DuplicateUserError(Exception):\n    pass\n\n\nCreateUserFn = Callable[[UserCreateRequest], Awaitable[UserResponse]]\n\n\nasync def get_create_user() -> CreateUserFn:\n    raise NotImplementedError(\"Provide a create-user repository function via dependency override\")\n\n\n@router.post(\"\", response_model=UserResponse, status_code=status.HTTP_201_CREATED)\nasync def create_user_route(\n    payload: UserCreateRequest,\n    create_user: Annotated[CreateUserFn, Depends(get_create_user)],\n) -> UserResponse:\n    try:\n        return await create_user(payload)\n    except DuplicateUserError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"A user with this email or username already exists\",\n        )\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0354715,
+    "duration_ms": 7040,
+    "num_turns": 1
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write the FastAPI route handler for creating users. It should validate the request and call a create-user repository function provided through Depends.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nfrom typing import Annotated, Awaitable, Callable\n\nfrom fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, EmailStr, Field\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n\nclass UserCreateRequest(BaseModel):\n    model_config = ConfigDict(extra=\"forbid\", str_strip_whitespace=True)\n\n    email: EmailStr\n    username: str = Field(min_length=3, max_length=32, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    password: str = Field(min_length=8, max_length=128)\n    full_name: str | None = Field(default=None, max_length=100)\n\n\nclass UserResponse(BaseModel):\n    id: int\n    email: EmailStr\n    username: str\n    full_name: str | None = None\n\n\nclass DuplicateUserError(Exception):\n    pass\n\n\nCreateUserFn = Callable[[UserCreateRequest], Awaitable[UserResponse]]\n\n\nasync def get_create_user() -> CreateUserFn:\n    raise NotImplementedError(\"Provide a create-user repository function via dependency override\")\n\n\n@router.post(\"\", response_model=UserResponse, status_code=status.HTTP_201_CREATED)\nasync def create_user_route(\n    payload: UserCreateRequest,\n    create_user: Annotated[CreateUserFn, Depends(get_create_user)],\n) -> UserResponse:\n    try:\n        return await create_user(payload)\n    except DuplicateUserError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"A user with this email or username already exists\",\n        )\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:03:22+00:00",
+  "valid": false
+}

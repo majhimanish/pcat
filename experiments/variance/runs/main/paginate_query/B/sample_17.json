@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import func, select\n\n\ndef paginate(query, page, per_page):\n    \"\"\"Return (rows, total) for the given 1-based page of a SQLAlchemy query.\n\n    `query` may be a legacy `Query` object (with a `.session`) or a 2.0-style\n    `Select` statement (in which case `session` must be supplied via\n    `paginate_select`).\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    total = query.order_by(None).count()\n    rows = (\n        query.limit(per_page)\n        .offset((page - 1) * per_page)\n        .all()\n    )\n    return rows, total\n\n\ndef paginate_select(session, stmt, page, per_page):\n    \"\"\"Return (rows, total) for the given 1-based page of a 2.0-style Select.\"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(per_page).offset((page - 1) * per_page)\n    rows = session.execute(page_stmt).scalars().all()\n    return rows, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0340046,
+    "duration_ms": 9287,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write paginate(query, page, per_page) for SQLAlchemy that returns the page's rows and the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2",
+  "raw_response": "```python\nfrom sqlalchemy import func, select\n\n\ndef paginate(query, page, per_page):\n    \"\"\"Return (rows, total) for the given 1-based page of a SQLAlchemy query.\n\n    `query` may be a legacy `Query` object (with a `.session`) or a 2.0-style\n    `Select` statement (in which case `session` must be supplied via\n    `paginate_select`).\n    \"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    total = query.order_by(None).count()\n    rows = (\n        query.limit(per_page)\n        .offset((page - 1) * per_page)\n        .all()\n    )\n    return rows, total\n\n\ndef paginate_select(session, stmt, page, per_page):\n    \"\"\"Return (rows, total) for the given 1-based page of a 2.0-style Select.\"\"\"\n    page = max(int(page), 1)\n    per_page = max(int(per_page), 1)\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(per_page).offset((page - 1) * per_page)\n    rows = session.execute(page_stmt).scalars().all()\n    return rows, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 17,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:05+00:00",
+  "valid": true
+}

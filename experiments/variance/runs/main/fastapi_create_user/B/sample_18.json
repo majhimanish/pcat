@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n\nclass UserCreate(BaseModel):\n    email: EmailStr\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    password: str = Field(..., min_length=8, max_length=128)\n    full_name: str | None = Field(default=None, max_length=100)\n\n\nclass UserRead(BaseModel):\n    id: int\n    email: EmailStr\n    username: str\n    full_name: str | None = None\n\n\nclass DuplicateUserError(Exception):\n    pass\n\n\ndef get_create_user():\n    \"\"\"Dependency provider for the create-user repository function.\n\n    Override via app.dependency_overrides[get_create_user] or replace this\n    body to return the real repository function.\n    \"\"\"\n    raise NotImplementedError(\"create_user repository function is not configured\")\n\n\n@router.post(\"\", response_model=UserRead, status_code=status.HTTP_201_CREATED)\nasync def create_user_route(\n    payload: UserCreate,\n    create_user=Depends(get_create_user),\n) -> UserRead:\n    try:\n        user = await create_user(\n            email=payload.email,\n            username=payload.username,\n            password=payload.password,\n            full_name=payload.full_name,\n        )\n    except DuplicateUserError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"A user with this email or username already exists\",\n        )\n    return user\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0351935,
+    "duration_ms": 14223,
+    "num_turns": 1
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write the FastAPI route handler for creating users. It should validate the request and call a create-user repository function provided through Depends.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nfrom fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\nrouter = APIRouter(prefix=\"/users\", tags=[\"users\"])\n\n\nclass UserCreate(BaseModel):\n    email: EmailStr\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    password: str = Field(..., min_length=8, max_length=128)\n    full_name: str | None = Field(default=None, max_length=100)\n\n\nclass UserRead(BaseModel):\n    id: int\n    email: EmailStr\n    username: str\n    full_name: str | None = None\n\n\nclass DuplicateUserError(Exception):\n    pass\n\n\ndef get_create_user():\n    \"\"\"Dependency provider for the create-user repository function.\n\n    Override via app.dependency_overrides[get_create_user] or replace this\n    body to return the real repository function.\n    \"\"\"\n    raise NotImplementedError(\"create_user repository function is not configured\")\n\n\n@router.post(\"\", response_model=UserRead, status_code=status.HTTP_201_CREATED)\nasync def create_user_route(\n    payload: UserCreate,\n    create_user=Depends(get_create_user),\n) -> UserRead:\n    try:\n        user = await create_user(\n            email=payload.email,\n            username=payload.username,\n            password=payload.password,\n            full_name=payload.full_name,\n        )\n    except DuplicateUserError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"A user with this email or username already exists\",\n        )\n    return user\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 18,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:03:36+00:00",
+  "valid": false
+}

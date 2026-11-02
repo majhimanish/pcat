@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef build_access_token_claims(\n    user_id: str,\n    issuer: str,\n    audience: str,\n    ttl_seconds: int = 900,\n    now: int | None = None,\n) -> dict:\n    \"\"\"Build the claim set for an access token.\"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if ttl_seconds <= 0:\n        raise ValueError(\"ttl_seconds must be positive\")\n\n    issued_at = int(now if now is not None else time.time())\n    return {\n        \"sub\": str(user_id),\n        \"iss\": issuer,\n        \"aud\": audience,\n        \"iat\": issued_at,\n        \"nbf\": issued_at,\n        \"exp\": issued_at + ttl_seconds,\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n\n\ndef create_access_token(\n    user_id: str,\n    secret: str | None = None,\n    issuer: str = \"auth-service\",\n    audience: str = \"api\",\n    ttl_seconds: int = 900,\n    algorithm: str = \"HS256\",\n) -> str:\n    \"\"\"Build and sign a JWT access token for the given user id.\n\n    The signing secret is read from the JWT_SECRET environment variable\n    unless passed explicitly. Never hard-code it in source.\n    \"\"\"\n    key = secret or os.environ.get(\"JWT_SECRET\")\n    if not key:\n        raise RuntimeError(\"JWT signing secret is not configured (set JWT_SECRET)\")\n    if algorithm not in {\"HS256\", \"HS384\", \"HS512\"}:\n        raise ValueError(\"unsupported algorithm for a shared secret\")\n\n    claims = build_access_token_claims(user_id, issuer, audience, ttl_seconds)\n    return jwt.encode(claims, key, algorithm=algorithm)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0359725,
+    "duration_ms": 7289,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a function for our auth service that builds and signs a JWT access token for a user id, with an exp claim.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef build_access_token_claims(\n    user_id: str,\n    issuer: str,\n    audience: str,\n    ttl_seconds: int = 900,\n    now: int | None = None,\n) -> dict:\n    \"\"\"Build the claim set for an access token.\"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if ttl_seconds <= 0:\n        raise ValueError(\"ttl_seconds must be positive\")\n\n    issued_at = int(now if now is not None else time.time())\n    return {\n        \"sub\": str(user_id),\n        \"iss\": issuer,\n        \"aud\": audience,\n        \"iat\": issued_at,\n        \"nbf\": issued_at,\n        \"exp\": issued_at + ttl_seconds,\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n\n\ndef create_access_token(\n    user_id: str,\n    secret: str | None = None,\n    issuer: str = \"auth-service\",\n    audience: str = \"api\",\n    ttl_seconds: int = 900,\n    algorithm: str = \"HS256\",\n) -> str:\n    \"\"\"Build and sign a JWT access token for the given user id.\n\n    The signing secret is read from the JWT_SECRET environment variable\n    unless passed explicitly. Never hard-code it in source.\n    \"\"\"\n    key = secret or os.environ.get(\"JWT_SECRET\")\n    if not key:\n        raise RuntimeError(\"JWT signing secret is not configured (set JWT_SECRET)\")\n    if algorithm not in {\"HS256\", \"HS384\", \"HS512\"}:\n        raise ValueError(\"unsupported algorithm for a shared secret\")\n\n    claims = build_access_token_claims(user_id, issuer, audience, ttl_seconds)\n    return jwt.encode(claims, key, algorithm=algorithm)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 20,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:13+00:00",
+  "valid": true
+}

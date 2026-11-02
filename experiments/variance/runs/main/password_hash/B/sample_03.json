@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimums: N=2^17, r=8, p=1)\n_SCRYPT_N = 2 ** 17\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n_MAXMEM = 256 * 1024 * 1024\n\n\ndef _b64(data: bytes) -> str:\n    return base64.b64encode(data).decode(\"ascii\")\n\n\ndef _unb64(data: str) -> bytes:\n    return base64.b64decode(data.encode(\"ascii\"))\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password at signup. Returns a self-describing string to store in the DB.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    digest = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        dklen=_SCRYPT_DKLEN,\n        maxmem=_MAXMEM,\n    )\n    return f\"scrypt${_SCRYPT_N}${_SCRYPT_R}${_SCRYPT_P}${_b64(salt)}${_b64(digest)}\"\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login attempt against the stored hash. Constant-time comparison.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, digest_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = _unb64(salt_b64)\n        expected = _unb64(digest_b64)\n        candidate = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=int(n),\n            r=int(r),\n            p=int(p),\n            dklen=len(expected),\n            maxmem=_MAXMEM,\n        )\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(candidate, expected)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0395392,
+    "duration_ms": 10048,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write the code we use at signup to hash passwords, plus the check we run at login to see if the password matches the hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimums: N=2^17, r=8, p=1)\n_SCRYPT_N = 2 ** 17\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n_MAXMEM = 256 * 1024 * 1024\n\n\ndef _b64(data: bytes) -> str:\n    return base64.b64encode(data).decode(\"ascii\")\n\n\ndef _unb64(data: str) -> bytes:\n    return base64.b64decode(data.encode(\"ascii\"))\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password at signup. Returns a self-describing string to store in the DB.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    digest = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        dklen=_SCRYPT_DKLEN,\n        maxmem=_MAXMEM,\n    )\n    return f\"scrypt${_SCRYPT_N}${_SCRYPT_R}${_SCRYPT_P}${_b64(salt)}${_b64(digest)}\"\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login attempt against the stored hash. Constant-time comparison.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, digest_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = _unb64(salt_b64)\n        expected = _unb64(digest_b64)\n        candidate = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=int(n),\n            r=int(r),\n            p=int(p),\n            dklen=len(expected),\n            maxmem=_MAXMEM,\n        )\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(candidate, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 3,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:20+00:00",
+  "valid": true
+}

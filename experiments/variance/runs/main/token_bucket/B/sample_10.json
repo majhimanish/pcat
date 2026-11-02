@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\n\n\ndef create_bucket(capacity, refill_rate, now=None):\n    \"\"\"Create a token bucket state dict.\n\n    capacity:    maximum number of tokens the bucket can hold\n    refill_rate: tokens added per second\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n    return {\n        \"capacity\": float(capacity),\n        \"refill_rate\": float(refill_rate),\n        \"tokens\": float(capacity),\n        \"last_refill\": now,\n    }\n\n\ndef allow_request(bucket, now=None):\n    \"\"\"Refill the bucket based on elapsed time, then consume one token if available.\n\n    Mutates the bucket dict in place. Returns True if a token was consumed,\n    False if the request should be rejected.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    elapsed = max(0.0, now - bucket[\"last_refill\"])\n    bucket[\"tokens\"] = min(\n        bucket[\"capacity\"],\n        bucket[\"tokens\"] + elapsed * bucket[\"refill_rate\"],\n    )\n    bucket[\"last_refill\"] = now\n\n    if bucket[\"tokens\"] >= 1.0:\n        bucket[\"tokens\"] -= 1.0\n        return True\n    return False\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.033795,
+    "duration_ms": 9631,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement a token bucket check: refill tokens based on elapsed time, then consume one if available. Keep the bucket state in a dict.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport time\n\n\ndef create_bucket(capacity, refill_rate, now=None):\n    \"\"\"Create a token bucket state dict.\n\n    capacity:    maximum number of tokens the bucket can hold\n    refill_rate: tokens added per second\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n    return {\n        \"capacity\": float(capacity),\n        \"refill_rate\": float(refill_rate),\n        \"tokens\": float(capacity),\n        \"last_refill\": now,\n    }\n\n\ndef allow_request(bucket, now=None):\n    \"\"\"Refill the bucket based on elapsed time, then consume one token if available.\n\n    Mutates the bucket dict in place. Returns True if a token was consumed,\n    False if the request should be rejected.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    elapsed = max(0.0, now - bucket[\"last_refill\"])\n    bucket[\"tokens\"] = min(\n        bucket[\"capacity\"],\n        bucket[\"tokens\"] + elapsed * bucket[\"refill_rate\"],\n    )\n    bucket[\"last_refill\"] = now\n\n    if bucket[\"tokens\"] >= 1.0:\n        bucket[\"tokens\"] -= 1.0\n        return True\n    return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 10,
+  "status": "ok",
+  "task": "token_bucket",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:02:20+00:00",
+  "valid": true
+}

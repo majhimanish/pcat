@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate(query, page, per_page, session=None):\n    \"\"\"Return (rows, total) for the requested 1-indexed page of `query`.\n\n    `query` may be a legacy `Query` object (bound to a session) or a 2.0-style\n    `Select` statement (in which case `session` must be provided).\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    offset = (page - 1) * per_page\n\n    # Legacy Query object\n    if hasattr(query, \"session\") and hasattr(query, \"limit\") and not hasattr(query, \"subquery\") is False:\n        pass\n\n    if hasattr(query, \"with_entities\") and hasattr(query, \"offset\"):\n        # Count over a subquery so GROUP BY / DISTINCT / joins are counted correctly\n        total = query.order_by(None).count()\n        rows = query.limit(per_page).offset(offset).all()\n        return rows, total\n\n    # 2.0-style Select\n    if session is None:\n        raise ValueError(\"session is required when query is a Select statement\")\n\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    rows = session.execute(query.limit(per_page).offset(offset)).scalars().all()\n    return rows, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.034700600000000005,
+    "duration_ms": 13719,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write paginate(query, page, per_page) for SQLAlchemy that returns the page's rows and the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2",
+  "raw_response": "```python\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate(query, page, per_page, session=None):\n    \"\"\"Return (rows, total) for the requested 1-indexed page of `query`.\n\n    `query` may be a legacy `Query` object (bound to a session) or a 2.0-style\n    `Select` statement (in which case `session` must be provided).\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    offset = (page - 1) * per_page\n\n    # Legacy Query object\n    if hasattr(query, \"session\") and hasattr(query, \"limit\") and not hasattr(query, \"subquery\") is False:\n        pass\n\n    if hasattr(query, \"with_entities\") and hasattr(query, \"offset\"):\n        # Count over a subquery so GROUP BY / DISTINCT / joins are counted correctly\n        total = query.order_by(None).count()\n        rows = query.limit(per_page).offset(offset).all()\n        return rows, total\n\n    # 2.0-style Select\n    if session is None:\n        raise ValueError(\"session is required when query is a Select statement\")\n\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    rows = session.execute(query.limit(per_page).offset(offset)).scalars().all()\n    return rows, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 7,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:55+00:00",
+  "valid": true
+}

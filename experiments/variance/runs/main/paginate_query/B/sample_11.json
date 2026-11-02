@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\n\n\ndef paginate(\n    query: Query,\n    page: int = 1,\n    page_size: int = 20,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a legacy ORM Query.\n\n    page is 1-based. Raises ValueError for invalid page or page_size.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    # Count over a subquery so DISTINCT, GROUP BY, and joins are counted correctly.\n    # order_by is dropped from the count since it does not affect the total.\n    total = query.order_by(None).count()\n\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef paginate_select(\n    session: Session,\n    stmt: Any,\n    page: int = 1,\n    page_size: int = 20,\n    scalars: bool = True,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a 2.0-style select() statement.\n\n    page is 1-based. If scalars is True, returns the first column/entity of\n    each row (typical for select(Model)); otherwise returns Row objects.\n    Raises ValueError for invalid page or page_size.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(page_stmt)\n    items = result.scalars().all() if scalars else result.all()\n    return items, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.036540500000000004,
+    "duration_ms": 12576,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a pagination helper for SQLAlchemy: given a query, a page number and a page size, return the items on that page and the total number of results.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nfrom typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query, Session\n\n\ndef paginate(\n    query: Query,\n    page: int = 1,\n    page_size: int = 20,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a legacy ORM Query.\n\n    page is 1-based. Raises ValueError for invalid page or page_size.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    # Count over a subquery so DISTINCT, GROUP BY, and joins are counted correctly.\n    # order_by is dropped from the count since it does not affect the total.\n    total = query.order_by(None).count()\n\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef paginate_select(\n    session: Session,\n    stmt: Any,\n    page: int = 1,\n    page_size: int = 20,\n    scalars: bool = True,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items_on_page, total_count) for a 2.0-style select() statement.\n\n    page is 1-based. If scalars is True, returns the first column/entity of\n    each row (typical for select(Model)); otherwise returns Row objects.\n    Raises ValueError for invalid page or page_size.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(page_stmt)\n    items = result.scalars().all() if scalars else result.all()\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 11,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:59+00:00",
+  "valid": true
+}

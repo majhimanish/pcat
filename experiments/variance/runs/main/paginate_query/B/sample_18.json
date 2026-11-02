@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query: Query, page: int = 1, per_page: int = 20) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for the requested 1-indexed page of a SQLAlchemy query.\n\n    The query should have a deterministic ORDER BY so pages are stable.\n    `total` is the number of rows the unpaginated query would return.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are\n    # counted correctly. Ordering is dropped since it doesn't affect the count.\n    total = query.session.execute(\n        select(func.count()).select_from(query.order_by(None).subquery())\n    ).scalar_one()\n\n    items = query.limit(per_page).offset((page - 1) * per_page).all()\n\n    return items, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.033345400000000004,
+    "duration_ms": 8853,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Our API endpoints need paging. Write a function that takes a SQLAlchemy query and returns one page of results plus how many results there are in total.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query: Query, page: int = 1, per_page: int = 20) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for the requested 1-indexed page of a SQLAlchemy query.\n\n    The query should have a deterministic ORDER BY so pages are stable.\n    `total` is the number of rows the unpaginated query would return.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are\n    # counted correctly. Ordering is dropped since it doesn't affect the count.\n    total = query.session.execute(\n        select(func.count()).select_from(query.order_by(None).subquery())\n    ).scalar_one()\n\n    items = query.limit(per_page).offset((page - 1) * per_page).all()\n\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 18,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:06+00:00",
+  "valid": true
+}

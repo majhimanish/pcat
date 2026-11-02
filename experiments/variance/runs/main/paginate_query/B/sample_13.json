@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from math import ceil\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\nDEFAULT_PAGE_SIZE = 20\nMAX_PAGE_SIZE = 100\n\n\ndef paginate(\n    query: Query,\n    page: int = 1,\n    page_size: int = DEFAULT_PAGE_SIZE,\n    max_page_size: int = MAX_PAGE_SIZE,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items_for_page, total_count) for a SQLAlchemy ORM query.\n\n    - page is 1-indexed; values < 1 are clamped to 1.\n    - page_size is clamped to the range [1, max_page_size].\n    - total_count is the number of rows the unpaginated query would return,\n      computed via a subquery so it stays correct with joins, filters,\n      DISTINCT and GROUP BY.\n    - Any existing ORDER BY is preserved for the page query, so results are\n      stable; callers should always order by a unique column for deterministic\n      paging.\n    \"\"\"\n    page = max(1, int(page))\n    page_size = max(1, min(int(page_size), max_page_size))\n\n    # Count over the query as a subquery; strip ordering since it is irrelevant\n    # to the count and can be expensive.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).limit(None).offset(None).subquery()\n    )\n    total = query.session.execute(count_stmt).scalar_one()\n\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef total_pages(total: int, page_size: int = DEFAULT_PAGE_SIZE) -> int:\n    \"\"\"Number of pages needed for `total` rows at `page_size` per page.\"\"\"\n    page_size = max(1, int(page_size))\n    return ceil(total / page_size) if total else 0\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0361834,
+    "duration_ms": 12246,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Our API endpoints need paging. Write a function that takes a SQLAlchemy query and returns one page of results plus how many results there are in total.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nfrom math import ceil\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\nDEFAULT_PAGE_SIZE = 20\nMAX_PAGE_SIZE = 100\n\n\ndef paginate(\n    query: Query,\n    page: int = 1,\n    page_size: int = DEFAULT_PAGE_SIZE,\n    max_page_size: int = MAX_PAGE_SIZE,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items_for_page, total_count) for a SQLAlchemy ORM query.\n\n    - page is 1-indexed; values < 1 are clamped to 1.\n    - page_size is clamped to the range [1, max_page_size].\n    - total_count is the number of rows the unpaginated query would return,\n      computed via a subquery so it stays correct with joins, filters,\n      DISTINCT and GROUP BY.\n    - Any existing ORDER BY is preserved for the page query, so results are\n      stable; callers should always order by a unique column for deterministic\n      paging.\n    \"\"\"\n    page = max(1, int(page))\n    page_size = max(1, min(int(page_size), max_page_size))\n\n    # Count over the query as a subquery; strip ordering since it is irrelevant\n    # to the count and can be expensive.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).limit(None).offset(None).subquery()\n    )\n    total = query.session.execute(count_stmt).scalar_one()\n\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef total_pages(total: int, page_size: int = DEFAULT_PAGE_SIZE) -> int:\n    \"\"\"Number of pages needed for `total` rows at `page_size` per page.\"\"\"\n    page_size = max(1, int(page_size))\n    return ceil(total / page_size) if total else 0\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:04+00:00",
+  "valid": true
+}

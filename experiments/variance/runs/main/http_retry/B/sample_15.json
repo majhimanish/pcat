@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport time\n\nimport requests\n\n\ndef get_with_retry(\n    url,\n    max_retries=5,\n    base_delay=0.5,\n    max_delay=30.0,\n    backoff_factor=2.0,\n    jitter=True,\n    timeout=10,\n    **kwargs,\n):\n    \"\"\"Perform a GET request, retrying on network errors and 5xx responses.\n\n    Uses exponential backoff: delay = min(max_delay, base_delay * backoff_factor ** attempt),\n    optionally with full jitter. Non-5xx responses (including 4xx) are returned\n    immediately without retrying.\n\n    Args:\n        url: The URL to request.\n        max_retries: Maximum number of retries after the initial attempt.\n        base_delay: Initial delay in seconds.\n        max_delay: Upper bound on the delay between attempts.\n        backoff_factor: Multiplier applied to the delay on each retry.\n        jitter: If True, sleep a random time in [0, delay] to avoid thundering herd.\n        timeout: Per-request timeout in seconds.\n        **kwargs: Extra arguments passed to requests.get (headers, params, etc.).\n\n    Returns:\n        requests.Response for the first non-5xx response, or the last 5xx\n        response if retries are exhausted.\n\n    Raises:\n        requests.exceptions.RequestException: If the final attempt fails with a\n            network error.\n    \"\"\"\n    last_response = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **kwargs)\n            if response.status_code < 500:\n                return response\n            last_response = response\n        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):\n            if attempt == max_retries:\n                raise\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_delay, base_delay * (backoff_factor ** attempt))\n        if jitter:\n            delay = random.uniform(0, delay)\n        time.sleep(delay)\n\n    return last_response\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0365225,
+    "duration_ms": 8875,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement a GET request wrapper that retries on network errors and 5xx responses using exponential backoff.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport random\nimport time\n\nimport requests\n\n\ndef get_with_retry(\n    url,\n    max_retries=5,\n    base_delay=0.5,\n    max_delay=30.0,\n    backoff_factor=2.0,\n    jitter=True,\n    timeout=10,\n    **kwargs,\n):\n    \"\"\"Perform a GET request, retrying on network errors and 5xx responses.\n\n    Uses exponential backoff: delay = min(max_delay, base_delay * backoff_factor ** attempt),\n    optionally with full jitter. Non-5xx responses (including 4xx) are returned\n    immediately without retrying.\n\n    Args:\n        url: The URL to request.\n        max_retries: Maximum number of retries after the initial attempt.\n        base_delay: Initial delay in seconds.\n        max_delay: Upper bound on the delay between attempts.\n        backoff_factor: Multiplier applied to the delay on each retry.\n        jitter: If True, sleep a random time in [0, delay] to avoid thundering herd.\n        timeout: Per-request timeout in seconds.\n        **kwargs: Extra arguments passed to requests.get (headers, params, etc.).\n\n    Returns:\n        requests.Response for the first non-5xx response, or the last 5xx\n        response if retries are exhausted.\n\n    Raises:\n        requests.exceptions.RequestException: If the final attempt fails with a\n            network error.\n    \"\"\"\n    last_response = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **kwargs)\n            if response.status_code < 500:\n                return response\n            last_response = response\n        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):\n            if attempt == max_retries:\n                raise\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_delay, base_delay * (backoff_factor ** attempt))\n        if jitter:\n            delay = random.uniform(0, delay)\n        time.sleep(delay)\n\n    return last_response\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 15,
+  "status": "ok",
+  "task": "http_retry",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:27+00:00",
+  "valid": true
+}

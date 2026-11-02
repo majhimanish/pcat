@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport datetime\n\nimport jwt  # PyJWT\n\nJWT_ALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 15\n\n\ndef _get_secret_key() -> str:\n    secret = os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\"JWT_SECRET_KEY environment variable is not set\")\n    return secret\n\n\ndef create_access_token(user_id, expires_minutes: int = ACCESS_TOKEN_EXPIRE_MINUTES) -> str:\n    \"\"\"Return a signed JWT for user_id that expires after `expires_minutes` minutes.\"\"\"\n    now = datetime.datetime.now(datetime.timezone.utc)\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"exp\": now + datetime.timedelta(minutes=expires_minutes),\n    }\n    return jwt.encode(payload, _get_secret_key(), algorithm=JWT_ALGORITHM)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0356978,
+    "duration_ms": 9339,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement create_access_token(user_id) that returns a signed JWT which expires after some minutes.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-4",
+  "raw_response": "```python\nimport os\nimport datetime\n\nimport jwt  # PyJWT\n\nJWT_ALGORITHM = \"HS256\"\nACCESS_TOKEN_EXPIRE_MINUTES = 15\n\n\ndef _get_secret_key() -> str:\n    secret = os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\"JWT_SECRET_KEY environment variable is not set\")\n    return secret\n\n\ndef create_access_token(user_id, expires_minutes: int = ACCESS_TOKEN_EXPIRE_MINUTES) -> str:\n    \"\"\"Return a signed JWT for user_id that expires after `expires_minutes` minutes.\"\"\"\n    now = datetime.datetime.now(datetime.timezone.utc)\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"exp\": now + datetime.timedelta(minutes=expires_minutes),\n    }\n    return jwt.encode(payload, _get_secret_key(), algorithm=JWT_ALGORITHM)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 4,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:59:58+00:00",
+  "valid": true
+}

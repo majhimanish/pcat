@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy.sql import Select\n\n\ndef get_total_count(session: Session, query: Select) -> int:\n    \"\"\"Return the total number of rows the query would produce, ignoring any LIMIT/OFFSET/ORDER BY.\"\"\"\n    count_query = select(func.count()).select_from(\n        query.order_by(None).limit(None).offset(None).subquery()\n    )\n    return session.execute(count_query).scalar_one()\n\n\ndef get_page(\n    session: Session,\n    query: Select,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"\n    Fetch page `page` (1-indexed) of `query` with `page_size` rows per page.\n\n    Returns a tuple of (rows, total_count), where total_count is the overall\n    number of rows matching the query across all pages.\n\n    Note: the query should have a deterministic ORDER BY for stable pagination.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    total = get_total_count(session, query)\n\n    paged_query = query.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(paged_query)\n\n    # For ORM entity queries (select(Model)), return entities; otherwise return Row objects.\n    if len(query.column_descriptions) == 1 and query.column_descriptions[0].get(\"entity\") is not None \\\n            and query.column_descriptions[0].get(\"expr\") is query.column_descriptions[0].get(\"entity\"):\n        rows = list(result.scalars().all())\n    else:\n        rows = list(result.all())\n\n    return rows, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.038145099999999994,
+    "duration_ms": 11271,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "SQLAlchemy: function to get page N of a query with a page size, and the overall row count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-4",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy.sql import Select\n\n\ndef get_total_count(session: Session, query: Select) -> int:\n    \"\"\"Return the total number of rows the query would produce, ignoring any LIMIT/OFFSET/ORDER BY.\"\"\"\n    count_query = select(func.count()).select_from(\n        query.order_by(None).limit(None).offset(None).subquery()\n    )\n    return session.execute(count_query).scalar_one()\n\n\ndef get_page(\n    session: Session,\n    query: Select,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"\n    Fetch page `page` (1-indexed) of `query` with `page_size` rows per page.\n\n    Returns a tuple of (rows, total_count), where total_count is the overall\n    number of rows matching the query across all pages.\n\n    Note: the query should have a deterministic ORDER BY for stable pagination.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    total = get_total_count(session, query)\n\n    paged_query = query.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(paged_query)\n\n    # For ORM entity queries (select(Model)), return entities; otherwise return Row objects.\n    if len(query.column_descriptions) == 1 and query.column_descriptions[0].get(\"entity\") is not None \\\n            and query.column_descriptions[0].get(\"expr\") is query.column_descriptions[0].get(\"entity\"):\n        rows = list(result.scalars().all())\n    else:\n        rows = list(result.all())\n\n    return rows, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 4,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:47+00:00",
+  "valid": true
+}

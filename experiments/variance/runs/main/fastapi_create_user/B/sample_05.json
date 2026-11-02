@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field, ConfigDict\n\napp = FastAPI()\n\n# In-memory store used by the default repository implementation.\n_USERS: dict[int, dict] = {}\n\n\nclass UserCreate(BaseModel):\n    username: str = Field(min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    full_name: str | None = Field(default=None, max_length=100)\n    age: int | None = Field(default=None, ge=0, le=150)\n\n\nclass UserOut(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n\n    id: int\n    username: str\n    email: EmailStr\n    full_name: str | None = None\n    age: int | None = None\n\n\ndef create_user_in_db(user: UserCreate) -> dict:\n    \"\"\"Repository function: persist a user and return the stored record.\"\"\"\n    for existing in _USERS.values():\n        if existing[\"username\"] == user.username or existing[\"email\"] == user.email:\n            raise ValueError(\"duplicate\")\n    new_id = len(_USERS) + 1\n    record = {\"id\": new_id, **user.model_dump()}\n    _USERS[new_id] = record\n    return record\n\n\ndef get_create_user():\n    \"\"\"Dependency provider returning the repository function (override in tests).\"\"\"\n    return create_user_in_db\n\n\n@app.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\ndef create_user_endpoint(\n    payload: UserCreate,\n    create_user: Annotated[object, Depends(get_create_user)],\n) -> UserOut:\n    try:\n        created = create_user(payload)\n    except ValueError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"User with this username or email already exists\",\n        )\n    return UserOut.model_validate(created)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.04405,
+    "duration_ms": 9906,
+    "num_turns": 2
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement POST /users in FastAPI: validate the payload, create the user via a repository function injected with Depends, return the created user.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nfrom typing import Annotated\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field, ConfigDict\n\napp = FastAPI()\n\n# In-memory store used by the default repository implementation.\n_USERS: dict[int, dict] = {}\n\n\nclass UserCreate(BaseModel):\n    username: str = Field(min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    full_name: str | None = Field(default=None, max_length=100)\n    age: int | None = Field(default=None, ge=0, le=150)\n\n\nclass UserOut(BaseModel):\n    model_config = ConfigDict(from_attributes=True)\n\n    id: int\n    username: str\n    email: EmailStr\n    full_name: str | None = None\n    age: int | None = None\n\n\ndef create_user_in_db(user: UserCreate) -> dict:\n    \"\"\"Repository function: persist a user and return the stored record.\"\"\"\n    for existing in _USERS.values():\n        if existing[\"username\"] == user.username or existing[\"email\"] == user.email:\n            raise ValueError(\"duplicate\")\n    new_id = len(_USERS) + 1\n    record = {\"id\": new_id, **user.model_dump()}\n    _USERS[new_id] = record\n    return record\n\n\ndef get_create_user():\n    \"\"\"Dependency provider returning the repository function (override in tests).\"\"\"\n    return create_user_in_db\n\n\n@app.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\ndef create_user_endpoint(\n    payload: UserCreate,\n    create_user: Annotated[object, Depends(get_create_user)],\n) -> UserOut:\n    try:\n        created = create_user(payload)\n    except ValueError:\n        raise HTTPException(\n            status_code=status.HTTP_409_CONFLICT,\n            detail=\"User with this username or email already exists\",\n        )\n    return UserOut.model_validate(created)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 5,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:03:15+00:00",
+  "valid": false
+}

@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport time\nimport uuid\nfrom typing import Optional\n\nimport jwt  # PyJWT\n\nJWT_ALGORITHM = \"HS256\"\nDEFAULT_TTL_SECONDS = 15 * 60\n\n\ndef create_access_token(\n    user_id: str,\n    secret_key: Optional[str] = None,\n    ttl_seconds: int = DEFAULT_TTL_SECONDS,\n    issuer: Optional[str] = None,\n    audience: Optional[str] = None,\n    extra_claims: Optional[dict] = None,\n) -> str:\n    \"\"\"Build and sign a JWT access token for the given user id.\n\n    The signing key is read from the JWT_SECRET_KEY environment variable\n    unless passed explicitly. Never hardcode secrets in source.\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if ttl_seconds <= 0:\n        raise ValueError(\"ttl_seconds must be positive\")\n\n    secret_key = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret_key:\n        raise RuntimeError(\"JWT signing key is not configured (JWT_SECRET_KEY)\")\n\n    now = int(time.time())\n    claims = dict(extra_claims or {})\n    claims.update(\n        {\n            \"sub\": str(user_id),\n            \"iat\": now,\n            \"nbf\": now,\n            \"exp\": now + ttl_seconds,\n            \"jti\": uuid.uuid4().hex,\n            \"type\": \"access\",\n        }\n    )\n    if issuer:\n        claims[\"iss\"] = issuer\n    if audience:\n        claims[\"aud\"] = audience\n\n    return jwt.encode(claims, secret_key, algorithm=JWT_ALGORITHM)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0380215,
+    "duration_ms": 6434,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a function for our auth service that builds and signs a JWT access token for a user id, with an exp claim.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport os\nimport time\nimport uuid\nfrom typing import Optional\n\nimport jwt  # PyJWT\n\nJWT_ALGORITHM = \"HS256\"\nDEFAULT_TTL_SECONDS = 15 * 60\n\n\ndef create_access_token(\n    user_id: str,\n    secret_key: Optional[str] = None,\n    ttl_seconds: int = DEFAULT_TTL_SECONDS,\n    issuer: Optional[str] = None,\n    audience: Optional[str] = None,\n    extra_claims: Optional[dict] = None,\n) -> str:\n    \"\"\"Build and sign a JWT access token for the given user id.\n\n    The signing key is read from the JWT_SECRET_KEY environment variable\n    unless passed explicitly. Never hardcode secrets in source.\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if ttl_seconds <= 0:\n        raise ValueError(\"ttl_seconds must be positive\")\n\n    secret_key = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret_key:\n        raise RuntimeError(\"JWT signing key is not configured (JWT_SECRET_KEY)\")\n\n    now = int(time.time())\n    claims = dict(extra_claims or {})\n    claims.update(\n        {\n            \"sub\": str(user_id),\n            \"iat\": now,\n            \"nbf\": now,\n            \"exp\": now + ttl_seconds,\n            \"jti\": uuid.uuid4().hex,\n            \"type\": \"access\",\n        }\n    )\n    if issuer:\n        claims[\"iss\"] = issuer\n    if audience:\n        claims[\"aud\"] = audience\n\n    return jwt.encode(claims, secret_key, algorithm=JWT_ALGORITHM)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 5,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:59:58+00:00",
+  "valid": true
+}

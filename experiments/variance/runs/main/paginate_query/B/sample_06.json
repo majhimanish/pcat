@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query, page=1, page_size=20):\n    \"\"\"Return (items, total) for the given 1-based page of a query.\n\n    Works with legacy ORM `Query` objects as well as 2.0-style `Select`\n    statements (for the latter, pass a Session as `session` via\n    `paginate_select`).\n    \"\"\"\n    if not isinstance(query, Query):\n        raise TypeError(\"paginate expects a sqlalchemy.orm.Query; use paginate_select for Select statements\")\n\n    page = max(int(page), 1)\n    page_size = max(int(page_size), 1)\n\n    total = query.order_by(None).count()\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef paginate_select(session, stmt, page=1, page_size=20, scalars=True):\n    \"\"\"Return (items, total) for the given 1-based page of a 2.0-style Select.\n\n    If `scalars` is True, items are ORM entities / first-column scalars;\n    otherwise they are Row objects.\n    \"\"\"\n    page = max(int(page), 1)\n    page_size = max(int(page_size), 1)\n\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    paged = stmt.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(paged)\n    items = result.scalars().all() if scalars else result.all()\n    return items, total\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0350065,
+    "duration_ms": 9895,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a pagination helper for SQLAlchemy: given a query, a page number and a page size, return the items on that page and the total number of results.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-1",
+  "raw_response": "```python\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Query\n\n\ndef paginate(query, page=1, page_size=20):\n    \"\"\"Return (items, total) for the given 1-based page of a query.\n\n    Works with legacy ORM `Query` objects as well as 2.0-style `Select`\n    statements (for the latter, pass a Session as `session` via\n    `paginate_select`).\n    \"\"\"\n    if not isinstance(query, Query):\n        raise TypeError(\"paginate expects a sqlalchemy.orm.Query; use paginate_select for Select statements\")\n\n    page = max(int(page), 1)\n    page_size = max(int(page_size), 1)\n\n    total = query.order_by(None).count()\n    items = query.limit(page_size).offset((page - 1) * page_size).all()\n    return items, total\n\n\ndef paginate_select(session, stmt, page=1, page_size=20, scalars=True):\n    \"\"\"Return (items, total) for the given 1-based page of a 2.0-style Select.\n\n    If `scalars` is True, items are ORM entities / first-column scalars;\n    otherwise they are Row objects.\n    \"\"\"\n    page = max(int(page), 1)\n    page_size = max(int(page_size), 1)\n\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    paged = stmt.limit(page_size).offset((page - 1) * page_size)\n    result = session.execute(paged)\n    items = result.scalars().all() if scalars else result.all()\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 6,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:50+00:00",
+  "valid": true
+}

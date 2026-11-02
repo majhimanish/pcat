@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SALT_BYTES = 16\n_KEY_BYTES = 32\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Return a salted scrypt hash string for the given plaintext password.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    key = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        maxmem=128 * 1024 * 1024,\n        dklen=_KEY_BYTES,\n    )\n    return \"scrypt${}${}${}${}${}\".format(\n        _SCRYPT_N,\n        _SCRYPT_R,\n        _SCRYPT_P,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(key).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a plaintext password against a hash produced by hash_password.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, key_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(key_b64)\n        n, r, p = int(n), int(r), int(p)\n        candidate = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            maxmem=128 * 1024 * 1024,\n            dklen=len(expected),\n        )\n    except (ValueError, TypeError, AttributeError):\n        return False\n    return hmac.compare_digest(candidate, expected)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.036402300000000005,
+    "duration_ms": 7905,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement password storage helpers: turn a plaintext password into a hash, and verify a plaintext password against a hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SALT_BYTES = 16\n_KEY_BYTES = 32\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Return a salted scrypt hash string for the given plaintext password.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    key = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_SCRYPT_N,\n        r=_SCRYPT_R,\n        p=_SCRYPT_P,\n        maxmem=128 * 1024 * 1024,\n        dklen=_KEY_BYTES,\n    )\n    return \"scrypt${}${}${}${}${}\".format(\n        _SCRYPT_N,\n        _SCRYPT_R,\n        _SCRYPT_P,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(key).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a plaintext password against a hash produced by hash_password.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, key_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(key_b64)\n        n, r, p = int(n), int(r), int(p)\n        candidate = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            maxmem=128 * 1024 * 1024,\n            dklen=len(expected),\n        )\n    except (ValueError, TypeError, AttributeError):\n        return False\n    return hmac.compare_digest(candidate, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 15,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:34+00:00",
+  "valid": true
+}

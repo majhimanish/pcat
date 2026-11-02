@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport time\nimport jwt  # PyJWT\n\n\ndef get_secret_key() -> str:\n    \"\"\"Load the signing secret from the environment (never hardcode it).\"\"\"\n    secret = os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\"JWT_SECRET_KEY environment variable is not set\")\n    return secret\n\n\ndef mint_jwt(user_id: str, expires_in_seconds: int = 3600, secret_key: str | None = None) -> str:\n    \"\"\"\n    Create a signed JWT for a user.\n\n    Claims:\n      sub - the user id\n      iat - issued-at (unix timestamp)\n      exp - expiry (unix timestamp)\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive\")\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"exp\": now + expires_in_seconds,\n    }\n    key = secret_key or get_secret_key()\n    return jwt.encode(payload, key, algorithm=\"HS256\")\n\n\ndef verify_jwt(token: str, secret_key: str | None = None) -> dict:\n    \"\"\"Decode and validate a token; raises jwt.InvalidTokenError on failure.\"\"\"\n    key = secret_key or get_secret_key()\n    return jwt.decode(\n        token,\n        key,\n        algorithms=[\"HS256\"],\n        options={\"require\": [\"sub\", \"exp\", \"iat\"]},\n    )\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0350737,
+    "duration_ms": 6993,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Can you write the code to mint a JWT for a user? It needs the user id in it, an expiry, and it has to be signed with our secret key.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nimport os\nimport time\nimport jwt  # PyJWT\n\n\ndef get_secret_key() -> str:\n    \"\"\"Load the signing secret from the environment (never hardcode it).\"\"\"\n    secret = os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\"JWT_SECRET_KEY environment variable is not set\")\n    return secret\n\n\ndef mint_jwt(user_id: str, expires_in_seconds: int = 3600, secret_key: str | None = None) -> str:\n    \"\"\"\n    Create a signed JWT for a user.\n\n    Claims:\n      sub - the user id\n      iat - issued-at (unix timestamp)\n      exp - expiry (unix timestamp)\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id is required\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive\")\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"exp\": now + expires_in_seconds,\n    }\n    key = secret_key or get_secret_key()\n    return jwt.encode(payload, key, algorithm=\"HS256\")\n\n\ndef verify_jwt(token: str, secret_key: str | None = None) -> dict:\n    \"\"\"Decode and validate a token; raises jwt.InvalidTokenError on failure.\"\"\"\n    key = secret_key or get_secret_key()\n    return jwt.decode(\n        token,\n        key,\n        algorithms=[\"HS256\"],\n        options={\"require\": [\"sub\", \"exp\", \"iat\"]},\n    )\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 8,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:00+00:00",
+  "valid": true
+}

@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\nimport random\n\nimport requests\n\n\ndef fetch_with_retry(url, max_retries=3, base_delay=1.0, timeout=10):\n    \"\"\"GET a URL, retrying on errors with exponential backoff and jitter.\n\n    Retries on network errors, timeouts, 5xx, and 429 responses.\n    Other 4xx responses are not retried. Returns the successful\n    requests.Response, or raises the last error once retries are exhausted.\n    \"\"\"\n    last_error = None\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout)\n            if response.status_code == 429 or response.status_code >= 500:\n                response.raise_for_status()\n            response.raise_for_status()\n            return response\n        except requests.HTTPError as e:\n            status = e.response.status_code if e.response is not None else None\n            if status is not None and status < 500 and status != 429:\n                raise\n            last_error = e\n        except (requests.ConnectionError, requests.Timeout) as e:\n            last_error = e\n\n        if attempt < max_retries:\n            delay = base_delay * (2 ** attempt)\n            delay += random.uniform(0, delay * 0.1)\n            time.sleep(delay)\n\n    raise last_error\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.033914799999999995,
+    "duration_ms": 6025,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write fetch_with_retry(url) that makes a GET request and, on errors, retries a few times, waiting longer after each failure.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nimport time\nimport random\n\nimport requests\n\n\ndef fetch_with_retry(url, max_retries=3, base_delay=1.0, timeout=10):\n    \"\"\"GET a URL, retrying on errors with exponential backoff and jitter.\n\n    Retries on network errors, timeouts, 5xx, and 429 responses.\n    Other 4xx responses are not retried. Returns the successful\n    requests.Response, or raises the last error once retries are exhausted.\n    \"\"\"\n    last_error = None\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout)\n            if response.status_code == 429 or response.status_code >= 500:\n                response.raise_for_status()\n            response.raise_for_status()\n            return response\n        except requests.HTTPError as e:\n            status = e.response.status_code if e.response is not None else None\n            if status is not None and status < 500 and status != 429:\n                raise\n            last_error = e\n        except (requests.ConnectionError, requests.Timeout) as e:\n            last_error = e\n\n        if attempt < max_retries:\n            delay = base_delay * (2 ** attempt)\n            delay += random.uniform(0, delay * 0.1)\n            time.sleep(delay)\n\n    raise last_error\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 8,
+  "status": "ok",
+  "task": "http_retry",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:01:17+00:00",
+  "valid": true
+}

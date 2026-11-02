@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimums: N=2**17, r=8, p=1)\n_N = 2 ** 17\n_R = 8\n_P = 1\n_DKLEN = 64\n_SALT_BYTES = 16\n\n\ndef _derive(password: str, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=n,\n        r=r,\n        p=p,\n        dklen=dklen,\n        maxmem=256 * 1024 * 1024,\n    )\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password at signup. Returns a self-describing string to store in the DB.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    digest = _derive(password, salt, _N, _R, _P, _DKLEN)\n    return \"$\".join([\n        \"scrypt\",\n        str(_N),\n        str(_R),\n        str(_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(digest).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login attempt against the stored hash. Constant-time comparison.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, digest_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(digest_b64)\n        actual = _derive(password, salt, int(n), int(r), int(p), len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0359924,
+    "duration_ms": 11069,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write the code we use at signup to hash passwords, plus the check we run at login to see if the password matches the hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n# scrypt parameters (OWASP-recommended minimums: N=2**17, r=8, p=1)\n_N = 2 ** 17\n_R = 8\n_P = 1\n_DKLEN = 64\n_SALT_BYTES = 16\n\n\ndef _derive(password: str, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=n,\n        r=r,\n        p=p,\n        dklen=dklen,\n        maxmem=256 * 1024 * 1024,\n    )\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password at signup. Returns a self-describing string to store in the DB.\"\"\"\n    salt = os.urandom(_SALT_BYTES)\n    digest = _derive(password, salt, _N, _R, _P, _DKLEN)\n    return \"$\".join([\n        \"scrypt\",\n        str(_N),\n        str(_R),\n        str(_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(digest).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Check a login attempt against the stored hash. Constant-time comparison.\"\"\"\n    try:\n        scheme, n, r, p, salt_b64, digest_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(digest_b64)\n        actual = _derive(password, salt, int(n), int(r), int(p), len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:33+00:00",
+  "valid": true
+}

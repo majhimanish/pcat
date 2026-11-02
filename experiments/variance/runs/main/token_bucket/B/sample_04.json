@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\n\n\ndef allow_request(buckets, client_id, capacity=10, refill_rate=1.0, cost=1, now=None):\n    \"\"\"\n    Token-bucket rate limiter. Each client's bucket is stored in the `buckets` dict\n    as {\"tokens\": float, \"last\": float}.\n\n    Args:\n        buckets: dict mapping client_id -> bucket state (mutated in place).\n        client_id: identifier of the client making the request.\n        capacity: maximum tokens a bucket can hold (burst size).\n        refill_rate: tokens added per second.\n        cost: tokens consumed by this request.\n        now: optional timestamp (seconds); defaults to time.monotonic().\n\n    Returns:\n        True if the request is allowed, False if it is rate limited.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    bucket = buckets.get(client_id)\n    if bucket is None:\n        # New clients start with a full bucket.\n        bucket = {\"tokens\": float(capacity), \"last\": now}\n        buckets[client_id] = bucket\n    else:\n        elapsed = max(0.0, now - bucket[\"last\"])\n        bucket[\"tokens\"] = min(float(capacity), bucket[\"tokens\"] + elapsed * refill_rate)\n        bucket[\"last\"] = now\n\n    if bucket[\"tokens\"] >= cost:\n        bucket[\"tokens\"] -= cost\n        return True\n    return False\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0368587,
+    "duration_ms": 6219,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Give me a function for token-bucket rate limiting where each client's bucket lives in a dict.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-4",
+  "raw_response": "```python\nimport time\n\n\ndef allow_request(buckets, client_id, capacity=10, refill_rate=1.0, cost=1, now=None):\n    \"\"\"\n    Token-bucket rate limiter. Each client's bucket is stored in the `buckets` dict\n    as {\"tokens\": float, \"last\": float}.\n\n    Args:\n        buckets: dict mapping client_id -> bucket state (mutated in place).\n        client_id: identifier of the client making the request.\n        capacity: maximum tokens a bucket can hold (burst size).\n        refill_rate: tokens added per second.\n        cost: tokens consumed by this request.\n        now: optional timestamp (seconds); defaults to time.monotonic().\n\n    Returns:\n        True if the request is allowed, False if it is rate limited.\n    \"\"\"\n    if now is None:\n        now = time.monotonic()\n\n    bucket = buckets.get(client_id)\n    if bucket is None:\n        # New clients start with a full bucket.\n        bucket = {\"tokens\": float(capacity), \"last\": now}\n        buckets[client_id] = bucket\n    else:\n        elapsed = max(0.0, now - bucket[\"last\"])\n        bucket[\"tokens\"] = min(float(capacity), bucket[\"tokens\"] + elapsed * refill_rate)\n        bucket[\"last\"] = now\n\n    if bucket[\"tokens\"] >= cost:\n        bucket[\"tokens\"] -= cost\n        return True\n    return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 4,
+  "status": "ok",
+  "task": "token_bucket",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:02:10+00:00",
+  "valid": true
+}

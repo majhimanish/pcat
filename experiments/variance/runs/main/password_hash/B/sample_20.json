@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef _derive(password: str, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=n,\n        r=r,\n        p=p,\n        dklen=dklen,\n        maxmem=128 * n * r * 2 + 1024 * 1024,\n    )\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a plaintext password using scrypt with a random per-password salt.\n\n    Returns a self-describing string:\n    scrypt$n$r$p$base64(salt)$base64(hash)\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a str\")\n    salt = os.urandom(_SALT_BYTES)\n    digest = _derive(password, salt, _SCRYPT_N, _SCRYPT_R, _SCRYPT_P, _SCRYPT_DKLEN)\n    return \"$\".join([\n        \"scrypt\",\n        str(_SCRYPT_N),\n        str(_SCRYPT_R),\n        str(_SCRYPT_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(digest).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a plaintext password against a hash from hash_password.\n\n    Uses a constant-time comparison. Returns False for malformed hashes.\n    \"\"\"\n    if not isinstance(password, str) or not isinstance(stored_hash, str):\n        return False\n    try:\n        scheme, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(hash_b64, validate=True)\n        actual = _derive(password, salt, n, r, p, len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.037934300000000004,
+    "duration_ms": 8215,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Implement password storage helpers: turn a plaintext password into a hash, and verify a plaintext password against a hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-5",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_SCRYPT_N = 2 ** 15\n_SCRYPT_R = 8\n_SCRYPT_P = 1\n_SCRYPT_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef _derive(password: str, salt: bytes, n: int, r: int, p: int, dklen: int) -> bytes:\n    return hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=n,\n        r=r,\n        p=p,\n        dklen=dklen,\n        maxmem=128 * n * r * 2 + 1024 * 1024,\n    )\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a plaintext password using scrypt with a random per-password salt.\n\n    Returns a self-describing string:\n    scrypt$n$r$p$base64(salt)$base64(hash)\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a str\")\n    salt = os.urandom(_SALT_BYTES)\n    digest = _derive(password, salt, _SCRYPT_N, _SCRYPT_R, _SCRYPT_P, _SCRYPT_DKLEN)\n    return \"$\".join([\n        \"scrypt\",\n        str(_SCRYPT_N),\n        str(_SCRYPT_R),\n        str(_SCRYPT_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(digest).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a plaintext password against a hash from hash_password.\n\n    Uses a constant-time comparison. Returns False for malformed hashes.\n    \"\"\"\n    if not isinstance(password, str) or not isinstance(stored_hash, str):\n        return False\n    try:\n        scheme, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if scheme != \"scrypt\":\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(hash_b64, validate=True)\n        actual = _derive(password, salt, n, r, p, len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 20,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:00:40+00:00",
+  "valid": true
+}

@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\n\n_TRUE_VALUES = {\"1\", \"true\", \"yes\", \"on\"}\n_FALSE_VALUES = {\"0\", \"false\", \"no\", \"off\"}\n\n\ndef _parse_bool(name, raw):\n    value = raw.strip().lower()\n    if value in _TRUE_VALUES:\n        return True\n    if value in _FALSE_VALUES:\n        return False\n    raise ValueError(\n        f\"Invalid boolean for {name}: {raw!r} \"\n        f\"(expected one of {sorted(_TRUE_VALUES | _FALSE_VALUES)})\"\n    )\n\n\ndef _parse_port(name, raw):\n    try:\n        port = int(raw.strip())\n    except ValueError:\n        raise ValueError(f\"Invalid integer for {name}: {raw!r}\") from None\n    if not 1 <= port <= 65535:\n        raise ValueError(f\"{name} must be between 1 and 65535, got {port}\")\n    return port\n\n\ndef _parse_database_url(name, raw):\n    url = raw.strip()\n    if not url:\n        raise ValueError(f\"{name} must not be empty\")\n    scheme, sep, rest = url.partition(\"://\")\n    if not sep or not scheme or not rest:\n        raise ValueError(f\"Invalid database URL for {name}: expected 'scheme://...'\")\n    return url\n\n\ndef load_settings(env=None):\n    \"\"\"Load application settings from environment variables.\n\n    Variables (defaults in parentheses):\n        DATABASE_URL (sqlite:///app.db)\n        PORT         (8000)\n        DEBUG        (false)\n\n    Missing variables fall back to defaults; invalid values raise ValueError.\n    \"\"\"\n    if env is None:\n        env = os.environ\n\n    defaults = {\n        \"DATABASE_URL\": \"sqlite:///app.db\",\n        \"PORT\": \"8000\",\n        \"DEBUG\": \"false\",\n    }\n\n    def get(name):\n        raw = env.get(name)\n        return defaults[name] if raw is None else raw\n\n    return {\n        \"database_url\": _parse_database_url(\"DATABASE_URL\", get(\"DATABASE_URL\")),\n        \"port\": _parse_port(\"PORT\", get(\"PORT\")),\n        \"debug\": _parse_bool(\"DEBUG\", get(\"DEBUG\")),\n    }\n",
+  "condition": "B",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0373238,
+    "duration_ms": 13852,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write load_settings() that reads settings like the database URL, port and debug flag from the environment, using defaults when they're missing and failing on invalid values.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-3",
+  "raw_response": "```python\nimport os\n\n_TRUE_VALUES = {\"1\", \"true\", \"yes\", \"on\"}\n_FALSE_VALUES = {\"0\", \"false\", \"no\", \"off\"}\n\n\ndef _parse_bool(name, raw):\n    value = raw.strip().lower()\n    if value in _TRUE_VALUES:\n        return True\n    if value in _FALSE_VALUES:\n        return False\n    raise ValueError(\n        f\"Invalid boolean for {name}: {raw!r} \"\n        f\"(expected one of {sorted(_TRUE_VALUES | _FALSE_VALUES)})\"\n    )\n\n\ndef _parse_port(name, raw):\n    try:\n        port = int(raw.strip())\n    except ValueError:\n        raise ValueError(f\"Invalid integer for {name}: {raw!r}\") from None\n    if not 1 <= port <= 65535:\n        raise ValueError(f\"{name} must be between 1 and 65535, got {port}\")\n    return port\n\n\ndef _parse_database_url(name, raw):\n    url = raw.strip()\n    if not url:\n        raise ValueError(f\"{name} must not be empty\")\n    scheme, sep, rest = url.partition(\"://\")\n    if not sep or not scheme or not rest:\n        raise ValueError(f\"Invalid database URL for {name}: expected 'scheme://...'\")\n    return url\n\n\ndef load_settings(env=None):\n    \"\"\"Load application settings from environment variables.\n\n    Variables (defaults in parentheses):\n        DATABASE_URL (sqlite:///app.db)\n        PORT         (8000)\n        DEBUG        (false)\n\n    Missing variables fall back to defaults; invalid values raise ValueError.\n    \"\"\"\n    if env is None:\n        env = os.environ\n\n    defaults = {\n        \"DATABASE_URL\": \"sqlite:///app.db\",\n        \"PORT\": \"8000\",\n        \"DEBUG\": \"false\",\n    }\n\n    def get(name):\n        raw = env.get(name)\n        return defaults[name] if raw is None else raw\n\n    return {\n        \"database_url\": _parse_database_url(\"DATABASE_URL\", get(\"DATABASE_URL\")),\n        \"port\": _parse_port(\"PORT\", get(\"PORT\")),\n        \"debug\": _parse_bool(\"DEBUG\", get(\"DEBUG\")),\n    }\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "task": "env_config",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:02:00+00:00",
+  "valid": true
+}
