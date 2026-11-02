@@ -247,3 +247,27 @@ def test_reference_match_rate_for_condition_c(tmp_path):
     refs = {"demo": {"shape_fingerprint": first["shape_fingerprint"], "exact_fingerprint": first["exact_fingerprint"]}}
     s = variance.analyze_run(run, ["demo"], refs)["tasks"]["demo"]["C"]["summary"]
     assert s["reference_match_rate"] == 0.75 and s["reference_exact_match_rate"] == 0.5
+
+
+def test_supplementary_classes_removed_metric():
+    pyd = (
+        "from fastapi import Depends\nfrom pydantic import BaseModel\n\n"
+        "class {m}(BaseModel):\n    name: str\n\n"
+        "def create(payload: {m}, repo=Depends(get_repo)):\n    return repo(payload.name)\n"
+    )
+    rows = [
+        variance.analyze_sample({"sample": i, "status": "ok", "code": pyd.format(m=m)})
+        for i, m in enumerate(["UserIn", "NewUser"], 1)
+    ]
+    assert all(r["invalid_reason"] == "contains_class" for r in rows)
+    # class names are treated like globals, so the two samples get the same shape
+    assert rows[0]["classes_removed"]["shape_fingerprint"] == rows[1]["classes_removed"]["shape_fingerprint"]
+    summary = variance.summarize(rows)
+    assert summary["valid"] == 0
+    assert summary["supplementary_classes_removed"] == {
+        "samples": 2, "with_classes": 2, "distinct_shapes": 1, "top_shape_share": 1.0, "effective_shapes": 1.0,
+    }
+    nested = variance.analyze_sample(
+        {"sample": 3, "status": "ok", "code": "def f():\n    class A:\n        pass\n    return A\n"}
+    )
+    assert "classes_removed" not in nested

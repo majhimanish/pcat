@@ -315,7 +315,7 @@ class _GlobalRenamer(ast.NodeTransformer):
         self.shadowed = set()
 
 
-def normalize_snippet(code: str) -> tuple[str, int]:
+def normalize_snippet(code: str, drop_classes: bool = False) -> tuple[str, int]:
     """Rewrite a sample so the unchanged canonicalizer accepts it.
 
     - `if __name__ == "__main__":` blocks are dropped (demo code, not the answer)
@@ -324,14 +324,21 @@ def normalize_snippet(code: str) -> tuple[str, int]:
       order, into a synthetic last function `_module_level`, and the names they
       bind are renamed g0, g1, ... everywhere (so a global's name does not
       matter, like a local's) and declared `global` there.
+    - with `drop_classes` (supplementary metric only), top-level classes are
+      removed and their names are treated like such globals.
 
     Returns (source for canonical.analyze, number of statements moved).
     """
     tree = ast.parse(code)
     kept: list[ast.stmt] = []
     moved: list[ast.stmt] = []
+    bound: list[str] = []
     for stmt in tree.body:
         if _is_main_guard(stmt):
+            continue
+        if drop_classes and isinstance(stmt, ast.ClassDef):
+            if stmt.name not in bound:
+                bound.append(stmt.name)
             continue
         if canonical._is_string_expr(stmt) and not kept and not moved:
             continue  # module docstring
@@ -340,7 +347,6 @@ def normalize_snippet(code: str) -> tuple[str, int]:
         else:
             moved.append(stmt)
 
-    bound: list[str] = []
     for stmt in moved:
         for node in ast.walk(stmt):
             if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store) and node.id not in bound:
@@ -371,7 +377,7 @@ def normalize_snippet(code: str) -> tuple[str, int]:
     return ast.unparse(module), len(moved)
 
 
-def snippet_info(code: str) -> SnippetInfo:
+def snippet_info(code: str, drop_classes: bool = False) -> SnippetInfo:
     """Fingerprints and descriptors of a valid sample (raises PcatError if impossible)."""
     tree = ast.parse(code)
     funcs = [n for n in tree.body if isinstance(n, _FUNC_TYPES)]
@@ -379,7 +385,7 @@ def snippet_info(code: str) -> SnippetInfo:
     args = entry.args
     params = len(args.posonlyargs) + len(args.args) + len(args.kwonlyargs)
     params += (args.vararg is not None) + (args.kwarg is not None)
-    source, moved = normalize_snippet(code)
+    source, moved = normalize_snippet(code, drop_classes)
     result = canonical.analyze(source)
     shape_text = shape.shape_text_from_canonical(result.text)
     roots = import_roots(tree)
@@ -463,7 +469,30 @@ def analyze_sample(record: dict) -> dict:
             )
     if reason is not None:
         row["invalid_reason"] = reason
+    # Supplementary metric (not part of the spec's validity rule): samples whose
+    # only problem is top-level classes (e.g. Pydantic models) are fingerprinted
+    # with those classes removed.
+    if "invalid_reason" not in row:
+        row["classes_removed"] = {"shape_fingerprint": row["shape_fingerprint"], "classes": 0}
+    elif reason == "contains_class" and _only_top_level_classes(record["code"]):
+        try:
+            info = snippet_info(record["code"], drop_classes=True)
+        except (PcatError, RecursionError, ValueError, SyntaxError, IndexError):
+            pass
+        else:
+            classes = sum(isinstance(n, ast.ClassDef) for n in ast.parse(record["code"]).body)
+            row["classes_removed"] = {
+                "shape_fingerprint": info.shape_fingerprint,
+                "classes": classes,
+                "third_party": list(info.third_party),
+            }
     return row
+
+
+def _only_top_level_classes(code: str) -> bool:
+    tree = ast.parse(code)
+    top = {id(n) for n in tree.body if isinstance(n, ast.ClassDef)}
+    return all(id(n) in top for n in ast.walk(tree) if isinstance(n, ast.ClassDef))
 
 
 def _reason_key(reason: str) -> str:
@@ -492,6 +521,20 @@ def summarize(rows: list[dict]) -> dict:
         "function_counts": _histogram(r["functions"] for r in valid),
         "entry_param_counts": _histogram(r["entry_params"] for r in valid),
         "with_module_statements": sum(1 for r in valid if r["module_statements"]),
+        "supplementary_classes_removed": _classes_removed_summary(rows),
+    }
+
+
+def _classes_removed_summary(rows: list[dict]) -> dict:
+    """Shape metrics over valid samples plus samples whose only issue is top-level classes."""
+    covered = [r["classes_removed"] for r in rows if "classes_removed" in r]
+    metrics = distribution_metrics([c["shape_fingerprint"] for c in covered])
+    return {
+        "samples": len(covered),
+        "with_classes": sum(1 for c in covered if c["classes"]),
+        "distinct_shapes": metrics["distinct"],
+        "top_shape_share": metrics["top_share"],
+        "effective_shapes": metrics["effective"],
     }
 
 
