@@ -1,0 +1,10 @@
+{
+  "code": "from datetime import datetime, timedelta, timezone\nimport jwt\n\nKEY = \"change-me\"\n\ndef make_jwt(uid, minutes=15):\n    # renamed, comments, same structure\n    exp = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    claims = {\"sub\": str(uid), \"exp\": exp}\n    return jwt.encode(claims, KEY, algorithm=\"HS256\")\n",
+  "condition": "A",
+  "error": null,
+  "raw_response": "```python\nfrom datetime import datetime, timedelta, timezone\nimport jwt\n\nKEY = \"change-me\"\n\ndef make_jwt(uid, minutes=15):\n    # renamed, comments, same structure\n    exp = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    claims = {\"sub\": str(uid), \"exp\": exp}\n    return jwt.encode(claims, KEY, algorithm=\"HS256\")\n```",
+  "sample": 2,
+  "status": "ok",
+  "task": "demo",
+  "timestamp": "2026-11-02T00:00:02+00:00"
+}

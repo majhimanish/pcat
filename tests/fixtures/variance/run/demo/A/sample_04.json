@@ -1,0 +1,10 @@
+{
+  "code": "import os\nfrom datetime import datetime, timedelta\nfrom jose import jwt\n\nSECRET = os.environ.get(\"JWT_SECRET\", \"dev\")\n\n\ndef create_access_token(user_id: int, expires_minutes: int = 30) -> str:\n    to_encode = {\"sub\": str(user_id), \"exp\": datetime.utcnow() + timedelta(minutes=expires_minutes)}\n    return jwt.encode(to_encode, SECRET, algorithm=\"HS256\")\n\n\nif __name__ == \"__main__\":\n    print(create_access_token(1))\n",
+  "condition": "A",
+  "error": null,
+  "raw_response": "```python\nimport os\nfrom datetime import datetime, timedelta\nfrom jose import jwt\n\nSECRET = os.environ.get(\"JWT_SECRET\", \"dev\")\n\n\ndef create_access_token(user_id: int, expires_minutes: int = 30) -> str:\n    to_encode = {\"sub\": str(user_id), \"exp\": datetime.utcnow() + timedelta(minutes=expires_minutes)}\n    return jwt.encode(to_encode, SECRET, algorithm=\"HS256\")\n\n\nif __name__ == \"__main__\":\n    print(create_access_token(1))\n```",
+  "sample": 4,
+  "status": "ok",
+  "task": "demo",
+  "timestamp": "2026-11-02T00:00:04+00:00"
+}

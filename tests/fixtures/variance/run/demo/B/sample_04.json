@@ -1,0 +1,10 @@
+{
+  "code": "def f(:\n",
+  "condition": "B",
+  "error": null,
+  "raw_response": "```python\ndef f(:\n```",
+  "sample": 4,
+  "status": "ok",
+  "task": "demo",
+  "timestamp": "2026-11-02T00:00:04+00:00"
+}

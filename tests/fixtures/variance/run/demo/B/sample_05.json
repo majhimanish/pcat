@@ -1,0 +1,10 @@
+{
+  "code": null,
+  "condition": "B",
+  "error": "timed out",
+  "raw_response": null,
+  "sample": 5,
+  "status": "failed",
+  "task": "demo",
+  "timestamp": "2026-11-02T00:00:05+00:00"
+}

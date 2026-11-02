@@ -1,0 +1,10 @@
+{
+  "code": "import jwt\nfrom datetime import datetime, timedelta, timezone\n\nSECRET_KEY = \"change-me\"\n\n\ndef create_token(user_id, minutes=60):\n    \"\"\"Docstring.\"\"\"\n    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    payload = {\"sub\": str(user_id), \"exp\": expire}\n    return jwt.encode(payload, SECRET_KEY, algorithm=\"HS512\")\n",
+  "condition": "A",
+  "error": null,
+  "raw_response": "```python\nimport jwt\nfrom datetime import datetime, timedelta, timezone\n\nSECRET_KEY = \"change-me\"\n\n\ndef create_token(user_id, minutes=60):\n    \"\"\"Docstring.\"\"\"\n    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    payload = {\"sub\": str(user_id), \"exp\": expire}\n    return jwt.encode(payload, SECRET_KEY, algorithm=\"HS512\")\n```",
+  "sample": 3,
+  "status": "ok",
+  "task": "demo",
+  "timestamp": "2026-11-02T00:00:03+00:00"
+}
