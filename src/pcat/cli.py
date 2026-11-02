@@ -39,7 +39,8 @@ def _root() -> Path:
 
 
 def _fail(message: str) -> None:
-    typer.echo(f"error: {message}", err=True)
+    for line in message.splitlines() or [""]:
+        typer.echo(f"error: {line}", err=True)
     raise typer.Exit(1)
 
 
@@ -285,6 +286,28 @@ def index() -> None:
     typer.echo(f"wrote {path.relative_to(_root()).as_posix()}")
 
 
+@app.command("migrate-fingerprints")
+@_guard
+def migrate_fingerprints() -> None:
+    """Recompute all fingerprints under the current canonicalization rules.
+
+    Rewrites pattern.yaml files whose fingerprint changed, regenerates
+    index.json and prints old/new fingerprints. Writes nothing if any pattern
+    fails to load or canonicalize.
+    """
+    rows = cat.migrate_fingerprints(_root())
+    width = max([len("id")] + [len(r.key) for r in rows])
+    typer.echo(f"{'id':<{width}}  {'old':<64}  {'new':<64}  status")
+    for r in rows:
+        status = "changed" if r.changed else "unchanged"
+        typer.echo(f"{r.key:<{width}}  {(r.old or '-'):<64}  {r.new:<64}  {status}")
+    changed = sum(r.changed for r in rows)
+    typer.echo(
+        f"{changed} of {len(rows)} fingerprint(s) changed; "
+        f"rules version {canonical.CANONICAL_VERSION}; wrote {cat.CATALOG_DIR}/{cat.INDEX_FILE}"
+    )
+
+
 @app.command()
 @_guard
 def show(pattern_id: str = typer.Argument(..., metavar="ID")) -> None:
@@ -338,7 +361,7 @@ def find(file: Path = typer.Argument(..., exists=True, dir_okay=False)) -> None:
         tree = ast.parse(source)
     except SyntaxError as exc:
         raise PcatError(f"{file}: syntax error at line {exc.lineno}: {exc.msg}") from None
-    entries = cat.read_index(_root())
+    entries = cat.read_index(_root())["patterns"]
     by_fp: dict[str, list[dict]] = {}
     for entry in entries:
         if entry.get("fingerprint"):

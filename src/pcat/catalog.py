@@ -19,7 +19,7 @@ import yaml
 from pydantic import ValidationError
 
 from pcat import canonical
-from pcat.errors import CanonicalizationError, CatalogError
+from pcat.errors import CanonicalizationError, CatalogError, PcatError
 from pcat.schema import PatternMeta
 
 CATALOG_DIR = "catalog"
@@ -202,8 +202,16 @@ def index_entries(patterns: list[Pattern]) -> list[dict]:
     return sorted(entries, key=lambda e: (e["id"], e["version"]))
 
 
+def index_document(patterns: list[Pattern]) -> dict:
+    """The full index.json document: rules version plus sorted entries."""
+    return {
+        "canonical_version": canonical.CANONICAL_VERSION,
+        "patterns": index_entries(patterns),
+    }
+
+
 def index_text(patterns: list[Pattern]) -> str:
-    return json.dumps(index_entries(patterns), sort_keys=True, indent=2) + "\n"
+    return json.dumps(index_document(patterns), sort_keys=True, indent=2) + "\n"
 
 
 def write_index(root: Path) -> Path:
@@ -212,11 +220,64 @@ def write_index(root: Path) -> Path:
     return path
 
 
-def read_index(root: Path) -> list[dict]:
+def read_index(root: Path) -> dict:
+    """Parsed index.json as {"canonical_version": int, "patterns": [...]}.
+
+    A v1 index (a bare list of entries) is returned as canonical_version 1.
+    """
     path = root / CATALOG_DIR / INDEX_FILE
     if not path.is_file():
         raise CatalogError(f"{path} not found; run `pcat index`")
-    return json.loads(path.read_text(encoding="utf-8"))
+    return normalize_index(json.loads(path.read_text(encoding="utf-8")))
+
+
+def normalize_index(data) -> dict:
+    if isinstance(data, list):  # format written by canonical rules v1
+        return {"canonical_version": 1, "patterns": data}
+    if isinstance(data, dict) and isinstance(data.get("patterns"), list):
+        return {
+            "canonical_version": int(data.get("canonical_version", 1)),
+            "patterns": data["patterns"],
+        }
+    raise CatalogError(f"{INDEX_FILE} has an unknown format")
+
+
+@dataclass(frozen=True)
+class MigrationRow:
+    key: str
+    old: str | None
+    new: str
+
+    @property
+    def changed(self) -> bool:
+        return self.old != self.new
+
+
+def migrate_fingerprints(root: Path) -> list[MigrationRow]:
+    """Recompute every fingerprint under the current rules and rewrite changed ones.
+
+    All-or-nothing: if any pattern cannot be loaded or canonicalized, nothing is
+    written. Regenerates index.json (which records CANONICAL_VERSION).
+    """
+    patterns = load_catalog(root)
+    errors = [f"{p.label}: {err}" for p in patterns for err in p.load_errors]
+    rows: list[tuple[Pattern, MigrationRow]] = []
+    for p in patterns:
+        if p.meta is None:
+            continue
+        try:
+            new = analyze_pattern(p).fingerprint
+        except PcatError as exc:
+            errors.append(f"{p.label}: {exc}")
+            continue
+        rows.append((p, MigrationRow(p.meta.key, p.meta.fingerprint, new)))
+    if errors:
+        raise CatalogError("migration aborted, nothing written:\n" + "\n".join(errors))
+    for p, row in rows:
+        if row.changed:
+            write_fingerprint(p, row.new)
+    write_index(root)
+    return sorted((row for _, row in rows), key=lambda r: r.key)
 
 
 def write_fingerprint(pattern: Pattern, value: str) -> None:
@@ -461,11 +522,28 @@ def _cross_checks(root: Path, patterns: list[Pattern], computed: dict[str, str])
 
 
 # Fields of an approved pattern version that a later change must not touch.
-IMMUTABLE_FIELDS = ("id", "version", "behavior", "entry_point", "keep_annotations", "fingerprint")
+# `fingerprint` is handled separately: it may change only through a migration.
+IMMUTABLE_FIELDS = ("id", "version", "behavior", "entry_point", "keep_annotations")
 
 
 def _git(root: Path, *args: str) -> subprocess.CompletedProcess:
     return subprocess.run(["git", "-C", str(root), *args], capture_output=True, text=True)
+
+
+def _git_bytes(root: Path, *args: str) -> bytes | None:
+    proc = subprocess.run(["git", "-C", str(root), *args], capture_output=True)
+    return proc.stdout if proc.returncode == 0 else None
+
+
+def _base_canonical_version(root: Path, base: str) -> int:
+    """CANONICAL_VERSION recorded in index.json at `base` (1 if absent or v1 format)."""
+    raw = _git_bytes(root, "show", f"{base}:./{CATALOG_DIR}/{INDEX_FILE}")
+    if raw is None:
+        return 1
+    try:
+        return normalize_index(json.loads(raw.decode("utf-8")))["canonical_version"]
+    except (ValueError, CatalogError):
+        return 1
 
 
 def _immutability_checks(root: Path, patterns: list[Pattern], base: str) -> list[Problem]:
@@ -475,6 +553,8 @@ def _immutability_checks(root: Path, patterns: list[Pattern], base: str) -> list
     if listing.returncode != 0:
         return [Problem("immutable", base, f"cannot read git ref: {listing.stderr.strip()}")]
     current = {p.rel: p for p in patterns}
+    base_version = _base_canonical_version(root, base)
+    rules_bumped = canonical.CANONICAL_VERSION > base_version
     for line in sorted(listing.stdout.splitlines()):
         path = Path(line)
         if path.name != YAML_FILE or len(path.parts) != 4:
@@ -500,4 +580,25 @@ def _immutability_checks(root: Path, patterns: list[Pattern], base: str) -> list
                         f"create version {old_meta.version + 1} instead",
                     )
                 )
+        old_impl = _git_bytes(root, "show", f"{base}:./{rel}/{IMPL_FILE}")
+        new_impl = pattern.impl_path.read_bytes() if pattern.impl_path.is_file() else None
+        if old_impl is not None and old_impl != new_impl:
+            out.append(
+                Problem(
+                    "immutable",
+                    old_meta.key,
+                    f"{IMPL_FILE} changed since {base}; approved patterns are immutable, "
+                    f"create version {old_meta.version + 1} instead",
+                )
+            )
+        elif old_meta.fingerprint != pattern.meta.fingerprint and not rules_bumped:
+            out.append(
+                Problem(
+                    "immutable",
+                    old_meta.key,
+                    f"fingerprint changed since {base} without a canonicalization rules bump "
+                    f"(CANONICAL_VERSION is {canonical.CANONICAL_VERSION} here and "
+                    f"{base_version} at {base}); approved patterns are immutable",
+                )
+            )
     return out

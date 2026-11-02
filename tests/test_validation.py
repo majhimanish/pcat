@@ -244,7 +244,8 @@ def test_base_check_rejects_rewritten_fingerprint(git_root):
     reindex(git_root)
     assert cat.validate(git_root, run_tests=False) == []  # self-consistent...
     problems = cat.validate(git_root, run_tests=False, base="HEAD")
-    assert any(p.check == "immutable" and "fingerprint" in p.message for p in problems)
+    # v1.1: reported as an impl.py change (checked before the fingerprint)
+    assert any(p.check == "immutable" and "impl.py changed" in p.message for p in problems)
 
 
 def test_base_check_rejects_removed_pattern(git_root):
@@ -258,3 +259,87 @@ def test_base_check_allows_deprecation(git_root):
     edit_yaml(pattern_dir(git_root, REC), status="deprecated", replaced_by=ITER)
     reindex(git_root)
     assert cat.validate(git_root, run_tests=False, base="HEAD") == []
+
+
+# v1.1: versioned canonicalization rules ------------------------------------ #
+FAKE_FP = "0" * 64
+
+
+def _commit(root, message):
+    _git(root, "-c", "user.name=t", "-c", "user.email=t@t", "add", "-A")
+    _git(root, "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", message)
+
+
+def _make_base(root, base_rules_version):
+    """Commit a base whose ITER fingerprint is what older rules 'would' have given."""
+    import json
+
+    _git(root, "init", "-q")
+    edit_yaml(pattern_dir(root, ITER), fingerprint=FAKE_FP)
+    entries = cat.index_entries(cat.load_catalog(root))
+    if base_rules_version == 1:
+        doc = entries  # v1 index format: a bare list
+    else:
+        doc = {"canonical_version": base_rules_version, "patterns": entries}
+    (root / "catalog" / "index.json").write_text(json.dumps(doc, sort_keys=True, indent=2) + "\n")
+    _commit(root, "base")
+
+
+def test_migrate_fingerprints_reports_and_rewrites(root):
+    folder = pattern_dir(root, ITER)
+    edit_yaml(folder, fingerprint=FAKE_FP)
+    before = (folder / "pattern.yaml").read_text()
+    other = (pattern_dir(root, REC) / "pattern.yaml").read_text()
+    rows = cat.migrate_fingerprints(root)
+    by_key = {r.key: r for r in rows}
+    assert len(rows) == 6
+    assert [r.key for r in rows if r.changed] == [f"{ITER}@v1"]
+    row = by_key[f"{ITER}@v1"]
+    assert row.old == FAKE_FP and row.new == cat.analyze_pattern(cat.get_one(root, ITER)).fingerprint
+    after = (folder / "pattern.yaml").read_text().splitlines()
+    differing = [(x, y) for x, y in zip(before.splitlines(), after) if x != y]
+    assert len(after) == len(before.splitlines())
+    assert differing == [(f"fingerprint: '{FAKE_FP}'", f"fingerprint: {row.new}")]
+    assert (pattern_dir(root, REC) / "pattern.yaml").read_text() == other
+    assert cat.validate(root, run_tests=False) == []  # index regenerated too
+
+
+def test_migrate_fingerprints_is_all_or_nothing(root):
+    edit_yaml(pattern_dir(root, ITER), fingerprint=FAKE_FP)
+    (pattern_dir(root, REC) / "impl.py").write_text("X = make()\ndef f():\n    pass\n")
+    index_before = (root / "catalog" / "index.json").read_text()
+    with pytest.raises(cat.CatalogError, match="nothing written"):
+        cat.migrate_fingerprints(root)
+    assert yaml.safe_load((pattern_dir(root, ITER) / "pattern.yaml").read_text())["fingerprint"] == FAKE_FP
+    assert (root / "catalog" / "index.json").read_text() == index_before
+
+
+def test_base_allows_fingerprint_change_with_rules_bump_and_same_impl(root):
+    _make_base(root, base_rules_version=1)
+    cat.migrate_fingerprints(root)
+    assert cat.validate(root, run_tests=False, base="HEAD") == []
+
+
+def test_base_rejects_fingerprint_change_without_rules_bump(root):
+    _make_base(root, base_rules_version=canonical.CANONICAL_VERSION)
+    cat.migrate_fingerprints(root)
+    problems = cat.validate(root, run_tests=False, base="HEAD")
+    assert [p.subject for p in problems] == [f"{ITER}@v1"]
+    assert "without a canonicalization rules bump" in problems[0].message
+
+
+def test_base_rejects_impl_change_even_with_rules_bump(root):
+    _make_base(root, base_rules_version=1)
+    impl = pattern_dir(root, ITER) / "impl.py"
+    impl.write_text(impl.read_text().replace("return -1", "return None"))
+    cat.migrate_fingerprints(root)
+    problems = cat.validate(root, run_tests=False, base="HEAD")
+    assert any(p.subject == f"{ITER}@v1" and "impl.py changed" in p.message for p in problems)
+
+
+def test_base_rejects_comment_only_impl_change(git_root):
+    impl = pattern_dir(git_root, ITER) / "impl.py"
+    impl.write_text("# harmless comment\n" + impl.read_text())
+    assert cat.validate(git_root, run_tests=False) == []  # fingerprint unchanged
+    problems = cat.validate(git_root, run_tests=False, base="HEAD")
+    assert any("impl.py changed" in p.message for p in problems)

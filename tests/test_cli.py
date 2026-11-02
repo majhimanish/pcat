@@ -10,7 +10,7 @@ import pytest
 import yaml
 from typer.testing import CliRunner
 
-from conftest import REPO_ROOT, SEED_IDS, pattern_dir
+from conftest import REPO_ROOT, SEED_IDS, edit_yaml, pattern_dir
 from pcat import canonical
 from pcat import catalog as cat
 from pcat.cli import app
@@ -158,7 +158,10 @@ def test_index_twice_is_byte_identical(root):
 
 
 def test_index_format(root):
-    entries = json.loads((root / "catalog" / "index.json").read_text())
+    doc = json.loads((root / "catalog" / "index.json").read_text())
+    assert list(doc) == ["canonical_version", "patterns"]
+    assert doc["canonical_version"] == canonical.CANONICAL_VERSION == 2
+    entries = doc["patterns"]
     assert [e["id"] for e in entries] == SEED_IDS
     assert set(entries[0]) == {
         "id", "version", "title", "category", "variant_of", "behavior", "status", "fingerprint", "path",
@@ -265,3 +268,107 @@ def test_missing_catalog_root(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     result = runner.invoke(app, ["index"])
     assert result.exit_code == 1 and "no catalog/ directory" in result.output
+
+
+# v1.1 ----------------------------------------------------------------------- #
+
+GREETER = textwrap.dedent(
+    '''
+    import re
+
+    UNUSED = 5
+    GREETING = "hello"
+    PUNCT = ".,!?"
+    PATTERN = re.compile(r"\\s+")
+
+
+    def _clean(word):
+        return word.strip(PUNCT)
+
+
+    def greet(name):
+        """Greet someone politely."""
+        return f"{GREETING}, {_clean(name)}"
+
+
+    def squash(text):
+        return PATTERN.sub(" ", text)
+    '''
+).lstrip()
+
+
+def test_add_copies_constants_used_by_function_and_helper(root, tmp_path):
+    source = tmp_path / "greeter.py"
+    source.write_text(GREETER)
+    result = pcat(root, "add", source, "--function", "greet", "--id", "text.greet.polite")
+    assert result.exit_code == 0, result.output
+    folder = pattern_dir(root, "text.greet.polite")
+    impl = (folder / "impl.py").read_text()
+    assert 'GREETING = "hello"' in impl and 'PUNCT = ".,!?"' in impl
+    assert "UNUSED" not in impl and "PATTERN" not in impl and "import re" not in impl
+    (folder / "test_impl.py").write_text(
+        "from impl import greet\n\n\n"
+        "def test_greet():\n    assert greet('bob!') == 'hello, bob'\n\n\n"
+        "def test_empty():\n    assert greet('') == 'hello, '\n"
+    )
+    assert pcat(root, "index").exit_code == 0
+    result = pcat(root, "validate", "text.greet.polite")
+    assert result.exit_code == 0, result.output
+
+
+def test_add_fails_clearly_on_non_literal_module_name(root, tmp_path):
+    source = tmp_path / "greeter.py"
+    source.write_text(GREETER)
+    result = pcat(root, "add", source, "--function", "squash", "--id", "text.squash.spaces")
+    assert result.exit_code == 1
+    assert "module-level name 'PATTERN'" in result.output and "not a literal" in result.output
+    assert not pattern_dir(root, "text.squash.spaces").exists()
+
+
+SORTER = textwrap.dedent(
+    '''
+    def sort_by_size(items, largest_first=False):
+        """Sort items by absolute value."""
+        return _ordered(items, reverse=largest_first, key=abs)
+
+
+    def _ordered(items, key=None, reverse=False):
+        return sorted(items, key=key, reverse=reverse)
+    '''
+).lstrip()
+
+
+def test_render_renaming_helper_parameter_keeps_calls_working(root, tmp_path):
+    source = tmp_path / "sorter.py"
+    source.write_text(SORTER)
+    assert pcat(root, "add", source, "--function", "sort_by_size", "--id", "sort.by_size.abs").exit_code == 0
+    assert pcat(root, "index").exit_code == 0
+    result = pcat(root, "render", "sort.by_size.abs", "--names", "f1.v2=descending", "f1.v1=by")
+    assert result.exit_code == 0, result.output
+    assert "return _ordered(items, descending=largest_first, by=abs)" in result.output
+    namespace: dict = {}
+    exec(result.output, namespace)  # noqa: S102 - test only
+    assert namespace["sort_by_size"]([3, -5, 1], largest_first=True) == [-5, 3, 1]
+
+
+def test_migrate_fingerprints_command(root):
+    folder = pattern_dir(root, ITER)
+    edit_yaml(folder, fingerprint="0" * 64)
+    result = pcat(root, "migrate-fingerprints")
+    assert result.exit_code == 0, result.output
+    lines = result.output.splitlines()
+    assert lines[0].split() == ["id", "old", "new", "status"]
+    row = next(line for line in lines if line.startswith(f"{ITER}@v1"))
+    assert row.split()[1] == "0" * 64 and row.split()[3] == "changed"
+    assert sum("unchanged" in line for line in lines) == 5
+    assert "1 of 6 fingerprint(s) changed; rules version 2" in result.output
+    assert pcat(root, "validate", "--skip-tests").exit_code == 0
+
+
+def test_migrate_fingerprints_command_reports_each_error(root):
+    for pid in (ITER, "text.slugify.ascii"):
+        (pattern_dir(root, pid) / "impl.py").write_text("X = make()\ndef f():\n    pass\n")
+    result = pcat(root, "migrate-fingerprints")
+    assert result.exit_code == 1
+    errors = [line for line in result.output.splitlines() if line.startswith("error: ")]
+    assert len(errors) == 3  # header + one line per broken pattern
