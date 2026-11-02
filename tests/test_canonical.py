@@ -258,8 +258,11 @@ def test_canonicalize_is_idempotent_on_its_output():
     "code,message",
     [
         ("def f(:\n", "syntax error"),
-        ("X = 1\ndef f():\n    return X\n", "only imports and function definitions"),
-        ("class A:\n    pass\n", "only imports and function definitions"),
+        ("X = make()\ndef f():\n    return X\n", "not a literal constant"),
+        ("X = [1, Y]\ndef f():\n    return X\n", "not a literal constant"),
+        ("A, B = 1, 2\ndef f():\n    return A\n", "only imports, function definitions"),
+        ("X = 1\nX = 2\ndef f():\n    return X\n", "defined twice"),
+        ("class A:\n    pass\n", "only imports, function definitions"),
         ("import os\n", "no top-level function"),
         ("def f():\n    class A:\n        pass\n", "class definitions inside functions"),
         ("def f():\n    return v0\n", "placeholder namespace"),
@@ -371,3 +374,275 @@ def test_match_and_async_constructs_are_renamed_in_reading_order():
     assert "case [v4, *v5]:" in result.text
     assert "async for v7 in v6:" in result.text
     assert canonicalize(render(result.text, result.name_map)) == result.text
+
+
+# --------------------------------------------------------------------------- #
+# v1.1: keyword arguments at calls to the pattern's own functions
+# --------------------------------------------------------------------------- #
+
+
+def run(text: str, entry: str, *args, **kwargs):
+    namespace: dict = {}
+    exec(compile(text, "<canonical>", "exec"), namespace)  # noqa: S102 - test only
+    return namespace[entry](*args, **kwargs)
+
+
+KW_HELPER = src(
+    """
+    def entry(xs, flip=False):
+        return order(xs, reverse=flip, key=abs)
+
+    def order(items, key=None, reverse=False):
+        return sorted(items, key=key, reverse=reverse)
+    """
+)
+
+
+def test_helper_keywords_use_callee_placeholders_and_canonical_text_runs():
+    result = analyze(KW_HELPER)
+    # callee `order`: items -> v0, key -> v1, reverse -> v2
+    assert "return f1(v0, v2=v1, v1=abs)" in result.text
+    assert "def f1(v0, v1=None, v2=False):" in result.text
+    assert "sorted(v0, key=v1, reverse=v2)" in result.text  # external call untouched
+    data = [3, -1, 2, -5]
+    for flip in (False, True):
+        assert run(result.text, "f0", data, flip) == run(KW_HELPER, "entry", data, flip)
+
+
+def test_helper_defined_after_caller_and_before_give_same_result():
+    before = src(
+        """
+        def order(items, key=None, reverse=False):
+            return sorted(items, key=key, reverse=reverse)
+
+        def entry(xs, flip=False):
+            return order(xs, reverse=flip, key=abs)
+        """
+    )
+    assert canonicalize(before, "entry") == canonicalize(KW_HELPER, "entry")
+    assert "f1(v0, v2=v1, v1=abs)" in canonicalize(before, "entry")
+
+
+def test_recursive_entry_point_with_keywords():
+    code = src(
+        """
+        def count_down(n, acc=None):
+            if acc is None:
+                acc = []
+            if n == 0:
+                return acc
+            acc.append(n)
+            return count_down(n - 1, acc=acc)
+        """
+    )
+    text = canonicalize(code)
+    assert "return f0(v0 - 1, v1=v1)" in text
+    assert run(text, "f0", 3) == [3, 2, 1] == run(code, "count_down", 3)
+
+
+def test_unmatched_keyword_into_kwargs_is_left_alone():
+    code = src(
+        """
+        def entry(x):
+            return build(x, size=2, color="red")
+
+        def build(x, size=1, **extra):
+            return x, size, extra
+        """
+    )
+    text = canonicalize(code)
+    assert "f1(v0, v1=2, color='red')" in text
+    assert run(text, "f0", 9) == (9, 2, {"color": "red"}) == run(code, "entry", 9)
+
+
+def test_positional_only_name_passed_as_keyword_lands_in_kwargs_unchanged():
+    code = "def entry():\n    return build(1, a=2)\n\ndef build(a, /, **kw):\n    return a, kw\n"
+    text = canonicalize(code)
+    assert "f1(1, a=2)" in text
+    assert run(text, "f0") == (1, {"a": 2})
+
+
+def test_keyword_only_parameters_are_renamed_at_call_sites():
+    code = "def entry(x):\n    return helper(x, scale=3)\n\ndef helper(x, *, scale):\n    return x * scale\n"
+    text = canonicalize(code)
+    assert "f1(v0, v1=3)" in text and "def f1(v0, *, v1):" in text
+    assert run(text, "f0", 2) == 6
+
+
+def test_external_and_shadowed_calls_keep_keyword_names():
+    code = src(
+        """
+        import json
+        from functools import reduce
+
+        def entry(obj, items, order):
+            a = sorted(items, reverse=True)
+            b = obj.method(key=1)
+            c = json.dumps(items, indent=2)
+            d = reduce(lambda x, y: x + y, items, initial=0)
+            e = order(reverse=True)  # parameter shadows the top-level function
+            return a, b, c, d, e
+
+        def order(reverse=False):
+            return reverse
+        """
+    )
+    text = canonicalize(code, "entry")
+    for kept in ("reverse=True)", "key=1", "indent=2", "initial=0", "v2(reverse=True)"):
+        assert kept in text, kept
+
+
+def test_render_maps_keywords_through_callee_names():
+    result = analyze(KW_HELPER)
+    out = render(result.text, {**result.name_map, "f1.v2": "descending", "f1.v1": "by"})
+    assert "return order(xs, descending=flip, by=abs)" in out
+    assert "def order(items, by=None, descending=False):" in out
+    assert run(out, "entry", [3, -1, 2], True) == [3, 2, -1]
+    assert canonicalize(render(result.text, result.name_map), "entry") == result.text
+
+
+# --------------------------------------------------------------------------- #
+# v1.1: module-level literal constants
+# --------------------------------------------------------------------------- #
+
+CONSTS = src(
+    """
+    import re
+
+    SEPARATOR = "-"
+
+    def _clean(word):
+        return re.sub(PATTERN_TEXT, "", word)
+
+    PATTERN_TEXT: str = r"[^a-z]"
+    LIMITS = (1, 10)
+
+    def join_words(words, limit=LIMITS[1]):
+        return SEPARATOR.join(_clean(w) for w in words[:limit])
+    """
+)
+
+
+def test_constants_renamed_in_source_order_and_placed_before_functions():
+    # `limit=LIMITS[1]` is evaluated at def time; constants come before all
+    # functions so the canonical (and rendered) text stays runnable.
+    result = analyze(CONSTS, "join_words")
+    assert result.text == src(
+        """
+        import re
+        c0 = '-'
+        c1: str = '[^a-z]'
+        c2 = (1, 10)
+
+        def f0(v0, v1=c2[1]):
+            return c0.join((f1(v2) for v2 in v0[:v1]))
+
+        def f1(v0):
+            return re.sub(c1, '', v0)
+        """
+    )
+    assert {k: v for k, v in result.name_map.items() if k.startswith("c")} == {
+        "c0": "SEPARATOR",
+        "c1": "PATTERN_TEXT",
+        "c2": "LIMITS",
+    }
+    assert run(result.text, "f0", ["ab1", "c!d"]) == run(CONSTS, "join_words", ["ab1", "c!d"])
+
+
+def test_constants_round_trip_and_are_idempotent():
+    result = analyze(CONSTS, "join_words")
+    rendered = render(result.text, result.name_map)
+    assert "SEPARATOR = '-'" in rendered and "PATTERN_TEXT: str" in rendered
+    assert canonicalize(rendered, "join_words") == result.text
+    assert canonicalize(result.text, "f0") == result.text
+    custom = render(result.text, {"c0": "SEP"})
+    assert "SEP = '-'" in custom and "SEP.join" in custom
+
+
+def test_constant_annotations_stripped_on_request():
+    text = canonicalize("LIMIT: int = 3\ndef f():\n    return LIMIT\n", keep_annotations=False)
+    assert text == "c0 = 3\n\ndef f0():\n    return c0\n"
+
+
+def test_global_declaration_and_local_shadowing_of_constants():
+    code = src(
+        """
+        COUNT = 0
+
+        def bump():
+            global COUNT
+            COUNT += 1
+            return COUNT
+
+        def shadow():
+            COUNT = 5
+            return COUNT
+        """
+    )
+    text = canonicalize(code, "bump")
+    assert "global c0" in text and "c0 += 1" in text
+    assert "def f1():\n    v0 = 5\n    return v0" in text
+
+
+@pytest.mark.parametrize(
+    "literal",
+    ["1", "-2.5", "'s'", "b'x'", "True", "None", "(1, 'a')", "[1, [2]]", "{'k': (1,)}", "{1, 2}"],
+)
+def test_accepted_literals(literal):
+    assert canonicalize(f"X = {literal}\ndef f():\n    return X\n").startswith("c0 = ")
+
+
+def test_free_name_c0_collides_with_placeholders():
+    with pytest.raises(CanonicalizationError, match="placeholder namespace"):
+        canonicalize("def f():\n    return c0\n")
+
+
+def test_extract_copies_used_constants_transitively():
+    code = src(
+        """
+        UNUSED = 5
+        GREETING = "hello"  # trailing comment
+        PUNCT = ".,!?"
+
+        def _clean(word):
+            return word.strip(PUNCT)
+
+        def greet(name):
+            return f"{GREETING}, {_clean(name)}"
+        """
+    )
+    out = extract_function(code, "greet")
+    assert "GREETING = \"hello\"" in out and 'PUNCT = ".,!?"' in out
+    assert "UNUSED" not in out
+    assert out.index("GREETING") < out.index("PUNCT") < out.index("def _clean")
+    assert run(out, "greet", "bob!") == "hello, bob"
+
+
+@pytest.mark.parametrize(
+    "definition,name",
+    [
+        ("PATTERN = re.compile('x')", "PATTERN"),
+        ("class Helper:\n    pass", "Helper"),
+        ("for LOOPVAR in range(3):\n    pass", "LOOPVAR"),
+        ("TOTAL = 1\nTOTAL += 1", "TOTAL"),
+    ],
+)
+def test_extract_fails_clearly_on_non_literal_module_names(definition, name):
+    code = f"import re\n{definition}\n\ndef f():\n    return {name}\n"
+    with pytest.raises(CanonicalizationError, match=f"module-level name '{name}'"):
+        extract_function(code, "f")
+
+
+def test_extract_ignores_locals_that_shadow_module_names():
+    code = src(
+        """
+        def helper():
+            return 1
+
+        CONFIG = object()
+
+        def f(helper, CONFIG):
+            return helper(CONFIG)
+        """
+    )
+    assert list_functions(extract_function(code, "f")) == ["f"]

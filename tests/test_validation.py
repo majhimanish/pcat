@@ -66,9 +66,9 @@ def test_check1_missing_pattern_yaml(root):
 # 2 ------------------------------------------------------------------------- #
 def test_check2_top_level_statement_rejected(root):
     impl = pattern_dir(root, ITER) / "impl.py"
-    impl.write_text(impl.read_text() + "\nCACHE = {}\n")
+    impl.write_text(impl.read_text() + "\nCACHE = dict()\n")
     problems = cat.validate(root, run_tests=False)
-    assert any(p.check == "2" and "only imports and function" in p.message for p in problems)
+    assert any(p.check == "2" and "not a literal constant" in p.message for p in problems)
 
 
 def test_check2_syntax_error(root):

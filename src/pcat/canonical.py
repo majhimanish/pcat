@@ -1,24 +1,30 @@
 """Canonicalization, fingerprinting, name maps and rendering of Python patterns.
 
-The rules in this module define every fingerprint in the catalog. Any change to
-the output of `canonicalize` changes fingerprints and requires a deliberate
-migration of every pattern (see CLAUDE.md, "Invariants").
+The rules in this module define every fingerprint in the catalog. Any change
+that can alter the output of `canonicalize` must bump `CANONICAL_VERSION` and
+be followed by `pcat migrate-fingerprints` (see CLAUDE.md, "Invariants").
 
-Input is a module that contains only imports and top-level function
-definitions (plus an optional module docstring). The pipeline is:
+Input is a module that contains only imports, top-level function definitions
+and literal constants (`NAME = <literal>` or `NAME: T = <literal>`, where the
+value is accepted by `ast.literal_eval`), plus an optional module docstring.
+The pipeline is:
 
 1. parse with `ast.parse`
 2. remove docstrings (leading string-constant statements of modules/functions)
 3. optionally strip type annotations (`keep_annotations=False`)
-4. split, sort and deduplicate top-level imports
-5. order functions: entry point first, then helpers in source order
-6. rename top-level functions to f0, f1, ... and each function's parameters and
-   local variables to v0, v1, ... (numbering restarts in every function)
+4. split, sort and deduplicate top-level imports; they always come first
+5. then constants in source order, then functions: entry point first, helpers
+   in source order (constants are literals, so placing them before every
+   function keeps defaults/decorators that use them runnable)
+6. rename top-level functions to f0, f1, ..., constants to c0, c1, ... (source
+   order), and each function's parameters and locals to v0, v1, ... (numbering
+   restarts in every function). Keyword arguments in calls to functions defined
+   in the snippet are renamed with the callee's placeholders.
 7. `ast.unparse`, then exactly one trailing newline
 
-Name-map keys: "fN" for function names, "vM" for locals of the entry point
-(f0), and "fN.vM" for locals of helper fN (N >= 1). "f0.vM" is accepted as an
-alias of "vM" when rendering.
+Name-map keys: "fN" for function names, "cN" for constants, "vM" for locals of
+the entry point (f0), and "fN.vM" for locals of helper fN (N >= 1). "f0.vM" is
+accepted as an alias of "vM" when rendering.
 """
 
 from __future__ import annotations
@@ -28,12 +34,19 @@ import hashlib
 import keyword
 import re
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from pcat.errors import CanonicalizationError, RenderError
 
-PLACEHOLDER_RE = re.compile(r"^[fv]\d+$")
+# Version of the rules in this module. v1 = the original rules (spec v1);
+# v2 = keyword arguments at calls to snippet functions renamed, literal
+# constants allowed and renamed to cN. Bump on any change that can alter any
+# fingerprint, then run `pcat migrate-fingerprints`.
+CANONICAL_VERSION = 2
+
+PLACEHOLDER_RE = re.compile(r"^[fvc]\d+$")
 _FUNC_RE = re.compile(r"^f\d+$")
+_CONST_RE = re.compile(r"^c\d+$")
 _KEY_RE = re.compile(r"^(?:(f\d+)\.)?(v\d+)$")
 
 _FUNC_TYPES = (ast.FunctionDef, ast.AsyncFunctionDef)
@@ -68,34 +81,58 @@ def analyze(
     if not keep_annotations:
         tree = _AnnotationStripper().visit(tree)
         _fix_empty_bodies(tree)
-    imports, funcs = _split_module(tree)
-    imports = _normalize_imports(imports)
-    funcs = _order_functions(funcs, entry_point)
+    mod = _split_module(tree)
+    imports = _normalize_imports(mod.imports)
+    funcs = _order_functions(mod.funcs, entry_point)
+    body = [*mod.consts, *funcs]
 
     fmap = {func.name: f"f{i}" for i, func in enumerate(funcs)}
+    cmap = {_const_name(c): f"c{i}" for i, c in enumerate(mod.consts)}
+    module_map = {**fmap, **cmap}
     module_bound = {_alias_bound_name(a) for imp in imports for a in imp.names}
     module_bound.discard("*")
     for name in sorted(module_bound):
         if PLACEHOLDER_RE.match(name):
             raise CanonicalizationError(
-                f"imported name {name!r} collides with the placeholder namespace (f0, v0, ...)"
+                f"imported name {name!r} collides with the placeholder namespace "
+                "(f0, c0, v0, ...)"
             )
+
+    # Scope analysis of every function first, so that calls can be resolved
+    # regardless of definition order.
+    scopes: dict[str, _Scope] = {}
+    for func in funcs:
+        scope = _scope_names(func)
+        scope.local_map = _number_locals(func, scope.locals)
+        scopes[func.name] = scope
+    kw_maps = {
+        func.name: _keyword_map(func, scopes[func.name].local_map) for func in funcs
+    }
+
+    for const in mod.consts:
+        _check_collisions(const, set(module_map), f"constant {_const_name(const)!r}")
 
     name_map: dict[str, str] = {}
     for func in funcs:
         placeholder = fmap[func.name]
-        locals_, excluded = _scope_names(func)
-        local_map = _number_locals(func, locals_)
-        _check_collisions(func, local_map, fmap, excluded)
-
+        scope = scopes[func.name]
+        _check_collisions(
+            func, set(scope.local_map) | set(module_map), f"function {func.name!r}"
+        )
         name_map[placeholder] = func.name
         prefix = "" if placeholder == "f0" else f"{placeholder}."
-        for real, ph in local_map.items():
+        for real, ph in scope.local_map.items():
             name_map[f"{prefix}{ph}"] = real
+    for real, ph in cmap.items():
+        name_map[ph] = real
 
-        _apply_renames(func, placeholder, fmap, local_map, excluded)
+    for func in funcs:
+        scope = scopes[func.name]
+        _apply_renames(func, fmap[func.name], module_map, scope.local_map, scope.imported, kw_maps)
+    for const in mod.consts:
+        _rename_constant(const, cmap[_const_name(const)], module_map, kw_maps)
 
-    text = _unparse(imports, funcs)
+    text = _unparse(imports, body)
     return CanonicalResult(text=text, fingerprint=fingerprint(text), name_map=name_map)
 
 
@@ -114,7 +151,7 @@ def fingerprint(canonical_text: str) -> str:
 def extract_name_map(
     source: str, entry_point: str | None = None, keep_annotations: bool = True
 ) -> dict[str, str]:
-    """Return {"f0": "binary_search", "v0": "items", "f1.v0": ...} for `source`."""
+    """Return {"f0": "binary_search", "v0": "items", "f1.v0": ..., "c0": ...}."""
     return analyze(source, entry_point, keep_annotations).name_map
 
 
@@ -122,19 +159,19 @@ def list_functions(source: str) -> list[str]:
     """Names of the top-level functions in `source`, in source order.
 
     Raises CanonicalizationError if the module contains anything other than
-    imports, functions and a module docstring at top level.
+    imports, functions, literal constants and a module docstring at top level.
     """
     tree = _parse(source)
     _strip_docstrings(tree)
-    _, funcs = _split_module(tree)
-    return [f.name for f in funcs]
+    return [f.name for f in _split_module(tree).funcs]
 
 
 def render(canonical_text: str, name_map: dict[str, str]) -> str:
     """Replace placeholders in `canonical_text` with names from `name_map`.
 
     Works on the AST (never on raw text). Placeholders missing from the map are
-    left as they are. Unknown keys and invalid identifiers raise RenderError.
+    left as they are. Keyword arguments at calls to snippet functions follow the
+    callee's names. Unknown keys and invalid identifiers raise RenderError.
     """
     for key, value in name_map.items():
         if not isinstance(value, str) or not value.isidentifier() or keyword.iskeyword(value):
@@ -142,69 +179,108 @@ def render(canonical_text: str, name_map: dict[str, str]) -> str:
 
     try:
         tree = _parse(canonical_text)
+        mod = _split_module(tree)
     except CanonicalizationError as exc:
-        raise RenderError(f"canonical text does not parse: {exc}") from None
-    imports, funcs = _split_module(tree)
-    func_names = [f.name for f in funcs]
+        raise RenderError(f"not a canonical form: {exc}") from None
+    func_names = [f.name for f in mod.funcs]
     bad = [n for n in func_names if not _FUNC_RE.match(n)]
+    bad += [_const_name(c) for c in mod.consts if not _CONST_RE.match(_const_name(c))]
     if bad:
-        raise RenderError(f"not a canonical form: function {bad[0]!r} is not a placeholder")
+        raise RenderError(f"not a canonical form: {bad[0]!r} is not a placeholder")
+    const_names = {_const_name(c) for c in mod.consts}
 
-    scopes: dict[str, set[str]] = {}
-    for func in funcs:
-        locals_, _ = _scope_names(func)
-        scopes[func.name] = locals_
-
-    fmap: dict[str, str] = {}
+    scopes = {func.name: _scope_names(func) for func in mod.funcs}
+    module_map: dict[str, str] = {}
     local_maps: dict[str, dict[str, str]] = {name: {} for name in func_names}
     for key, value in name_map.items():
         if _FUNC_RE.match(key):
             if key not in scopes:
                 raise RenderError(f"unknown placeholder {key!r}: no such function")
-            fmap[key] = value
+            module_map[key] = value
+            continue
+        if _CONST_RE.match(key):
+            if key not in const_names:
+                raise RenderError(f"unknown placeholder {key!r}: no such constant")
+            module_map[key] = value
             continue
         m = _KEY_RE.match(key)
         if not m:
-            raise RenderError(f"invalid name-map key {key!r}; expected fN, vM or fN.vM")
+            raise RenderError(f"invalid name-map key {key!r}; expected fN, cN, vM or fN.vM")
         owner = m.group(1) or "f0"
         var = m.group(2)
-        if owner not in scopes or var not in scopes[owner]:
+        if owner not in scopes or var not in scopes[owner].locals:
             raise RenderError(f"unknown placeholder {key!r}")
         local_maps[owner][var] = value
 
-    for func in funcs:
-        _apply_renames(func, fmap.get(func.name, func.name), fmap, local_maps[func.name], set())
-    return _unparse(imports, funcs)
+    kw_maps = {func.name: _keyword_map(func, local_maps[func.name]) for func in mod.funcs}
+    for func in mod.funcs:
+        _apply_renames(
+            func,
+            module_map.get(func.name, func.name),
+            module_map,
+            local_maps[func.name],
+            scopes[func.name].imported,
+            kw_maps,
+        )
+    for const in mod.consts:
+        name = _const_name(const)
+        _rename_constant(const, module_map.get(name, name), module_map, kw_maps)
+    return _unparse(mod.imports, mod.body)
 
 
 def extract_function(source: str, name: str) -> str:
-    """Return source for top-level function `name`, the helpers it uses and its imports.
+    """Return source for top-level function `name` and everything it needs.
 
-    Helpers are other top-level functions referenced (transitively) by name.
-    Only imports whose bound names are referenced are kept; star imports are
-    always kept. Function bodies are copied verbatim, so comments survive.
-    Other top-level statements of the file are ignored.
+    That is: other top-level functions it references (transitively), the
+    literal constants those functions use, and the imports whose bound names
+    they use (star imports are always kept). Functions and constants are copied
+    verbatim in source order, so comments inside functions survive. Raises
+    CanonicalizationError if a function uses a module-level name that is bound
+    by anything other than a literal constant, a function or an import.
     """
     tree = _parse(source)
-    funcs = {n.name: n for n in tree.body if isinstance(n, _FUNC_TYPES)}
+    funcs: dict[str, ast.stmt] = {}
+    consts: dict[str, ast.stmt] = {}
+    binding_count: dict[str, int] = {}
+    for stmt in tree.body:
+        if isinstance(stmt, _IMPORT_TYPES):
+            continue
+        names = _top_level_bindings(stmt)
+        for bound in names:
+            binding_count[bound] = binding_count.get(bound, 0) + 1
+        if isinstance(stmt, _FUNC_TYPES):
+            funcs[stmt.name] = stmt
+        elif _is_literal_constant(stmt):
+            consts[_const_name(stmt)] = stmt
     if name not in funcs:
         raise CanonicalizationError(f"no top-level function named {name!r}")
 
     selected: set[str] = set()
+    used: set[str] = set()
     todo = [name]
     while todo:
         current = todo.pop()
         if current in selected:
             continue
         selected.add(current)
-        for ref in _referenced_names(funcs[current]):
-            if ref in funcs and ref not in selected:
+        for ref in sorted(_free_names(funcs[current])):
+            used.add(ref)
+            if binding_count.get(ref, 0) > 1:
+                raise CanonicalizationError(
+                    f"function {current!r} uses module-level name {ref!r}, which is bound "
+                    "more than once at top level; only a single NAME = <literal> "
+                    "constant can be copied into a pattern"
+                )
+            if ref in funcs:
                 todo.append(ref)
-
-    ordered = [n for n in tree.body if isinstance(n, _FUNC_TYPES) and n.name in selected]
-    used: set[str] = set()
-    for func in ordered:
-        used |= _referenced_names(func)
+            elif ref in consts:
+                selected.add(ref)
+            elif ref in binding_count:
+                raise CanonicalizationError(
+                    f"function {current!r} uses module-level name {ref!r}, which is not "
+                    "a literal constant; only NAME = <literal> constants (see "
+                    "ast.literal_eval) can be copied into a pattern"
+                )
 
     import_lines: list[str] = []
     for stmt in tree.body:
@@ -223,9 +299,12 @@ def extract_function(source: str, name: str) -> str:
 
     lines = source.splitlines(keepends=True)
     chunks = []
-    for func in ordered:
-        start = min([func.lineno] + [d.lineno for d in func.decorator_list])
-        chunks.append("".join(lines[start - 1 : func.end_lineno]).rstrip() + "\n")
+    for stmt in tree.body:
+        if isinstance(stmt, _FUNC_TYPES) and stmt.name in selected:
+            start = min([stmt.lineno] + [d.lineno for d in stmt.decorator_list])
+            chunks.append("".join(lines[start - 1 : stmt.end_lineno]).rstrip() + "\n")
+        elif stmt in consts.values() and _const_name(stmt) in selected:
+            chunks.append(ast.get_source_segment(source, stmt) + "\n")
 
     parts = []
     if import_lines:
@@ -292,28 +371,100 @@ def _fix_empty_bodies(tree: ast.AST) -> None:
             body.append(ast.Pass())
 
 
-def _split_module(tree: ast.Module) -> tuple[list[ast.stmt], list[ast.FunctionDef]]:
-    imports: list[ast.stmt] = []
-    funcs: list[ast.FunctionDef] = []
+def _is_literal_value(node: ast.expr | None) -> bool:
+    if node is None:
+        return False
+    try:
+        ast.literal_eval(node)
+    except (ValueError, TypeError, SyntaxError, MemoryError, RecursionError):
+        return False
+    return True
+
+
+def _assigned_name(stmt: ast.stmt) -> str | None:
+    """NAME for `NAME = value` / `NAME: T = value`, else None."""
+    if isinstance(stmt, ast.Assign) and len(stmt.targets) == 1:
+        target = stmt.targets[0]
+        return target.id if isinstance(target, ast.Name) else None
+    if isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+        return stmt.target.id if isinstance(stmt.target, ast.Name) else None
+    return None
+
+
+def _is_literal_constant(stmt: ast.stmt) -> bool:
+    return _assigned_name(stmt) is not None and _is_literal_value(stmt.value)
+
+
+def _const_name(stmt: ast.stmt) -> str:
+    name = _assigned_name(stmt)
+    assert name is not None
+    return name
+
+
+def _top_level_bindings(stmt: ast.stmt) -> set[str]:
+    """Names a non-import top-level statement binds in the module namespace."""
+    if isinstance(stmt, (*_FUNC_TYPES, ast.ClassDef)):
+        return {stmt.name}
+    names: set[str] = set()
+    todo: list[ast.AST] = [stmt]
+    while todo:
+        node = todo.pop()
+        if isinstance(node, (*_FUNC_TYPES, ast.ClassDef)):
+            names.add(node.name)  # e.g. a def inside a top-level `if`
+            continue
+        if isinstance(node, ast.Lambda):
+            continue
+        if isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            names.add(node.id)
+        elif isinstance(node, _IMPORT_TYPES):
+            names.update(_alias_bound_name(a) for a in node.names if a.name != "*")
+        todo.extend(ast.iter_child_nodes(node))
+    return names
+
+
+@dataclass
+class _ModuleParts:
+    imports: list[ast.stmt] = field(default_factory=list)
+    funcs: list[ast.FunctionDef] = field(default_factory=list)
+    consts: list[ast.stmt] = field(default_factory=list)
+    body: list[ast.stmt] = field(default_factory=list)  # funcs + consts, source order
+
+
+def _split_module(tree: ast.Module) -> _ModuleParts:
+    parts = _ModuleParts()
     seen: set[str] = set()
+
+    def claim(name: str, stmt: ast.stmt, what: str) -> None:
+        if name in seen:
+            raise CanonicalizationError(f"line {stmt.lineno}: {what} {name!r} is defined twice")
+        seen.add(name)
+
     for stmt in tree.body:
         if isinstance(stmt, _IMPORT_TYPES):
-            imports.append(stmt)
+            parts.imports.append(stmt)
         elif isinstance(stmt, _FUNC_TYPES):
-            if stmt.name in seen:
+            claim(stmt.name, stmt, "function")
+            parts.funcs.append(stmt)
+            parts.body.append(stmt)
+        elif _assigned_name(stmt) is not None:
+            name = _assigned_name(stmt)
+            if not _is_literal_value(stmt.value):
                 raise CanonicalizationError(
-                    f"line {stmt.lineno}: function {stmt.name!r} is defined twice"
+                    f"line {stmt.lineno}: top-level assignment to {name!r} is not a literal "
+                    "constant; only NAME = <literal> is allowed (numbers, strings, bytes, "
+                    "booleans, None, and tuples/lists/dicts/sets of those)"
                 )
-            seen.add(stmt.name)
-            funcs.append(stmt)
+            claim(name, stmt, "name")
+            parts.consts.append(stmt)
+            parts.body.append(stmt)
         else:
             raise CanonicalizationError(
-                f"line {stmt.lineno}: only imports and function definitions are allowed "
-                f"at top level, found {type(stmt).__name__}"
+                f"line {stmt.lineno}: only imports, function definitions and literal "
+                f"constants are allowed at top level, found {type(stmt).__name__}"
             )
-    if not funcs:
+    if not parts.funcs:
         raise CanonicalizationError("no top-level function found")
-    return imports, funcs
+    return parts
 
 
 def _normalize_imports(imports: list[ast.stmt]) -> list[ast.stmt]:
@@ -356,20 +507,40 @@ def _arg_nodes(args: ast.arguments) -> list[ast.arg]:
     return nodes
 
 
+def _keyword_map(func: ast.FunctionDef, local_map: dict[str, str]) -> dict[str, str]:
+    """Parameter renames that apply to keyword arguments in calls to `func`.
+
+    Only parameters that can be passed by keyword (regular and keyword-only).
+    Positional-only parameters never bind a keyword: with `**kwargs` such a
+    keyword lands in kwargs under its literal name, so it must stay unchanged.
+    """
+    names = [a.arg for a in (*func.args.args, *func.args.kwonlyargs)]
+    return {n: local_map[n] for n in names if n in local_map}
+
+
 def _body_nodes(func: ast.FunctionDef) -> Iterator[ast.AST]:
     for stmt in func.body:
         yield from ast.walk(stmt)
 
 
-def _scope_names(func: ast.FunctionDef) -> tuple[set[str], set[str]]:
-    """Return (renameable local names, names that must never be renamed).
+@dataclass
+class _Scope:
+    locals: set[str]  # renameable local names
+    imported: set[str]  # bound by imports inside the function: never renamed
+    local_map: dict[str, str] = field(default_factory=dict)
+
+
+def _scope_names(func: ast.FunctionDef) -> _Scope:
+    """Local names of a top-level function.
 
     All bindings anywhere inside the function (including nested functions,
     lambdas and comprehensions) form one flat scope. This is a consistent
-    bijective rename, so it preserves behaviour.
+    bijective rename, so it preserves behaviour. Names declared `global` are not
+    locals: they resolve to module names (functions, constants) or stay as-is.
     """
     bound = {a.arg for a in _arg_nodes(func.args)}
-    excluded: set[str] = set()
+    imported: set[str] = set()
+    globals_: set[str] = set()
     for node in _body_nodes(func):
         if isinstance(node, ast.ClassDef):
             raise CanonicalizationError(
@@ -388,13 +559,22 @@ def _scope_names(func: ast.FunctionDef) -> tuple[set[str], set[str]]:
         elif isinstance(node, ast.MatchMapping) and node.rest:
             bound.add(node.rest)
         elif isinstance(node, _IMPORT_TYPES):
-            excluded.update(_alias_bound_name(a) for a in node.names)
+            imported.update(_alias_bound_name(a) for a in node.names)
         elif isinstance(node, ast.Global):
-            excluded.update(node.names)
+            globals_.update(node.names)
     locals_ = {
-        n for n in bound - excluded if n not in _NEVER_RENAME and not _is_dunder(n)
+        n
+        for n in bound - imported - globals_
+        if n not in _NEVER_RENAME and not _is_dunder(n)
     }
-    return locals_, excluded
+    return _Scope(locals=locals_, imported=imported)
+
+
+def _free_names(func: ast.FunctionDef) -> set[str]:
+    """Names a top-level function reads from the module namespace."""
+    scope = _scope_names(func)
+    referenced = {n.id for n in ast.walk(func) if isinstance(n, ast.Name)}
+    return referenced - scope.locals - scope.imported - _NEVER_RENAME
 
 
 def _is_dunder(name: str) -> bool:
@@ -439,38 +619,60 @@ def _number_locals(func: ast.FunctionDef, locals_: set[str]) -> dict[str, str]:
     return mapping
 
 
-def _check_collisions(func, local_map, fmap, excluded) -> None:
+def _check_collisions(node: ast.AST, renamed: set[str], where: str) -> None:
     """Reject names that would be confused with placeholders after renaming."""
-    everything = list(_identifiers(func))
-    for ident in everything:
-        if ident in local_map and ident not in excluded:
-            continue
-        if ident in fmap:
-            continue
-        if PLACEHOLDER_RE.match(ident):
+    for ident in _identifiers(node):
+        if ident not in renamed and PLACEHOLDER_RE.match(ident):
             raise CanonicalizationError(
-                f"function {func.name!r}: name {ident!r} is not renamed and collides with "
-                "the placeholder namespace (f0, v0, ...)"
+                f"{where}: name {ident!r} is not renamed and collides with the "
+                "placeholder namespace (f0, c0, v0, ...)"
             )
 
 
 class _Renamer(ast.NodeTransformer):
-    """Rename functions (fmap) and one function's locals (local_map)."""
+    """Rename module names (functions, constants) and one function's locals.
 
-    def __init__(self, fmap: dict[str, str], local_map: dict[str, str], excluded: set[str]):
-        self.fmap = fmap
+    `kw_maps` maps a snippet function's (pre-rename) name to the renames of its
+    keyword-passable parameters; keyword arguments of calls to it follow them.
+    """
+
+    def __init__(
+        self,
+        module_map: dict[str, str],
+        local_map: dict[str, str],
+        imported: set[str],
+        kw_maps: dict[str, dict[str, str]],
+    ):
+        self.module_map = module_map
         self.local_map = local_map
-        self.excluded = excluded
+        self.imported = imported
+        self.kw_maps = kw_maps
 
     def _map(self, name: str) -> str:
         if name in self.local_map:
             return self.local_map[name]
-        if name in self.excluded:
+        if name in self.imported:
             return name
-        return self.fmap.get(name, name)
+        return self.module_map.get(name, name)
 
     def visit_Name(self, node: ast.Name) -> ast.Name:  # noqa: N802
         node.id = self._map(node.id)
+        return node
+
+    def visit_Call(self, node: ast.Call) -> ast.Call:  # noqa: N802
+        callee = None
+        func = node.func
+        if (
+            isinstance(func, ast.Name)
+            and func.id not in self.local_map
+            and func.id not in self.imported
+        ):
+            callee = self.kw_maps.get(func.id)
+        self.generic_visit(node)
+        if callee:
+            for kw in node.keywords:
+                if kw.arg is not None and kw.arg in callee:
+                    kw.arg = callee[kw.arg]
         return node
 
     def visit_arg(self, node: ast.arg) -> ast.arg:
@@ -509,16 +711,20 @@ class _Renamer(ast.NodeTransformer):
         node.names = [self.local_map.get(n, n) for n in node.names]
         return node
 
+    def visit_Global(self, node: ast.Global) -> ast.Global:  # noqa: N802
+        node.names = [self.module_map.get(n, n) for n in node.names]
+        return node
 
-def _apply_renames(func, new_name, fmap, local_map, excluded) -> None:
+
+def _apply_renames(func, new_name, module_map, local_map, imported, kw_maps) -> None:
     """Rename a top-level function in place.
 
     Decorators, defaults and signature annotations are evaluated in module
-    scope, so they only see function renames. Parameters and the body see the
+    scope, so they only see module renames. Parameters and the body see the
     function's local renames too.
     """
-    module_scope = _Renamer(fmap, {}, set())
-    func_scope = _Renamer(fmap, local_map, excluded)
+    module_scope = _Renamer(module_map, {}, set(), kw_maps)
+    func_scope = _Renamer(module_map, local_map, imported, kw_maps)
 
     func.name = new_name
     func.decorator_list = [module_scope.visit(d) for d in func.decorator_list]
@@ -534,11 +740,14 @@ def _apply_renames(func, new_name, fmap, local_map, excluded) -> None:
     func.body = [func_scope.visit(stmt) for stmt in func.body]
 
 
-def _unparse(imports: list[ast.stmt], funcs: list[ast.FunctionDef]) -> str:
-    module = ast.Module(body=[*imports, *funcs], type_ignores=[])
+def _rename_constant(stmt: ast.stmt, new_name: str, module_map, kw_maps) -> None:
+    target = stmt.targets[0] if isinstance(stmt, ast.Assign) else stmt.target
+    target.id = new_name
+    if isinstance(stmt, ast.AnnAssign):
+        stmt.annotation = _Renamer(module_map, {}, set(), kw_maps).visit(stmt.annotation)
+
+
+def _unparse(imports: list[ast.stmt], body: list[ast.stmt]) -> str:
+    module = ast.Module(body=[*imports, *body], type_ignores=[])
     ast.fix_missing_locations(module)
     return ast.unparse(module).strip("\n") + "\n"
-
-
-def _referenced_names(func: ast.FunctionDef) -> set[str]:
-    return {n.id for n in ast.walk(func) if isinstance(n, ast.Name)}
