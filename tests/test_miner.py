@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import shutil
 from pathlib import Path
@@ -125,7 +126,7 @@ def test_generated_files_skipped_unless_included(report):
 
 
 def test_default_skip_dirs_unless_disabled(report):
-    assert report["stats"]["files_seen"] == 11  # vendor/ is pruned
+    assert report["stats"]["files_seen"] == 12  # vendor/ is pruned
     _, mined = mined_paths(run(settings=MineSettings(min_occurrences=2, skip_dirs=False)).report)
     assert "app/vendor/lib.py" in mined
 
@@ -194,14 +195,14 @@ def test_report_is_byte_identical_across_runs_and_jobs(tree, tmp_path):
 def test_cache_used_and_invalidated(tree, tmp_path):
     cache = str(tmp_path / "cache")
     first = run([str(tree)], cache_dir=cache)
-    assert first.cache_hits == 0 and first.cache_misses == 8
+    assert first.cache_hits == 0 and first.cache_misses == 9
     second = run([str(tree)], cache_dir=cache)
-    assert second.cache_hits == 8 and second.cache_misses == 0
+    assert second.cache_hits == 9 and second.cache_misses == 0
     assert miner.report_json_text(first.report) == miner.report_json_text(second.report)
     billing = tree / "app" / "billing.py"
     billing.write_text(billing.read_text().replace("> 100", "> 7"))
     third = run([str(tree)], cache_dir=cache)
-    assert third.cache_hits == 7 and third.cache_misses == 1
+    assert third.cache_hits == 8 and third.cache_misses == 1
     cluster = clusters_by_member(third.report)[frozenset(TOTAL_SHAPE_MEMBERS)]
     assert [g["count"] for g in cluster["exact_groups"]] == [3, 1, 1]
 
@@ -239,10 +240,131 @@ def test_cli_mine_writes_both_reports(tmp_path, monkeypatch):
     )
     assert result.exit_code == 0, result.output
     assert (tmp_path / "r" / "report.json").is_file() and (tmp_path / "r" / "report.html").is_file()
-    assert "functions: 14 mined of 18 found" in result.output
+    assert "functions: 17 mined of 21 found" in result.output
     assert (tmp_path / ".pcat-cache").is_dir()
 
 
 def test_cli_mine_missing_input(tmp_path):
     result = CliRunner().invoke(app, ["mine", str(tmp_path / "nope"), "--out", str(tmp_path / "r")])
     assert result.exit_code == 1 and "does not exist" in result.output
+
+
+# Part B: fragments ----------------------------------------------------------- #
+def fragment_clusters(rep):
+    return rep["fragment_clusters"]
+
+
+def test_fragment_cluster_found_and_renamed(report):
+    (cluster,) = [c for c in fragment_clusters(report) if c["members"][0]["statement"] == "for"]
+    assert cluster["id"].startswith("fr-") and cluster["id"] == "fr-" + cluster["shape_fingerprint"][:12]
+    assert [(m["qualname"], m["statement"]) for m in cluster["members"]] == [
+        ("parse_ini", "for"), ("parse_env", "for"), ("Loader.load", "for"),
+    ]
+    text = cluster["shape_text"]
+    assert text.startswith("for v0 in v1:\n    v2 = v0.strip()")  # parameter/locals renamed
+    assert "v3 in RESERVED" in text  # global left alone
+    assert "int(v4.strip())" in text and "except ValueError:" in text  # builtins left alone
+    assert [g["count"] for g in cluster["exact_groups"]] == [2, 1]  # '=' vs ':' separator
+
+
+def test_parameter_renamed_global_not():
+    code = (
+        b"LIMIT = 3\n"
+        b"def f(items, extra):\n"
+        b"    out = []\n"
+        b"    for x in items:\n"
+        b"        if x > LIMIT and x not in extra:\n"
+        b"            out.append(x * x + LIMIT)\n"
+        b"            print(out, len(out))\n"
+        b"    return out\n"
+    )
+    (frag,) = [
+        f for f in miner.analyze_source(code, MineSettings(min_fragment_nodes=10))["fragments"]
+        if f["statement"] == "for"
+    ]
+    assert frag["shape_text"].startswith("for v0 in v1:\n    if v0 > LIMIT and v0 not in v2:")
+    assert "v3.append(v0 * v0 + LIMIT)" in frag["shape_text"]
+
+
+def _write(tmp_path, name, text):
+    path = tmp_path / name
+    path.write_text(text)
+    return path
+
+
+LOOP = """
+    for raw in lines:
+        line = raw.strip()
+        try:
+            key, value = line.split("=", 1)
+            result[key.strip().lower()] = int(value.strip())
+        except ValueError:
+            errors.append(line)
+            continue
+"""
+
+
+def test_whole_body_fragments_are_dropped(tmp_path):
+    funcs = "".join(f"\n\ndef parse_{i}(lines, result, errors):{LOOP}" for i in range(3))
+    _write(tmp_path, "m.py", funcs)
+    rep = run([str(tmp_path)], catalog_root=None, settings=MineSettings(min_occurrences=3)).report
+    statements = {m["statement"] for c in rep["fragment_clusters"] for m in c["members"]}
+    assert "for" not in statements  # each for loop is an entire function body
+    assert statements == {"try"}  # the inner try is not, so it still clusters
+
+
+def test_contained_cluster_suppressed_only_with_same_occurrences(tmp_path):
+    body = "\n    total = 0" + LOOP + "    return total\n"
+    funcs = "".join(f"\n\ndef parse_{i}(lines, result, errors):{body}" for i in range(3))
+    _write(tmp_path, "m.py", funcs)
+    rep = run([str(tmp_path)], catalog_root=None, settings=MineSettings(min_occurrences=3)).report
+    assert [c["members"][0]["statement"] for c in rep["fragment_clusters"]] == ["for"]
+
+    # A fourth occurrence of the try block alone: occurrences differ, both reported.
+    extra = (
+        "\n\ndef single(line, result, errors):\n    while line:\n"
+        + "\n".join(ln for ln in LOOP.splitlines()[3:])
+        + "\n        break\n    return result\n"
+    )
+    _write(tmp_path, "n.py", extra)
+    rep = run([str(tmp_path)], catalog_root=None, settings=MineSettings(min_occurrences=3)).report
+    kinds = sorted((c["members"][0]["statement"], c["occurrences"]) for c in rep["fragment_clusters"])
+    assert kinds == [("for", 3), ("try", 4)]
+
+
+def test_elif_chain_is_one_fragment():
+    tree = ast.parse(
+        "def f(x):\n    if x == 1:\n        a = 1\n    elif x == 2:\n        a = 2\n    else:\n"
+        "        if x:\n            a = 3\n        a = 4\n    return a\n"
+    )
+    found = list(miner._candidate_statements(tree.body[0]))
+    # the outer if, plus the `if x:` nested in the else (it is not the sole else statement)
+    assert [(type(n).__name__, n.lineno) for n in found] == [("If", 2), ("If", 7)]
+
+
+def test_nested_function_fragments_belong_to_inner_function():
+    code = (
+        b"def outer(rows):\n"
+        b"    def inner(items):\n"
+        b"        acc = []\n"
+        b"        for i in items:\n"
+        b"            if i is not None:\n"
+        b"                acc.append(i * 2 + 1)\n"
+        b"                acc.sort()\n"
+        b"        return acc\n"
+        b"    return inner(rows)\n"
+    )
+    frags = miner.analyze_source(code, MineSettings(min_fragment_nodes=5))["fragments"]
+    assert {f["qualname"] for f in frags} == {"outer.<locals>.inner"}
+
+
+def test_no_fragments_flag(report):
+    rep = run(settings=MineSettings(min_occurrences=2, fragments=False)).report
+    assert rep["fragment_clusters"] == [] and rep["stats"]["fragments_mined"] == 0
+    assert rep["function_clusters"] == report["function_clusters"]
+
+
+def test_min_fragment_nodes(report):
+    rep = run(settings=MineSettings(min_occurrences=2, min_fragment_nodes=1000)).report
+    assert rep["fragment_clusters"] == []
+    assert report["stats"]["fragments_mined"] > 0
