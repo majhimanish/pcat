@@ -1,0 +1,185 @@
+# v2.1 LLM output variance experiment: tasks and prompts.
+# Committed before any sample was generated, so prompts are not tuned to results.
+#
+# Condition A uses `prompt` for every sample. Conditions B and C cycle through
+# `paraphrases` (sample i uses paraphrase i % 5). `suffix` is appended to every
+# prompt, separated by a blank line.
+
+suffix: >-
+  Respond with exactly one Python code block and nothing else: standalone
+  functions only (no classes), no explanation before or after the code.
+
+tasks:
+  jwt_create:
+    prompt: >-
+      Write a Python function that creates a signed JWT access token for a user
+      id with an expiry time.
+    paraphrases:
+      - >-
+        I need a helper that generates a JWT access token for a given user ID.
+        The token should be signed and expire after a configurable amount of
+        time.
+      - >-
+        Python: function to issue a signed access token (JWT) containing the
+        user's id and an expiration.
+      - >-
+        Can you write the code to mint a JWT for a user? It needs the user id in
+        it, an expiry, and it has to be signed with our secret key.
+      - >-
+        Implement create_access_token(user_id) that returns a signed JWT which
+        expires after some minutes.
+      - >-
+        Write a function for our auth service that builds and signs a JWT access
+        token for a user id, with an exp claim.
+
+  password_hash:
+    prompt: >-
+      Write Python functions to hash a password and to verify a password against
+      a stored hash.
+    paraphrases:
+      - >-
+        I need two functions: one that hashes a user's password for storage and
+        one that checks a login password against the stored hash.
+      - >-
+        Python password hashing: hash_password(plain) and verify_password(plain,
+        hashed). Make it secure.
+      - >-
+        Write the code we use at signup to hash passwords, plus the check we run
+        at login to see if the password matches the hash.
+      - >-
+        Give me functions to securely hash passwords and verify them later.
+      - >-
+        Implement password storage helpers: turn a plaintext password into a
+        hash, and verify a plaintext password against a hash.
+
+  paginate_query:
+    prompt: >-
+      Write a Python function that returns one page of results from a SQLAlchemy
+      query, together with the total count.
+    paraphrases:
+      - >-
+        I need a pagination helper for SQLAlchemy: given a query, a page number
+        and a page size, return the items on that page and the total number of
+        results.
+      - >-
+        Write paginate(query, page, per_page) for SQLAlchemy that returns the
+        page's rows and the total count.
+      - >-
+        Our API endpoints need paging. Write a function that takes a SQLAlchemy
+        query and returns one page of results plus how many results there are in
+        total.
+      - >-
+        SQLAlchemy: function to get page N of a query with a page size, and the
+        overall row count.
+      - >-
+        Implement a generic paginate function for SQLAlchemy queries returning
+        items, total, page and page size.
+
+  http_retry:
+    prompt: >-
+      Write a Python function that GETs a URL with retries and exponential
+      backoff on failure.
+    paraphrases:
+      - >-
+        I need to fetch a URL over HTTP but the server is flaky. Write a function
+        that retries the GET request with exponential backoff when it fails.
+      - >-
+        Python: http GET helper with retry and exponential backoff.
+      - >-
+        Write fetch_with_retry(url) that makes a GET request and, on errors,
+        retries a few times, waiting longer after each failure.
+      - >-
+        Give me a function to download a URL that retries failed requests with
+        exponentially increasing delays.
+      - >-
+        Implement a GET request wrapper that retries on network errors and 5xx
+        responses using exponential backoff.
+
+  env_config:
+    prompt: >-
+      Write a Python function that loads and validates settings from environment
+      variables, with defaults.
+    paraphrases:
+      - >-
+        I need to read our app's configuration from environment variables. Write
+        a function that loads them, applies defaults, and validates the values.
+      - >-
+        Python: load config from env vars with defaults and validation, return
+        it as a dict.
+      - >-
+        Write load_settings() that reads settings like the database URL, port and
+        debug flag from the environment, using defaults when they're missing and
+        failing on invalid values.
+      - >-
+        Give me a function to parse and validate environment-variable settings
+        with sensible defaults.
+      - >-
+        Implement configuration loading from os.environ: defaults for missing
+        values, type conversion, and errors for invalid ones.
+
+  token_bucket:
+    prompt: >-
+      Write a Python function that checks a rate limit using a token bucket
+      stored in a dict.
+    paraphrases:
+      - >-
+        I need a rate limiter. Write a function that uses a token bucket, kept in
+        a plain dict, to decide whether a request is allowed.
+      - >-
+        Python: token bucket rate limit check, state stored in a dictionary,
+        returns True if the request is allowed.
+      - >-
+        Write allow_request(buckets, key) that implements token-bucket rate
+        limiting per key, with the buckets stored in a dict.
+      - >-
+        Give me a function for token-bucket rate limiting where each client's
+        bucket lives in a dict.
+      - >-
+        Implement a token bucket check: refill tokens based on elapsed time, then
+        consume one if available. Keep the bucket state in a dict.
+
+  csv_import:
+    prompt: >-
+      Write a Python function that parses a CSV of users, validates each row,
+      and returns the valid rows and the per-row errors.
+    paraphrases:
+      - >-
+        I need to import users from a CSV file. Write a function that parses it,
+        validates every row, and gives back the good rows plus a list of errors
+        for the bad ones.
+      - >-
+        Python: parse users CSV (name, email, age), validate rows, return
+        (valid_rows, errors) with the row number for each error.
+      - >-
+        Write import_users_csv(text) that reads CSV content, checks each user
+        row, and returns valid users and errors keyed by row.
+      - >-
+        Give me a function that validates a CSV of users row by row and returns
+        the valid records and the problems found.
+      - >-
+        Implement CSV user import with validation: collect valid rows and a
+        per-row error report.
+
+  fastapi_create_user:
+    prompt: >-
+      Write a FastAPI endpoint function that validates the input and creates a
+      user via an injected repository function.
+    paraphrases:
+      - >-
+        I need a POST endpoint in FastAPI that creates a user. Validate the
+        input, and save the user using a repository function that gets injected
+        as a dependency.
+      - >-
+        FastAPI: create-user endpoint with input validation, using a dependency
+        injected repo function to persist the user.
+      - >-
+        Write the FastAPI route handler for creating users. It should validate
+        the request and call a create-user repository function provided through
+        Depends.
+      - >-
+        Give me a FastAPI function endpoint for user signup that validates input
+        and stores the user through an injected repository function.
+      - >-
+        Implement POST /users in FastAPI: validate the payload, create the user
+        via a repository function injected with Depends, return the created
+        user.
