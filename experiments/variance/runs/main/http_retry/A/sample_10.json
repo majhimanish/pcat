@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport time\n\nimport requests\n\n\ndef get_with_retries(\n    url,\n    max_retries=5,\n    base_delay=1.0,\n    max_delay=30.0,\n    timeout=10,\n    retry_statuses=(429, 500, 502, 503, 504),\n    **request_kwargs,\n):\n    \"\"\"GET a URL, retrying with exponential backoff and jitter on failure.\n\n    Retries on network errors (connection errors, timeouts) and on the HTTP\n    status codes listed in `retry_statuses`. Other 4xx responses are raised\n    immediately. Raises the last error if all attempts are exhausted.\n    \"\"\"\n    last_exc = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **request_kwargs)\n\n            if response.status_code in retry_statuses:\n                response.raise_for_status()\n\n            response.raise_for_status()\n            return response\n\n        except (requests.ConnectionError, requests.Timeout) as exc:\n            last_exc = exc\n        except requests.HTTPError as exc:\n            status = exc.response.status_code if exc.response is not None else None\n            if status not in retry_statuses:\n                raise\n            last_exc = exc\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_delay, base_delay * (2 ** attempt))\n        delay *= random.uniform(0.5, 1.0)  # jitter\n\n        # Honor Retry-After header if the server provided one (seconds form)\n        resp = getattr(last_exc, \"response\", None)\n        if resp is not None:\n            retry_after = resp.headers.get(\"Retry-After\")\n            if retry_after and retry_after.isdigit():\n                delay = max(delay, min(float(retry_after), max_delay))\n\n        time.sleep(delay)\n\n    raise last_exc\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0358618,
+    "duration_ms": 6948,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that GETs a URL with retries and exponential backoff on failure.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport random\nimport time\n\nimport requests\n\n\ndef get_with_retries(\n    url,\n    max_retries=5,\n    base_delay=1.0,\n    max_delay=30.0,\n    timeout=10,\n    retry_statuses=(429, 500, 502, 503, 504),\n    **request_kwargs,\n):\n    \"\"\"GET a URL, retrying with exponential backoff and jitter on failure.\n\n    Retries on network errors (connection errors, timeouts) and on the HTTP\n    status codes listed in `retry_statuses`. Other 4xx responses are raised\n    immediately. Raises the last error if all attempts are exhausted.\n    \"\"\"\n    last_exc = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **request_kwargs)\n\n            if response.status_code in retry_statuses:\n                response.raise_for_status()\n\n            response.raise_for_status()\n            return response\n\n        except (requests.ConnectionError, requests.Timeout) as exc:\n            last_exc = exc\n        except requests.HTTPError as exc:\n            status = exc.response.status_code if exc.response is not None else None\n            if status not in retry_statuses:\n                raise\n            last_exc = exc\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_delay, base_delay * (2 ** attempt))\n        delay *= random.uniform(0.5, 1.0)  # jitter\n\n        # Honor Retry-After header if the server provided one (seconds form)\n        resp = getattr(last_exc, \"response\", None)\n        if resp is not None:\n            retry_after = resp.headers.get(\"Retry-After\")\n            if retry_after and retry_after.isdigit():\n                delay = max(delay, min(float(retry_after), max_delay))\n\n        time.sleep(delay)\n\n    raise last_exc\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 10,
+  "status": "ok",
+  "task": "http_retry",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:45+00:00",
+  "valid": true
+}

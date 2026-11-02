@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_ALGORITHM = \"scrypt\"\n_N = 2 ** 15\n_R = 8\n_P = 1\n_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password with scrypt and a random salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a string\")\n    salt = os.urandom(_SALT_BYTES)\n    key = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_N,\n        r=_R,\n        p=_P,\n        dklen=_DKLEN,\n        maxmem=128 * _N * _R * 2,\n    )\n    return \"$\".join([\n        _ALGORITHM,\n        str(_N),\n        str(_R),\n        str(_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(key).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a password against a hash produced by hash_password.\n\n    Uses a constant-time comparison. Returns False for malformed hashes.\n    \"\"\"\n    try:\n        algorithm, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if algorithm != _ALGORITHM:\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n        actual = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            dklen=len(expected),\n            maxmem=128 * n * r * 2,\n        )\n    except (ValueError, TypeError, AttributeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0367982,
+    "duration_ms": 8286,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write Python functions to hash a password and to verify a password against a stored hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_ALGORITHM = \"scrypt\"\n_N = 2 ** 15\n_R = 8\n_P = 1\n_DKLEN = 32\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str) -> str:\n    \"\"\"Hash a password with scrypt and a random salt.\n\n    Returns a self-describing string: scrypt$N$r$p$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a string\")\n    salt = os.urandom(_SALT_BYTES)\n    key = hashlib.scrypt(\n        password.encode(\"utf-8\"),\n        salt=salt,\n        n=_N,\n        r=_R,\n        p=_P,\n        dklen=_DKLEN,\n        maxmem=128 * _N * _R * 2,\n    )\n    return \"$\".join([\n        _ALGORITHM,\n        str(_N),\n        str(_R),\n        str(_P),\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(key).decode(\"ascii\"),\n    ])\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a password against a hash produced by hash_password.\n\n    Uses a constant-time comparison. Returns False for malformed hashes.\n    \"\"\"\n    try:\n        algorithm, n, r, p, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if algorithm != _ALGORITHM:\n            return False\n        n, r, p = int(n), int(r), int(p)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n        actual = hashlib.scrypt(\n            password.encode(\"utf-8\"),\n            salt=salt,\n            n=n,\n            r=r,\n            p=p,\n            dklen=len(expected),\n            maxmem=128 * n * r * 2,\n        )\n    except (ValueError, TypeError, AttributeError):\n        return False\n    return hmac.compare_digest(actual, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 5,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:56:56+00:00",
+  "valid": true
+}

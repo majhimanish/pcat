@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, Callable, Dict\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\napp = FastAPI()\n\n\nclass UserCreate(BaseModel):\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    password: str = Field(..., min_length=8, max_length=128)\n\n\nclass UserOut(BaseModel):\n    id: int\n    username: str\n    email: EmailStr\n\n\ndef get_create_user_repo() -> Callable[[Dict[str, Any]], Dict[str, Any]]:\n    \"\"\"Dependency provider. Override via app.dependency_overrides in tests\n    or replace with a real repository-backed function.\"\"\"\n    def create_user(data: Dict[str, Any]) -> Dict[str, Any]:\n        raise NotImplementedError(\"Repository function not configured\")\n    return create_user\n\n\ndef hash_password(password: str) -> str:\n    import hashlib\n    import os\n\n    salt = os.urandom(16)\n    digest = hashlib.scrypt(password.encode(\"utf-8\"), salt=salt, n=2**14, r=8, p=1)\n    return salt.hex() + \":\" + digest.hex()\n\n\n@app.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\ndef create_user_endpoint(\n    payload: UserCreate,\n    create_user: Callable[[Dict[str, Any]], Dict[str, Any]] = Depends(get_create_user_repo),\n) -> UserOut:\n    username = payload.username.strip()\n    if not username:\n        raise HTTPException(\n            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n            detail=\"Username must not be blank\",\n        )\n\n    user_data = {\n        \"username\": username,\n        \"email\": payload.email.lower(),\n        \"password_hash\": hash_password(payload.password),\n    }\n\n    try:\n        created = create_user(user_data)\n    except ValueError as exc:\n        # Repository signals duplicate/invalid data via ValueError\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))\n\n    return UserOut(id=created[\"id\"], username=created[\"username\"], email=created[\"email\"])\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0428809,
+    "duration_ms": 16188,
+    "num_turns": 3
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a FastAPI endpoint function that validates the input and creates a user via an injected repository function.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any, Callable, Dict\n\nfrom fastapi import Depends, FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\napp = FastAPI()\n\n\nclass UserCreate(BaseModel):\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: EmailStr\n    password: str = Field(..., min_length=8, max_length=128)\n\n\nclass UserOut(BaseModel):\n    id: int\n    username: str\n    email: EmailStr\n\n\ndef get_create_user_repo() -> Callable[[Dict[str, Any]], Dict[str, Any]]:\n    \"\"\"Dependency provider. Override via app.dependency_overrides in tests\n    or replace with a real repository-backed function.\"\"\"\n    def create_user(data: Dict[str, Any]) -> Dict[str, Any]:\n        raise NotImplementedError(\"Repository function not configured\")\n    return create_user\n\n\ndef hash_password(password: str) -> str:\n    import hashlib\n    import os\n\n    salt = os.urandom(16)\n    digest = hashlib.scrypt(password.encode(\"utf-8\"), salt=salt, n=2**14, r=8, p=1)\n    return salt.hex() + \":\" + digest.hex()\n\n\n@app.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\ndef create_user_endpoint(\n    payload: UserCreate,\n    create_user: Callable[[Dict[str, Any]], Dict[str, Any]] = Depends(get_create_user_repo),\n) -> UserOut:\n    username = payload.username.strip()\n    if not username:\n        raise HTTPException(\n            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n            detail=\"Username must not be blank\",\n        )\n\n    user_data = {\n        \"username\": username,\n        \"email\": payload.email.lower(),\n        \"password_hash\": hash_password(payload.password),\n    }\n\n    try:\n        created = create_user(user_data)\n    except ValueError as exc:\n        # Repository signals duplicate/invalid data via ValueError\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))\n\n    return UserOut(id=created[\"id\"], username=created[\"username\"], email=created[\"email\"])\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:59:50+00:00",
+  "valid": false
+}

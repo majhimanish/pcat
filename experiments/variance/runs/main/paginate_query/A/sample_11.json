@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.0 Select.\n\n    - `page` is 1-indexed; values below 1 are treated as 1.\n    - `per_page` must be a positive integer.\n    - `total` is the count of all rows matching the query, ignoring\n      pagination.\n    - If the query has no ORDER BY, results may be inconsistent across\n      pages; supply a deterministic ordering for stable pagination.\n    \"\"\"\n    if per_page < 1:\n        raise ValueError(\"per_page must be a positive integer\")\n    page = max(1, page)\n\n    # Count over the query as a subquery so joins, filters, DISTINCT and\n    # GROUP BY are all respected. Ordering is dropped as it is irrelevant\n    # to the count.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    if total == 0:\n        return [], 0\n\n    page_stmt = query.limit(per_page).offset((page - 1) * per_page)\n    result = session.execute(page_stmt)\n\n    # Single-entity selects yield scalars (model instances); multi-column\n    # selects yield Row objects.\n    if len(query.selected_columns) == 1 or _is_single_entity(query):\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n\n\ndef _is_single_entity(query: Any) -> bool:\n    \"\"\"True if the select targets exactly one ORM entity.\"\"\"\n    descriptions = query.column_descriptions\n    return len(descriptions) == 1\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.036127099999999995,
+    "duration_ms": 7783,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.0 Select.\n\n    - `page` is 1-indexed; values below 1 are treated as 1.\n    - `per_page` must be a positive integer.\n    - `total` is the count of all rows matching the query, ignoring\n      pagination.\n    - If the query has no ORDER BY, results may be inconsistent across\n      pages; supply a deterministic ordering for stable pagination.\n    \"\"\"\n    if per_page < 1:\n        raise ValueError(\"per_page must be a positive integer\")\n    page = max(1, page)\n\n    # Count over the query as a subquery so joins, filters, DISTINCT and\n    # GROUP BY are all respected. Ordering is dropped as it is irrelevant\n    # to the count.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    if total == 0:\n        return [], 0\n\n    page_stmt = query.limit(per_page).offset((page - 1) * per_page)\n    result = session.execute(page_stmt)\n\n    # Single-entity selects yield scalars (model instances); multi-column\n    # selects yield Row objects.\n    if len(query.selected_columns) == 1 or _is_single_entity(query):\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n\n\ndef _is_single_entity(query: Any) -> bool:\n    \"\"\"True if the select targets exactly one ORM entity.\"\"\"\n    descriptions = query.column_descriptions\n    return len(descriptions) == 1\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 11,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:23+00:00",
+  "valid": true
+}

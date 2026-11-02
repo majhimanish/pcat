@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\nimport uuid\nfrom datetime import timedelta\n\nimport jwt  # PyJWT\n\n\ndef create_access_token(\n    user_id: str,\n    secret_key: str,\n    expires_in: timedelta = timedelta(minutes=15),\n    algorithm: str = \"HS256\",\n    issuer: str | None = None,\n    audience: str | None = None,\n) -> str:\n    \"\"\"Create a signed JWT access token for a user id with an expiry time.\"\"\"\n    if not user_id:\n        raise ValueError(\"user_id must not be empty\")\n    if not secret_key:\n        raise ValueError(\"secret_key must not be empty\")\n    if expires_in.total_seconds() <= 0:\n        raise ValueError(\"expires_in must be positive\")\n    if algorithm.lower() == \"none\":\n        raise ValueError(\"unsigned tokens are not allowed\")\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in.total_seconds()),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        payload[\"iss\"] = issuer\n    if audience:\n        payload[\"aud\"] = audience\n\n    return jwt.encode(payload, secret_key, algorithm=algorithm)\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.034192,
+    "duration_ms": 6929,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that creates a signed JWT access token for a user id with an expiry time.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport time\nimport uuid\nfrom datetime import timedelta\n\nimport jwt  # PyJWT\n\n\ndef create_access_token(\n    user_id: str,\n    secret_key: str,\n    expires_in: timedelta = timedelta(minutes=15),\n    algorithm: str = \"HS256\",\n    issuer: str | None = None,\n    audience: str | None = None,\n) -> str:\n    \"\"\"Create a signed JWT access token for a user id with an expiry time.\"\"\"\n    if not user_id:\n        raise ValueError(\"user_id must not be empty\")\n    if not secret_key:\n        raise ValueError(\"secret_key must not be empty\")\n    if expires_in.total_seconds() <= 0:\n        raise ValueError(\"expires_in must be positive\")\n    if algorithm.lower() == \"none\":\n        raise ValueError(\"unsigned tokens are not allowed\")\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in.total_seconds()),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        payload[\"iss\"] = issuer\n    if audience:\n        payload[\"aud\"] = audience\n\n    return jwt.encode(payload, secret_key, algorithm=algorithm)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 7,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:56:31+00:00",
+  "valid": true
+}

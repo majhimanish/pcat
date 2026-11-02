@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\n_ITERATIONS = 600_000\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str, iterations: int = _ITERATIONS) -> str:\n    \"\"\"Hash a password with PBKDF2-HMAC-SHA256 and a random salt.\n\n    Returns a string in the form: pbkdf2_sha256$iterations$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a string\")\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.pbkdf2_hmac(\"sha256\", password.encode(\"utf-8\"), salt, iterations)\n    return \"pbkdf2_sha256${}${}${}\".format(\n        iterations,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a password against a hash produced by hash_password.\"\"\"\n    try:\n        algorithm, iterations, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if algorithm != \"pbkdf2_sha256\":\n            return False\n        iterations = int(iterations)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n    except (ValueError, AttributeError, TypeError):\n        return False\n\n    candidate = hashlib.pbkdf2_hmac(\n        \"sha256\", password.encode(\"utf-8\"), salt, iterations, dklen=len(expected)\n    )\n    return hmac.compare_digest(candidate, expected)\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0355682,
+    "duration_ms": 6289,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write Python functions to hash a password and to verify a password against a stored hash.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\n_ITERATIONS = 600_000\n_SALT_BYTES = 16\n\n\ndef hash_password(password: str, iterations: int = _ITERATIONS) -> str:\n    \"\"\"Hash a password with PBKDF2-HMAC-SHA256 and a random salt.\n\n    Returns a string in the form: pbkdf2_sha256$iterations$salt_b64$hash_b64\n    \"\"\"\n    if not isinstance(password, str):\n        raise TypeError(\"password must be a string\")\n    salt = os.urandom(_SALT_BYTES)\n    dk = hashlib.pbkdf2_hmac(\"sha256\", password.encode(\"utf-8\"), salt, iterations)\n    return \"pbkdf2_sha256${}${}${}\".format(\n        iterations,\n        base64.b64encode(salt).decode(\"ascii\"),\n        base64.b64encode(dk).decode(\"ascii\"),\n    )\n\n\ndef verify_password(password: str, stored_hash: str) -> bool:\n    \"\"\"Verify a password against a hash produced by hash_password.\"\"\"\n    try:\n        algorithm, iterations, salt_b64, hash_b64 = stored_hash.split(\"$\")\n        if algorithm != \"pbkdf2_sha256\":\n            return False\n        iterations = int(iterations)\n        salt = base64.b64decode(salt_b64)\n        expected = base64.b64decode(hash_b64)\n    except (ValueError, AttributeError, TypeError):\n        return False\n\n    candidate = hashlib.pbkdf2_hmac(\n        \"sha256\", password.encode(\"utf-8\"), salt, iterations, dklen=len(expected)\n    )\n    return hmac.compare_digest(candidate, expected)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 6,
+  "status": "ok",
+  "task": "password_hash",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:56:54+00:00",
+  "valid": true
+}

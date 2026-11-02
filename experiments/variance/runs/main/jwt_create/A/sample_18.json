@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef create_access_token(\n    user_id: str,\n    expires_in_seconds: int = 900,\n    secret_key: str | None = None,\n    algorithm: str = \"HS256\",\n    issuer: str | None = None,\n    audience: str | None = None,\n) -> str:\n    \"\"\"Create a signed JWT access token for the given user id.\n\n    The signing secret is read from the JWT_SECRET_KEY environment variable\n    unless passed explicitly. The token expires `expires_in_seconds` after issue.\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id must be a non-empty value\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive\")\n\n    secret = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\n            \"No signing key provided: set JWT_SECRET_KEY or pass secret_key\"\n        )\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in_seconds),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        payload[\"iss\"] = issuer\n    if audience:\n        payload[\"aud\"] = audience\n\n    return jwt.encode(payload, secret, algorithm=algorithm)\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.034782,
+    "duration_ms": 6799,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that creates a signed JWT access token for a user id with an expiry time.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef create_access_token(\n    user_id: str,\n    expires_in_seconds: int = 900,\n    secret_key: str | None = None,\n    algorithm: str = \"HS256\",\n    issuer: str | None = None,\n    audience: str | None = None,\n) -> str:\n    \"\"\"Create a signed JWT access token for the given user id.\n\n    The signing secret is read from the JWT_SECRET_KEY environment variable\n    unless passed explicitly. The token expires `expires_in_seconds` after issue.\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id must be a non-empty value\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive\")\n\n    secret = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret:\n        raise RuntimeError(\n            \"No signing key provided: set JWT_SECRET_KEY or pass secret_key\"\n        )\n\n    now = int(time.time())\n    payload = {\n        \"sub\": str(user_id),\n        \"iat\": now,\n        \"nbf\": now,\n        \"exp\": now + int(expires_in_seconds),\n        \"jti\": uuid.uuid4().hex,\n        \"type\": \"access\",\n    }\n    if issuer:\n        payload[\"iss\"] = issuer\n    if audience:\n        payload[\"aud\"] = audience\n\n    return jwt.encode(payload, secret, algorithm=algorithm)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 18,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:56:47+00:00",
+  "valid": true
+}

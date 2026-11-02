@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.0-style select().\n\n    - page is 1-indexed.\n    - total is the count of all rows matching the query, ignoring pagination.\n    - Any existing ORDER BY is dropped for the count query (cheaper), but kept\n      for the page query. Add an ORDER BY to `query` for deterministic pages.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    offset = (page - 1) * per_page\n    page_stmt = query.limit(per_page).offset(offset)\n\n    result = session.execute(page_stmt)\n    # Single-entity selects return model instances; multi-column selects\n    # return Row objects.\n    first_col_is_entity = len(page_stmt.column_descriptions) == 1 and bool(\n        page_stmt.column_descriptions[0].get(\"entity\")\n    ) and page_stmt.column_descriptions[0].get(\"expr\") is page_stmt.column_descriptions[0].get(\"entity\")\n    items = result.scalars().all() if first_col_is_entity else result.all()\n\n    return items, total\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0353171,
+    "duration_ms": 6078,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.0-style select().\n\n    - page is 1-indexed.\n    - total is the count of all rows matching the query, ignoring pagination.\n    - Any existing ORDER BY is dropped for the count query (cheaper), but kept\n      for the page query. Add an ORDER BY to `query` for deterministic pages.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    offset = (page - 1) * per_page\n    page_stmt = query.limit(per_page).offset(offset)\n\n    result = session.execute(page_stmt)\n    # Single-entity selects return model instances; multi-column selects\n    # return Row objects.\n    first_col_is_entity = len(page_stmt.column_descriptions) == 1 and bool(\n        page_stmt.column_descriptions[0].get(\"entity\")\n    ) and page_stmt.column_descriptions[0].get(\"expr\") is page_stmt.column_descriptions[0].get(\"entity\")\n    items = result.scalars().all() if first_col_is_entity else result.all()\n\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 8,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:19+00:00",
+  "valid": true
+}

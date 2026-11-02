@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.x select() or legacy Query.\n\n    `page` is 1-indexed. `total` is the count of all rows matching the query\n    before pagination. The query should already include any ordering so that\n    pages are stable.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    offset = (page - 1) * per_page\n\n    # Legacy Query object (session.query(...))\n    if hasattr(query, \"limit\") and hasattr(query, \"count\") and not hasattr(query, \"subquery_\"):\n        total = query.order_by(None).count()\n        items = query.limit(per_page).offset(offset).all()\n        return items, total\n\n    # SQLAlchemy 2.x Select construct\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = query.limit(per_page).offset(offset)\n    result = session.execute(page_stmt)\n    items = result.scalars().all() if _returns_single_entity(query) else result.all()\n    return items, total\n\n\ndef _returns_single_entity(stmt: Any) -> bool:\n    \"\"\"True if the select() has exactly one column/entity, so scalars() is appropriate.\"\"\"\n    try:\n        return len(stmt.selected_columns) == 1 or len(stmt.column_descriptions) == 1\n    except AttributeError:\n        return False\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0359371,
+    "duration_ms": 7087,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any, List, Tuple\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> Tuple[List[Any], int]:\n    \"\"\"Return (items, total) for one page of a SQLAlchemy 2.x select() or legacy Query.\n\n    `page` is 1-indexed. `total` is the count of all rows matching the query\n    before pagination. The query should already include any ordering so that\n    pages are stable.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    offset = (page - 1) * per_page\n\n    # Legacy Query object (session.query(...))\n    if hasattr(query, \"limit\") and hasattr(query, \"count\") and not hasattr(query, \"subquery_\"):\n        total = query.order_by(None).count()\n        items = query.limit(per_page).offset(offset).all()\n        return items, total\n\n    # SQLAlchemy 2.x Select construct\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = query.limit(per_page).offset(offset)\n    result = session.execute(page_stmt)\n    items = result.scalars().all() if _returns_single_entity(query) else result.all()\n    return items, total\n\n\ndef _returns_single_entity(stmt: Any) -> bool:\n    \"\"\"True if the select() has exactly one column/entity, so scalars() is appropriate.\"\"\"\n    try:\n        return len(stmt.selected_columns) == 1 or len(stmt.column_descriptions) == 1\n    except AttributeError:\n        return False\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 6,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:20+00:00",
+  "valid": true
+}

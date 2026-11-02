@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy.sql import Select\n\n\ndef paginate_query(\n    session: Session,\n    query: Select,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return one page of results from a SQLAlchemy 2.0-style select, plus the total count.\n\n    Args:\n        session: Active SQLAlchemy session.\n        query: A ``select()`` statement. It should have a deterministic\n            ORDER BY for stable pagination.\n        page: 1-based page number.\n        page_size: Number of rows per page.\n\n    Returns:\n        A tuple ``(items, total)`` where ``items`` is the list of rows for the\n        requested page and ``total`` is the number of rows the unpaginated\n        query would return.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    # Count over the original query as a subquery (ordering is irrelevant for counting).\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    offset = (page - 1) * page_size\n    page_stmt = query.limit(page_size).offset(offset)\n    result = session.execute(page_stmt)\n\n    # scalars() for single-entity selects; fall back to full rows otherwise.\n    if len(query.selected_columns) == 1 or _is_single_entity(query):\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n\n\ndef _is_single_entity(query: Select) -> bool:\n    \"\"\"True if the select targets exactly one ORM entity (e.g. ``select(User)``).\"\"\"\n    descriptions = query.column_descriptions\n    return len(descriptions) == 1 and descriptions[0].get(\"entity\") is not None\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0364931,
+    "duration_ms": 8808,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\nfrom sqlalchemy.sql import Select\n\n\ndef paginate_query(\n    session: Session,\n    query: Select,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return one page of results from a SQLAlchemy 2.0-style select, plus the total count.\n\n    Args:\n        session: Active SQLAlchemy session.\n        query: A ``select()`` statement. It should have a deterministic\n            ORDER BY for stable pagination.\n        page: 1-based page number.\n        page_size: Number of rows per page.\n\n    Returns:\n        A tuple ``(items, total)`` where ``items`` is the list of rows for the\n        requested page and ``total`` is the number of rows the unpaginated\n        query would return.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    # Count over the original query as a subquery (ordering is irrelevant for counting).\n    count_stmt = select(func.count()).select_from(query.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    offset = (page - 1) * page_size\n    page_stmt = query.limit(page_size).offset(offset)\n    result = session.execute(page_stmt)\n\n    # scalars() for single-entity selects; fall back to full rows otherwise.\n    if len(query.selected_columns) == 1 or _is_single_entity(query):\n        items = list(result.scalars().all())\n    else:\n        items = list(result.all())\n\n    return items, total\n\n\ndef _is_single_entity(query: Select) -> bool:\n    \"\"\"True if the select targets exactly one ORM entity (e.g. ``select(User)``).\"\"\"\n    descriptions = query.column_descriptions\n    return len(descriptions) == 1 and descriptions[0].get(\"entity\") is not None\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 17,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:32+00:00",
+  "valid": true
+}

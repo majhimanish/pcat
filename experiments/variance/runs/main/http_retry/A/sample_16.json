@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport time\n\nimport requests\n\n\ndef get_with_retries(\n    url,\n    max_retries=5,\n    backoff_factor=0.5,\n    max_backoff=30.0,\n    timeout=10,\n    retry_statuses=(429, 500, 502, 503, 504),\n    **kwargs,\n):\n    \"\"\"GET a URL, retrying with exponential backoff and jitter on failure.\n\n    Retries on connection errors, timeouts, and the given HTTP status codes.\n    Returns the requests.Response on success; raises the last error otherwise.\n    \"\"\"\n    last_exc = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **kwargs)\n            if response.status_code not in retry_statuses:\n                response.raise_for_status()\n                return response\n            last_exc = requests.HTTPError(\n                f\"{response.status_code} error for url: {url}\", response=response\n            )\n            retry_after = response.headers.get(\"Retry-After\")\n        except (requests.ConnectionError, requests.Timeout) as exc:\n            last_exc = exc\n            retry_after = None\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_backoff, backoff_factor * (2 ** attempt))\n        delay += random.uniform(0, delay * 0.1)\n        if retry_after and retry_after.isdigit():\n            delay = max(delay, min(float(retry_after), max_backoff))\n        time.sleep(delay)\n\n    raise last_exc\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.034802799999999995,
+    "duration_ms": 6465,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that GETs a URL with retries and exponential backoff on failure.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport random\nimport time\n\nimport requests\n\n\ndef get_with_retries(\n    url,\n    max_retries=5,\n    backoff_factor=0.5,\n    max_backoff=30.0,\n    timeout=10,\n    retry_statuses=(429, 500, 502, 503, 504),\n    **kwargs,\n):\n    \"\"\"GET a URL, retrying with exponential backoff and jitter on failure.\n\n    Retries on connection errors, timeouts, and the given HTTP status codes.\n    Returns the requests.Response on success; raises the last error otherwise.\n    \"\"\"\n    last_exc = None\n\n    for attempt in range(max_retries + 1):\n        try:\n            response = requests.get(url, timeout=timeout, **kwargs)\n            if response.status_code not in retry_statuses:\n                response.raise_for_status()\n                return response\n            last_exc = requests.HTTPError(\n                f\"{response.status_code} error for url: {url}\", response=response\n            )\n            retry_after = response.headers.get(\"Retry-After\")\n        except (requests.ConnectionError, requests.Timeout) as exc:\n            last_exc = exc\n            retry_after = None\n\n        if attempt == max_retries:\n            break\n\n        delay = min(max_backoff, backoff_factor * (2 ** attempt))\n        delay += random.uniform(0, delay * 0.1)\n        if retry_after and retry_after.isdigit():\n            delay = max(delay, min(float(retry_after), max_backoff))\n        time.sleep(delay)\n\n    raise last_exc\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 16,
+  "status": "ok",
+  "task": "http_retry",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:52+00:00",
+  "valid": true
+}

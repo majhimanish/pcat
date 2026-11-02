@@ -1,0 +1,79 @@
+import re
+from typing import Any, Awaitable, Callable, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, status
+from pydantic import BaseModel, EmailStr, Field, field_validator
+
+app = FastAPI()
+
+USERNAME_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
+
+
+class UserCreate(BaseModel):
+    username: str = Field(..., min_length=3, max_length=32)
+    email: EmailStr
+    password: str = Field(..., min_length=8, max_length=128)
+    full_name: Optional[str] = Field(default=None, max_length=100)
+
+    @field_validator("username")
+    @classmethod
+    def validate_username(cls, value: str) -> str:
+        value = value.strip()
+        if not USERNAME_PATTERN.match(value):
+            raise ValueError(
+                "username may only contain letters, digits, '_', '.', and '-'"
+            )
+        return value
+
+    @field_validator("password")
+    @classmethod
+    def validate_password(cls, value: str) -> str:
+        if not (
+            re.search(r"[a-z]", value)
+            and re.search(r"[A-Z]", value)
+            and re.search(r"\d", value)
+        ):
+            raise ValueError(
+                "password must contain upper-case, lower-case, and a digit"
+            )
+        return value
+
+
+class UserOut(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    full_name: Optional[str] = None
+
+
+CreateUserFn = Callable[[dict[str, Any]], Awaitable[dict[str, Any]]]
+
+
+def get_create_user_fn() -> CreateUserFn:
+    """Dependency provider; override in app.dependency_overrides or replace
+    with a real repository-backed implementation."""
+    raise NotImplementedError("create_user repository function not configured")
+
+
+@app.post("/users", response_model=UserOut, status_code=status.HTTP_201_CREATED)
+async def create_user_endpoint(
+    payload: UserCreate,
+    create_user: CreateUserFn = Depends(get_create_user_fn),
+) -> UserOut:
+    user_data = payload.model_dump()
+    # The repository is responsible for hashing the password before storage;
+    # the plain password is never returned in the response.
+    try:
+        created = await create_user(user_data)
+    except ValueError as exc:
+        # e.g. duplicate username/email raised by the repository
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=str(exc)
+        ) from exc
+
+    return UserOut(
+        id=created["id"],
+        username=created["username"],
+        email=created["email"],
+        full_name=created.get("full_name"),
+    )

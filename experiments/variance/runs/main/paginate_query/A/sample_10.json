@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total_count) for the requested 1-based page of a query.\n\n    `query` may be a SQLAlchemy 2.0 `Select` statement or a legacy `Query`\n    object. The query should have a deterministic ORDER BY for stable paging.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    offset = (page - 1) * page_size\n\n    if hasattr(query, \"statement\"):  # legacy Query object\n        stmt = query.statement\n    else:\n        stmt = query\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are respected.\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(page_size).offset(offset)\n\n    if hasattr(query, \"statement\"):\n        items = list(query.limit(page_size).offset(offset).all())\n    else:\n        result = session.execute(page_stmt)\n        # Single-entity selects yield ORM objects; otherwise return Row objects.\n        if len(stmt.column_descriptions) == 1:\n            items = list(result.scalars().all())\n        else:\n            items = list(result.all())\n\n    return items, total\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.035363099999999995,
+    "duration_ms": 12151,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    page_size: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return (items, total_count) for the requested 1-based page of a query.\n\n    `query` may be a SQLAlchemy 2.0 `Select` statement or a legacy `Query`\n    object. The query should have a deterministic ORDER BY for stable paging.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if page_size < 1:\n        raise ValueError(\"page_size must be >= 1\")\n\n    offset = (page - 1) * page_size\n\n    if hasattr(query, \"statement\"):  # legacy Query object\n        stmt = query.statement\n    else:\n        stmt = query\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are respected.\n    count_stmt = select(func.count()).select_from(\n        stmt.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    page_stmt = stmt.limit(page_size).offset(offset)\n\n    if hasattr(query, \"statement\"):\n        items = list(query.limit(page_size).offset(offset).all())\n    else:\n        result = session.execute(page_stmt)\n        # Single-entity selects yield ORM objects; otherwise return Row objects.\n        if len(stmt.column_descriptions) == 1:\n            items = list(result.scalars().all())\n        else:\n            items = list(result.all())\n\n    return items, total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 10,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:26+00:00",
+  "valid": true
+}

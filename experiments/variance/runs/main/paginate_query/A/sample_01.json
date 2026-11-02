@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return one page of results and the total number of matching rows.\n\n    Args:\n        session: The active SQLAlchemy session.\n        query: A SQLAlchemy 2.0 ``Select`` statement (e.g. ``select(User)``).\n            It should have a deterministic ``order_by`` for stable paging.\n        page: 1-based page number.\n        per_page: Number of items per page.\n\n    Returns:\n        A tuple of ``(items, total)`` where ``items`` is the list of results\n        for the requested page and ``total`` is the count of all rows the\n        query would return without pagination.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are\n    # respected. Ordering is irrelevant for counting, so drop it.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    if total == 0:\n        return [], 0\n\n    page_stmt = query.limit(per_page).offset((page - 1) * per_page)\n    items = session.execute(page_stmt).scalars().all()\n\n    return list(items), total\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0351051,
+    "duration_ms": 7051,
+    "num_turns": 1
+  },
+  "invalid_reason": null,
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that returns one page of results from a SQLAlchemy query, together with the total count.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import func, select\nfrom sqlalchemy.orm import Session\n\n\ndef paginate_query(\n    session: Session,\n    query: Any,\n    page: int = 1,\n    per_page: int = 20,\n) -> tuple[list[Any], int]:\n    \"\"\"Return one page of results and the total number of matching rows.\n\n    Args:\n        session: The active SQLAlchemy session.\n        query: A SQLAlchemy 2.0 ``Select`` statement (e.g. ``select(User)``).\n            It should have a deterministic ``order_by`` for stable paging.\n        page: 1-based page number.\n        per_page: Number of items per page.\n\n    Returns:\n        A tuple of ``(items, total)`` where ``items`` is the list of results\n        for the requested page and ``total`` is the count of all rows the\n        query would return without pagination.\n    \"\"\"\n    if page < 1:\n        raise ValueError(\"page must be >= 1\")\n    if per_page < 1:\n        raise ValueError(\"per_page must be >= 1\")\n\n    # Count over a subquery so joins, filters, DISTINCT and GROUP BY are\n    # respected. Ordering is irrelevant for counting, so drop it.\n    count_stmt = select(func.count()).select_from(\n        query.order_by(None).subquery()\n    )\n    total = session.execute(count_stmt).scalar_one()\n\n    if total == 0:\n        return [], 0\n\n    page_stmt = query.limit(per_page).offset((page - 1) * per_page)\n    items = session.execute(page_stmt).scalars().all()\n\n    return list(items), total\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 1,
+  "status": "ok",
+  "task": "paginate_query",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:57:12+00:00",
+  "valid": true
+}

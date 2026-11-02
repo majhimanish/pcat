@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import re\nfrom typing import Any, Awaitable, Callable, Optional\n\nfrom fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, Field, field_validator\n\nrouter = APIRouter()\n\nEMAIL_PATTERN = re.compile(r\"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$\")\n\nCreateUserFn = Callable[[dict[str, Any]], Awaitable[dict[str, Any]]]\n\n\nclass UserCreate(BaseModel):\n    model_config = ConfigDict(str_strip_whitespace=True)\n\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: str = Field(..., max_length=254)\n    password: str = Field(..., min_length=8, max_length=128)\n    full_name: Optional[str] = Field(default=None, max_length=100)\n\n    @field_validator(\"email\")\n    @classmethod\n    def validate_email(cls, value: str) -> str:\n        if not EMAIL_PATTERN.match(value):\n            raise ValueError(\"Invalid email address\")\n        return value.lower()\n\n\nclass UserOut(BaseModel):\n    id: int\n    username: str\n    email: str\n    full_name: Optional[str] = None\n\n\ndef get_create_user_fn() -> CreateUserFn:\n    \"\"\"Dependency provider; override via app.dependency_overrides in\n    production wiring and tests to inject the real repository function.\"\"\"\n    raise NotImplementedError(\"create_user repository function not configured\")\n\n\n@router.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\nasync def create_user_endpoint(\n    payload: UserCreate,\n    create_user: CreateUserFn = Depends(get_create_user_fn),\n) -> UserOut:\n    if payload.password.lower() in {payload.username.lower(), payload.email}:\n        raise HTTPException(\n            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n            detail=\"Password must not match username or email\",\n        )\n\n    try:\n        created = await create_user(payload.model_dump())\n    except ValueError as exc:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))\n\n    return UserOut(**created)\n",
+  "condition": "A",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0377436,
+    "duration_ms": 12098,
+    "num_turns": 1
+  },
+  "invalid_reason": "contains_class",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a FastAPI endpoint function that validates the input and creates a user via an injected repository function.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "prompt",
+  "raw_response": "```python\nimport re\nfrom typing import Any, Awaitable, Callable, Optional\n\nfrom fastapi import APIRouter, Depends, HTTPException, status\nfrom pydantic import BaseModel, ConfigDict, Field, field_validator\n\nrouter = APIRouter()\n\nEMAIL_PATTERN = re.compile(r\"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$\")\n\nCreateUserFn = Callable[[dict[str, Any]], Awaitable[dict[str, Any]]]\n\n\nclass UserCreate(BaseModel):\n    model_config = ConfigDict(str_strip_whitespace=True)\n\n    username: str = Field(..., min_length=3, max_length=50, pattern=r\"^[A-Za-z0-9_.-]+$\")\n    email: str = Field(..., max_length=254)\n    password: str = Field(..., min_length=8, max_length=128)\n    full_name: Optional[str] = Field(default=None, max_length=100)\n\n    @field_validator(\"email\")\n    @classmethod\n    def validate_email(cls, value: str) -> str:\n        if not EMAIL_PATTERN.match(value):\n            raise ValueError(\"Invalid email address\")\n        return value.lower()\n\n\nclass UserOut(BaseModel):\n    id: int\n    username: str\n    email: str\n    full_name: Optional[str] = None\n\n\ndef get_create_user_fn() -> CreateUserFn:\n    \"\"\"Dependency provider; override via app.dependency_overrides in\n    production wiring and tests to inject the real repository function.\"\"\"\n    raise NotImplementedError(\"create_user repository function not configured\")\n\n\n@router.post(\"/users\", response_model=UserOut, status_code=status.HTTP_201_CREATED)\nasync def create_user_endpoint(\n    payload: UserCreate,\n    create_user: CreateUserFn = Depends(get_create_user_fn),\n) -> UserOut:\n    if payload.password.lower() in {payload.username.lower(), payload.email}:\n        raise HTTPException(\n            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,\n            detail=\"Password must not match username or email\",\n        )\n\n    try:\n        created = await create_user(payload.model_dump())\n    except ValueError as exc:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))\n\n    return UserOut(**created)\n```",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 18,
+  "status": "ok",
+  "task": "fastapi_create_user",
+  "temperature": null,
+  "timestamp": "2026-11-02T06:59:51+00:00",
+  "valid": false
+}
