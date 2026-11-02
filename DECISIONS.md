@@ -396,3 +396,10 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 102. **Runs kept:** `runs/smoke` (2 samples per task and condition, the spec's
      smoke test) and `runs/main`. `pcat mine` reports per condition use
      `--min-occurrences 1` with trivial functions kept, no cache.
+103. **Supplementary similarity metrics (not in the spec):** exact shape equality
+     counts `x + n` vs `x + int(n)` as different shapes, so analysis also reports
+     the median pairwise similarity of shape texts
+     (`difflib.SequenceMatcher(autojunk=False).ratio()`) and the number of
+     near-shape groups: single-linkage clusters of samples with similarity
+     ≥ 0.90. The threshold is a judgment call, chosen before looking at
+     condition C; the spec's metrics stay the headline.
