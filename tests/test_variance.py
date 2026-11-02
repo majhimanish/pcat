@@ -271,3 +271,15 @@ def test_supplementary_classes_removed_metric():
         {"sample": 3, "status": "ok", "code": "def f():\n    class A:\n        pass\n    return A\n"}
     )
     assert "classes_removed" not in nested
+
+
+def test_similarity_metrics():
+    base = "def f0(v0):\n    return v0 + 0\n"
+    near = "def f0(v0):\n    return int(v0) + 0\n"
+    far = "import os\n\ndef f0():\n    for v0 in os.listdir(''):\n        print(v0, v0, v0)\n"
+    assert variance.similarity_metrics([base, base]) == {"median_similarity": 1.0, "near_shape_groups": 1}
+    m = variance.similarity_metrics([base, near, far])
+    assert m["near_shape_groups"] == 2  # base and near link, far stays alone
+    assert 0 < m["median_similarity"] < 1
+    assert variance.similarity_metrics([base]) == {"median_similarity": 1.0, "near_shape_groups": 1}
+    assert variance.similarity_metrics([]) == {"median_similarity": 0.0, "near_shape_groups": 0}

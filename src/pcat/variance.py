@@ -10,6 +10,8 @@ here by a separate, experiment-only normalization step (`normalize_snippet`).
 from __future__ import annotations
 
 import ast
+import difflib
+import itertools
 import json
 import math
 import os
@@ -420,6 +422,47 @@ def distribution_metrics(values: list[str]) -> dict:
     }
 
 
+NEAR_SHAPE_THRESHOLD = 0.9
+
+
+def similarity(a: str, b: str) -> float:
+    """difflib ratio of two shape texts (1.0 = identical)."""
+    return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
+
+
+def similarity_metrics(texts: list[str]) -> dict:
+    """Supplementary: how *different* distinct shapes are.
+
+    Exact shape equality counts a one-token difference as a new shape, so this
+    adds the median pairwise similarity and the number of near-shape groups
+    (single-linkage clusters of samples with similarity >= NEAR_SHAPE_THRESHOLD).
+    """
+    n = len(texts)
+    if n < 2:
+        return {"median_similarity": 1.0 if n else 0.0, "near_shape_groups": n}
+    parent = list(range(n))
+
+    def find(i: int) -> int:
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+
+    sims = []
+    for i, j in itertools.combinations(range(n), 2):
+        sim = 1.0 if texts[i] == texts[j] else similarity(texts[i], texts[j])
+        sims.append(sim)
+        if sim >= NEAR_SHAPE_THRESHOLD:
+            parent[find(i)] = find(j)
+    sims.sort()
+    mid = len(sims) // 2
+    median = sims[mid] if len(sims) % 2 else (sims[mid - 1] + sims[mid]) / 2
+    return {
+        "median_similarity": round(median, 3),
+        "near_shape_groups": len({find(i) for i in range(n)}),
+    }
+
+
 def _histogram(values) -> dict:
     return {str(k): v for k, v in sorted(Counter(values).items(), key=lambda kv: str(kv[0]))}
 
@@ -460,6 +503,7 @@ def analyze_sample(record: dict) -> dict:
                 {
                     "exact_fingerprint": info.exact_fingerprint,
                     "shape_fingerprint": info.shape_fingerprint,
+                    "shape_text": shape.shape_text_from_canonical(info.canonical_text),
                     "imports": list(info.imports),
                     "third_party": list(info.third_party),
                     "functions": info.functions,
@@ -521,6 +565,7 @@ def summarize(rows: list[dict]) -> dict:
         "function_counts": _histogram(r["functions"] for r in valid),
         "entry_param_counts": _histogram(r["entry_params"] for r in valid),
         "with_module_statements": sum(1 for r in valid if r["module_statements"]),
+        **similarity_metrics([r["shape_text"] for r in valid]),
         "supplementary_classes_removed": _classes_removed_summary(rows),
     }
 
