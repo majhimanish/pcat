@@ -763,3 +763,26 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      `_order_by_clauses`; the replay showed only sample 12 does (sample 17 adds a
      `tiebreaker` parameter). A dated erratum was added to
      `docs/benchmarks/v3-mcp.md`; no v3 data changed.
+
+## v4.1 — human approval and linter fixes (`docs/specs/v4.1-human-approval.md`)
+
+167. **Approval hash** = first 8 hex characters of the function's exact
+     fingerprint as the miner computes it (the function canonicalized on its own,
+     current rules = v1.1/v2, decorators dropped). So comments (markers,
+     approvals), docstrings, formatting and names never change it, but any code
+     change in the function does. Helpers and module constants are not part of
+     it: changing `RETRY_STATUSES` does not invalidate an approval on the
+     function. Hashes compare case-insensitively (stored lower-case).
+168. **Stale approvals** approve nothing and are warnings: no hash (v4 format;
+     the message prints the line to write with the current hash), a different
+     hash, or (as in v4) a code that no longer occurs.
+169. **`check_code` treats approvals as proposals.** In the agent's context
+     nothing has been reviewed, so a matching approval is `proposed`
+     (`approved: false`), excluded from `unapproved_high`, counted in
+     `awaiting_human_confirmation`; `next_step` tells the agent to say a human
+     must confirm it. Each analysis has `hash` and an `approval_template`.
+170. **Deliberately changed v4 tests:** `test_lint.py` (valid approval, stale,
+     GitHub format) now write approvals with the hash and expect the state in the
+     output (`approved (confirmed)`); `test_serving.py` expects a code approval
+     to be `proposed`, and the instructions to show `#<hash>` and to say a human
+     must confirm.

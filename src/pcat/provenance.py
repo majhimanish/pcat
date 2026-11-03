@@ -27,7 +27,9 @@ INFERENCE_THRESHOLD = 0.56  # midpoint of the best range: 199/200 derived, 1/187
 
 MARKER_RE = re.compile(r"^#\s*pcat\s*:\s*(?P<id>\S+?)(?:@v(?P<version>\d+))?\s*$")
 ALLOW_RE = re.compile(r"^#\s*pcat-allow\s*:\s*(?P<rest>.*)$")
-_ALLOW_BODY_RE = re.compile(r"^(?P<code>PC\d{3})\s*(?:--\s*(?P<reason>.*))?$")
+_ALLOW_BODY_RE = re.compile(
+    r"^(?P<code>PC\d{3})(?:\s+#(?P<hash>[0-9a-fA-F]{8}))?\s*(?:--\s*(?P<reason>.*))?$")
+HASH_LENGTH = 8
 _ID_RE = re.compile(r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$")
 MIN_REASON_LENGTH = 10
 
@@ -49,6 +51,23 @@ class Approval:
     reason: str
     line: int
     problem: str | None = None  # why the approval is invalid, if it is
+    hash: str | None = None  # v4.1: first 8 hex of the approved function's fingerprint
+
+
+def function_hash(node: ast.FunctionDef) -> str | None:
+    """First 8 hex characters of the function's canonical fingerprint (current rules).
+
+    The function is canonicalized on its own, like the miner does, so comments
+    (markers, approvals), docstrings, formatting and names never change it.
+    """
+    try:
+        return miner.mine_function(node)["exact_fingerprint"][:HASH_LENGTH]
+    except (PcatError, RecursionError):
+        return None
+
+
+def approval_line(code: str, hash_: str | None, reason: str = "<reason>") -> str:
+    return f"# pcat-allow: {code} #{hash_ or '????????'} -- {reason}"
 
 
 @dataclass
@@ -118,14 +137,15 @@ def parse_approval(rest: str, line: int) -> Approval:
     m = _ALLOW_BODY_RE.match(rest.strip())
     if not m:
         return Approval(None, "", line, "malformed approval: expected "
-                                        "'# pcat-allow: PC101 -- reason' (one code per line)")
+                                        "'# pcat-allow: PC101 #<hash> -- reason' (one code per line)")
+    code, hash_ = m.group("code"), (m.group("hash") or "").lower() or None
     reason = (m.group("reason") or "").strip()
     if not reason:
-        return Approval(m.group("code"), "", line, "approval has no reason (add '-- <reason>')")
+        return Approval(code, "", line, "approval has no reason (add '-- <reason>')", hash_)
     if len(reason) < MIN_REASON_LENGTH:
-        return Approval(m.group("code"), reason, line,
-                        f"approval reason is shorter than {MIN_REASON_LENGTH} characters")
-    return Approval(m.group("code"), reason, line)
+        return Approval(code, reason, line,
+                        f"approval reason is shorter than {MIN_REASON_LENGTH} characters", hash_)
+    return Approval(code, reason, line, None, hash_)
 
 
 def functions(source: str, tree: ast.Module | None = None) -> list[FunctionInfo]:

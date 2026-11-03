@@ -76,12 +76,23 @@ def approve(code: str, line: str) -> str:
                         f"{line}\n# pcat: http.get_with_retry.requests@v1\ndef fetch(")
 
 
+def fetch_hash(code: str) -> str:
+    """v4.1: the current hash of `fetch`, as approvals must carry it."""
+    import ast
+
+    from pcat import provenance
+
+    node = next(n for n in ast.parse(code).body if isinstance(n, ast.FunctionDef) and n.name == "fetch")
+    return provenance.function_hash(node)
+
+
 def test_valid_approval_passes_and_is_reported(tmp_path, http_code):
     reason = "this API only treats timeouts as transient; connection errors must fail fast"
-    path = write(tmp_path, approve(http_code.replace(*NARROW), f"# pcat-allow: PC100 -- {reason}"))
+    code = http_code.replace(*NARROW)
+    path = write(tmp_path, approve(code, f"# pcat-allow: PC100 #{fetch_hash(code)} -- {reason}"))
     out = run(str(path))
     assert out.exit_code == 0, out.output
-    assert f"[approved: {reason}]" in out.output
+    assert f"[approved (confirmed): {reason}]" in out.output  # v4.1: state shown; no base = confirmed
     dev = as_json(str(path))["findings"][0]["deviations"][0]
     assert dev["approved"] and dev["approval"] == reason and dev["code"] == "PC100"
 
@@ -98,7 +109,8 @@ def test_invalid_approvals_do_not_count(tmp_path, http_code, line, warning):
 
 
 def test_stale_approval_is_a_warning(tmp_path, http_code):
-    path = write(tmp_path, approve(http_code, "# pcat-allow: PC101 -- kept from an older version of this code"))
+    path = write(tmp_path, approve(http_code, f"# pcat-allow: PC101 #{fetch_hash(http_code)} -- "
+                                              "kept from an older version of this code"))
     out = run(str(path))
     assert out.exit_code == 0
     assert "warning: stale approval: PC101 no longer occurs in `fetch`" in out.output
@@ -128,13 +140,13 @@ def test_github_format(tmp_path, http_code):
     reason = "documented reason for the low change here"
     code = http_code.replace(*NARROW).replace("RETRY_STATUSES = (429, 500, 502, 503, 504)",
                                               "RETRY_STATUSES = (500, 502, 503, 504)")
-    path = write(tmp_path, approve(code, f"# pcat-allow: PC109 -- {reason}"))
+    path = write(tmp_path, approve(code, f"# pcat-allow: PC109 #{fetch_hash(code)} -- {reason}"))
     out = run(str(path), "--format", "github")
     lines = out.output.splitlines()
     assert out.exit_code == 1
     assert lines[0].startswith(f"::error file={path.as_posix().replace(':', '%3A')},line=")
     assert "title=PC100 guard violated (high) - http.get_with_retry.requests@v1::" in lines[0]
-    assert lines[1].startswith("::notice ") and f"(approved: {reason})" in lines[1]
+    assert lines[1].startswith("::notice ") and f"(approved, confirmed: {reason})" in lines[1]
 
 
 def test_github_escaping():

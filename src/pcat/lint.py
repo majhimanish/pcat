@@ -37,6 +37,8 @@ class Finding:
     stale_approvals: list[dict] = field(default_factory=list)
     diff: str = ""
     deprecated: str | None = None  # replaced_by when the marked pattern is deprecated
+    hash: str | None = None  # v4.1: the function's current hash, for approvals
+    approvals: list[dict] = field(default_factory=list)  # every approval with its state
 
     def failing(self, fail_on: str) -> list[dict]:
         if self.provenance != "marked" or fail_on == "never":
@@ -51,7 +53,8 @@ class Finding:
             "provenance": self.provenance, "pattern": self.pattern,
             "pattern_function": self.pattern_function, "similarity": self.similarity,
             "deviations": self.deviations, "stale_approvals": self.stale_approvals,
-            "diff": self.diff, "deprecated": self.deprecated,
+            "diff": self.diff, "deprecated": self.deprecated, "hash": self.hash,
+            "approvals": self.approvals,
         }
 
 
@@ -70,6 +73,15 @@ class Report:
     files: int
     fail_on: str
     include_inferred: bool
+    base_ref: str | None = None
+
+    @property
+    def approvals(self) -> list[dict]:
+        return [a for f in self.findings for a in f.approvals]
+
+    @property
+    def proposals(self) -> list[dict]:
+        return [a for a in self.approvals if a["state"] == "proposed"]
 
     @property
     def failed(self) -> bool:
@@ -85,7 +97,9 @@ class Report:
                 counts[d["severity"]] += 1
         return {
             "files": self.files, "fail_on": self.fail_on, "include_inferred": self.include_inferred,
-            "failed": self.failed,
+            "failed": self.failed, "base_ref": self.base_ref,
+            "approval_states": "confirmed/proposed relative to base_ref" if self.base_ref
+            else "no base ref: approvals treated as confirmed",
             "summary": {"functions": len(self.findings),
                         "marked": sum(f.provenance == "marked" for f in self.findings),
                         "inferred": sum(f.provenance == "inferred" for f in self.findings),
@@ -132,36 +146,70 @@ class Catalog:
 # --------------------------------------------------------------------------- #
 
 
-def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviation],
-                    path: str) -> tuple[list[dict], list[dict], list[Message]]:
-    """Deviations marked approved, stale approvals, and messages for invalid approvals."""
+def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviation], path: str, *,
+                    current_hash: str | None, base_keys: set[tuple] | None = None,
+                    confirmed_proposals: bool = False) -> tuple[list[dict], list[dict], list[Message], list[dict]]:
+    """Apply the `# pcat-allow` lines of one function (v4.1 states).
+
+    An approval is *stale* when it has no hash (v4 format) or its hash differs
+    from the function's current hash, or its code no longer occurs; stale ones
+    approve nothing. A current one is *confirmed* when `base_keys` is None (no
+    base ref) or the same (function, code, hash) existed at the base ref, else
+    *proposed*: it approves nothing unless `confirmed_proposals` (a human
+    confirmed the pull request). Returns (deviation dicts, stale approvals,
+    messages, every approval with its state).
+    """
     messages = []
-    valid: dict[str, provenance.Approval] = {}
+    current: dict[str, tuple[provenance.Approval, str]] = {}
+    records: list[dict] = []
+    stale: list[dict] = []
+    present = {d.code for d in devs}
     for a in info.approvals:
+        record = {"function": info.qualname, "path": path, "line": a.line, "code": a.code,
+                  "hash": a.hash, "current_hash": current_hash, "reason": a.reason}
         if a.problem:
             messages.append(Message(path, a.line, "warning", f"{a.problem}; it approves nothing"))
-        elif a.code not in deviation.SEVERITY:
+            records.append({**record, "state": "invalid"})
+            continue
+        if a.code not in deviation.SEVERITY:
             messages.append(Message(path, a.line, "warning", f"unknown deviation code {a.code}"))
-        else:
-            valid.setdefault(a.code, a)
+            records.append({**record, "state": "invalid"})
+            continue
+        why = None
+        if a.hash is None:
+            why = (f"stale approval: {a.code} in `{info.qualname}` has no code hash (v4 format); if the "
+                   f"current code is approved, write: {provenance.approval_line(a.code, current_hash, a.reason)}")
+        elif a.hash != current_hash:
+            why = (f"stale approval: {a.code} #{a.hash} in `{info.qualname}` was given for different code "
+                   f"(the function's hash is now #{current_hash}); it approves nothing until re-approved")
+        elif a.code not in present:
+            why = f"stale approval: {a.code} no longer occurs in `{info.qualname}`"
+        if why:
+            messages.append(Message(path, a.line, "warning", why))
+            item = {**record, "state": "stale", "why": why}
+            records.append(item)
+            stale.append(item)
+            continue
+        state = "confirmed" if base_keys is None or (info.qualname, a.code, a.hash) in base_keys else "proposed"
+        records.append({**record, "state": state})
+        if a.code not in current or state == "confirmed":
+            current[a.code] = (a, state)
     out = []
     for d in devs:
         item = d.to_dict()
-        approval = valid.get(d.code)
-        item["approved"] = approval is not None
-        item["approval"] = approval.reason if approval else None
+        found = current.get(d.code)
+        state = found[1] if found else None
+        item["approved"] = state == "confirmed" or (state == "proposed" and confirmed_proposals)
+        item["approval"] = found[0].reason if found else None
+        item["approval_state"] = state
+        item["hash"] = current_hash
         out.append(item)
-    present = {d.code for d in devs}
-    stale = [{"code": a.code, "line": a.line, "reason": a.reason}
-             for code, a in sorted(valid.items()) if code not in present]
-    for s in stale:
-        messages.append(Message(path, s["line"], "warning",
-                                f"stale approval: {s['code']} no longer occurs in `{info.qualname}`"))
-    return out, stale, messages
+    return out, stale, messages, records
 
 
 def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool,
-                lines: set[int] | None = None) -> tuple[list[Finding], list[Message]]:
+                lines: set[int] | None = None, base_keys: set[tuple] | None = None,
+                confirmed_proposals: bool = False) -> tuple[list[Finding], list[Message]]:
     """Findings for one file's source. `lines`: only functions touching these lines."""
     try:
         tree = ast.parse(source)
@@ -199,7 +247,9 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             messages.append(Message(path, info.node.lineno, "warning",
                                     f"cannot analyze `{info.qualname}`: {exc}"))
             continue
-        devs, stale, approval_messages = apply_approvals(info, analysis.deviations, path)
+        devs, stale, approval_messages, records = apply_approvals(
+            info, analysis.deviations, path, current_hash=provenance.function_hash(info.node),
+            base_keys=base_keys, confirmed_proposals=confirmed_proposals)
         messages.extend(approval_messages)
         meta = pattern.meta
         findings.append(Finding(
@@ -207,6 +257,7 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             pattern=meta.key, pattern_function=analysis.pattern_function, similarity=similarity,
             deviations=devs, stale_approvals=stale, diff=analysis.diff,
             deprecated=meta.replaced_by if meta.status == "deprecated" else None,
+            hash=provenance.function_hash(info.node), approvals=records,
         ))
         if meta.status == "deprecated":
             messages.append(Message(path, info.node.lineno, "warning",
@@ -278,7 +329,7 @@ def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on:
         messages.extend(msgs)
     findings.sort(key=lambda x: (x.path, x.line, x.function))
     messages.sort(key=lambda m: (m.path, m.line, m.level, m.text))
-    return Report(findings, messages, len(files), fail_on, include_inferred)
+    return Report(findings, messages, len(files), fail_on, include_inferred, changed_since)
 
 
 # --------------------------------------------------------------------------- #
@@ -295,12 +346,25 @@ def format_text(report: Report, show_diff: bool = True) -> str:
             out.append("  no deviations")
         failing = {id(d) for d in f.failing(report.fail_on)}
         for d in f.deviations:
-            tag = " [approved: " + d["approval"] + "]" if d["approved"] else (" [fails]" if id(d) in failing else "")
-            out.append(f"  {f.path}:{d['line']}: {d['code']} {d['severity']}: {d['message']}{tag}")
+            if d["approved"]:
+                tag = f" [approved ({d['approval_state']}): {d['approval']}]"
+            elif d.get("approval_state") == "proposed":
+                tag = f" [proposed approval, needs confirmation: {d['approval']}]" + (
+                    " [fails]" if id(d) in failing else "")
+            else:
+                tag = " [fails]" if id(d) in failing else ""
+            out.append(f"  {f.path}:{d['line']}: {d['code']} {d['severity']} #{d.get('hash') or '????????'}: "
+                       f"{d['message']}{tag}")
         if show_diff and f.diff and any(not d["approved"] and d["severity"] != "low" for d in f.deviations):
             out.extend("    " + line for line in f.diff.rstrip("\n").splitlines())
     for m in report.messages:
         out.append(f"{m.path}:{m.line}: {m.level}: {m.text}")
+    if report.approvals and report.base_ref is None:
+        out.append("note: no base ref: approvals treated as confirmed (use --changed-since to tell "
+                   "confirmed approvals from proposed ones)")
+    elif report.proposals:
+        out.append(f"note: {len(report.proposals)} proposed approval(s) since {report.base_ref} approve "
+                   "nothing until confirmed in the pull request (see `pcat approvals check`)")
     s = report.to_dict()["summary"]
     dev = s["deviations"]
     out.append(f"{s['functions']} function(s) checked ({s['marked']} marked, {s['inferred']} inferred) in "
@@ -324,10 +388,13 @@ def format_github(report: Report) -> str:
         for d in f.deviations:
             if d["approved"]:
                 level = "notice"
-                text = f"{d['message']} (approved: {d['approval']})"
+                text = f"{d['message']} (approved, {d['approval_state']}: {d['approval']})"
             else:
                 level = "error" if id(d) in failing else "warning"
-                text = d["message"] + ("" if f.provenance == "marked" else " (inferred provenance; advisory)")
+                text = d["message"] + ("" if f.provenance != "inferred" else " (inferred provenance; advisory)")
+                if d.get("approval_state") == "proposed":
+                    text += f" (proposed approval awaiting confirmation: {d['approval']})"
+            text += f" [hash #{d.get('hash') or '????????'}]"
             title = f"{d['code']} {d['title']} ({d['severity']}) - {f.pattern}"
             out.append(f"::{level} file={_gh_escape(f.path, True)},line={d['line']},"
                        f"title={_gh_escape(title, True)}::{_gh_escape(text)}")

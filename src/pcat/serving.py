@@ -58,8 +58,10 @@ class CatalogService:
             "nothing fits, write the code normally. After writing code from a pattern, call "
             "check_code with your final code and the pattern id: it lists deviations from the "
             "reviewed pattern by severity. Fix every high-severity deviation unless the request "
-            "explicitly requires it; in that case add a '# pcat-allow: <code> -- <reason>' line "
-            "above the function's marker giving the reason."
+            "explicitly requires it; in that case you may propose an approval: add a "
+            "'# pcat-allow: <code> #<hash> -- <reason>' line above the function's marker, using "
+            "the hash check_code shows. A proposal approves nothing until a human confirms it in "
+            "the pull request, so say in your reply that a human needs to confirm it."
         )
 
     # ------------------------------------------------------------------ #
@@ -235,10 +237,14 @@ class CatalogService:
         analyses = []
         for info, pat, function, source in sorted(targets, key=lambda t: (t[0].node.lineno, t[0].qualname)):
             a = deviation.analyze_function(tree, info.node, pat, function)
-            devs, stale, _ = lint.apply_approvals(info, a.deviations, "<code>")
+            current_hash = provenance.function_hash(info.node)
+            # Agent context: an approval written in the code is only a proposal (base_keys empty).
+            devs, stale, _, _ = lint.apply_approvals(info, a.deviations, "<code>",
+                                                     current_hash=current_hash, base_keys=set())
             analyses.append({
                 "function": info.qualname, "line": info.node.lineno, "pattern": pat.meta.key,
-                "pattern_function": a.pattern_function, "provenance": source,
+                "pattern_function": a.pattern_function, "provenance": source, "hash": current_hash,
+                "approval_template": provenance.approval_line("<code>", current_hash),
                 "deviations": devs, "stale_approvals": stale,
                 "invalid_approvals": [{"line": x.line, "problem": x.problem} for x in info.approvals if x.problem],
                 "diff": a.diff,
@@ -252,8 +258,10 @@ class CatalogService:
                 "pattern": f"{inf.pattern_id}@v{inf.version}", "pattern_function": inf.function,
                 "similarity": inf.similarity, "likely_derived": inf.derived}
         high = sum(1 for a in analyses for d in a["deviations"]
-                   if d["severity"] == "high" and not d["approved"])
-        out: dict[str, Any] = {"deviations": analyses, "unapproved_high": high}
+                   if d["severity"] == "high" and not d["approved"] and d["approval_state"] != "proposed")
+        proposed = sum(1 for a in analyses for d in a["deviations"] if d["approval_state"] == "proposed")
+        out: dict[str, Any] = {"deviations": analyses, "unapproved_high": high,
+                               "awaiting_human_confirmation": proposed}
         if problems:
             out["problems"] = problems
         if not analyses:
@@ -262,8 +270,13 @@ class CatalogService:
         elif high:
             out["next_step"] = (
                 "Fix every high-severity deviation unless the request explicitly requires it; for "
-                "one the request requires, add '# pcat-allow: <code> -- <reason>' directly above the "
-                "function's marker.")
+                "one the request requires, propose an approval by adding '# pcat-allow: <code> "
+                "#<hash> -- <reason>' (the function's hash is shown with each deviation) directly "
+                "above the function's marker, and tell the user a human must confirm it.")
+        elif proposed:
+            out["next_step"] = (
+                "Proposed approvals are not approvals until a human confirms them in the pull "
+                "request: say so in your reply.")
         else:
             out["next_step"] = "No unapproved high-severity deviations."
         return out

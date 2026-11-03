@@ -148,10 +148,13 @@ def test_check_code_with_a_marker_and_an_approval(service):
     result = service.check_code(code)
     [analysis] = result["deviations"]
     assert analysis["provenance"] == "marker" and analysis["pattern"] == "http.get_with_retry.requests@v1"
-    approved = code.replace("# pcat: http", "# pcat-allow: PC100 -- the request says connection errors must fail fast\n# pcat: http")
-    again = service.check_code(approved)
+    line = f"# pcat-allow: PC100 #{analysis['hash']} -- the request says connection errors must fail fast"
+    again = service.check_code(code.replace("# pcat: http", line + "\n# pcat: http"))
     dev = again["deviations"][0]["deviations"][0]
-    assert dev["approved"] and again["unapproved_high"] == 0
+    # v4.1: an approval written in code is a proposal for a human to confirm, not an approval
+    assert not dev["approved"] and dev["approval_state"] == "proposed" and dev["hash"] == analysis["hash"]
+    assert again["unapproved_high"] == 0 and again["awaiting_human_confirmation"] == 1
+    assert "human" in again["next_step"]
     markers = {f["name"]: f["marker"] for f in again["functions"]}
     assert markers == {"retry_after_seconds": None, "fetch": "http.get_with_retry.requests@v1"}
 
@@ -175,4 +178,5 @@ def test_instructions_ask_for_check_code_with_the_pattern_id(service):
     text = service.instructions()
     assert "call check_code with your final code and the pattern id" in text
     assert "Fix every high-severity deviation unless the request explicitly requires it" in text
-    assert "# pcat-allow: <code> -- <reason>" in text
+    assert "# pcat-allow: <code> #<hash> -- <reason>" in text  # v4.1: approvals carry the hash
+    assert "a human needs to confirm it" in text
