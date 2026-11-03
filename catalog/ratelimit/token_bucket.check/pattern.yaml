@@ -1,0 +1,20 @@
+id: ratelimit.token_bucket.check
+version: 1
+title: Token-bucket rate limit check with retry-after
+summary: Refill a per-key token bucket kept in a dict for the elapsed time, take the request's cost if available, and return (allowed, seconds until it would be allowed).
+category: ratelimit
+variant_of: ratelimit.token_bucket
+behavior:
+  returns: allowed_and_retry_after_seconds
+  state: dict_key_to_tokens_and_last
+  new_key: starts_full
+  clock: monotonic_injectable_now
+  clock_going_backwards: no_refill
+  cost_over_capacity: raises_value_error
+  concurrency: single_process_not_thread_safe
+entry_point: check_rate_limit
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: db071827f76c8404571e5048036b7cac39c7d822bc2a3dd23944d54b941f3015
