@@ -1,0 +1,21 @@
+id: importers.users_csv.parse
+version: 1
+title: Parse and validate a users CSV with per-row errors
+summary: Read users (name, email, optional age) from CSV text or a text stream and return (valid users, errors), each error being {"row", "errors"}; no regex, values never echoed, row count capped.
+category: importers
+variant_of: importers.users_csv
+behavior:
+  input: str_or_text_stream
+  required_columns: name+email
+  returns: valid_rows_and_row_errors
+  error_record: row_line_number_and_messages
+  email_check: structural_no_regex
+  duplicate_emails: rejected_case_insensitive
+  values_in_errors: never
+  max_rows_default: 10000
+entry_point: import_users
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 6309caa9bb3d5838ac61d407ffc8d31d594b76f5bf0c815845bccc25621bfec7
