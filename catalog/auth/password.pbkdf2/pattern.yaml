@@ -19,3 +19,26 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 6aa1d0682d282360563b4669d7adec56e4f1f916617d70096a3b8c76ee9686d7
+exports:
+- verify_password
+- needs_rehash
+keywords:
+- password
+- hash
+- hashing
+- verify
+- login
+- credentials
+- pbkdf2
+- salt
+- signup
+- store password
+- rehash
+- authentication
+use_when: Store user passwords as salted PBKDF2 hashes at sign-up, check them at login in constant time,
+  and upgrade old hashes after a successful login.
+usage: |-
+  stored = hash_password(plain_password)          # at sign-up
+  if verify_password(attempt, stored):             # at login
+      if needs_rehash(stored):
+          stored = hash_password(attempt)

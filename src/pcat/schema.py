@@ -42,6 +42,11 @@ class PatternMeta(BaseModel):
     # Third-party distributions the pattern imports, as pip requirement strings
     # (e.g. "pyjwt>=2.8,<3"). Metadata only: never part of the fingerprint.
     requires: list[str] = Field(default_factory=list)
+    # v3 search/serving metadata. Optional; never part of the fingerprint.
+    exports: list[str] = Field(default_factory=list)  # public functions besides entry_point
+    keywords: list[str] = Field(default_factory=list)  # 5-15 search terms when given
+    use_when: Optional[str] = Field(default=None, min_length=1)  # situations the pattern is for
+    usage: Optional[str] = Field(default=None, min_length=1)  # short calling example for agents
 
     @field_validator("entry_point")
     @classmethod
@@ -61,6 +66,27 @@ class PatternMeta(BaseModel):
             raise ValueError("requires lists a distribution more than once")
         return value
 
+    @field_validator("exports")
+    @classmethod
+    def _exports_are_identifiers(cls, value: list[str]) -> list[str]:
+        for name in value:
+            if not name.isidentifier() or keyword.iskeyword(name):
+                raise ValueError(f"{name!r} is not a valid Python function name")
+        if len(value) != len(set(value)):
+            raise ValueError("exports lists a function more than once")
+        return value
+
+    @field_validator("keywords")
+    @classmethod
+    def _keywords_count(cls, value: list[str]) -> list[str]:
+        if value and not 5 <= len(value) <= 15:
+            raise ValueError(f"give 5-15 keywords, got {len(value)}")
+        if any(not k.strip() for k in value):
+            raise ValueError("keywords must not be empty")
+        if len({k.strip().lower() for k in value}) != len(value):
+            raise ValueError("keywords must be unique")
+        return value
+
     @model_validator(mode="after")
     def _cross_field_rules(self) -> "PatternMeta":
         if self.id.split(".")[0] != self.category:
@@ -71,6 +97,8 @@ class PatternMeta(BaseModel):
             raise ValueError("deprecated patterns must set replaced_by")
         if self.status == "active" and self.replaced_by:
             raise ValueError("active patterns must not set replaced_by")
+        if self.entry_point in self.exports:
+            raise ValueError("exports must not repeat the entry_point")
         return self
 
     @property

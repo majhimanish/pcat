@@ -17,3 +17,19 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: ba244d247458e8dfb0e5c79174e368ffb70b83553a5487743925d398b9c3c0de
+keywords:
+- retry
+- exponential backoff
+- transient error
+- flaky
+- attempts
+- sleep
+- callable
+- resilience
+- reraise
+- delay cap
+use_when: Call any zero-argument function again after transient exceptions, waiting base_delay * factor**n
+  (capped) between attempts, and re-raise the last error when attempts run out.
+usage: |-
+  result = retry_with_exponential_backoff(lambda: client.fetch(job_id),
+                                          max_attempts=5, retry_on=(ConnectionError,))

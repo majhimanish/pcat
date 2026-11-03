@@ -15,3 +15,20 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 68a881fa849c71ad539062fde96eb18497ec0f064acc007636aded7f84c6e441
+keywords:
+- group by
+- grouping
+- bucket
+- partition
+- categorize
+- key function
+- dict of lists
+- aggregate
+- collections
+- unsorted
+use_when: Split an iterable into lists keyed by a computed key, keeping keys in first-seen order and items
+  in input order, without sorting first (unlike itertools.groupby).
+usage: |-
+  groups = group_by(orders, key=lambda order: order.customer_id)
+  for customer_id, customer_orders in groups.items():
+      ...

@@ -15,3 +15,15 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: cf06bfe1351b06a8bf0def374666a64d11a3439a90dc5cc99d3e53adc8458576
+keywords:
+- sort
+- merge sort
+- stable sort
+- divide and conquer
+- ordering
+- ascending
+- recursive
+- new list
+use_when: Return a new, stably sorted list (ascending) without modifying the input, e.g. when stability
+  must be explicit or the sort is being taught or audited.
+usage: ordered = merge_sort(scores)

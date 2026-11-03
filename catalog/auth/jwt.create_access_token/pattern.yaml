@@ -19,3 +19,22 @@ keep_annotations: true
 requires:
   - pyjwt>=2.8,<3
 fingerprint: 85b3a9a425177cf2ee9cff9c64070a6d50455b44095644ae0b98d63d1964a084
+keywords:
+- jwt
+- json web token
+- access token
+- bearer token
+- sign
+- hs256
+- expiry
+- claims
+- audience
+- issuer
+- authentication
+- login
+- pyjwt
+use_when: Issue a short-lived signed access token for an authenticated user that other services verify
+  with the shared secret, audience and issuer.
+usage: |-
+  token = create_access_token(user.id, secret=settings["jwt_secret"],
+                              issuer="auth.example.com", audience="orders-api")

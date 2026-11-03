@@ -19,3 +19,20 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 6309caa9bb3d5838ac61d407ffc8d31d594b76f5bf0c815845bccc25621bfec7
+keywords:
+- csv
+- import
+- users
+- upload
+- parse
+- validate rows
+- spreadsheet
+- email
+- bulk import
+- row errors
+use_when: Import users from an uploaded or local CSV (name, email, optional age), keeping valid rows and
+  reporting every problem per row with its line number.
+usage: |-
+  valid_users, errors = import_users(uploaded_file.read().decode("utf-8"))
+  for problem in errors:
+      print(problem["row"], problem["errors"])

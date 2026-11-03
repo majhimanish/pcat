@@ -15,3 +15,16 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: f19b87a5616bf85332fe97ca1057a3c00bb7fe3f3a31200ffe3f7437505ddd7c
+keywords:
+- binary search
+- bisect
+- sorted list
+- find index
+- lookup
+- logarithmic
+- recursive
+- recursion
+- sequence
+use_when: Find the index of a value in an ascending sorted sequence in O(log n) using recursion over index
+  bounds; returns -1 when the value is absent.
+usage: index = binary_search(sorted_ids, wanted_id)

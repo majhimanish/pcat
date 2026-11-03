@@ -17,3 +17,17 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 3a2864bbf5feb3ef52129e3db1e8a4f1ec123d6ce0e99c9ae5cebd7c1f83a5ec
+keywords:
+- slug
+- slugify
+- url
+- permalink
+- ascii
+- lowercase
+- hyphen
+- title
+- transliterate
+- unicode
+use_when: Turn a title or name into a lowercase ASCII slug for URLs, file names or identifiers, removing
+  accents and joining words with a separator.
+usage: 'slug = slugify("Crème Brûlée Recipes")  # "creme-brulee-recipes"'

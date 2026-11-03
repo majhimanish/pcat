@@ -18,3 +18,20 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: db071827f76c8404571e5048036b7cac39c7d822bc2a3dd23944d54b941f3015
+keywords:
+- rate limit
+- rate limiting
+- throttle
+- token bucket
+- quota
+- requests per second
+- burst
+- retry-after
+- '429'
+- limiter
+use_when: Decide per client key whether a request is allowed under a rate limit, and how long to wait
+  if not (for a 429 Retry-After), with state in a dict.
+usage: |-
+  allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=20, refill_rate=5.0)
+  if not allowed:
+      return 429, {"Retry-After": str(math.ceil(retry_after))}

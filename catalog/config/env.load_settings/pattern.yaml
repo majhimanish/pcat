@@ -18,3 +18,22 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 714b9e2489e151c5464aad756e97eb8ca007edd963b12e82bd940ccc9d15879f
+exports:
+- parse_bool
+keywords:
+- environment variables
+- env
+- config
+- configuration
+- settings
+- os.environ
+- defaults
+- validate
+- startup
+- parse
+- secrets
+use_when: Load an application's settings from environment variables at startup with defaults, type parsing
+  and required values, reporting every invalid value at once.
+usage: |-
+  settings = load_settings({"DATABASE_URL": (str, ...), "PORT": (int, 8000),
+                            "DEBUG": (parse_bool, False)}, secret_names=("DATABASE_URL",))

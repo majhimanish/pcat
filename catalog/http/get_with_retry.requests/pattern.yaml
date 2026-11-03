@@ -21,3 +21,23 @@ keep_annotations: true
 requires:
   - requests>=2.31,<3
 fingerprint: c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0
+keywords:
+- http
+- get
+- url
+- request
+- retry
+- backoff
+- download
+- fetch
+- requests
+- retry-after
+- timeout
+- flaky api
+- '429'
+- '503'
+use_when: 'Fetch a URL over HTTP when the server or network can fail transiently: retry connection errors,
+  timeouts, 429 and 5xx with backoff, but fail fast on other 4xx.'
+usage: |-
+  response = get_with_retry("https://api.example.com/items", session=http_session, attempts=4)
+  items = response.json()

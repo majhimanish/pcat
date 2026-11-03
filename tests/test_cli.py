@@ -168,6 +168,8 @@ def test_index_format(root):
     seed = next(e for e in entries if e["id"] == SEED_IDS[0])
     assert set(seed) == {
         "id", "version", "title", "category", "variant_of", "behavior", "status", "fingerprint", "path",
+        # v3: search/serving metadata is in every entry (empty when unset)
+        "requires", "exports", "keywords", "use_when", "usage",
     }
     assert seed["path"] == "catalog/collections/group_by.dict_of_lists"
 

@@ -15,10 +15,11 @@ from pcat import catalog as cat
 ITER = "search.binary_search.iterative"
 
 
-def test_requires_defaults_to_empty_and_is_absent_from_index(root):
+def test_requires_defaults_to_empty_and_is_empty_in_index(root):
+    # v3 made every metadata key present in every index entry (was: absent when empty).
     entries = json.loads((root / "catalog" / "index.json").read_text())["patterns"]
     seeds = [e for e in entries if e["id"] == ITER]
-    assert seeds and "requires" not in seeds[0]
+    assert seeds and seeds[0]["requires"] == []
     assert cat.get_one(root, ITER).meta.requires == []
 
 

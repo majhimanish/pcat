@@ -39,6 +39,12 @@ INDEX_FIELDS = (
     "status",
     "fingerprint",
     "path",
+    # v3 metadata (always present; empty when not set)
+    "requires",
+    "exports",
+    "keywords",
+    "use_when",
+    "usage",
 )
 
 
@@ -198,8 +204,7 @@ def index_entries(patterns: list[Pattern]) -> list[dict]:
         meta = p.meta.model_dump()
         entry = {k: meta[k] for k in INDEX_FIELDS if k != "path"}
         entry["path"] = p.rel
-        if meta["requires"]:  # only present when a pattern needs third-party packages
-            entry["requires"] = sorted(meta["requires"], key=str.lower)
+        entry["requires"] = sorted(meta["requires"], key=str.lower)
         entries.append(entry)
     return sorted(entries, key=lambda e: (e["id"], e["version"]))
 
@@ -407,6 +412,16 @@ def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) 
             out.append(Problem("2", label, f"{IMPL_FILE}: {exc}"))
             functions = None
         if functions is not None:
+            missing_exports = [e for e in meta.exports if e not in functions]
+            if missing_exports:
+                out.append(
+                    Problem(
+                        "3",
+                        label,
+                        f"exports not found in {IMPL_FILE}: {', '.join(missing_exports)} "
+                        f"(functions: {', '.join(functions)})",
+                    )
+                )
             if meta.entry_point not in functions:
                 out.append(
                     Problem(
