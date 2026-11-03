@@ -11,6 +11,7 @@
         "secret": "parameter_min_32_bytes"
       },
       "category": "auth",
+      "entry_point": "create_access_token",
       "exports": [],
       "fingerprint": "85b3a9a425177cf2ee9cff9c64070a6d50455b44095644ae0b98d63d1964a084",
       "id": "auth.jwt.create_access_token",
@@ -34,6 +35,7 @@
         "pyjwt>=2.8,<3"
       ],
       "status": "active",
+      "summary": "Return an HS256-signed JWT for a user id with sub, iss, aud, iat, nbf, exp and a random jti; the secret, issuer, audience, lifetime and clock are parameters.",
       "title": "Create a signed JWT access token (registered claims)",
       "usage": "token = create_access_token(user.id, secret=settings[\"jwt_secret\"],\n                            issuer=\"auth.example.com\", audience=\"orders-api\")",
       "use_when": "Issue a short-lived signed access token for an authenticated user that other services verify with the shared secret, audience and issuer.",
@@ -52,6 +54,7 @@
         "salt_bytes": 16
       },
       "category": "auth",
+      "entry_point": "hash_password",
       "exports": [
         "verify_password",
         "needs_rehash"
@@ -75,6 +78,7 @@
       "path": "catalog/auth/password.pbkdf2",
       "requires": [],
       "status": "active",
+      "summary": "hash_password stores a salted PBKDF2-HMAC-SHA256 hash with its iteration count (at least 600,000); verify_password checks it in constant time; needs_rehash says when to upgrade an old hash.",
       "title": "Hash and verify passwords (PBKDF2-HMAC-SHA256)",
       "usage": "stored = hash_password(plain_password)          # at sign-up\nif verify_password(attempt, stored):             # at login\n    if needs_rehash(stored):\n        stored = hash_password(attempt)",
       "use_when": "Store user passwords as salted PBKDF2 hashes at sign-up, check them at login in constant time, and upgrade old hashes after a successful login.",
@@ -89,6 +93,7 @@
         "result": "dict_of_lists"
       },
       "category": "collections",
+      "entry_point": "group_by",
       "exports": [],
       "fingerprint": "68a881fa849c71ad539062fde96eb18497ec0f064acc007636aded7f84c6e441",
       "id": "collections.group_by.dict_of_lists",
@@ -107,6 +112,7 @@
       "path": "catalog/collections/group_by.dict_of_lists",
       "requires": [],
       "status": "active",
+      "summary": "Group items into a dict mapping key(item) to the list of items with that key.",
       "title": "Group by key (dict of lists)",
       "usage": "groups = group_by(orders, key=lambda order: order.customer_id)\nfor customer_id, customer_orders in groups.items():\n    ...",
       "use_when": "Split an iterable into lists keyed by a computed key, keeping keys in first-seen order and items in input order, without sorting first (unlike itertools.groupby).",
@@ -124,6 +130,7 @@
         "style": "caller_supplied_schema"
       },
       "category": "config",
+      "entry_point": "load_settings",
       "exports": [
         "parse_bool"
       ],
@@ -145,6 +152,7 @@
       "path": "catalog/config/env.load_settings",
       "requires": [],
       "status": "active",
+      "summary": "Parse environment variables described by a caller-supplied schema of (parser, default) pairs; defaults for missing values, ... marks required ones, every problem is reported at once and secret values are never echoed.",
       "title": "Load settings from environment variables with a schema",
       "usage": "settings = load_settings({\"DATABASE_URL\": (str, ...), \"PORT\": (int, 8000),\n                          \"DEBUG\": (parse_bool, False)}, secret_names=(\"DATABASE_URL\",))",
       "use_when": "Load an application's settings from environment variables at startup with defaults, type parsing and required values, reporting every invalid value at once.",
@@ -162,6 +170,7 @@
         "returns": "dict_items_total_page_page_size_pages"
       },
       "category": "db",
+      "entry_point": "paginate",
       "exports": [],
       "fingerprint": "109903bf01b7b00f9b60a9644e9b3fbb8593af9b6faf72af5f5086101496233f",
       "id": "db.pagination.select_page",
@@ -184,6 +193,7 @@
         "sqlalchemy>=2.0,<3"
       ],
       "status": "active",
+      "summary": "Return one 1-based page of a SQLAlchemy 2.0 select as {\"items\", \"total\", \"page\", \"page_size\", \"pages\"}, counting over a subquery; page size is capped at 100.",
       "title": "Paginate a SQLAlchemy 2.0 select (page dict)",
       "usage": "page = paginate(session, select(User).order_by(User.id), page=2, page_size=20)\nreturn {\"items\": [u.to_dict() for u in page[\"items\"]], \"total\": page[\"total\"], \"pages\": page[\"pages\"]}",
       "use_when": "Return one page of a SQLAlchemy 2.0 select together with the total row count and page metadata for a paginated API response.",
@@ -202,6 +212,7 @@
         "timeout_always_set": true
       },
       "category": "http",
+      "entry_point": "get_with_retry",
       "exports": [],
       "fingerprint": "c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0",
       "id": "http.get_with_retry.requests",
@@ -226,6 +237,7 @@
         "requests>=2.31,<3"
       ],
       "status": "active",
+      "summary": "GET with requests, retrying connection errors, timeouts, 429 and 5xx with capped exponential backoff, full jitter and numeric Retry-After; session, sleep and randomness are injectable.",
       "title": "GET a URL with retries and exponential backoff (requests)",
       "usage": "response = get_with_retry(\"https://api.example.com/items\", session=http_session, attempts=4)\nitems = response.json()",
       "use_when": "Fetch a URL over HTTP when the server or network can fail transiently: retry connection errors, timeouts, 429 and 5xx with backoff, but fail fast on other 4xx.",
@@ -244,6 +256,7 @@
         "values_in_errors": "never"
       },
       "category": "importers",
+      "entry_point": "import_users",
       "exports": [],
       "fingerprint": "6309caa9bb3d5838ac61d407ffc8d31d594b76f5bf0c815845bccc25621bfec7",
       "id": "importers.users_csv.parse",
@@ -262,6 +275,7 @@
       "path": "catalog/importers/users_csv.parse",
       "requires": [],
       "status": "active",
+      "summary": "Read users (name, email, optional age) from CSV text or a text stream and return (valid users, errors), each error being {\"row\", \"errors\"}; no regex, values never echoed, row count capped.",
       "title": "Parse and validate a users CSV with per-row errors",
       "usage": "valid_users, errors = import_users(uploaded_file.read().decode(\"utf-8\"))\nfor problem in errors:\n    print(problem[\"row\"], problem[\"errors\"])",
       "use_when": "Import users from an uploaded or local CSV (name, email, optional age), keeping valid rows and reporting every problem per row with its line number.",
@@ -279,6 +293,7 @@
         "state": "dict_key_to_tokens_and_last"
       },
       "category": "ratelimit",
+      "entry_point": "check_rate_limit",
       "exports": [],
       "fingerprint": "db071827f76c8404571e5048036b7cac39c7d822bc2a3dd23944d54b941f3015",
       "id": "ratelimit.token_bucket.check",
@@ -297,6 +312,7 @@
       "path": "catalog/ratelimit/token_bucket.check",
       "requires": [],
       "status": "active",
+      "summary": "Refill a per-key token bucket kept in a dict for the elapsed time, take the request's cost if available, and return (allowed, seconds until it would be allowed).",
       "title": "Token-bucket rate limit check with retry-after",
       "usage": "allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=20, refill_rate=5.0)\nif not allowed:\n    return 429, {\"Retry-After\": str(math.ceil(retry_after))}",
       "use_when": "Decide per client key whether a request is allowed under a rate limit, and how long to wait if not (for a 429 Retry-After), with state in a dict.",
@@ -313,6 +329,7 @@
         "sleep": "injectable"
       },
       "category": "retry",
+      "entry_point": "retry_with_exponential_backoff",
       "exports": [],
       "fingerprint": "ba244d247458e8dfb0e5c79174e368ffb70b83553a5487743925d398b9c3c0de",
       "id": "retry.with_exponential_backoff",
@@ -331,6 +348,7 @@
       "path": "catalog/retry/with_exponential_backoff",
       "requires": [],
       "status": "active",
+      "summary": "Call a function until it succeeds, sleeping base_delay * factor**n (capped) between attempts, re-raising the last error when attempts run out.",
       "title": "Retry with exponential backoff",
       "usage": "result = retry_with_exponential_backoff(lambda: client.fetch(job_id),\n                                        max_attempts=5, retry_on=(ConnectionError,))",
       "use_when": "Call any zero-argument function again after transient exceptions, waiting base_delay * factor**n (capped) between attempts, and re-raise the last error when attempts run out.",
@@ -345,6 +363,7 @@
         "style": "iterative"
       },
       "category": "search",
+      "entry_point": "binary_search",
       "exports": [],
       "fingerprint": "67f21b9d7bc1f6a3b2cd0ab253d49a40537e6e9f197ae6524bf874c62bb3488c",
       "id": "search.binary_search.iterative",
@@ -361,6 +380,7 @@
       "path": "catalog/search/binary_search.iterative",
       "requires": [],
       "status": "active",
+      "summary": "Return index of target in a sorted list, or -1 if absent.",
       "title": "Binary search (iterative)",
       "usage": "index = binary_search(sorted_ids, wanted_id)\nif index == -1:\n    ...  # not found",
       "use_when": "Find the index of a value in an ascending sorted sequence in O(log n) with a loop; returns -1 when the value is absent.",
@@ -375,6 +395,7 @@
         "style": "recursive"
       },
       "category": "search",
+      "entry_point": "binary_search",
       "exports": [],
       "fingerprint": "f19b87a5616bf85332fe97ca1057a3c00bb7fe3f3a31200ffe3f7437505ddd7c",
       "id": "search.binary_search.recursive",
@@ -392,6 +413,7 @@
       "path": "catalog/search/binary_search.recursive",
       "requires": [],
       "status": "active",
+      "summary": "Return index of target in a sorted list, or -1 if absent, using recursion over index bounds.",
       "title": "Binary search (recursive)",
       "usage": "index = binary_search(sorted_ids, wanted_id)",
       "use_when": "Find the index of a value in an ascending sorted sequence in O(log n) using recursion over index bounds; returns -1 when the value is absent.",
@@ -406,6 +428,7 @@
         "style": "recursive"
       },
       "category": "sort",
+      "entry_point": "merge_sort",
       "exports": [],
       "fingerprint": "cf06bfe1351b06a8bf0def374666a64d11a3439a90dc5cc99d3e53adc8458576",
       "id": "sort.merge_sort.recursive",
@@ -422,6 +445,7 @@
       "path": "catalog/sort/merge_sort.recursive",
       "requires": [],
       "status": "active",
+      "summary": "Return a new ascending, stable sorted list; the input is not modified.",
       "title": "Merge sort (recursive)",
       "usage": "ordered = merge_sort(scores)",
       "use_when": "Return a new, stably sorted list (ascending) without modifying the input, e.g. when stability must be explicit or the sort is being taught or audited.",
@@ -438,6 +462,7 @@
         "strip_edges": true
       },
       "category": "text",
+      "entry_point": "slugify",
       "exports": [],
       "fingerprint": "3a2864bbf5feb3ef52129e3db1e8a4f1ec123d6ce0e99c9ae5cebd7c1f83a5ec",
       "id": "text.slugify.ascii",
@@ -456,6 +481,7 @@
       "path": "catalog/text/slugify.ascii",
       "requires": [],
       "status": "active",
+      "summary": "Turn text into a lowercase ASCII slug of letters and digits joined by a separator.",
       "title": "Slugify (ASCII)",
       "usage": "slug = slugify(\"Cr\u00e8me Br\u00fbl\u00e9e Recipes\")  # \"creme-brulee-recipes\"",
       "use_when": "Turn a title or name into a lowercase ASCII slug for URLs, file names or identifiers, removing accents and joining words with a separator.",

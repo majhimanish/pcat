@@ -426,6 +426,30 @@ def promote(
     _add_pattern(target.source, target.member["name"], pattern_id)
 
 
+@app.command()
+@_guard
+def search(
+    request: str = typer.Argument(..., help="Plain-language description of the code you need."),
+    limit: int = typer.Option(5, "--limit", min=1),
+    include_deprecated: bool = typer.Option(False, "--include-deprecated"),
+) -> None:
+    """Find catalog patterns for a request (BM25 over pattern metadata)."""
+    from pcat import search as search_mod
+
+    index = search_mod.SearchIndex.from_root(_root(), include_deprecated)
+    hits = index.search(request, limit=limit)
+    if not hits:
+        best = index.rank(request)[:1]
+        hint = f" (best: {best[0].id} at {best[0].score:.2f})" if best else ""
+        typer.echo(
+            f"no reviewed pattern fits (threshold {search_mod.MATCH_THRESHOLD:.2f}){hint}"
+        )
+        return
+    width = max(len(h.id) for h in hits)
+    for h in hits:
+        typer.echo(f"{h.id:<{width}}  {h.score:6.2f}  {h.entry['title']}")
+
+
 def _catalog_root_or_none() -> Optional[Path]:
     try:
         return _root()

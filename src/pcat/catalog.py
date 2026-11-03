@@ -40,6 +40,8 @@ INDEX_FIELDS = (
     "fingerprint",
     "path",
     # v3 metadata (always present; empty when not set)
+    "summary",
+    "entry_point",
     "requires",
     "exports",
     "keywords",
