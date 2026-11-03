@@ -36,3 +36,18 @@ usage: |-
   valid_users, errors = import_users(uploaded_file.read().decode("utf-8"))
   for problem in errors:
       print(problem["row"], problem["errors"])
+guards:
+- kind: must_call
+  names: [csv.DictReader]
+  reason: the csv module handles quoting; no hand-split lines
+- kind: must_not_import
+  names: [re]
+  reason: no regular expressions on hostile input (ReDoS)
+- kind: max_value
+  target: MAX_ROWS
+  value: 10000
+  reason: bounded work per file
+- kind: max_value
+  target: MAX_EMAIL_LENGTH
+  value: 254
+  reason: RFC 5321 limit; bounds per-row work

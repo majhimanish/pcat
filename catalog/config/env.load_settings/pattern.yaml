@@ -37,3 +37,21 @@ use_when: Load an application's settings from environment variables at startup w
 usage: |-
   settings = load_settings({"DATABASE_URL": (str, ...), "PORT": (int, 8000),
                             "DEBUG": (parse_bool, False)}, secret_names=("DATABASE_URL",))
+guards:
+- kind: must_raise
+  names: [ValueError]
+  reason: invalid configuration fails at startup, listing every problem
+- kind: must_catch
+  names: [ValueError, TypeError]
+  reason: parser errors are collected per variable instead of stopping at the first
+- kind: must_not_call
+  names: [eval, exec, print]
+  reason: environment values (secrets) are never evaluated or printed
+- kind: must_raise
+  names: [ValueError]
+  function: parse_bool
+  reason: unknown spellings are rejected, not read as false
+- kind: must_not_call
+  names: [eval, bool]
+  function: parse_bool
+  reason: bool("false") is True; only explicit spellings are accepted

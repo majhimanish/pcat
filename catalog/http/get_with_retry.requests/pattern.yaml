@@ -41,3 +41,20 @@ use_when: 'Fetch a URL over HTTP when the server or network can fail transiently
 usage: |-
   response = get_with_retry("https://api.example.com/items", session=http_session, attempts=4)
   items = response.json()
+guards:
+- kind: must_catch
+  names: [requests.ConnectionError, requests.Timeout]
+  reason: connection errors and timeouts are transient and must be retried
+- kind: must_call
+  names: [.raise_for_status]
+  reason: final and non-retryable HTTP errors raise instead of passing as success
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects attempts < 1
+- kind: must_not_call
+  names: [requests.post, requests.put, requests.patch, requests.delete, .post, .put, .patch, .delete]
+  reason: only idempotent GET requests are retried
+- kind: max_value
+  target: max_delay
+  value: 30.0
+  reason: caps backoff and a server-controlled Retry-After so they cannot stall the caller

@@ -38,3 +38,14 @@ use_when: Issue a short-lived signed access token for an authenticated user that
 usage: |-
   token = create_access_token(user.id, secret=settings["jwt_secret"],
                               issuer="auth.example.com", audience="orders-api")
+guards:
+- kind: must_call
+  names: [jwt.encode, uuid.uuid4]
+  reason: signs with PyJWT; a random jti lets one token be deny-listed
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects a missing user id, issuer or audience, short secrets, non-positive lifetimes and naive datetimes
+- kind: min_value
+  target: MIN_SECRET_BYTES
+  value: 32
+  reason: RFC 7518, an HS256 key must be at least 256 bits

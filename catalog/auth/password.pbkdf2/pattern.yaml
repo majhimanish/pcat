@@ -42,3 +42,38 @@ usage: |-
   if verify_password(attempt, stored):             # at login
       if needs_rehash(stored):
           stored = hash_password(attempt)
+guards:
+- kind: must_call
+  names: [hashlib.pbkdf2_hmac, os.urandom]
+  reason: PBKDF2-HMAC with a random salt from the operating system
+- kind: must_not_call
+  names: [hashlib.md5, hashlib.sha1, random.randbytes, random.getrandbits, random.random]
+  reason: no fast hashes and no predictable salts
+- kind: must_raise
+  names: [ValueError]
+  reason: refuses iteration counts outside the reviewed bounds
+- kind: min_value
+  target: MIN_ITERATIONS
+  value: 600000
+  reason: OWASP 2023 minimum for PBKDF2-HMAC-SHA256
+- kind: min_value
+  target: iterations
+  value: 600000
+  reason: the default work factor for new hashes
+- kind: must_call
+  names: [hmac.compare_digest]
+  function: verify_password
+  reason: constant-time comparison of the derived key
+- kind: must_catch
+  names: [ValueError, TypeError]
+  function: verify_password
+  reason: a malformed stored hash returns False instead of raising
+- kind: max_value
+  target: MAX_ITERATIONS
+  value: 10000000
+  function: verify_password
+  reason: bounds the CPU a tampered stored hash can demand
+- kind: must_not_call
+  names: [hashlib.md5, hashlib.sha1]
+  function: verify_password
+  reason: no fast hashes

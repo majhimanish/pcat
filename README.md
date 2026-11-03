@@ -200,6 +200,7 @@ A rule change can alter fingerprints of untouched patterns, so it is explicit:
 8. `test_impl.py` exists and passes (each pattern in its own pytest process)
 9. idempotence: `canonicalize(render(canonical, name_map)) == canonical`
 10. `catalog/index.json` is up to date
+11. every `guards` entry holds on the pattern's own code (see [Deviation linter](#deviation-linter-pcat-lint))
 
 Plus `immutable` problems when `--base` is given.
 

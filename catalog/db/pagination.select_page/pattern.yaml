@@ -38,3 +38,14 @@ use_when: Return one page of a SQLAlchemy 2.0 select together with the total row
 usage: |-
   page = paginate(session, select(User).order_by(User.id), page=2, page_size=20)
   return {"items": [u.to_dict() for u in page["items"]], "total": page["total"], "pages": page["pages"]}
+guards:
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects page < 1 and page sizes outside 1..MAX_PAGE_SIZE
+- kind: max_value
+  target: MAX_PAGE_SIZE
+  value: 100
+  reason: the page-size cap bounds the rows one request can load
+- kind: must_call
+  names: [.limit, .offset, sqlalchemy.func.count]
+  reason: LIMIT/OFFSET run in SQL, and the total is a COUNT over the same statement

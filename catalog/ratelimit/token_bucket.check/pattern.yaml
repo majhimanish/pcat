@@ -35,3 +35,13 @@ usage: |-
   allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=20, refill_rate=5.0)
   if not allowed:
       return 429, {"Retry-After": str(math.ceil(retry_after))}
+guards:
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects non-positive settings and costs above capacity
+- kind: must_call
+  names: [time.monotonic, max, min]
+  reason: a monotonic clock; a clock that goes backwards adds nothing; tokens are capped at capacity
+- kind: must_not_call
+  names: [time.time]
+  reason: wall-clock time can jump and refill or drain buckets

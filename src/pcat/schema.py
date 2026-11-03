@@ -20,6 +20,52 @@ REQUIREMENT_PATTERN = (
 
 BehaviorValue = Union[StrictBool, StrictInt, float, str, None]
 
+GUARD_NAME_KINDS = ("must_catch", "must_call", "must_not_call", "must_not_import", "must_raise")
+GUARD_VALUE_KINDS = ("min_value", "max_value")
+# A dotted name (`requests.Timeout`, `eval`) or a method on any value (`.raise_for_status`).
+GUARD_NAME_PATTERN = r"^\.?[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$"
+
+
+class Guard(BaseModel):
+    """A reviewed property the linter checks on code derived from the pattern (v4).
+
+    names: exceptions (must_catch, must_raise), calls (must_call, must_not_call)
+    or modules (must_not_import). target/value: for min_value/max_value, a
+    module constant or a parameter (its default) of `function`, by its name in
+    the pattern. `function` defaults to the entry point.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    kind: Literal["must_catch", "must_call", "must_not_call", "min_value", "max_value",
+                  "must_not_import", "must_raise"]
+    names: list[str] = Field(default_factory=list)
+    target: Optional[str] = None
+    value: Optional[Union[StrictInt, float]] = None
+    function: Optional[str] = None
+    reason: Optional[str] = Field(default=None, min_length=1)
+
+    @model_validator(mode="after")
+    def _shape(self) -> "Guard":
+        if self.kind in GUARD_NAME_KINDS:
+            if not self.names:
+                raise ValueError(f"{self.kind} guard needs names")
+            if self.target is not None or self.value is not None:
+                raise ValueError(f"{self.kind} guard takes names, not target/value")
+            for name in self.names:
+                if not re.fullmatch(GUARD_NAME_PATTERN, name):
+                    raise ValueError(f"{name!r} is not a dotted name or .method")
+                if self.kind == "must_not_import" and name.startswith("."):
+                    raise ValueError(f"{name!r}: modules cannot start with '.'")
+            if len(set(self.names)) != len(self.names):
+                raise ValueError("guard names must be unique")
+        else:
+            if self.names:
+                raise ValueError(f"{self.kind} guard takes target and value, not names")
+            if not self.target or not self.target.isidentifier() or self.value is None:
+                raise ValueError(f"{self.kind} guard needs target (a name) and value")
+        return self
+
 
 class PatternMeta(BaseModel):
     """Metadata of one pattern version. Unknown keys are rejected."""
@@ -47,6 +93,8 @@ class PatternMeta(BaseModel):
     keywords: list[str] = Field(default_factory=list)  # 5-15 search terms when given
     use_when: Optional[str] = Field(default=None, min_length=1)  # situations the pattern is for
     usage: Optional[str] = Field(default=None, min_length=1)  # short calling example for agents
+    # v4 linter guards: reviewed properties checked on derived code. Never part of the fingerprint.
+    guards: list[Guard] = Field(default_factory=list)
 
     @field_validator("entry_point")
     @classmethod
@@ -99,6 +147,11 @@ class PatternMeta(BaseModel):
             raise ValueError("active patterns must not set replaced_by")
         if self.entry_point in self.exports:
             raise ValueError("exports must not repeat the entry_point")
+        for guard in self.guards:
+            if guard.function is not None and guard.function not in (self.entry_point, *self.exports):
+                raise ValueError(
+                    f"guard function {guard.function!r} must be the entry_point or an export"
+                )
         return self
 
     @property

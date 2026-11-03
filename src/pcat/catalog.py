@@ -311,7 +311,7 @@ def _write_text(path: Path, text: str) -> None:
 
 @dataclass(frozen=True)
 class Problem:
-    check: str  # "1".."10", or "immutable" for the optional --base check
+    check: str  # "1".."11", or "immutable" for the optional --base check
     subject: str
     message: str
 
@@ -469,6 +469,10 @@ def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) 
             if again != result.text:
                 out.append(Problem("9", label, "canonicalize(render(canonical)) != canonical"))
 
+    # 11: every guard holds on the pattern itself
+    if source is not None and meta.guards:
+        out.extend(_guard_checks(pattern, source))
+
     # 8: tests
     if not pattern.test_path.is_file():
         out.append(Problem("8", label, f"missing {TEST_FILE}"))
@@ -483,6 +487,29 @@ def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) 
                     f"{pattern.test_path.relative_to(pattern.root).as_posix()}",
                 )
             )
+    return out
+
+
+def _guard_checks(pattern: Pattern, source: str) -> list[Problem]:
+    from pcat import codeunit, guards
+
+    meta = pattern.meta
+    out: list[Problem] = []
+    for function in [meta.entry_point, *meta.exports]:
+        selected = guards.applicable(meta, function)
+        if not selected:
+            continue
+        try:
+            unit = codeunit.build_unit_from_source(source, function)
+        except (KeyError, SyntaxError, ValueError):
+            continue  # reported by checks 2/3
+        for result in guards.check(unit, selected):
+            if not result.found:
+                out.append(Problem("11", pattern.label, f"guard {result.index + 1} ({result.kind}): "
+                                   f"target {result.item!r} not found in {function}"))
+            elif not result.ok:
+                out.append(Problem("11", pattern.label, f"guard {result.index + 1} ({result.kind}) "
+                                   f"does not hold on the pattern itself: {result.message}"))
     return out
 
 

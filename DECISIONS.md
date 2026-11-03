@@ -629,3 +629,35 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      Result **0.56**: 199/200 derived found, 1/187 not-derived flagged (a
      hand-rolled PBKDF2 `hash_password` in a v2.1 sample, 0.583). The labelling
      uses similarity itself, so the derived scores are an optimistic upper bound.
+146. **Guard format.** `guards:` is a list of `{kind, names | target+value,
+     function?, reason?}`. `names` are dotted names resolved through the file's
+     imports (`from hmac import compare_digest as cd` -> `hmac.compare_digest`)
+     or `.method` for a method on any value; names compare by first and last
+     segment, so `requests.exceptions.Timeout` equals `requests.Timeout`.
+     `function` (default: entry point) must be the entry point or an export.
+     Guards are metadata only: not in fingerprints, not immutable, not in
+     `index.json` (the index-format test stays unchanged; `pcat lint` reads
+     pattern folders through `catalog.py` like `serve`).
+147. **`max_value` added** next to the spec's `min_value`: several reviewed
+     limits are caps (`MAX_PAGE_SIZE`, `MAX_ROWS`, `MAX_ITERATIONS`, `max_delay`)
+     that must not go *up*. Same rules as `min_value`.
+148. **Guard semantics.** Checked on the *unit*: the function plus same-file
+     top-level functions it calls (transitively), the constants it reads and the
+     imports it uses (`codeunit.py`; never fails on classes or scripts in the
+     file). `must_catch`: some handler catches the type, a broad handler
+     (`except:`, `Exception`, `BaseException`) or a builtin superclass counts;
+     third-party superclasses (`requests.RequestException`) are not known.
+     `must_raise`: a `raise T`/`raise T(...)` exists. `must_call`/`must_not_call`:
+     any call resolving to the name (a `raise T(...)` target is not a call).
+     `must_not_import`: an import the unit uses or contains has that module or a
+     submodule as origin. `min_value`/`max_value`: the target is a parameter of
+     the function (its default, a literal or a file constant) or a file constant;
+     an absent target is "not checked" (other codes report removed checks).
+149. **Guards were written** from the v2.2 security notes and each pattern's
+     code, for the 7 application patterns only (seeds have none), and committed
+     before Part F. Caveat: the v3 write-up (`docs/benchmarks/v3-mcp.md`) already
+     described the misses (HTTP narrowed to timeouts, a private SQLAlchemy
+     attribute, pandas), so the HTTP `must_catch` guard was not written blind.
+     The v3 miss samples themselves were not opened while writing guards.
+150. **Check 11:** every guard holds on the pattern's own code (all results ok,
+     every min/max target found). Runs with `--skip-tests` too (no execution).
