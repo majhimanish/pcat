@@ -437,6 +437,18 @@ def main():
     ]
     for t in TASKS:
         out.append(f"- **{t['task']}** → `{t['recommend']}`")
+    choices_path = ROOT / "choices.yaml"
+    if choices_path.exists():
+        import yaml
+
+        final = yaml.safe_load(choices_path.read_text())
+        if final.get("status") == "final":
+            out += ["", "## Owner's decisions (final)", ""]
+            for task, choice in final["choices"].items():
+                rec = next(t["recommend"] for t in TASKS if t["task"] == task)
+                note = "" if choice["variant"] == rec else " (differs from the recommendation)"
+                target = "deferred" if choice["variant"] == "defer" else f"pattern `{choice['pattern_id']}`"
+                out.append(f"- **{task}** → `{choice['variant']}`, {target}{note}")
     for t in TASKS:
         out += ["", "---", "", f"## {t['task']} — {t['title']}", "", f"**How the samples split:** {t['split']}", ""]
         for v in t["variants"]:
@@ -452,6 +464,9 @@ def main():
                 out += ["**Security notes:**", bullets(v["security"]), ""]
             out += ["**Pros:** " + " ".join(v["pros"]) + "  ", "**Cons:** " + " ".join(v["cons"]), ""]
         out += [f"### Recommendation: `{t['recommend']}`", "", t["reason"], ""]
+    coverage = ROOT / "v2.2-coverage.md"  # Part 2 coverage check, appended verbatim
+    if coverage.exists():
+        out += ["", "---", "", coverage.read_text().rstrip()]
     (ROOT / "v2.2-comparison.md").write_text("\n".join(out).rstrip() + "\n")
 
     y = [
