@@ -122,3 +122,57 @@ def test_tool_calls_are_logged(tmp_path):
     assert lines[0]["result"]["ids"][0] == "db.pagination.select_page"
     assert lines[3]["result"] == {"error": "unknown id"}
     assert all(line["timestamp"].endswith("+00:00") for line in lines)
+
+
+# v4: deviations, markers and inferred provenance in check_code ---------------
+
+
+def _narrow(code: str) -> str:
+    return code.replace("except (requests.ConnectionError, requests.Timeout):", "except requests.Timeout:")
+
+
+def test_check_code_with_pattern_id_reports_deviations(service):
+    code = service.get_pattern("http.get_with_retry.requests", {"f0": "fetch"})["code"]
+    unmarked = _narrow(code.replace("# pcat: http.get_with_retry.requests@v1\n", ""))
+    result = service.check_code(unmarked, "http.get_with_retry.requests")
+    [analysis] = result["deviations"]
+    assert analysis["function"] == "fetch" and analysis["provenance"] == "pattern_id"
+    assert [(d["code"], d["severity"]) for d in analysis["deviations"]] == [("PC100", "high")]
+    assert result["unapproved_high"] == 1 and result["next_step"].startswith("Fix every high-severity")
+    assert "+        except requests.Timeout:" in analysis["diff"]
+    assert result["summary"] == {"covered": 0, "near": 0, "none": 2}  # v3 keys unchanged
+
+
+def test_check_code_with_a_marker_and_an_approval(service):
+    code = _narrow(service.get_pattern("http.get_with_retry.requests", {"f0": "fetch"})["code"])
+    result = service.check_code(code)
+    [analysis] = result["deviations"]
+    assert analysis["provenance"] == "marker" and analysis["pattern"] == "http.get_with_retry.requests@v1"
+    approved = code.replace("# pcat: http", "# pcat-allow: PC100 -- the request says connection errors must fail fast\n# pcat: http")
+    again = service.check_code(approved)
+    dev = again["deviations"][0]["deviations"][0]
+    assert dev["approved"] and again["unapproved_high"] == 0
+    markers = {f["name"]: f["marker"] for f in again["functions"]}
+    assert markers == {"retry_after_seconds": None, "fetch": "http.get_with_retry.requests@v1"}
+
+
+def test_check_code_without_marker_or_id_adds_advisory_inference(service):
+    code = service.get_pattern("ratelimit.token_bucket.check", {"f0": "allow"})["code"]
+    code = code.replace("# pcat: ratelimit.token_bucket.check@v1\n", "")
+    result = service.check_code(code + "\n\ndef other(a):\n    return {a: a}\n")
+    assert result["deviations"] == [] and result["next_step"].startswith("No marked functions")
+    inferred = {f["name"]: f["inferred"] for f in result["functions"]}
+    assert inferred["allow"]["pattern"] == "ratelimit.token_bucket.check@v1" and inferred["allow"]["likely_derived"]
+    assert inferred["other"]["likely_derived"] is False
+
+
+def test_check_code_unknown_pattern_id(service):
+    with pytest.raises(PcatError, match="unknown pattern id 'nope.x'"):
+        service.check_code("def f():\n    pass\n", "nope.x")
+
+
+def test_instructions_ask_for_check_code_with_the_pattern_id(service):
+    text = service.instructions()
+    assert "call check_code with your final code and the pattern id" in text
+    assert "Fix every high-severity deviation unless the request explicitly requires it" in text
+    assert "# pcat-allow: <code> -- <reason>" in text

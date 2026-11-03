@@ -731,3 +731,17 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      new statement in it is already explained by a specific deviation (narrowed
      handler, added broad except, private access, added call) and it replaces at
      most as many pattern statements, or all removed statements are explained.
+162. **`check_code(code, pattern_id=None)`.** v3 keys (`functions` with name,
+     line, status, pattern, pattern_function; `summary`; `legend`; the syntax
+     error result) are unchanged; v4 adds `marker` and advisory `inferred`
+     (pattern, function, similarity, likely_derived) per function, plus
+     `deviations` (one analysis per marked function, and with `pattern_id` the
+     best-matching function for each public function of that pattern: the entry
+     point always, exports only when similarity >= INFERENCE_THRESHOLD),
+     `unapproved_high`, `next_step` and, for unknown markers, `problems`.
+     Approvals in the code are honoured as in `pcat lint`. An unknown
+     `pattern_id` is a tool error listing the known ids (like `get_pattern`).
+163. **Instructions** now say: keep the marker; after writing code from a
+     pattern call `check_code` with the final code and the pattern id; fix every
+     high-severity deviation unless the request explicitly requires it, and then
+     add `# pcat-allow: <code> -- <reason>` above the function's marker.

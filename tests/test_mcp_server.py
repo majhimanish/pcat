@@ -58,6 +58,19 @@ def test_check_code_over_mcp():
     _, _, result = call("check_code", {"code": "def f(:\n"})
     assert not result.isError and payload(result)["error"].startswith("syntax error")
 
+def test_check_code_with_pattern_id_over_mcp():
+    code = CatalogService(REPO_ROOT).get_pattern("http.get_with_retry.requests")["code"]
+    code = code.replace("except (requests.ConnectionError, requests.Timeout):", "except requests.Timeout:")
+    _, tools, result = call("check_code", {"code": code, "pattern_id": "http.get_with_retry.requests"})
+    schema = next(t for t in tools.tools if t.name == "check_code").inputSchema
+    assert "pattern_id" in schema["properties"] and schema["required"] == ["code"]
+    data = payload(result)
+    assert not result.isError and data["unapproved_high"] == 1
+    assert data["deviations"][0]["deviations"][0]["code"] == "PC100"
+    _, _, unknown = call("check_code", {"code": code, "pattern_id": "no.such"})
+    assert unknown.isError and "unknown pattern id" in unknown.content[0].text
+
+
 
 def test_pcat_serve_over_stdio_from_another_directory(tmp_path):
     """The way MCP clients run it: a subprocess started outside the repository."""

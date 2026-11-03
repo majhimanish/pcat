@@ -55,8 +55,11 @@ class CatalogService:
             "get_pattern and use its code, adapting only names and what the request explicitly "
             "requires (keep its structure, checks and library). Keep the '# pcat: <id>@v<N>' "
             "comment above each pattern function: it records where the code came from. If "
-            "nothing fits, write the code normally. Afterwards, call check_code on your final code to confirm which "
-            "functions match a reviewed pattern."
+            "nothing fits, write the code normally. After writing code from a pattern, call "
+            "check_code with your final code and the pattern id: it lists deviations from the "
+            "reviewed pattern by severity. Fix every high-severity deviation unless the request "
+            "explicitly requires it; in that case add a '# pcat-allow: <code> -- <reason>' line "
+            "above the function's marker giving the reason."
         )
 
     # ------------------------------------------------------------------ #
@@ -140,14 +143,25 @@ class CatalogService:
                   {"id": meta.key, "status": meta.status})
         return result
 
-    def check_code(self, code: str) -> dict[str, Any]:
+    def check_code(self, code: str, pattern_id: str | None = None) -> dict[str, Any]:
+        arguments: dict[str, Any] = {"length": len(code)}
+        if pattern_id is not None:
+            arguments["pattern_id"] = pattern_id
         try:
-            ast.parse(code)
+            tree = ast.parse(code)
         except (SyntaxError, ValueError) as exc:
             line = getattr(exc, "lineno", None)
             message = f"syntax error{f' at line {line}' if line else ''}: {getattr(exc, 'msg', exc)}"
-            self._log("check_code", {"length": len(code)}, {"error": "syntax"})
+            self._log("check_code", arguments, {"error": "syntax"})
             return {"error": message, "functions": []}
+        pattern = None
+        if pattern_id is not None:
+            try:
+                pattern = cat.get_one(self.root, pattern_id)
+            except PcatError:
+                known = ", ".join(sorted({p.meta.id for p in self._patterns.values()}))
+                self._log("check_code", arguments, {"error": "unknown id"})
+                raise PcatError(f"unknown pattern id {pattern_id!r}; known ids: {known}") from None
         analysis = miner.analyze_source(code.encode("utf-8"), miner.MineSettings(fragments=False))
         functions = []
         for f in analysis["functions"]:
@@ -164,12 +178,102 @@ class CatalogService:
                 item["note"] = f["error"]
             functions.append(item)
         summary = {s: sum(1 for f in functions if f["status"] == s) for s in ("covered", "near", "none")}
-        self._log("check_code", {"length": len(code)},
-                  {"statuses": [(f["name"], f["status"], f["pattern"]) for f in functions]})
-        return {"functions": functions, "summary": summary,
-                "legend": {"covered": "matches a reviewed pattern exactly (names aside)",
-                           "near": "same structure as a reviewed pattern; only literal values differ",
-                           "none": "no reviewed pattern"}}
+        result: dict[str, Any] = {
+            "functions": functions, "summary": summary,
+            "legend": {"covered": "matches a reviewed pattern exactly (names aside)",
+                       "near": "same structure as a reviewed pattern; only literal values differ",
+                       "none": "no reviewed pattern"},
+        }
+        result.update(self._provenance_and_deviations(code, tree, functions, pattern))
+        self._log("check_code", arguments, {
+            "statuses": [(f["name"], f["status"], f["pattern"]) for f in functions],
+            "deviations": [(a["function"], a["pattern"], [(d["code"], d["approved"]) for d in a["deviations"]])
+                           for a in result["deviations"]],
+        })
+        return result
+
+    def _provenance_and_deviations(self, code: str, tree: ast.Module, functions: list[dict],
+                                   pattern) -> dict[str, Any]:
+        """v4: markers, advisory inferred provenance and deviations from the source pattern."""
+        from pcat import deviation, lint
+
+        infos = provenance.functions(code, tree)
+        by_line = {i.node.lineno: i for i in infos}
+        catalog = self._lint_catalog()
+        problems: list[str] = []
+        targets: list[tuple] = []
+        for info in infos:
+            if info.marker is None:
+                continue
+            marked = catalog.resolve(info.marker)
+            if marked is None:
+                problems.append(f"line {info.marker.line}: unknown pattern {info.marker.ref} in marker")
+            else:
+                targets.append((info, marked, None, "marker"))
+        if pattern is not None:
+            refs = [r for r in catalog.refs if r.pattern_id == pattern.meta.id]
+            taken = {id(t[0].node) for t in targets if t[1].meta.id == pattern.meta.id}
+            pairs = []
+            for ref in refs:
+                for info in infos:
+                    text = provenance.shape_text(info.node)
+                    if text is not None and id(info.node) not in taken:
+                        pairs.append((provenance.variance.similarity(text, ref.shape_text), info.qualname,
+                                      ref.function, info))
+            pairs.sort(key=lambda p: (-p[0], p[1], p[2]))
+            used_f = {t[0].qualname for t in targets}
+            used_r = {deviation.choose_pattern_function(t[0].node, t[1]) for t in targets
+                      if t[1].meta.id == pattern.meta.id}
+            for sim, qualname, function, info in pairs:
+                if qualname in used_f or function in used_r:
+                    continue
+                if function != pattern.meta.entry_point and sim < provenance.INFERENCE_THRESHOLD:
+                    continue  # an export the code does not seem to contain
+                used_f.add(qualname)
+                used_r.add(function)
+                targets.append((info, pattern, function, "pattern_id"))
+        analyses = []
+        for info, pat, function, source in sorted(targets, key=lambda t: (t[0].node.lineno, t[0].qualname)):
+            a = deviation.analyze_function(tree, info.node, pat, function)
+            devs, stale, _ = lint.apply_approvals(info, a.deviations, "<code>")
+            analyses.append({
+                "function": info.qualname, "line": info.node.lineno, "pattern": pat.meta.key,
+                "pattern_function": a.pattern_function, "provenance": source,
+                "deviations": devs, "stale_approvals": stale,
+                "invalid_approvals": [{"line": x.line, "problem": x.problem} for x in info.approvals if x.problem],
+                "diff": a.diff,
+            })
+        refs = catalog.refs
+        for item in functions:
+            info = by_line.get(item["line"])
+            item["marker"] = info.marker.ref if info is not None and info.marker else None
+            inf = provenance.infer(info.node, refs) if info is not None else None
+            item["inferred"] = None if inf is None else {
+                "pattern": f"{inf.pattern_id}@v{inf.version}", "pattern_function": inf.function,
+                "similarity": inf.similarity, "likely_derived": inf.derived}
+        high = sum(1 for a in analyses for d in a["deviations"]
+                   if d["severity"] == "high" and not d["approved"])
+        out: dict[str, Any] = {"deviations": analyses, "unapproved_high": high}
+        if problems:
+            out["problems"] = problems
+        if not analyses:
+            out["next_step"] = ("No marked functions: pass pattern_id (the pattern you used) to see "
+                                "deviations from it.")
+        elif high:
+            out["next_step"] = (
+                "Fix every high-severity deviation unless the request explicitly requires it; for "
+                "one the request requires, add '# pcat-allow: <code> -- <reason>' directly above the "
+                "function's marker.")
+        else:
+            out["next_step"] = "No unapproved high-severity deviations."
+        return out
+
+    def _lint_catalog(self):
+        from pcat import lint
+
+        if getattr(self, "_catalog", None) is None:
+            self._catalog = lint.Catalog(self.root)
+        return self._catalog
 
     # ------------------------------------------------------------------ #
     # Helpers

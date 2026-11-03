@@ -48,13 +48,21 @@ def build_server(service: CatalogService) -> FastMCP:
             raise ToolError(str(exc)) from None
 
     @server.tool()
-    def check_code(code: str) -> dict[str, Any]:
+    def check_code(code: str, pattern_id: str | None = None) -> dict[str, Any]:
         """Check Python code against the catalog.
 
         For each function: covered (exact match with a reviewed pattern), near
-        (same structure, only literal values differ) or none.
+        (same structure, only literal values differ) or none. With `pattern_id`
+        (the pattern you used), or for functions carrying a `# pcat: <id>@vN`
+        marker, also returns `deviations` from that pattern: code, severity and a
+        message for each change (e.g. an exception no longer caught), plus a diff.
+        Fix every high-severity deviation unless the request explicitly requires
+        it; then add `# pcat-allow: PCxxx -- <reason>` above the function.
         """
-        return service.check_code(code)
+        try:
+            return service.check_code(code, pattern_id)
+        except PcatError as exc:
+            raise ToolError(str(exc)) from None
 
     return server
 

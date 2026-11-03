@@ -282,11 +282,13 @@ with three tools:
 | Tool | What it does |
 |---|---|
 | `search_patterns(request, limit=5)` | BM25 search over pattern metadata; returns matches above a calibrated threshold, or an empty list ("no reviewed pattern fits") |
-| `get_pattern(id, names=None)` | the pattern's code rendered with your names, plus `requires`, `exports`, `usage`, version and status (deprecated patterns carry a warning) |
-| `check_code(code)` | per function: `covered` (matches a pattern), `near` (same structure, other literals) or `none` |
+| `get_pattern(id, names=None)` | the pattern's code rendered with your names, with a `# pcat: <id>@v<N>` marker above each public function, plus `requires`, `exports`, `usage`, version and status (deprecated patterns carry a warning) |
+| `check_code(code, pattern_id=None)` | per function: `covered` (matches a pattern), `near` (same structure, other literals) or `none`, plus advisory inferred provenance; with `pattern_id` or a `# pcat:` marker, the deviations from that pattern (codes as in `pcat lint`) and a diff |
 
 The server also sends instructions telling the agent to search before writing
-common application code, use a fitting pattern, and check its result.
+common application code, use a fitting pattern and keep its marker, then call
+`check_code` with the pattern id and fix every high-severity deviation unless the
+request requires it (then it adds a `# pcat-allow` line with the reason).
 
 ```bash
 pip install -e ".[mcp]"          # in the environment that runs the server
