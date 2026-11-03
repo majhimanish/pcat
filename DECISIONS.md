@@ -824,3 +824,12 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 177. **This repository** installs the gate (`.github/workflows/pcat-approvals.yml`,
      `.pcat/approvers.yaml` = `majhimanish`, `allow_author: true` because there is
      one developer; documented as solo-developer mode).
+178. **PC111 (marker removed, high).** Only with `--changed-since REF`: a function
+     whose qualname had a marker in `REF`'s version of the file, has none now,
+     and infers as derived (>= INFERENCE_THRESHOLD) from the *same pattern id*.
+     Checked for every function of a changed file, not only touched ones (the
+     deletion is above the function). The finding (`provenance: marker-removed`)
+     also lists the deviations from that pattern, but only PC111 fails; it is
+     approved like any other code (`# pcat-allow: PC111 #<hash> -- reason`, a
+     proposal until confirmed). A deleted function (qualname gone) or one that no
+     longer infers as derived from that pattern reports nothing.

@@ -320,3 +320,42 @@ def test_changed_since_unknown_commit_is_an_error(repo, narrowed):
     commit_file(repo, narrowed, "x")
     out = lint(str(repo / "client.py"), "--changed-since", "0" * 40)
     assert out.exit_code == 1 and "no such commit" in out.output
+
+
+# Part C: PC111 marker removal ------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def clean() -> str:
+    return CatalogService(REPO_ROOT).get_pattern(HTTP, {"f0": "fetch"})["code"]
+
+
+def test_pc111_marker_removed_but_still_derived(repo, clean):
+    base = commit_file(repo, clean, "marked pattern code")
+    commit_file(repo, clean.replace(f"# pcat: {HTTP}@v1\n", "").replace(*NARROW), "drop the marker, narrow")
+    data = lint_json(str(repo / "client.py"), "--changed-since", base)
+    [finding] = data["findings"]
+    assert finding["provenance"] == "marker-removed" and finding["pattern"] == f"{HTTP}@v1"
+    codes = {d["code"]: d for d in finding["deviations"]}
+    assert codes["PC111"]["severity"] == "high" and "# pcat: http.get_with_retry.requests@v1" in codes["PC111"]["message"]
+    assert "PC100" in codes and data["failed"]
+    assert data["summary"]["failing"] == 1  # only PC111 fails; the other deviations are advisory
+    assert lint(str(repo / "client.py")).exit_code == 0  # without a base ref: only inferred, advisory
+
+
+def test_pc111_can_be_approved(repo, clean):
+    base = commit_file(repo, clean, "marked")
+    unmarked = clean.replace(f"# pcat: {HTTP}@v1\n", "")
+    approval = f"# pcat-allow: PC111 #{hash_of(unmarked)} -- this helper now follows our own client, not the pattern"
+    commit_file(repo, unmarked.replace("def fetch(", approval + "\ndef fetch("), "approve")
+    data = lint_json(str(repo / "client.py"), "--changed-since", base)
+    dev = next(d for d in data["findings"][0]["deviations"] if d["code"] == "PC111")
+    assert dev["approval_state"] == "proposed" and data["failed"]  # a proposal until confirmed
+
+
+def test_no_pc111_when_the_function_was_deleted_or_rewritten(repo, clean):
+    base = commit_file(repo, clean, "marked")
+    commit_file(repo, clean.split(f"# pcat: {HTTP}@v1\n")[0] + "\n\ndef other():\n    return 1\n", "delete it")
+    assert lint_json(str(repo / "client.py"), "--changed-since", base)["findings"] == []
+    commit_file(repo, "def fetch(url):\n    return url.upper()\n", "rewrite: no longer derived")
+    assert lint_json(str(repo / "client.py"), "--changed-since", base)["findings"] == []

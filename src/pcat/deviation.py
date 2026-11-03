@@ -31,7 +31,7 @@ from pcat.codeunit import Unit, name_key
 SEVERITY = {
     "PC100": "high", "PC101": "high", "PC102": "high", "PC103": "high",
     "PC104": "medium", "PC105": "medium", "PC106": "medium", "PC107": "medium",
-    "PC108": "low", "PC109": "low", "PC110": "low",
+    "PC108": "low", "PC109": "low", "PC110": "low", "PC111": "high",
 }
 TITLES = {
     "PC100": "guard violated",
@@ -45,6 +45,7 @@ TITLES = {
     "PC108": "call added",
     "PC109": "literal changed",
     "PC110": "other structural change",
+    "PC111": "marker removed from derived code",
 }
 SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3}
 DISTRIBUTION_IMPORTS = {"pyjwt": "jwt", "pyyaml": "yaml", "beautifulsoup4": "bs4", "pillow": "PIL"}

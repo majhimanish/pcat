@@ -41,11 +41,13 @@ class Finding:
     approvals: list[dict] = field(default_factory=list)  # every approval with its state
 
     def failing(self, fail_on: str) -> list[dict]:
-        if self.provenance != "marked" or fail_on == "never":
+        if self.provenance not in ("marked", "marker-removed") or fail_on == "never":
             return []
         bar = deviation.SEVERITY_RANK[fail_on]
+        # Code whose marker was removed fails on PC111 only; its other deviations are advisory.
         return [d for d in self.deviations
-                if not d["approved"] and deviation.SEVERITY_RANK[d["severity"]] >= bar]
+                if not d["approved"] and deviation.SEVERITY_RANK[d["severity"]] >= bar
+                and (self.provenance == "marked" or d["code"] == "PC111")]
 
     def to_dict(self) -> dict:
         return {
@@ -109,6 +111,7 @@ class Report:
             "summary": {"functions": len(self.findings),
                         "marked": sum(f.provenance == "marked" for f in self.findings),
                         "inferred": sum(f.provenance == "inferred" for f in self.findings),
+                        "marker_removed": sum(f.provenance == "marker-removed" for f in self.findings),
                         "deviations": counts,
                         "failing": sum(len(f.failing(self.fail_on)) for f in self.findings)},
             "findings": [f.to_dict() for f in self.findings],
@@ -245,7 +248,15 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
                             f"cannot parse: {getattr(exc, 'msg', exc)}")]
     findings: list[Finding] = []
     messages: list[Message] = []
+    removed = _removed_markers(base_source)
     for info in provenance.functions(source, tree):
+        if info.marker is None and info.qualname in removed:
+            got = _marker_removed(info, removed[info.qualname], tree, path, catalog, base_keys,
+                                  confirmed_proposals)
+            if got is not None:
+                findings.append(got[0])
+                messages.extend(got[1])
+            continue
         span_start = min([info.start, *(ln for ln, _ in info.problems),
                           *(m.line for m in info.markers), *(a.line for a in info.approvals)])
         if lines is not None and not any(span_start <= ln <= info.node.end_lineno for ln in lines):
@@ -290,6 +301,43 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             messages.append(Message(path, info.node.lineno, "warning",
                                     f"`{info.qualname}` uses deprecated {meta.key}; use {meta.replaced_by}"))
     return findings, messages
+
+
+def _removed_markers(base: str | None) -> dict[str, provenance.Marker]:
+    """qualname -> marker for every marked function in the base version of the file."""
+    if base is None:
+        return {}
+    try:
+        return {i.qualname: i.marker for i in provenance.functions(base) if i.marker is not None}
+    except (SyntaxError, ValueError):
+        return {}
+
+
+def _marker_removed(info: provenance.FunctionInfo, old: provenance.Marker, tree: ast.Module, path: str,
+                    catalog: Catalog, base_keys, confirmed_proposals):
+    """PC111 when a function lost its marker but still infers as derived from the same pattern."""
+    inf = provenance.infer(info.node, catalog.refs)
+    if inf is None or not inf.derived or inf.pattern_id != old.pattern_id:
+        return None  # genuinely no longer derived from that pattern: nothing to report
+    pattern = catalog.by_key(inf.pattern_id, inf.version)
+    if pattern is None:
+        return None
+    analysis = deviation.analyze_function(tree, info.node, pattern, inf.function)
+    pc111 = deviation.Deviation(
+        "PC111", deviation.SEVERITY["PC111"],
+        f"`{info.qualname}` had the marker `# pcat: {old.ref}` at the base ref and still looks derived "
+        f"from it (similarity {inf.similarity:.2f}); restore the marker, or approve PC111 if the code "
+        f"no longer follows the pattern", info.start, info.qualname)
+    devs = deviation._dedupe([pc111, *analysis.deviations])
+    current_hash = provenance.function_hash(info.node)
+    items, stale, messages, records = apply_approvals(info, devs, path, current_hash=current_hash,
+                                                      base_keys=base_keys,
+                                                      confirmed_proposals=confirmed_proposals)
+    finding = Finding(path=path, function=info.qualname, line=info.node.lineno, provenance="marker-removed",
+                      pattern=pattern.meta.key, pattern_function=analysis.pattern_function,
+                      similarity=inf.similarity, deviations=items, stale_approvals=stale, diff=analysis.diff,
+                      hash=current_hash, approvals=records)
+    return finding, messages
 
 
 # --------------------------------------------------------------------------- #
@@ -430,7 +478,12 @@ def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on:
 def format_text(report: Report, show_diff: bool = True) -> str:
     out = []
     for f in report.findings:
-        how = "marked" if f.provenance == "marked" else f"inferred, similarity {f.similarity:.2f}, advisory"
+        if f.provenance == "marked":
+            how = "marked"
+        elif f.provenance == "marker-removed":
+            how = f"marker removed, similarity {f.similarity:.2f}; fails on PC111"
+        else:
+            how = f"inferred, similarity {f.similarity:.2f}, advisory"
         out.append(f"{f.path}:{f.line}: {f.function} <- {f.pattern} {f.pattern_function} ({how})")
         if not f.deviations:
             out.append("  no deviations")
