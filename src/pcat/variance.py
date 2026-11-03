@@ -169,7 +169,7 @@ class CliGenerator:
         env = {k: v for k, v in os.environ.items() if k not in CLI_STRIPPED_ENV}
         try:
             proc = subprocess.run(
-                self.command(prompt), cwd=self.workdir, env=env,
+                self.command(prompt), cwd=self.workdir, env=env, stdin=subprocess.DEVNULL,
                 capture_output=True, text=True, timeout=self.timeout,
             )
         except subprocess.TimeoutExpired:

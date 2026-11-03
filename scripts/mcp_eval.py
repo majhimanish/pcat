@@ -60,8 +60,15 @@ def _heldout_job(job: dict) -> dict:
 
 def cmd_heldout(args) -> int:
     target = OUT / "heldout_set.json"
-    if target.exists() and not args.force:
-        sys.exit(f"{target.relative_to(ROOT)} exists; it must not be regenerated (use --force)")
+    previous = {}
+    if target.exists():
+        if args.resume:  # keep successful items; regenerate only failed ones
+            for r in json.loads(target.read_text())["items"]:
+                if r["request"]:
+                    previous[(r["kind"], r["task"], r["need"], r["sample"])] = r
+        elif not args.force:
+            sys.exit(f"{target.relative_to(ROOT)} exists; it must not be regenerated "
+                     "(--resume fills in failed items)")
     needs = json.loads((OUT / "heldout_needs.json").read_text())
     jobs = []
     for task, need in needs["positives"].items():
@@ -72,9 +79,12 @@ def cmd_heldout(args) -> int:
     for job in jobs:
         job["prompt"] = evaluation.HELDOUT_PROMPT.format(need=job["need"])
         job["model"] = args.model
-    print(f"generating {len(jobs)} held-out requests with claude -p ({args.model})")
+    todo = [j for j in jobs if (j["kind"], j["task"], j["need"], j["sample"]) not in previous]
+    print(f"generating {len(todo)} of {len(jobs)} held-out requests with claude -p ({args.model})")
     with ThreadPoolExecutor(max_workers=args.jobs) as pool:
-        records = list(pool.map(_heldout_job, jobs))
+        fresh = {(r["kind"], r["task"], r["need"], r["sample"]): r for r in pool.map(_heldout_job, todo)}
+    records = [previous.get(k) or fresh[k] for k in
+               ((j["kind"], j["task"], j["need"], j["sample"]) for j in jobs)]
     failed = [r for r in records if not r["request"]]
     write_json(target, {"model": args.model, "prompt_template": evaluation.HELDOUT_PROMPT,
                         "items": records})
@@ -143,6 +153,7 @@ def main() -> int:
     h.add_argument("--model", default=variance.DEFAULT_MODEL)
     h.add_argument("--jobs", type=int, default=8)
     h.add_argument("--force", action="store_true")
+    h.add_argument("--resume", action="store_true", help="regenerate only failed items")
     r = sub.add_parser("retrieval")
     r.add_argument("--out", default=None, help="file name under experiments/mcp/")
     args = parser.parse_args()
