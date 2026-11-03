@@ -1,0 +1,24 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "/security-review needs to run inside a git repository, but the current working directory (`/tmp/pcat-variance-yrnjxqix`) is not one.\n\nIf the repository is in a subdirectory, `cd` into it first and then re-run /security-review.\n\nIf this is a self-hosted runner session created without a `git_repository` source, either add one at session creation so the runner clones it and sets the working directory, or `cd` into the cloned repo before running the review.\n",
+  "condition": "C",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.037064400000000004,
+    "duration_ms": 8851,
+    "num_turns": 3
+  },
+  "invalid_reason": "syntax_error: invalid syntax",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Python: function to issue a signed access token (JWT) containing the user's id and an expiration.\n\nFollow this reference implementation; adapt names and details only where the request requires it:\n\n```python\nimport os\nimport time\nimport uuid\n\nimport jwt  # PyJWT\n\n\ndef generate_access_token(\n    user_id: str,\n    secret_key: str | None = None,\n    expires_in_seconds: int = 900,\n    algorithm: str = \"HS256\",\n    issuer: str | None = None,\n    audience: str | None = None,\n    extra_claims: dict | None = None,\n) -> str:\n    \"\"\"Generate a signed JWT access token for the given user ID.\n\n    Args:\n        user_id: Identifier stored in the \"sub\" claim.\n        secret_key: Signing key. Defaults to the JWT_SECRET_KEY environment variable.\n        expires_in_seconds: Token lifetime in seconds (default 15 minutes).\n        algorithm: Signing algorithm (default HS256).\n        issuer: Optional \"iss\" claim.\n        audience: Optional \"aud\" claim.\n        extra_claims: Optional additional claims (cannot override reserved claims).\n\n    Returns:\n        The encoded JWT as a string.\n    \"\"\"\n    if not user_id:\n        raise ValueError(\"user_id must be a non-empty value\")\n    if expires_in_seconds <= 0:\n        raise ValueError(\"expires_in_seconds must be positive\")\n\n    secret_key = secret_key or os.environ.get(\"JWT_SECRET_KEY\")\n    if not secret_key:\n        raise ValueError(\n            \"A signing key is required: pass secret_key or set JWT_SECRET_KEY\"\n        )\n\n    now = int(time.time())\n    payload = dict(extra_claims or {})\n    payload.update(\n        {\n            \"sub\": str(user_id),\n            \"iat\": now,\n            \"nbf\": now,\n            \"exp\": now + int(expires_in_seconds),\n            \"jti\": uuid.uuid4().hex,\n            \"type\": \"access\",\n        }\n    )\n    if issuer:\n        payload[\"iss\"] = issuer\n    if audience:\n        payload[\"aud\"] = audience\n\n    return jwt.encode(payload, secret_key, algorithm=algorithm)\n```\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "prompt_variant": "paraphrase-2+reference",
+  "raw_response": "/security-review needs to run inside a git repository, but the current working directory (`/tmp/pcat-variance-yrnjxqix`) is not one.\n\nIf the repository is in a subdirectory, `cd` into it first and then re-run /security-review.\n\nIf this is a self-hosted runner session created without a `git_repository` source, either add one at session creation so the runner clones it and sets the working directory, or `cd` into the cloned repo before running the review.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "task": "jwt_create",
+  "temperature": null,
+  "timestamp": "2026-11-02T07:06:06+00:00",
+  "valid": false
+}
