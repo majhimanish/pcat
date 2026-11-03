@@ -77,7 +77,7 @@ def test_pcat_serve_over_stdio_from_another_directory(tmp_path):
         async with stdio_client(params) as (read, write):
             async with ClientSession(read, write) as session:
                 init = await session.initialize()
-                result = await session.call_tool("search_patterns", {"request": "throttle API calls per client"})
+                result = await session.call_tool("search_patterns", {"request": "rate limit API requests per client with a token bucket"})
                 return init, result
 
     init, result = anyio.run(run)
