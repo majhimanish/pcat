@@ -661,3 +661,44 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      The v3 miss samples themselves were not opened while writing guards.
 150. **Check 11:** every guard holds on the pattern's own code (all results ok,
      every min/max target found). Runs with `--skip-tests` too (no execution).
+151. **Deviation analysis compares facts, not text.** Both sides are units
+     (decision 148). Calls, exception types and raised types are compared as
+     resolved names; statements are compared as keys with locals -> `_v`, unit
+     functions -> `_f`, constants -> `_c`, imports -> origin, annotations and
+     docstrings removed, so renaming (including import aliases) never produces a
+     deviation. Statement keys feed a `difflib` alignment for PC109/PC110.
+152. **Alignment.** Helpers pair by name, then in source order; a pattern helper
+     the user calls but does not define is assumed to be provided elsewhere and
+     left out of the comparison. Entry-point parameters pair by name, then by
+     equal position. Constants pair by name, then by order among same-typed
+     values. Locals map by canonical numbering when the function's structure is
+     identical, else by walking matching statements in parallel; import
+     bindings map by origin. Used only for messages and the diff.
+153. **Code semantics.** PC101: a type the pattern catches is caught by no user
+     handler (broad handlers and builtin superclasses count). PC102: pattern
+     raises are matched to user raises by type and the shape of the guarding
+     `if` test, then by type; unmatched ones are reported (bare `raise` counts).
+     PC103: a `requires` library is no longer used, or a pattern import root was
+     dropped *and* a non-stdlib root was added (adding a library alone is not a
+     swap; roots count only when used outside annotations). PC104: more broad
+     handlers than the pattern. PC105/PC108: resolved call names missing/new
+     (calls to locals are ignored). PC106: `_name` attributes or imported/free
+     `_names` not in the pattern (the file's own top-level privates are fine).
+     PC107: parameters added/removed, kind changed, `*args`/`**kwargs`
+     changed, or a default whose shape changed; a default differing only in a
+     literal is PC109. PC109: constant values, literal-only defaults, and literals
+     in statements of the same shape (only when the function's statement
+     alignment ratio is >= 0.8, so rewrites do not produce nonsense pairs).
+     PC110: one per function summarising unexplained added/missing statements,
+     plus added/removed helpers.
+154. **Guards take precedence** for the same fact: a violated `must_catch`
+     replaces PC101 for that type, `must_call` replaces PC105, `must_not_call`
+     PC108, `must_not_import` PC103; any value guard (passing or not) replaces
+     PC109 for its target, since the reviewer bounded that value. A guard
+     violation is reported even when the code otherwise matches the pattern's
+     shape exactly (a lowered security constant is the point of guards).
+155. **Messages and diff** use the user's names (functions, parameters,
+     constants, locals where aligned, import aliases); guard messages keep the
+     reviewer's spelling of library names. Output is sorted by severity, code,
+     line, message. The diff (pattern in the user's names vs the user's code,
+     comments and docstrings removed) is capped at 80 lines.

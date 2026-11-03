@@ -34,6 +34,7 @@ class Unit:
     file_constants: dict[str, object]  # every top-level literal constant of the file
     imports: dict[str, str]  # bound name -> dotted origin (module level + inside the unit)
     undefined_calls: set[str] = field(default_factory=set)  # free names called, defined nowhere
+    file_names: set[str] = field(default_factory=set)  # every name bound at the file's top level
     _locals: dict[int, set[str]] = field(default_factory=dict, repr=False)
 
     @property
@@ -205,6 +206,7 @@ def build_unit(tree: ast.Module, func: ast.FunctionDef) -> Unit:
         constant_nodes={k: const_nodes[k] for k in constants},
         file_constants=const_values,
         imports=imports,
+        file_names=top_level_names,
     )
     defined = top_level_names | set(dir(builtins)) | set(imports)
     for f in unit.functions:
