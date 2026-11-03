@@ -399,6 +399,13 @@ guards:
   value: 600000
 ```
 
+**Measured (v4, `docs/benchmarks/v4-linter.md`):** replayed on the 140 v3 agent
+samples, none of the 122 unchanged ones is flagged above low and all 18 changed
+ones get a named deviation (the 6 narrowed HTTP retries `PC100` high). Rerunning
+the 3 affected tasks with the v4 server, no sample shipped an unapproved
+high-severity deviation (v3: 12 of 60); most were approved with a reason rather
+than fixed, so reviewers should read `# pcat-allow` reasons critically.
+
 **CI for client repositories:** `docs/ci/pcat-lint.yml` is a reusable GitHub
 Actions workflow that installs pcat from the catalog repository and runs
 `pcat lint --format github --changed-since origin/<base>` on pull requests, so
@@ -420,5 +427,6 @@ In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern fold
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`)
-- `docs/benchmarks/` — miner benchmark, variance experiment and MCP results
+  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`)
+- `docs/benchmarks/` — miner benchmark, variance experiment, MCP and linter results
+- `docs/ci/pcat-lint.yml` — reusable workflow that lints client pull requests

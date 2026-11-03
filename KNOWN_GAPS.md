@@ -196,8 +196,8 @@ when you fix it; add one whenever you take a shortcut.
   (xlsx input, pandas) but also a silent regression (`http_retry` narrowed to
   `requests.Timeout`, dropping connection-error retries) and an unasked check
   reading SQLAlchemy's private `_order_by_clauses`. `check_code` reported `none`
-  and the agent submitted anyway. *Fix:* `check_code` (and the v4 linter)
-  should say what differs from the pattern; CI should flag near-misses.
+  and the agent submitted anyway. *Addressed in v4:* `check_code` and `pcat lint`
+  now report what differs; agents mostly approve rather than fix (see v4 gaps).
 - **The evaluation favours the server.** One model (claude-sonnet-5-5), only the
   pcat tools allowed, an explicit repo note, requests written by the same model
   family from needs I wrote, a 13-pattern catalog. *Fix:* rerun with file/shell
@@ -217,3 +217,47 @@ when you fix it; add one whenever you take a shortcut.
 - **The tool-call log grows without bound** and has timestamps (it is
   evaluation output, not a deterministic artifact). *Fix:* rotate, or keep it
   out of repositories.
+
+## Deviation linter (v4)
+
+- **Approvals are written by agents.** In the feedback run the agent itself added
+  every `# pcat-allow` line (5 HTTP `PC100` approvals keep connection errors
+  unretried). Nothing distinguishes a reviewer's approval from an agent's.
+  *Fix:* treat approvals as proposals until confirmed (e.g. a reviewer handle in
+  the approval, checked in CI against the pull request's approving reviews).
+- **Removing the marker escapes CI.** Only marked code can fail; an agent (or a
+  person) that deletes `# pcat: …` turns findings into advisory inferred ones. All
+  60 feedback samples kept the marker, but nothing enforces it. *Fix:* fail on
+  changed functions that are inferred as derived with high deviations, or require
+  a marker on them.
+- **Guards cover only what was written down.** 20/20 HTTP samples dropped `429`
+  from `RETRY_STATUSES` and it is only `PC109` low: there is no guard kind for
+  "this tuple/set must still contain X". *Fix:* a `must_contain` guard kind
+  (values in a constant), and guard proposals from observed deviations.
+- **Severity is rule-based and sometimes off.** `PC103` fires for dropping a stdlib
+  plumbing module next to a new library (`io` → `openpyxl` in a v3 CSV sample);
+  `PC110` can repeat a line already reported by a `must_not_call` guard. *Fix:*
+  count only modules that provide the pattern's core calls for `PC103`; attribute
+  every guard's line in the PC110 explanation.
+- **Guard matching is by name.** `must_call: hmac.compare_digest` rejects the
+  identical `secrets.compare_digest`; `must_catch` knows builtin superclasses but
+  not third-party ones (`requests.RequestException`); a `min_value`/`max_value`
+  whose target was inlined or renamed beyond alignment is "not checked". *Fix:*
+  alternatives in guard names (`a | b`), a small superclass table per library.
+- **Alignment is heuristic.** Helpers, parameters and constants pair by name and
+  then by position; in heavy rewrites messages and the diff can name the wrong
+  counterpart. Code split differently from the pattern (logic moved into a new
+  helper) shows as many PC105/PC108/PC110 lines.
+- **Inference margin is narrow and fitted.** Threshold 0.56 sits between the
+  lowest derived (0.54) and highest non-derived (0.58) function of the
+  calibration set it was chosen on; derived labels were themselves picked by
+  similarity. Small validators score near `parse_bool`. Advisory only.
+- **Guards are not in `index.json`** (deliberately, to keep the format stable);
+  out-of-process tools cannot see them. *Fix:* add `guards` in the next index change.
+- **The replay was not blind** (the v3 write-up named the misses; three miss samples
+  were inspected while building the analyzer). Future rule changes should be judged
+  on new samples, e.g. another feedback run.
+- **`check_code` is skipped when the agent thinks nothing changed** (11/20 pagination
+  feedback samples called it). Harmless here; `pcat lint` in CI is the backstop.
+- **`--changed-since` runs git once per file**; slow on very large trees.
+

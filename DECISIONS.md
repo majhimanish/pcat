@@ -745,3 +745,21 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      pattern call `check_code` with the final code and the pattern id; fix every
      high-severity deviation unless the request explicitly requires it, and then
      add `# pcat-allow: <code> -- <reason>` above the function's marker.
+164. **Replay method.** Each v3 sample is linted with `check_code(code,
+     pattern_id)` (the analysis `pcat lint` uses), where `pattern_id` is the
+     task's pattern if the tool log shows it was fetched (all were), standing in
+     for the marker the v3 code does not have. Outcome labels (exact match vs
+     fetched-but-changed) come from `experiments/mcp/e2e_results.json`.
+     "Switched library" for CSV = imports pandas/openpyxl/polars/xlrd and no
+     longer imports `csv` (4 samples, all pandas).
+165. **Feedback run.** `scripts/mcp_eval.py`'s v3 job builder and runner are
+     reused unchanged (same held-out requests, cycling, prompt, repo note, model
+     and CLI flags), loaded as a module with its output directory redirected to
+     `experiments/linter/feedback/`; only the server (now v4) differs. "High
+     shipped unapproved" = the final code, analysed with its markers (or the
+     pattern id), has an unapproved high deviation. Approvals counted are those
+     in the final code. v3 baselines for these tasks come from the replay.
+166. **v3 erratum.** The v3 write-up said both pagination misses read
+     `_order_by_clauses`; the replay showed only sample 12 does (sample 17 adds a
+     `tiebreaker` parameter). A dated erratum was added to
+     `docs/benchmarks/v3-mcp.md`; no v3 data changed.
