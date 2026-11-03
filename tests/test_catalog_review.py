@@ -59,5 +59,9 @@ def test_comparison_mentions_every_variant_and_recommendation():
     for path in variant_files():
         assert f"### `{path.stem}`" in doc
     choices = yaml.safe_load((REVIEW / "choices.yaml").read_text())["choices"]
+    sections = re.split(r"\n## ", doc)
     for task, choice in choices.items():
-        assert f"## {task} " in doc and f"### Recommendation: `{choice['variant']}`" in doc
+        (section,) = [s for s in sections if s.startswith(f"{task} ")]
+        # The owner may choose differently from the recommendation; both must be real options.
+        assert re.search(r"### Recommendation: `(\w+)`", section), task
+        assert choice["variant"] == "defer" or f"### `{choice['variant']}`" in section, task
