@@ -418,3 +418,43 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      mostly the pairwise similarity metric.
 107. **Write-up averages** ("mean effective shapes") use only task/condition cells
      with at least 10 valid samples, which excludes `fastapi_create_user` A and B.
+
+## v2.2 Part 1 — application catalog review (`docs/specs/v2.2-app-catalog.md`)
+
+108. **Part 1 only.** `docs/catalog-review/choices.yaml` did not exist, so this
+     session prepared the comparison and stopped; Part 2 waits for `status: final`.
+109. **Grouping:** the 40 A+B samples per task (including those invalid in v2.1
+     because of classes) were classified by regex features for each design
+     decision, then checked by reading the shortest sample of each group. Two
+     regex counts were wrong and were redone: `env_config` (5 schema-parameter
+     loaders, not 21) and `paginate_query` (13 legacy `Query`, 27 `select`).
+110. **Representative = shortest sample of the group** (a proxy for "cleanest");
+     the comparison names it per variant ("cleaned from sample …").
+111. **Variant module names are globally unique** (`jwt_minimal_claims`,
+     `bucket_bool`, …) because all variant tests run in one pytest session with
+     rootdir-based imports.
+112. **Variant rules:** catalog-ready (the unchanged canonicalizer accepts every
+     file), stdlib preferred, secrets/URLs/clocks/`sleep`/randomness/transports
+     passed in, lines ≤ 100 characters for phones, code blocks about 40 lines
+     (`csv_text_stream` is 45). Defaults such as `timedelta(minutes=15)` are
+     allowed in signatures (only module-level constants must be literals).
+113. **Security parameters:** HS256 secret ≥ 32 bytes; scrypt N=2^17, r=8, p=1
+     with `maxmem` 256 MiB (p ≤ 16 when verifying); PBKDF2 600,000 iterations
+     (≤ 10,000,000 when verifying); page size ≤ 100; `Retry-After` capped at
+     `max_delay`; CSV `max_rows` 10,000 and email ≤ 254 characters with no
+     regex (the samples' regex is quadratic: 0.7 s on 16 KB); FastAPI password
+     12–128 characters.
+114. **Class-free FastAPI** interprets "validated dict input" as per-field
+     `Annotated[..., Body(...)]` parameters (what the 3 class-free samples did):
+     FastAPI still validates them and documents them in OpenAPI. Routes are added
+     by `register_routes(app_or_router)` because catalog rules forbid a
+     module-level `router`; repository and hasher dependencies fail closed.
+115. **Recommendations against the majority:** `env_schema_loader` (5/40) because
+     a catalog pattern must be reusable unchanged; `paginate_page_dict` (5/40)
+     to standardise response shapes; `defer` for FastAPI to avoid spreading
+     non-idiomatic code. The rest follow the majority.
+116. **Dependencies:** `docs/catalog-review/requirements.txt` with version ranges;
+     variant tests use `pytest.importorskip`; pytest `testpaths` include the
+     variants; CI installs the requirements and runs them in their own step.
+117. **`scripts/catalog_review_doc.py`** regenerates the comparison from the
+     variant files and never overwrites an existing `choices.yaml`.

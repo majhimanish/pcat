@@ -11,23 +11,21 @@ approved patterns instead of producing a new variation per prompt.
 
 ## Status
 
-- **v1 (done):** catalog format, canonicalizer, `pcat` CLI (`new add canonical
-  fingerprint validate index show render find`), 10 validation checks plus an
-  optional `--base` immutability check, GitHub Actions CI, CODEOWNERS, 6 seed
-  patterns. Spec: `docs/specs/v1-catalog.md`.
+- **v1 (done):** catalog format, canonicalizer, `pcat` CLI, 10 validation checks +
+  `--base`, CI, CODEOWNERS, 6 seed patterns. Spec: `docs/specs/v1-catalog.md`.
 - **v1.1 (done):** rules v2 (`CANONICAL_VERSION = 2`): helper keywords renamed,
   literal constants (`cN`), `pcat migrate-fingerprints`, versioned `index.json`,
   stricter `--base`. Spec: `docs/specs/v1.1-canonicalizer-fix.md`.
-- **v2 (done):** pattern miner. `pcat mine` clusters repeated function shapes
-  and block fragments across repos, reports catalog coverage (`report.json` +
-  `report.html`); `pcat promote` turns a function cluster into a pattern via the
-  `pcat add` flow. Spec: `docs/specs/v2-miner.md`. Benchmark on
-  requests/flask/fastapi: `docs/benchmarks/v2-results.md` (0% coverage; all
-  default clusters were FastAPI tutorial copies; library code barely repeats).
+- **v2 (done):** miner: `pcat mine` (function/fragment clusters, coverage),
+  `pcat promote`. Benchmark: `docs/benchmarks/v2-results.md` (library code barely repeats).
 - **v2.1 (done):** LLM output variance experiment (`experiments/variance/`,
   `src/pcat/variance.py`, `scripts/variance.py`). 480 Claude Sonnet 5.5 samples:
   same prompt → effective shapes 15.7 of 20 on average; paraphrased 17.4; with a
   reference in the prompt 2.0. Write-up: `docs/benchmarks/v2.1-variance.md`.
+- **v2.2 Part 1 (done), Part 2 (waiting):** `docs/catalog-review/` compares 17
+  cleaned, tested variants for the 8 experiment tasks; `choices.yaml` is
+  `status: draft`. **Run Part 2 of `docs/specs/v2.2-app-catalog.md` only when the
+  owner sets `status: final`.**
 - **Planned next:** v3 MCP server (serve the catalog to coding agents), v4 linter
   (flag application code that reimplements or uses deprecated patterns).
 
@@ -88,6 +86,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `experiments/variance/` — `tasks.yaml` (frozen prompts), `runs/<id>/<task>/<A|B|C>/
   sample_NN.{py,json}`, `analysis.json`, `mine-*` reports, `references/` (not catalog).
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
+- `docs/catalog-review/` — v2.2 comparison doc, `choices.yaml`, `variants/<task>/`
+  (+ tests, in pytest testpaths; skip without `requirements.txt` libraries).
 
 ## Invariants (never break these)
 
@@ -128,7 +128,7 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `DECISIONS.md` — every assumption made so far (read before changing behavior)
 - `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-…`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`; later `v3-mcp.md`, `v4-linter.md`)
+  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`; later `v3-mcp.md`, `v4-linter.md`)
 - `docs/benchmarks/` — `v2-results.md` (mining), `v2.1-variance.md` (LLM variance)
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 

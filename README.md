@@ -235,6 +235,23 @@ python scripts/variance.py analyze --run-id main
 
 Results and the write-up: [`docs/benchmarks/v2.1-variance.md`](docs/benchmarks/v2.1-variance.md).
 
+## Application catalog review (v2.2)
+
+The variance experiment showed the model follows whatever reference it is given,
+so application patterns are chosen by a person, not taken from samples.
+[`docs/catalog-review/v2.2-comparison.md`](docs/catalog-review/v2.2-comparison.md)
+compares cleaned, tested variants for each of the 8 experiment tasks (JWT,
+password hashing, pagination, HTTP retry, env config, token bucket, CSV import,
+FastAPI create-user) with security notes and a recommendation. The owner records
+decisions in `docs/catalog-review/choices.yaml` and sets `status: final`; Part 2
+of the v2.2 spec then turns them into catalog patterns.
+
+```bash
+pip install -r docs/catalog-review/requirements.txt   # PyJWT, requests, SQLAlchemy, FastAPI
+pytest docs/catalog-review/variants                   # skips modules whose library is missing
+python scripts/catalog_review_doc.py                  # regenerate the comparison from the code
+```
+
 ## Planned extensions
 
 Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
@@ -256,5 +273,5 @@ internals can change without breaking these tools.
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`)
+  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`)
 - `docs/benchmarks/` — miner benchmark and variance experiment results

@@ -148,3 +148,21 @@ when you fix it; add one whenever you take a shortcut.
   distribution, or a semantic check (do two samples pass the same tests?).
 - **`third_party` uses the running interpreter's `sys.stdlib_module_names`**, so
   import-set columns could differ slightly across Python versions.
+
+## Catalog review (v2.2 Part 1)
+
+- **Patterns with several public functions.** `password_hash` variants export
+  `hash_password` and `verify_password`; `pcat add` copies only the entry point
+  and the helpers it calls, so it would drop `verify_password`. *Fix (Part 2):*
+  create such patterns with `pcat new` and copy the file, or let `pcat add`
+  take several `--function` options.
+- **Grouping relied partly on regexes**; the counts in the comparison are
+  approximate where a decision is hard to detect textually. *Fix:* classify with
+  AST checks per decision, or label samples by hand.
+- **Pagination is tested on SQLite only.** COUNT over a subquery and LIMIT/OFFSET
+  behave the same on PostgreSQL/MySQL, but this is untested. *Fix:* a CI job with
+  a PostgreSQL service.
+- **FastAPI TestClient warns** that `httpx` is deprecated for Starlette's test
+  client in favour of `httpx2`. *Fix:* switch the test dependency once `httpx2`
+  is stable.
+- **No tooling reads `choices.yaml` yet**; Part 2 applies it by hand.
