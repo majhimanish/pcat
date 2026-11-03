@@ -3,11 +3,17 @@
 An organization-specific catalog of **verified Python code patterns**.
 
 Code written by people or AI agents drifts: every prompt produces a slightly
-different binary search, retry loop or slugifier. Instead, common code shapes
+different JWT helper, password check or retry loop. Instead, common code shapes
 are written once, reviewed by engineers, and stored here. Each pattern is a
 self-contained function with metadata and tests, plus a **fingerprint** of its
 canonical form, so tools can tell when a piece of code *is* a catalog pattern
 no matter how its variables are named or commented.
+
+**The catalog's focus is application patterns** chosen and reviewed by a person
+(v2.2): JWT creation, password hashing, pagination, HTTP retry, settings from
+the environment, rate limiting and CSV import (`auth.*`, `db.*`, `http.*`,
+`config.*`, `ratelimit.*`, `importers.*`). The six original algorithm seeds
+(binary search, merge sort, …) remain as small, well-tested examples.
 
 This repository has the catalog and its review workflow (file format,
 canonicalizer, `pcat` CLI, validation, CI) and a **miner** that measures how much
@@ -19,8 +25,9 @@ planned next (see [Planned extensions](#planned-extensions)).
 
 ```bash
 python -m venv .venv && . .venv/bin/activate     # Python 3.11+
-pip install -e .[dev]
-pytest                  # tests for the tool (also validates the seed catalog)
+pip install -e ".[dev,catalog]"   # catalog = libraries the patterns import
+pytest                  # tool tests; also validates the catalog (third-party pattern
+                        # tests skip if the catalog extra is not installed)
 pcat validate           # all catalog checks, including every pattern's tests
 pcat show search.binary_search.iterative
 ```
@@ -80,10 +87,12 @@ pcat validate text.truncate.word_boundary
 ```
 
 **From existing code** — copies the function, every top-level helper it calls
-(transitively) and the imports they use; comments are kept:
+(transitively) and the imports they use; comments are kept. Repeat `--function`
+when a pattern exports several functions; the first is the entry point:
 
 ```bash
 pcat add path/to/module.py --function top_words --id text.top_words.counter
+pcat add auth.py --function hash_password --function verify_password --id auth.password.x
 # write real tests in test_impl.py, fill in behavior, then:
 pcat index && pcat validate text.top_words.counter
 ```
@@ -91,6 +100,13 @@ pcat index && pcat validate text.top_words.counter
 `pcat add` also copies every literal constant those functions use. If a used
 module-level name is anything else (e.g. `PATTERN = re.compile(...)`), it fails
 and names it; move that value into the function or make it a literal.
+
+A pattern that imports third-party packages lists them in `pattern.yaml` as
+`requires: ["pyjwt>=2.8,<3"]` (metadata only; it does not affect the
+fingerprint and appears in `index.json`). Add the same requirement to the
+`catalog` extra in `pyproject.toml` (a test checks this), and start the test
+file with `pytest.importorskip(...)` so it skips cleanly where the library is
+missing.
 
 The templates deliberately fail validation (failing test, `TODO` fields) until
 you finish them. Rules for `impl.py`: only imports, functions and literal
@@ -129,11 +145,12 @@ category, e.g. `/catalog/retry/ @your-org/sre`.
 
 ### Other CI systems
 
-The workflow is four shell commands after checkout with full history:
+The workflow is a few shell commands after checkout with full history:
 
 ```bash
-pip install -e .[dev]
+pip install -e ".[dev,catalog]"
 pytest tests/
+pip install -r docs/catalog-review/requirements.txt && pytest docs/catalog-review/variants
 pcat validate
 pcat validate --skip-tests --base origin/main     # pull requests only
 ```
@@ -243,13 +260,16 @@ so application patterns are chosen by a person, not taken from samples.
 compares cleaned, tested variants for each of the 8 experiment tasks (JWT,
 password hashing, pagination, HTTP retry, env config, token bucket, CSV import,
 FastAPI create-user) with security notes and a recommendation. The owner records
-decisions in `docs/catalog-review/choices.yaml` and sets `status: final`; Part 2
-of the v2.2 spec then turns them into catalog patterns.
+decisions in `docs/catalog-review/choices.yaml` (now `status: final`), and Part 2
+turned seven of them into catalog patterns (FastAPI create-user is deferred until
+patterns can contain classes). The comparison ends with a coverage check: none
+of the 135 v2.1 condition-B samples already matched its chosen pattern.
 
 ```bash
 pip install -r docs/catalog-review/requirements.txt   # PyJWT, requests, SQLAlchemy, FastAPI
 pytest docs/catalog-review/variants                   # skips modules whose library is missing
 python scripts/catalog_review_doc.py                  # regenerate the comparison from the code
+python scripts/catalog_coverage.py --condition B      # v2.1 samples vs the catalog patterns
 ```
 
 ## Planned extensions

@@ -151,11 +151,6 @@ when you fix it; add one whenever you take a shortcut.
 
 ## Catalog review (v2.2 Part 1)
 
-- **Patterns with several public functions.** `password_hash` variants export
-  `hash_password` and `verify_password`; `pcat add` copies only the entry point
-  and the helpers it calls, so it would drop `verify_password`. *Fix (Part 2):*
-  create such patterns with `pcat new` and copy the file, or let `pcat add`
-  take several `--function` options.
 - **Grouping relied partly on regexes**; the counts in the comparison are
   approximate where a decision is hard to detect textually. *Fix:* classify with
   AST checks per decision, or label samples by hand.
@@ -165,4 +160,28 @@ when you fix it; add one whenever you take a shortcut.
 - **FastAPI TestClient warns** that `httpx` is deprecated for Starlette's test
   client in favour of `httpx2`. *Fix:* switch the test dependency once `httpx2`
   is stable.
-- **No tooling reads `choices.yaml` yet**; Part 2 applies it by hand.
+
+## Application catalog (v2.2 Part 2)
+
+- **Exported functions are not recorded as such.** In a multi-function pattern
+  (`auth.password.pbkdf2`, `config.env.load_settings`) only `entry_point` is
+  named; the other public functions look like helpers in the canonical form and
+  in `index.json`. *Fix:* an optional `exports` list in `pattern.yaml` and the
+  index (metadata only).
+- **Skipped tests count as passing.** Without the `catalog` extra, `pcat validate`
+  passes third-party patterns whose tests were all skipped. CI installs the extra,
+  so it verifies them there. *Fix:* report skipped patterns in `validate` output,
+  or add a `--require-tests-run` flag for CI.
+- **`requires` is not checked against imports.** Nothing verifies that a pattern
+  importing `jwt` declares `pyjwt`. *Fix:* map top-level imports to distributions
+  (`importlib.metadata.packages_distributions`) during validation.
+- **`requires` appears in `index.json` only when non-empty** (to keep existing
+  entries byte-identical); consumers must default it. *Fix:* add it to every
+  entry in the next deliberate index-format change.
+- **FastAPI create-user is deferred** until patterns can contain classes
+  (Pydantic models). The tested class-free variant stays in `docs/catalog-review/`.
+- **Seed-specific assumptions** may remain in docs or examples (e.g.
+  `pcat show search.binary_search.iterative` in the quick start); harmless, but
+  application patterns make better examples.
+- **Owner and review are placeholders**: every pattern's `owner` is
+  `@platform-team` and CODEOWNERS still names that placeholder team.

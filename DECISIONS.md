@@ -458,3 +458,56 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      variants; CI installs the requirements and runs them in their own step.
 117. **`scripts/catalog_review_doc.py`** regenerates the comparison from the
      variant files and never overwrites an existing `choices.yaml`.
+
+## v2.2 Part 2 — application catalog patterns
+
+118. **Owner's choices** (`choices.yaml`, final): recommendations accepted except
+     `password_hash` → PBKDF2. The owner asked to keep all proposed ids, but the
+     proposed `auth.password.scrypt` named the wrong algorithm; asked, the owner
+     chose `auth.password.pbkdf2`. FastAPI is deferred.
+119. **Multi-function patterns (fixes the KNOWN_GAPS entry):** `extract_function`
+     takes one name or a list; each name is a root for the same transitive
+     helper/constant/import collection, and a single name gives exactly the old
+     output. `pcat add` accepts `--function` repeatedly; the first is the entry
+     point (`entry_point`, `f0`), the others are exported alongside. Simplest
+     design: no schema change (other exported functions are helpers to the
+     canonicalizer, which already includes every top-level function).
+     `migrate-fingerprints` confirmed 0 of 6 fingerprints changed.
+120. **Pattern files:** each pattern was created with `pcat add`; when the result
+     was canonically identical to the documented variant file, that file
+     (module docstring and comments included) was kept as `impl.py` — the
+     fingerprint is the same either way.
+121. **Owner notes for PBKDF2:** `hash_password` refuses fewer than 600,000 (or more
+     than 10,000,000) iterations; the count is stored in the hash; `ITERATIONS`
+     (default) and `MIN_ITERATIONS` (floor) are separate constants so the default
+     can be raised; `verify_password` still accepts lower legacy counts, and a
+     third function `needs_rehash(stored, iterations=ITERATIONS)` says when to
+     re-hash after a successful login (also True for malformed or foreign hashes).
+122. **`requires`:** optional list of pip requirement strings (name, extras,
+     version specifiers; no markers or URLs; one entry per distribution). It is
+     metadata only (not in the fingerprint, not an immutable field, so ranges can
+     be widened later). `index.json` includes a sorted `requires` key only for
+     patterns that declare some, so existing entries and their test stay
+     byte-identical; consumers should read `entry.get("requires", [])`.
+123. **`catalog` extra** in `pyproject.toml` = union of all `requires`;
+     `tests/test_catalog_requires.py` fails if a pattern's requirement is missing
+     from it. CI installs `.[dev,catalog]`.
+124. **Clean skips:** third-party pattern tests start with `pytest.importorskip`.
+     pytest then exits 5 ("no tests ran"); check 8 treats exit 5 as a pass only
+     when the summary reports skips and no failures or errors, so `pcat validate`
+     and `pytest` pass without the extra. A test file with no tests still fails.
+125. **Changed test expectations (catalog grew by design):** five tool tests
+     hard-coded the 6-seed catalog. They now derive counts from the catalog; the
+     index-format test checks a seed entry; "catalog contains exactly the seeds"
+     became "all seeds present with their v1 fingerprints" (pinned values, equal
+     to the v1 commit). The Part 1 guard test that required choices to equal the
+     recommendations now only requires a valid documented option.
+126. **Behavior maps and families:** each pattern's `variant_of` is its id's first
+     two segments (e.g. `auth.password`), so later alternatives (scrypt) become
+     variants of the same family; `behavior` records the decisions from the
+     comparison (algorithm, return shape, limits).
+127. **Coverage check:** `scripts/catalog_coverage.py` compares v2.1 samples with
+     each pattern as a whole snippet (v2.1 normalization) and by main function
+     (miner-style), shape and exact, plus the closest similarity. Result for B:
+     0 of 135 matched (closest 0.39–0.85); A and C also 0. Sanity-checked: a
+     pattern matches itself, and a renamed/re-commented copy matches by shape.

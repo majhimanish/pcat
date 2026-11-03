@@ -22,10 +22,10 @@ approved patterns instead of producing a new variation per prompt.
   `src/pcat/variance.py`, `scripts/variance.py`). 480 Claude Sonnet 5.5 samples:
   same prompt → effective shapes 15.7 of 20 on average; paraphrased 17.4; with a
   reference in the prompt 2.0. Write-up: `docs/benchmarks/v2.1-variance.md`.
-- **v2.2 Part 1 (done), Part 2 (waiting):** `docs/catalog-review/` compares 17
-  cleaned, tested variants for the 8 experiment tasks; `choices.yaml` is
-  `status: draft`. **Run Part 2 of `docs/specs/v2.2-app-catalog.md` only when the
-  owner sets `status: final`.**
+- **v2.2 (done):** application catalog. `docs/catalog-review/` compares 17 tested
+  variants; the owner's `choices.yaml` (final) became 7 patterns (`auth.*`, `db.*`,
+  `http.*`, `config.*`, `ratelimit.*`, `importers.*`; FastAPI deferred until patterns
+  support classes). Added: multi-function `pcat add`, `requires` metadata, `catalog` extra.
 - **Planned next:** v3 MCP server (serve the catalog to coding agents), v4 linter
   (flag application code that reimplements or uses deprecated patterns).
 
@@ -33,8 +33,8 @@ approved patterns instead of producing a new variation per prompt.
 
 ```bash
 python3.11 -m venv .venv && . .venv/bin/activate
-pip install -e .[dev]
-pytest                      # tool tests (tests/), includes validating the real catalog
+pip install -e ".[dev,catalog]"  # catalog = libraries the patterns import (CI installs it)
+pytest                      # tool tests + review variants; validates the real catalog
 pcat validate               # all checks incl. every pattern's tests
 pcat validate --skip-tests  # fast
 pcat validate --skip-tests --base origin/main   # approved versions unchanged
@@ -76,8 +76,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `src/pcat/cli.py` — typer app; thin layer over the modules above; errors
   become `error: …` + exit 1.
 - `src/pcat/errors.py` — `PcatError` and subclasses.
-- `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml`, `impl.py`,
-  `test_impl.py`; `catalog/index.json` is generated.
+- `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`),
+  `impl.py`, `test_impl.py`; `catalog/index.json` is generated. App patterns + 6 seeds.
 - `tests/` — tool tests; `conftest.py` gives a `root` fixture with a temp copy
   of the seed catalog; `tests/fixtures/miner/` holds miner fixture code
   (excluded from collection).
@@ -118,8 +118,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - Library code raises `PcatError` subclasses; only `cli.py` prints or exits.
 - Tests: `tests/test_<module>.py`; use the `root` fixture (never mutate the real
   `catalog/` in tests). Each validation check has a test that triggers it.
-- Pattern tests: `test_impl.py` next to `impl.py`, `from impl import …`, cover
-  normal cases, edge cases and empty input; no network, no sleeping.
+- Pattern tests: `test_impl.py` next to `impl.py`, `from impl import …`, normal/edge/
+  failure/security cases; no network or sleeping; `importorskip` for `requires` libs.
 - Commits: imperative subject (≤ 72 chars) saying what; body saying why.
   One meaningful step per commit; one pattern per PR.
 
