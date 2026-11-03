@@ -79,6 +79,23 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
                 out.append(GuardResult(index, guard.kind, exc, ok,
                                        f"`{fname}` can no longer raise `{exc}`; the reviewed "
                                        f"pattern raises it for invalid input{why}", unit.func.lineno))
+        elif guard.kind == "must_include":
+            target = names.get(guard.target, guard.target)
+            value, line, found = resolve_literal(unit, target)
+            if not found:
+                out.append(GuardResult(index, guard.kind, guard.target, True,
+                                       f"`{target}` not found in `{fname}`; guard not checked", line, False))
+                continue
+            label = f"`{target}`" + (f" (pattern: `{guard.target}`)" if target != guard.target else "")
+            if not isinstance(value, (list, tuple, set, frozenset)):
+                out.append(GuardResult(index, guard.kind, guard.target, False,
+                                       f"{label} is no longer a collection ({value!r}); the reviewed "
+                                       f"pattern requires it to include {_items(guard.values)}{why}", line))
+                continue
+            missing = [v for v in guard.values if v not in value]
+            out.append(GuardResult(index, guard.kind, guard.target, not missing,
+                                   f"{label} no longer includes {_items(missing)}; the reviewed pattern "
+                                   f"requires {_items(guard.values)}{why}", line))
         else:  # min_value / max_value
             target = names.get(guard.target, guard.target)
             value, line, found = resolve_value(unit, target)
@@ -99,8 +116,22 @@ def violations(results: list[GuardResult]) -> list[GuardResult]:
     return [r for r in results if not r.ok]
 
 
+def _items(values) -> str:
+    return ", ".join(repr(v) for v in values)
+
+
 def resolve_value(unit: Unit, target: str) -> tuple[float | None, int, bool]:
     """Numeric value of parameter `target`'s default or module constant `target`."""
+    value, line, found = resolve_literal(unit, target)
+    number = _number(value) if found else None
+    return number, line, found and number is not None
+
+
+def resolve_literal(unit: Unit, target: str) -> tuple[object, int, bool]:
+    """Literal value of parameter `target`'s default or module constant `target`.
+
+    Returns (value, line, found); a default that is not a literal or a file
+    constant counts as not found."""
     args = unit.func.args
     positional = [*args.posonlyargs, *args.args]
     defaults = dict(zip([a.arg for a in positional[len(positional) - len(args.defaults):]], args.defaults))
@@ -111,14 +142,14 @@ def resolve_value(unit: Unit, target: str) -> tuple[float | None, int, bool]:
         if node is None:
             return None, unit.func.lineno, False
         if isinstance(node, ast.Name) and node.id in unit.file_constants:
-            return _number(unit.file_constants[node.id]), node.lineno, True
+            return unit.file_constants[node.id], node.lineno, True
         try:
-            return _number(ast.literal_eval(node)), node.lineno, True
+            return ast.literal_eval(node), node.lineno, True
         except (ValueError, TypeError, SyntaxError):
             return None, node.lineno, False
     if target in unit.file_constants:
         line = unit.constant_nodes[target].lineno if target in unit.constant_nodes else unit.func.lineno
-        return _number(unit.file_constants[target]), line, True
+        return unit.file_constants[target], line, True
     return None, unit.func.lineno, False
 
 

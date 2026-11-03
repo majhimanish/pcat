@@ -466,8 +466,8 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     attributed_u: set[int] = set()
     attributed_lines: set[int] = set()  # user lines explained by a specific deviation
 
-    def emit(code: str, message: str, line: int, func: str | None = None) -> None:
-        devs.append(Deviation(code, SEVERITY[code], message, line, func or uname))
+    def emit(code: str, message: str, line: int, func: str | None = None, severity: str | None = None) -> None:
+        devs.append(Deviation(code, severity or SEVERITY[code], message, line, func or uname))
 
     # PC100: guards -------------------------------------------------------
     suppressed: dict[str, set[str]] = {k: set() for k in ("catch", "call", "nocall", "import", "value")}
@@ -477,7 +477,7 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
         names = {**al.constants, **al.params}
         guard_results = guards.check(uu, selected, names)
         for r in guard_results:
-            if r.kind in ("min_value", "max_value"):
+            if r.kind in ("min_value", "max_value", "must_include"):
                 suppressed["value"].add(r.item)
             if r.ok:
                 continue
@@ -500,14 +500,20 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     dropped = sorted(p_roots - u_roots)
     added_third = sorted(r for r in u_roots - p_roots
                          if r not in sys.stdlib_module_names and r not in suppressed["import"])
-    if missing_required:
-        emit("PC103", f"`{uname}` no longer uses {', '.join(f'`{r}`' for r in missing_required)}, "
-             f"which the pattern requires ({', '.join(meta.requires)})"
-             + (f"; it uses {', '.join(f'`{r}`' for r in added_third)} instead" if added_third else ""),
+    added_std = sorted(r for r in u_roots - p_roots if r in sys.stdlib_module_names)
+    names = lambda roots: ", ".join(f"`{r}`" for r in roots)  # noqa: E731
+    if missing_required:  # a library the pattern requires is dropped or replaced: high
+        emit("PC103", f"`{uname}` no longer uses {names(missing_required)}, which the pattern requires "
+             f"({', '.join(meta.requires)})" + (f"; it uses {names(added_third)} instead" if added_third else ""),
              uu.func.lineno)
-    elif dropped and added_third:
-        emit("PC103", f"`{uname}` replaced {', '.join(f'`{r}`' for r in dropped)} with "
-             f"{', '.join(f'`{r}`' for r in added_third)}", uu.func.lineno)
+    elif added_third:  # a new third-party library: medium
+        emit("PC103", f"`{uname}` adds the third-party {names(added_third)}"
+             + (f" and no longer uses {names(dropped)}" if dropped else ""), uu.func.lineno, severity="medium")
+    elif dropped or added_std:  # only standard-library modules differ: low
+        parts = ([f"no longer uses {names(dropped)}"] if dropped else []) + (
+            [f"adds {names(added_std)}"] if added_std else [])
+        emit("PC103", f"`{uname}` changes standard-library modules: {'; '.join(parts)}", uu.func.lineno,
+             severity="low")
 
     # PC101 / PC104: exception handling ------------------------------------
     p_handlers, u_handlers = codeunit.handlers(pu), codeunit.handlers(uu)
@@ -661,19 +667,23 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
                 continue
             shape_match = False
             removed, added = pe[i1:i2], ue[j1:j2]
-            added_explained = all(id(e.node) in attributed_u or getattr(e.node, "lineno", None)
-                                  in attributed_lines for e in added)
-            if added_explained and (all(id(e.node) in attributed_p for e in removed)
-                                    or (added and len(removed) <= len(added))):
+            # v4.1: a line that already carries another deviation is never reported again as PC110
+            devlines = attributed_lines | {d.line for d in devs}
+            added_free = [e for e in added if id(e.node) not in attributed_u
+                          and getattr(e.node, "lineno", None) not in devlines]
+            if not added_free and (all(id(e.node) in attributed_p for e in removed)
+                                   or (added and len(removed) <= len(added))):
                 continue
-            line = (getattr(added[0].node, "lineno", None) if added else None) or (
+            line = (getattr(added_free[0].node, "lineno", None) if added_free else None) or (
                 getattr(ue[j1 - 1].node, "end_lineno", None) if j1 > 0 else None) or uf.lineno
-            added_total += len(added)
+            if not added_free and line in devlines:
+                continue
+            added_total += len(added_free)
             removed_total += len(removed)
             if first_line is None:
                 first_line = line
-                if added:
-                    example = f"e.g. `{_short(added[0].text, 60)}`"
+                if added_free:
+                    example = f"e.g. `{_short(added_free[0].text, 60)}`"
                 else:
                     text = in_user_names(removed[0].node, mapping).splitlines()[0]
                     example = f"e.g. missing `{_short(text, 60)}`"

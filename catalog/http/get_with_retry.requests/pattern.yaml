@@ -58,3 +58,7 @@ guards:
   target: max_delay
   value: 30.0
   reason: caps backoff and a server-controlled Retry-After so they cannot stall the caller
+- kind: must_include
+  target: RETRY_STATUSES
+  values: [429, 500, 502, 503, 504]
+  reason: 429 (rate limited) and these 5xx responses are transient and must still be retried

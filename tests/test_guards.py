@@ -175,3 +175,51 @@ def test_real_catalog_guards_hold():
     assert len(with_guards) == 7
     problems = [p for p in cat.validate(REPO_ROOT, run_tests=False) if p.check == "11"]
     assert problems == []
+
+
+# v4.1: must_include ----------------------------------------------------------
+
+
+def test_must_include_passes_and_fails():
+    src = "STATUSES = (429, 500, 502)\n\ndef f(x, codes=(1, 2), names=STATUSES):\n    return x in STATUSES\n"
+    assert ok(src, kind="must_include", target="STATUSES", values=[429, 500])
+    res = run(src.replace("(429, 500, 502)", "(500, 502)"), "f", kind="must_include",
+              target="STATUSES", values=[429, 500])
+    assert not res[0].ok and res[0].message.startswith("`STATUSES` no longer includes 429; the reviewed pattern requires 429, 500")
+    assert ok(src, kind="must_include", target="codes", values=[1])  # a default argument
+    assert ok(src, kind="must_include", target="names", values=[502])  # default naming a constant
+    assert not ok(src.replace("(429, 500, 502)", "429"), kind="must_include", target="STATUSES", values=[429])
+    missing = run(src, "f", kind="must_include", target="NOPE", values=[1])[0]
+    assert missing.ok and not missing.found
+
+
+@pytest.mark.parametrize("guard,error", [
+    (dict(kind="must_include", target="X"), "needs target"),
+    (dict(kind="must_include", target="X", values=[1], value=2), "not names/value"),
+    (dict(kind="must_include", target="X", values=[1, 1]), "unique"),
+    (dict(kind="min_value", target="X", value=1, values=[1]), "not names"),
+])
+def test_invalid_must_include(guard, error):
+    with pytest.raises(ValidationError, match=error):
+        Guard(**guard)
+
+
+def test_check_11_covers_must_include(root):
+    folder = pattern_dir(root, "http.get_with_retry.requests")
+    import yaml
+
+    data = yaml.safe_load((folder / "pattern.yaml").read_text())
+    data["guards"] = [g for g in data["guards"] if g["kind"] != "must_include"] + [
+        {"kind": "must_include", "target": "RETRY_STATUSES", "values": [408, 429]}]
+    edit_yaml(folder, guards=data["guards"])
+    problems = [p for p in cat.validate(root, ["http.get_with_retry.requests"], run_tests=False) if p.check == "11"]
+    assert len(problems) == 1 and "(must_include) does not hold" in problems[0].message
+    assert "no longer includes 408" in problems[0].message
+
+
+def test_http_pattern_has_the_429_guard():
+    from conftest import REPO_ROOT
+
+    meta = cat.get_one(REPO_ROOT, "http.get_with_retry.requests").meta
+    [g] = [g for g in meta.guards if g.kind == "must_include"]
+    assert (g.target, g.values) == ("RETRY_STATUSES", [429, 500, 502, 503, 504])

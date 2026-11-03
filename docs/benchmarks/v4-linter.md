@@ -216,3 +216,38 @@ The same approved deviation on a pull request (`--format github`, sample 12):
    severity for value changes in reviewed tuples and sets. Fix the two noisy
    rules seen here (`PC103` for stdlib plumbing like `io`; `PC110` repeating a
    `must_not_call` line).
+
+## Addendum (v4.1): replay with the new guard and rules
+
+*Added in v4.1 (`docs/specs/v4.1-human-approval.md`); the v4 numbers above are
+unchanged.* Same 140 v3 samples, same method, with three v4.1 changes: a
+`must_include` guard (`RETRY_STATUSES` must include 429, 500, 502, 503, 504),
+PC103 graded by what changed, and PC110 never repeating a line that already
+carries another deviation. Data: `experiments/linter/replay_v4.1.json`
+(`scripts/lint_eval.py replay`); `replay.json` remains the v4 result.
+
+| | v4 | v4.1 |
+|---|---|---|
+| HTTP samples flagged for dropping 429 | 0/20 (only `PC109` low) | **20/20** (`PC100` high) |
+| Exact matches: no deviation / low / high | 108 / 14 / 0 | 108 / 0 / **14** |
+| Misses: medium / high | 6 / 12 | 7 / 11 |
+| Samples that would fail CI (`--fail-on high`) | 12 | **25** |
+| `PC103`: high / medium | 5 / 0 | 0 / 10 |
+| `PC109` / `PC110` deviations | 28 / 29 | 8 / 29 |
+
+- **429.** All 20 HTTP samples now fail on `RETRY_STATUSES` no longer including
+  429. That includes the 14 that v3 counted as exact matches and v4 reported
+  only as low: they *are* behaviour changes the reviewer cared about, so the v4
+  expectation "no exact match above low" no longer holds, deliberately.
+- **PC103.** No sample drops a library from a pattern's `requires`, so no `PC103`
+  is high any more. The 4 pandas rewrites and 6 openpyxl additions are medium
+  ("adds the third-party ..."); CSV sample 2 (`io` → `openpyxl`, high in v4) is
+  medium, and its worst severity drops from high to medium. The pandas samples
+  still fail on `PC100` (`csv.DictReader` no longer called).
+- **PC110** did not change on the replay: its 29 reports are rewrites with new
+  statements on lines without another deviation. The rule fixes the v4 feedback
+  example instead: on HTTP sample 20, the `session.post(...)` line is now only
+  the `PC100` it carries, not also a `PC110`.
+- **Approvals.** The v4 feedback samples' approvals have no hash, so under v4.1
+  they are stale and approve nothing; each now needs a hash and a human
+  confirmation (`pcat approvals check`).

@@ -58,7 +58,9 @@ def test_high_deviation_fails_by_default_and_never_disables(tmp_path, http_code)
 
 
 def test_fail_on_levels(tmp_path, http_code):
-    low = http_code.replace("RETRY_STATUSES = (429, 500, 502, 503, 504)", "RETRY_STATUSES = (500, 502, 503, 504)")
+    # v4.1: dropping 429 is now a guard violation (must_include), so use another low change
+    low = http_code.replace("base_delay: float=0.5", "base_delay: float=1.0")
+    assert low != http_code
     lp = write(tmp_path, low, "low.py")
     assert run(str(lp)).exit_code == 0
     assert run(str(lp), "--fail-on", "medium").exit_code == 0
@@ -138,8 +140,7 @@ def test_unknown_pattern_marker_is_an_error(tmp_path):
 
 def test_github_format(tmp_path, http_code):
     reason = "documented reason for the low change here"
-    code = http_code.replace(*NARROW).replace("RETRY_STATUSES = (429, 500, 502, 503, 504)",
-                                              "RETRY_STATUSES = (500, 502, 503, 504)")
+    code = http_code.replace(*NARROW).replace("base_delay: float=0.5", "base_delay: float=1.0")  # v4.1: low change
     path = write(tmp_path, approve(code, f"# pcat-allow: PC109 #{fetch_hash(code)} -- {reason}"))
     out = run(str(path), "--format", "github")
     lines = out.output.splitlines()

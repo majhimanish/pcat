@@ -32,16 +32,19 @@ class Guard(BaseModel):
     names: exceptions (must_catch, must_raise), calls (must_call, must_not_call)
     or modules (must_not_import). target/value: for min_value/max_value, a
     module constant or a parameter (its default) of `function`, by its name in
-    the pattern. `function` defaults to the entry point.
+    the pattern. target/values (v4.1 must_include): a collection constant or
+    default that must still contain every value. `function` defaults to the
+    entry point.
     """
 
     model_config = ConfigDict(extra="forbid")
 
     kind: Literal["must_catch", "must_call", "must_not_call", "min_value", "max_value",
-                  "must_not_import", "must_raise"]
+                  "must_not_import", "must_raise", "must_include"]
     names: list[str] = Field(default_factory=list)
     target: Optional[str] = None
     value: Optional[Union[StrictInt, float]] = None
+    values: list[Union[StrictInt, float, str]] = Field(default_factory=list)
     function: Optional[str] = None
     reason: Optional[str] = Field(default=None, min_length=1)
 
@@ -50,7 +53,7 @@ class Guard(BaseModel):
         if self.kind in GUARD_NAME_KINDS:
             if not self.names:
                 raise ValueError(f"{self.kind} guard needs names")
-            if self.target is not None or self.value is not None:
+            if self.target is not None or self.value is not None or self.values:
                 raise ValueError(f"{self.kind} guard takes names, not target/value")
             for name in self.names:
                 if not re.fullmatch(GUARD_NAME_PATTERN, name):
@@ -59,8 +62,15 @@ class Guard(BaseModel):
                     raise ValueError(f"{name!r}: modules cannot start with '.'")
             if len(set(self.names)) != len(self.names):
                 raise ValueError("guard names must be unique")
+        elif self.kind == "must_include":
+            if self.names or self.value is not None:
+                raise ValueError("must_include guard takes target and values, not names/value")
+            if not self.target or not self.target.isidentifier() or not self.values:
+                raise ValueError("must_include guard needs target (a name) and values")
+            if len(set(map(repr, self.values))) != len(self.values):
+                raise ValueError("must_include values must be unique")
         else:
-            if self.names:
+            if self.names or self.values:
                 raise ValueError(f"{self.kind} guard takes target and value, not names")
             if not self.target or not self.target.isidentifier() or self.value is None:
                 raise ValueError(f"{self.kind} guard needs target (a name) and value")

@@ -122,9 +122,13 @@ def test_pc103_library_swapped():
 
 
 def test_adding_a_third_party_import_alone_is_not_a_swap():
+    # v4.1: a stdlib-only change is PC103 low; a new third-party library alone is medium
     user = "import json\n" + mutate("        resp.raise_for_status()\n",
                                     "        resp.raise_for_status()\n        json.dumps(1)\n")
-    assert "PC103" not in codes(user)
+    assert [(d.code, d.severity) for d in run(user).deviations if d.code == "PC103"] == [("PC103", "low")]
+    third = "import orjson\n" + mutate("        resp.raise_for_status()\n",
+                                       "        resp.raise_for_status()\n        orjson.dumps(1)\n")
+    assert [(d.code, d.severity) for d in run(third).deviations if d.code == "PC103"] == [("PC103", "medium")]
 
 
 def test_pc104_broad_except_added():
@@ -254,3 +258,46 @@ def test_choose_pattern_function_by_name_then_similarity(service):
     pattern = cat.get_one(REPO_ROOT, "auth.password.pbkdf2")
     assert deviation.choose_pattern_function(nodes["verify_password"], pattern) == "verify_password"
     assert deviation.choose_pattern_function(nodes["make_hash"], pattern) == "hash_password"
+
+
+# v4.1: PC103 severity levels, PC110 suppression, must_include -------------------
+
+
+def test_pc103_severity_levels():
+    requires = META
+    swapped = RENAMED.replace("import requests as rq", "import httpx as rq")
+    assert [(d.code, d.severity) for d in run(swapped, meta=requires).deviations if d.code == "PC103"] == [
+        ("PC103", "high")]  # a required library dropped or replaced
+    no_requires = SimpleNamespace(**{**META.__dict__, "requires": []})
+    assert [(d.code, d.severity) for d in run(swapped, meta=no_requires).deviations if d.code == "PC103"] == [
+        ("PC103", "medium")]  # a new third-party library, nothing required dropped
+    std = "import io\n" + mutate("        return clean(resp.text)", "        return clean(io.StringIO(resp.text).read())")
+    assert [(d.code, d.severity) for d in run(std).deviations if d.code == "PC103"] == [("PC103", "low")]
+
+
+def test_pc110_does_not_repeat_a_line_with_another_deviation():
+    # one changed statement carrying a new call: PC108 on that line, no PC110 for it
+    user = mutate("        resp.raise_for_status()\n", "        resp.raise_for_status() or print(resp)\n")
+    got = [(d.code, d.line) for d in run(user).deviations]
+    assert ("PC108", 22) in got and not [c for c, _ in got if c == "PC110"]
+    # a must_not_call line (the v4 POST case) is not repeated as PC110 either
+    post = RENAMED.replace("rq.get(address", "rq.post(address")
+    guarded = SimpleNamespace(**{**META.__dict__, "guards": [Guard(kind="must_not_call", names=["requests.post"])]})
+    got = [(d.code, d.line) for d in run(post, meta=guarded).deviations]
+    assert ("PC100", 17) in got and "PC110" not in [c for c, _ in got]
+    # a genuinely new statement still is PC110
+    assert "PC110" in codes(mutate("    for n in range(tries):", "    count = 0\n    for n in range(tries):"))
+
+
+def test_must_include_replaces_pc109_for_its_target():
+    guarded = SimpleNamespace(**{**META.__dict__, "guards": [
+        Guard(kind="must_include", target="RETRY", values=[429])]})
+    pattern = PATTERN.replace("LIMIT = 100\n", "LIMIT = 100\nRETRY = (429, 500)\n").replace(
+        "        response.raise_for_status()\n", "        if response.status_code in RETRY:\n            continue\n        response.raise_for_status()\n")
+    user = RENAMED.replace("MAX_CHARS = 100  # renamed constant\n", "MAX_CHARS = 100\nRETRY = (500,)\n").replace(
+        "        resp.raise_for_status()\n", "        if resp.status_code in RETRY:\n            continue\n        resp.raise_for_status()\n")
+    pu = codeunit.build_unit_from_source(pattern, "f")
+    uu = codeunit.build_unit_from_source(user, "fetch")
+    a = deviation.analyze(pu, uu, pattern_key="demo.fetch@v1", pattern_function="f", meta=guarded)
+    assert [(d.code, d.severity) for d in a.deviations] == [("PC100", "high")]
+    assert a.deviations[0].message.startswith("`RETRY` no longer includes 429")

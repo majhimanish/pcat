@@ -833,3 +833,32 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      approved like any other code (`# pcat-allow: PC111 #<hash> -- reason`, a
      proposal until confirmed). A deleted function (qualname gone) or one that no
      longer infers as derived from that pattern reports nothing.
+179. **`must_include`** takes `target` (constant or parameter default, resolved
+     like `min_value`) and `values`; it fails when the target is no longer a
+     collection or lacks a value, and (like the other value guards) replaces
+     PC109 for its target. Added to `http.get_with_retry.requests`:
+     `RETRY_STATUSES` must include 429, 500, 502, 503, 504.
+180. **No other `must_include`.** The other application patterns have one
+     collection constant, `importers.users_csv.parse` `REQUIRED_COLUMNS`
+     (`name`, `email`). The v2.2 security notes for that pattern cover ReDoS, row
+     limits, not echoing values and formula injection, not required columns, so
+     no guard was added. `config.env.load_settings`' `secret_names` defaults to
+     `()` (nothing to include) and its boolean spellings are inline literals, not
+     constants. The other patterns have no collection constants or defaults.
+181. **PC103 levels.** High: a library from the pattern's `requires` is no longer
+     used (dropped or replaced). Medium: a third-party root the pattern does not
+     use appears (whether or not something stdlib was dropped). Low: only
+     standard-library roots differ (dropped and/or added). Roots count only when
+     used outside annotations (decision 153).
+182. **PC110 suppression.** A changed region's new statements on a line that
+     carries any other deviation are not counted; a region with no such free
+     statements is skipped when it replaces at most as many pattern statements
+     or its removed statements are explained; a pure removal whose reported line
+     carries another deviation is skipped too.
+183. **Deliberately changed v4 tests:** `test_lint.py::test_fail_on_levels` and
+     `::test_github_format` use a `base_delay` default change as the low
+     deviation, since dropping 429 is now high; `test_deviation.py::
+     test_adding_a_third_party_import_alone_is_not_a_swap` expects PC103 low for
+     a stdlib import (`json`) and medium for a third-party one.
+184. **Replay output.** The v4.1 replay writes `experiments/linter/replay_v4.1.json`
+     (default of `replay --out`); `replay.json` stays the frozen v4 result.

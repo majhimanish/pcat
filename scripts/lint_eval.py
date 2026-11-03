@@ -1,7 +1,8 @@
 """v4 evaluation driver (spec docs/specs/v4-linter.md).
 
     python scripts/lint_eval.py calibrate        # inference threshold (Part A), existing data only
-    python scripts/lint_eval.py replay           # lint every v3 end-to-end sample (no generation)
+    python scripts/lint_eval.py replay           # lint every v3 sample (no generation); v4.1 rules
+                                                 # -> replay_v4.1.json (replay.json = frozen v4 result)
     python scripts/lint_eval.py feedback         # 60 new runs with the v4 server (claude -p)
     python scripts/lint_eval.py feedback-analyze # metrics for the feedback run vs v3
 
@@ -146,7 +147,7 @@ def cmd_replay(args) -> int:
         "samples": rows,
         "negatives_that_fetched": negatives,
     }
-    write_json(OUT / "replay.json", report)
+    write_json(OUT / args.out, report)
     print(json.dumps({"checks": report["checks"], "confusion": report["confusion"]}, indent=2))
     return 0
 
@@ -270,7 +271,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="v4 evaluation")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("calibrate")
-    sub.add_parser("replay")
+    rp = sub.add_parser("replay")
+    rp.add_argument("--out", default="replay_v4.1.json",
+                    help="file under experiments/linter/ (replay.json is the frozen v4 result)")
     sub.add_parser("feedback-analyze")
     f = sub.add_parser("feedback")
     f.add_argument("--samples", type=int, default=20)
