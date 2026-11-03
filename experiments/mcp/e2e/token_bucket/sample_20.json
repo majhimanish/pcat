@@ -1,0 +1,71 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import MutableMapping\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef rate_limit_response(buckets: MutableMapping[str, dict[str, float]], client_ip: str, capacity: float=20.0, refill_rate: float=5.0) -> tuple[int, dict[str, str]] | None:\n    \"\"\"Return None if the request may proceed, else (429, headers) with Retry-After in whole seconds.\n\n    Usage in a handler/middleware (buckets is a module-level dict):\n        blocked = rate_limit_response(buckets, client_ip)\n        if blocked is not None:\n            status, headers = blocked\n            return status, headers, {\"error\": \"Too Many Requests\"}\n    \"\"\"\n    allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=capacity, refill_rate=refill_rate)\n    if allowed:\n        return None\n    return 429, {'Retry-After': str(max(1, math.ceil(retry_after)))}\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0517645,
+    "duration_ms": 16134,
+    "num_turns": 5
+  },
+  "group": "token_bucket",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import MutableMapping\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef rate_limit_response(buckets: MutableMapping[str, dict[str, float]], client_ip: str, capacity: float=20.0, refill_rate: float=5.0) -> tuple[int, dict[str, str]] | None:\n    \"\"\"Return None if the request may proceed, else (429, headers) with Retry-After in whole seconds.\n\n    Usage in a handler/middleware (buckets is a module-level dict):\n        blocked = rate_limit_response(buckets, client_ip)\n        if blocked is not None:\n            status, headers = blocked\n            return status, headers, {\"error\": \"Too Many Requests\"}\n    \"\"\"\n    allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=capacity, refill_rate=refill_rate)\n    if allowed:\n        return None\n    return 429, {'Retry-After': str(max(1, math.ceil(retry_after)))}\n```",
+  "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 20,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:53:27+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Token-bucket rate limit check with retry-after for API clients"
+      },
+      "result": {
+        "ids": [
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          22.471
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:13.923+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "ratelimit.token_bucket.check",
+        "names": null
+      },
+      "result": {
+        "id": "ratelimit.token_bucket.check@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:53:15.429+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1361
+      },
+      "result": {
+        "statuses": [
+          [
+            "check_rate_limit",
+            "covered",
+            "ratelimit.token_bucket.check"
+          ],
+          [
+            "rate_limit_response",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:20.052+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

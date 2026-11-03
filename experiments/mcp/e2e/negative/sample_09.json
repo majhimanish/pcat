@@ -1,0 +1,60 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from pathlib import Path\nfrom typing import Mapping, Union\n\nimport pandas as pd\nfrom openpyxl.styles import Alignment, Font, PatternFill\nfrom openpyxl.utils import get_column_letter\n\n\ndef _sanitize_sheet_name(name: str, used: set) -> str:\n    invalid = set('[]:*?/\\\\')\n    cleaned = \"\".join(\"_\" if c in invalid else c for c in str(name)).strip(\"'\") or \"Sheet\"\n    cleaned = cleaned[:31]\n    base, i = cleaned, 1\n    while cleaned.lower() in used:\n        suffix = f\"_{i}\"\n        cleaned = base[: 31 - len(suffix)] + suffix\n        i += 1\n    used.add(cleaned.lower())\n    return cleaned\n\n\ndef _format_sheet(worksheet, df: pd.DataFrame, max_width: int = 60) -> None:\n    header_font = Font(bold=True, color=\"FFFFFF\")\n    header_fill = PatternFill(start_color=\"305496\", end_color=\"305496\", fill_type=\"solid\")\n    for cell in worksheet[1]:\n        cell.font = header_font\n        cell.fill = header_fill\n        cell.alignment = Alignment(horizontal=\"center\", vertical=\"center\", wrap_text=True)\n    worksheet.freeze_panes = \"A2\"\n    for idx, column in enumerate(df.columns, start=1):\n        values = df[column].astype(str).tolist()\n        longest = max([len(str(column))] + [len(v) for v in values])\n        worksheet.column_dimensions[get_column_letter(idx)].width = min(longest + 2, max_width)\n\n\ndef export_report_to_xlsx(\n    sections: Mapping[str, Union[pd.DataFrame, list, dict]],\n    output_path: Union[str, Path],\n) -> Path:\n    output_path = Path(output_path)\n    output_path.parent.mkdir(parents=True, exist_ok=True)\n    used: set = set()\n    with pd.ExcelWriter(output_path, engine=\"openpyxl\") as writer:\n        for name, data in sections.items():\n            df = data if isinstance(data, pd.DataFrame) else pd.DataFrame(data)\n            sheet = _sanitize_sheet_name(name, used)\n            df.to_excel(writer, sheet_name=sheet, index=False)\n            _format_sheet(writer.sheets[sheet], df)\n        if not sections:\n            pd.DataFrame().to_excel(writer, sheet_name=\"Sheet1\", index=False)\n    return output_path\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.05067450000000001,
+    "duration_ms": 16331,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add a function to my Python project that exports the report data to a single .xlsx workbook with one sheet per section (e.g. summary, details, errors), using pandas/openpyxl. Include header formatting and auto-sized columns, and take the output path as a parameter.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom pathlib import Path\nfrom typing import Mapping, Union\n\nimport pandas as pd\nfrom openpyxl.styles import Alignment, Font, PatternFill\nfrom openpyxl.utils import get_column_letter\n\n\ndef _sanitize_sheet_name(name: str, used: set) -> str:\n    invalid = set('[]:*?/\\\\')\n    cleaned = \"\".join(\"_\" if c in invalid else c for c in str(name)).strip(\"'\") or \"Sheet\"\n    cleaned = cleaned[:31]\n    base, i = cleaned, 1\n    while cleaned.lower() in used:\n        suffix = f\"_{i}\"\n        cleaned = base[: 31 - len(suffix)] + suffix\n        i += 1\n    used.add(cleaned.lower())\n    return cleaned\n\n\ndef _format_sheet(worksheet, df: pd.DataFrame, max_width: int = 60) -> None:\n    header_font = Font(bold=True, color=\"FFFFFF\")\n    header_fill = PatternFill(start_color=\"305496\", end_color=\"305496\", fill_type=\"solid\")\n    for cell in worksheet[1]:\n        cell.font = header_font\n        cell.fill = header_fill\n        cell.alignment = Alignment(horizontal=\"center\", vertical=\"center\", wrap_text=True)\n    worksheet.freeze_panes = \"A2\"\n    for idx, column in enumerate(df.columns, start=1):\n        values = df[column].astype(str).tolist()\n        longest = max([len(str(column))] + [len(v) for v in values])\n        worksheet.column_dimensions[get_column_letter(idx)].width = min(longest + 2, max_width)\n\n\ndef export_report_to_xlsx(\n    sections: Mapping[str, Union[pd.DataFrame, list, dict]],\n    output_path: Union[str, Path],\n) -> Path:\n    output_path = Path(output_path)\n    output_path.parent.mkdir(parents=True, exist_ok=True)\n    used: set = set()\n    with pd.ExcelWriter(output_path, engine=\"openpyxl\") as writer:\n        for name, data in sections.items():\n            df = data if isinstance(data, pd.DataFrame) else pd.DataFrame(data)\n            sheet = _sanitize_sheet_name(name, used)\n            df.to_excel(writer, sheet_name=sheet, index=False)\n            _format_sheet(writer.sheets[sheet], df)\n        if not sections:\n            pd.DataFrame().to_excel(writer, sheet_name=\"Sheet1\", index=False)\n    return output_path\n```",
+  "request": "Add a function to my Python project that exports the report data to a single .xlsx workbook with one sheet per section (e.g. summary, details, errors), using pandas/openpyxl. Include header formatting and auto-sized columns, and take the output path as a parameter.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 9,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:24+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "export report data to xlsx workbook with one sheet per section, header formatting, auto-sized columns"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:10.869+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 2033
+      },
+      "result": {
+        "statuses": [
+          [
+            "_sanitize_sheet_name",
+            "none",
+            null
+          ],
+          [
+            "_format_sheet",
+            "none",
+            null
+          ],
+          [
+            "export_report_to_xlsx",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:15.992+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

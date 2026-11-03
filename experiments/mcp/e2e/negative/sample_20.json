@@ -1,0 +1,65 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import time\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\n\ndef delete_old_logs(log_dir=\"logs\", max_age_days=30):\n    cutoff = time.time() - max_age_days * 86400\n    deleted = 0\n    for path in Path(log_dir).rglob(\"*.log*\"):\n        try:\n            if path.is_file() and path.stat().st_mtime < cutoff:\n                path.unlink()\n                deleted += 1\n        except OSError as exc:\n            print(f\"Could not delete {path}: {exc}\")\n    return deleted\n\n\ndef seconds_until(hour=2, minute=0):\n    now = datetime.now()\n    target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)\n    if target <= now:\n        target += timedelta(days=1)\n    return (target - now).total_seconds()\n\n\ndef run_daily(hour=2, minute=0):\n    while True:\n        time.sleep(seconds_until(hour, minute))\n        count = delete_old_logs()\n        print(f\"{datetime.now().isoformat()} deleted {count} old log files\")\n\n\ndef main():\n    run_daily()\n\n\nif __name__ == \"__main__\":\n    main()\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0363541,
+    "duration_ms": 11990,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport time\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\n\ndef delete_old_logs(log_dir=\"logs\", max_age_days=30):\n    cutoff = time.time() - max_age_days * 86400\n    deleted = 0\n    for path in Path(log_dir).rglob(\"*.log*\"):\n        try:\n            if path.is_file() and path.stat().st_mtime < cutoff:\n                path.unlink()\n                deleted += 1\n        except OSError as exc:\n            print(f\"Could not delete {path}: {exc}\")\n    return deleted\n\n\ndef seconds_until(hour=2, minute=0):\n    now = datetime.now()\n    target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)\n    if target <= now:\n        target += timedelta(days=1)\n    return (target - now).total_seconds()\n\n\ndef run_daily(hour=2, minute=0):\n    while True:\n        time.sleep(seconds_until(hour, minute))\n        count = delete_old_logs()\n        print(f\"{datetime.now().isoformat()} deleted {count} old log files\")\n\n\ndef main():\n    run_daily()\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "request": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 20,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:47+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "delete log files older than 30 days on a daily 2 AM schedule"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:39.022+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1005
+      },
+      "result": {
+        "statuses": [
+          [
+            "delete_old_logs",
+            "none",
+            null
+          ],
+          [
+            "seconds_until",
+            "none",
+            null
+          ],
+          [
+            "run_daily",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:41.904+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

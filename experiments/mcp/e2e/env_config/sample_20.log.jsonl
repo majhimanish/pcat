@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "Load settings from environment variables with a schema: database URL, port, debug flag, with defaults and validation"}, "result": {"ids": ["config.env.load_settings"], "scores": [24.616]}, "timestamp": "2026-11-03T06:52:16.147+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "config.env.load_settings", "names": null}, "result": {"id": "config.env.load_settings@v1", "status": "active"}, "timestamp": "2026-11-03T06:52:17.454+00:00", "tool": "get_pattern"}

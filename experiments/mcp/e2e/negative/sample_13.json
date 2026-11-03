@@ -1,0 +1,50 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport qrcode\n\n\ndef generate_ticket_qr(ticket_id, output_path):\n    if not isinstance(ticket_id, str) or not ticket_id.strip():\n        return False, \"Ticket ID must be a non-empty string.\"\n    if not isinstance(output_path, str) or not output_path.strip():\n        return False, \"Output path must be a non-empty string.\"\n\n    directory = os.path.dirname(os.path.abspath(output_path))\n    if not os.path.isdir(directory):\n        return False, f\"Directory does not exist: {directory}\"\n    if not os.access(directory, os.W_OK):\n        return False, f\"Path is not writable: {directory}\"\n\n    try:\n        qr = qrcode.QRCode(\n            error_correction=qrcode.constants.ERROR_CORRECT_M,\n            box_size=10,\n            border=4,\n        )\n        qr.add_data(ticket_id.strip())\n        qr.make(fit=True)\n        image = qr.make_image(fill_color=\"black\", back_color=\"white\")\n        image.save(output_path, format=\"PNG\")\n    except (OSError, ValueError) as exc:\n        return False, f\"Failed to create QR code: {exc}\"\n\n    return True, output_path\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0393147,
+    "duration_ms": 14775,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that takes a ticket ID string and generates a QR code image encoding it, saving it as a PNG file. Please use the `qrcode` library and make sure it handles errors gracefully if the ID is empty or the save path isn't writable.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport os\nimport qrcode\n\n\ndef generate_ticket_qr(ticket_id, output_path):\n    if not isinstance(ticket_id, str) or not ticket_id.strip():\n        return False, \"Ticket ID must be a non-empty string.\"\n    if not isinstance(output_path, str) or not output_path.strip():\n        return False, \"Output path must be a non-empty string.\"\n\n    directory = os.path.dirname(os.path.abspath(output_path))\n    if not os.path.isdir(directory):\n        return False, f\"Directory does not exist: {directory}\"\n    if not os.access(directory, os.W_OK):\n        return False, f\"Path is not writable: {directory}\"\n\n    try:\n        qr = qrcode.QRCode(\n            error_correction=qrcode.constants.ERROR_CORRECT_M,\n            box_size=10,\n            border=4,\n        )\n        qr.add_data(ticket_id.strip())\n        qr.make(fit=True)\n        image = qr.make_image(fill_color=\"black\", back_color=\"white\")\n        image.save(output_path, format=\"PNG\")\n    except (OSError, ValueError) as exc:\n        return False, f\"Failed to create QR code: {exc}\"\n\n    return True, output_path\n```",
+  "request": "Write a Python function that takes a ticket ID string and generates a QR code image encoding it, saving it as a PNG file. Please use the `qrcode` library and make sure it handles errors gracefully if the ID is empty or the save path isn't writable.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:32+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "generate a QR code PNG image from a ticket ID string with error handling"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:20.418+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1063
+      },
+      "result": {
+        "statuses": [
+          [
+            "generate_ticket_qr",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:23.421+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

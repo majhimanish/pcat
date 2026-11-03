@@ -1,0 +1,76 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import argparse\nimport html\nimport re\nimport sys\nfrom pathlib import Path\n\nimport markdown\n\nCSS = \"\"\"\nbody { max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; line-height: 1.6; color: #222; }\nh1, h2, h3 { line-height: 1.25; }\npre { background: #f5f5f5; padding: 1rem; overflow-x: auto; border-radius: 6px; }\ncode { background: #f5f5f5; padding: 0.15em 0.3em; border-radius: 3px; }\npre code { background: none; padding: 0; }\nblockquote { margin-left: 0; padding-left: 1rem; border-left: 4px solid #ddd; color: #555; }\ntable { border-collapse: collapse; }\nth, td { border: 1px solid #ccc; padding: 0.4rem 0.8rem; }\nimg { max-width: 100%; }\n\"\"\"\n\n\ndef extract_title(md_text, default=\"Document\"):\n    match = re.search(r\"^#\\s+(.+?)\\s*#*\\s*$\", md_text, re.MULTILINE)\n    return match.group(1) if match else default\n\n\ndef markdown_to_html_page(md_text, title=None):\n    if title is None:\n        title = extract_title(md_text)\n    body = markdown.markdown(md_text, extensions=[\"extra\", \"sane_lists\"])\n    return (\n        \"<!DOCTYPE html>\\n\"\n        '<html lang=\"en\">\\n<head>\\n'\n        '<meta charset=\"utf-8\">\\n'\n        '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\\n'\n        f\"<title>{html.escape(title)}</title>\\n\"\n        f\"<style>{CSS}</style>\\n\"\n        \"</head>\\n<body>\\n\"\n        f\"{body}\\n\"\n        \"</body>\\n</html>\\n\"\n    )\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=\"Convert a Markdown file to an HTML page.\")\n    parser.add_argument(\"input\", type=Path, help=\"input .md file\")\n    parser.add_argument(\"-o\", \"--output\", type=Path, help=\"output .html file (default: same name as input)\")\n    parser.add_argument(\"-t\", \"--title\", help=\"page title (default: first heading or file name)\")\n    args = parser.parse_args(argv)\n\n    md_text = args.input.read_text(encoding=\"utf-8\")\n    title = args.title or extract_title(md_text, default=args.input.stem)\n    output = args.output or args.input.with_suffix(\".html\")\n    output.write_text(markdown_to_html_page(md_text, title), encoding=\"utf-8\")\n    print(f\"Wrote {output}\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.05221769999999999,
+    "duration_ms": 17986,
+    "num_turns": 5
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport argparse\nimport html\nimport re\nimport sys\nfrom pathlib import Path\n\nimport markdown\n\nCSS = \"\"\"\nbody { max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; line-height: 1.6; color: #222; }\nh1, h2, h3 { line-height: 1.25; }\npre { background: #f5f5f5; padding: 1rem; overflow-x: auto; border-radius: 6px; }\ncode { background: #f5f5f5; padding: 0.15em 0.3em; border-radius: 3px; }\npre code { background: none; padding: 0; }\nblockquote { margin-left: 0; padding-left: 1rem; border-left: 4px solid #ddd; color: #555; }\ntable { border-collapse: collapse; }\nth, td { border: 1px solid #ccc; padding: 0.4rem 0.8rem; }\nimg { max-width: 100%; }\n\"\"\"\n\n\ndef extract_title(md_text, default=\"Document\"):\n    match = re.search(r\"^#\\s+(.+?)\\s*#*\\s*$\", md_text, re.MULTILINE)\n    return match.group(1) if match else default\n\n\ndef markdown_to_html_page(md_text, title=None):\n    if title is None:\n        title = extract_title(md_text)\n    body = markdown.markdown(md_text, extensions=[\"extra\", \"sane_lists\"])\n    return (\n        \"<!DOCTYPE html>\\n\"\n        '<html lang=\"en\">\\n<head>\\n'\n        '<meta charset=\"utf-8\">\\n'\n        '<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\\n'\n        f\"<title>{html.escape(title)}</title>\\n\"\n        f\"<style>{CSS}</style>\\n\"\n        \"</head>\\n<body>\\n\"\n        f\"{body}\\n\"\n        \"</body>\\n</html>\\n\"\n    )\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=\"Convert a Markdown file to an HTML page.\")\n    parser.add_argument(\"input\", type=Path, help=\"input .md file\")\n    parser.add_argument(\"-o\", \"--output\", type=Path, help=\"output .html file (default: same name as input)\")\n    parser.add_argument(\"-t\", \"--title\", help=\"page title (default: first heading or file name)\")\n    args = parser.parse_args(argv)\n\n    md_text = args.input.read_text(encoding=\"utf-8\")\n    title = args.title or extract_title(md_text, default=args.input.stem)\n    output = args.output or args.input.with_suffix(\".html\")\n    output.write_text(markdown_to_html_page(md_text, title), encoding=\"utf-8\")\n    print(f\"Wrote {output}\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n```",
+  "request": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 19,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:52+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "convert Markdown to HTML page with template and CLI"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:36.892+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "slugify text for title"
+      },
+      "result": {
+        "ids": [
+          "text.slugify.ascii"
+        ],
+        "scores": [
+          10.986
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:36.998+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 2178
+      },
+      "result": {
+        "statuses": [
+          [
+            "extract_title",
+            "none",
+            null
+          ],
+          [
+            "markdown_to_html_page",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:43.020+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

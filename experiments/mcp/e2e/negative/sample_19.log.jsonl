@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "convert Markdown to HTML page with template and CLI"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-03T06:55:36.892+00:00", "tool": "search_patterns"}
+{"arguments": {"limit": 5, "request": "slugify text for title"}, "result": {"ids": ["text.slugify.ascii"], "scores": [10.986]}, "timestamp": "2026-11-03T06:55:36.998+00:00", "tool": "search_patterns"}
+{"arguments": {"length": 2178}, "result": {"statuses": [["extract_title", "none", null], ["markdown_to_html_page", "none", null], ["main", "none", null]]}, "timestamp": "2026-11-03T06:55:43.020+00:00", "tool": "check_code"}

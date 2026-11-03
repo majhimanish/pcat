@@ -1,0 +1,50 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import io\n\nfrom PIL import Image, ImageOps\n\n\ndef make_thumbnail(source, max_size=(200, 200), output_format=None, quality=85):\n    \"\"\"Return thumbnail bytes for an uploaded image (path or file-like object).\n\n    - Preserves aspect ratio (fits within max_size, never upscales).\n    - Applies EXIF orientation so photos appear upright.\n    - Keeps the original format (e.g. JPEG, PNG) unless output_format is given.\n    \"\"\"\n    with Image.open(source) as img:\n        fmt = (output_format or img.format or \"JPEG\").upper()\n        if fmt == \"JPG\":\n            fmt = \"JPEG\"\n\n        img = ImageOps.exif_transpose(img)\n\n        if fmt == \"JPEG\":\n            if img.mode != \"RGB\":\n                img = img.convert(\"RGB\")\n        elif img.mode not in (\"RGB\", \"RGBA\", \"L\", \"LA\", \"P\"):\n            img = img.convert(\"RGBA\")\n\n        img.thumbnail(max_size, Image.Resampling.LANCZOS)\n\n        buf = io.BytesIO()\n        save_kwargs = {\"quality\": quality, \"optimize\": True} if fmt == \"JPEG\" else {}\n        img.save(buf, format=fmt, **save_kwargs)\n        return buf.getvalue()\n\n\ndef save_thumbnail(source, dest_path, max_size=(200, 200), output_format=None, quality=85):\n    \"\"\"Generate a thumbnail and write it to dest_path.\"\"\"\n    data = make_thumbnail(source, max_size, output_format, quality)\n    with open(dest_path, \"wb\") as f:\n        f.write(data)\n    return dest_path\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0400347,
+    "duration_ms": 13056,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport io\n\nfrom PIL import Image, ImageOps\n\n\ndef make_thumbnail(source, max_size=(200, 200), output_format=None, quality=85):\n    \"\"\"Return thumbnail bytes for an uploaded image (path or file-like object).\n\n    - Preserves aspect ratio (fits within max_size, never upscales).\n    - Applies EXIF orientation so photos appear upright.\n    - Keeps the original format (e.g. JPEG, PNG) unless output_format is given.\n    \"\"\"\n    with Image.open(source) as img:\n        fmt = (output_format or img.format or \"JPEG\").upper()\n        if fmt == \"JPG\":\n            fmt = \"JPEG\"\n\n        img = ImageOps.exif_transpose(img)\n\n        if fmt == \"JPEG\":\n            if img.mode != \"RGB\":\n                img = img.convert(\"RGB\")\n        elif img.mode not in (\"RGB\", \"RGBA\", \"L\", \"LA\", \"P\"):\n            img = img.convert(\"RGBA\")\n\n        img.thumbnail(max_size, Image.Resampling.LANCZOS)\n\n        buf = io.BytesIO()\n        save_kwargs = {\"quality\": quality, \"optimize\": True} if fmt == \"JPEG\" else {}\n        img.save(buf, format=fmt, **save_kwargs)\n        return buf.getvalue()\n\n\ndef save_thumbnail(source, dest_path, max_size=(200, 200), output_format=None, quality=85):\n    \"\"\"Generate a thumbnail and write it to dest_path.\"\"\"\n    data = make_thumbnail(source, max_size, output_format, quality)\n    with open(dest_path, \"wb\") as f:\n        f.write(data)\n    return dest_path\n```",
+  "request": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 3,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:54:59+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "generate image thumbnail with Pillow keeping aspect ratio and EXIF rotation"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:54:49.244+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 827
+      },
+      "result": {
+        "statuses": [
+          [
+            "make_thumbnail",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:52.230+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

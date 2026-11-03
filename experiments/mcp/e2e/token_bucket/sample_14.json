@@ -1,0 +1,76 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import MutableMapping\nimport math\nimport threading\nimport time\n\nfrom flask import Flask, jsonify, request\n\napp = Flask(__name__)\n\nREQUESTS_PER_MINUTE = 60\nBUCKETS: dict[str, dict[str, float]] = {}\nBUCKETS_LOCK = threading.Lock()\n\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\n\ndef get_client_key() -> str:\n    api_key = request.headers.get(\"X-API-Key\")\n    if api_key:\n        return \"key:\" + api_key\n    return \"ip:\" + (request.remote_addr or \"unknown\")\n\n\n@app.before_request\ndef enforce_rate_limit():\n    key = get_client_key()\n    with BUCKETS_LOCK:\n        allowed, retry_after = check_rate_limit(\n            BUCKETS,\n            key,\n            capacity=REQUESTS_PER_MINUTE,\n            refill_rate=REQUESTS_PER_MINUTE / 60.0,\n        )\n    if allowed:\n        return None\n    response = jsonify(error=\"Too Many Requests\")\n    response.status_code = 429\n    response.headers[\"Retry-After\"] = str(max(1, math.ceil(retry_after)))\n    return response\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0560782,
+    "duration_ms": 17530,
+    "num_turns": 5
+  },
+  "group": "token_bucket",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import MutableMapping\nimport math\nimport threading\nimport time\n\nfrom flask import Flask, jsonify, request\n\napp = Flask(__name__)\n\nREQUESTS_PER_MINUTE = 60\nBUCKETS: dict[str, dict[str, float]] = {}\nBUCKETS_LOCK = threading.Lock()\n\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\n\ndef get_client_key() -> str:\n    api_key = request.headers.get(\"X-API-Key\")\n    if api_key:\n        return \"key:\" + api_key\n    return \"ip:\" + (request.remote_addr or \"unknown\")\n\n\n@app.before_request\ndef enforce_rate_limit():\n    key = get_client_key()\n    with BUCKETS_LOCK:\n        allowed, retry_after = check_rate_limit(\n            BUCKETS,\n            key,\n            capacity=REQUESTS_PER_MINUTE,\n            refill_rate=REQUESTS_PER_MINUTE / 60.0,\n        )\n    if allowed:\n        return None\n    response = jsonify(error=\"Too Many Requests\")\n    response.status_code = 429\n    response.headers[\"Retry-After\"] = str(max(1, math.ceil(retry_after)))\n    return response\n```",
+  "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 14,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:53:09+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "rate limit per client with 429 and Retry-After"
+      },
+      "result": {
+        "ids": [
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          18.748
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:54.581+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "ratelimit.token_bucket.check",
+        "names": null
+      },
+      "result": {
+        "id": "ratelimit.token_bucket.check@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:52:56.632+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1839
+      },
+      "result": {
+        "statuses": [
+          [
+            "check_rate_limit",
+            "covered",
+            "ratelimit.token_bucket.check"
+          ],
+          [
+            "get_client_key",
+            "none",
+            null
+          ],
+          [
+            "enforce_rate_limit",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:04.294+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

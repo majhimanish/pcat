@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Paginate a SQLAlchemy select with page number, page size and total count"}, "result": {"ids": ["db.pagination.select_page"], "scores": [26.942]}, "timestamp": "2026-11-03T06:49:37.900+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "db.pagination.select_page", "names": null}, "result": {"id": "db.pagination.select_page@v1", "status": "active"}, "timestamp": "2026-11-03T06:49:39.149+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 937}, "result": {"statuses": [["paginate", "covered", "db.pagination.select_page"]]}, "timestamp": "2026-11-03T06:49:41.978+00:00", "tool": "check_code"}

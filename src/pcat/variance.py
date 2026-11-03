@@ -153,6 +153,7 @@ class CliGenerator:
 
     def __init__(self, model: str, workdir: Path, timeout: int = 600):
         self.model, self.workdir, self.timeout = model, Path(workdir), timeout
+        self.extra_args: list[str] = []  # e.g. --mcp-config for the v3 end-to-end run
 
     def command(self, prompt: str) -> list[str]:
         return [
@@ -161,6 +162,7 @@ class CliGenerator:
             "--no-session-persistence",
             "--strict-mcp-config",
             "--model", self.model,
+            *self.extra_args,
             "--disallowedTools", *CLI_DISALLOWED_TOOLS,
         ]
 

@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "Hash and verify passwords"}, "result": {"ids": ["auth.password.pbkdf2"], "scores": [12.41]}, "timestamp": "2026-11-03T06:49:20.915+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "auth.password.pbkdf2", "names": null}, "result": {"id": "auth.password.pbkdf2@v1", "status": "active"}, "timestamp": "2026-11-03T06:49:22.633+00:00", "tool": "get_pattern"}

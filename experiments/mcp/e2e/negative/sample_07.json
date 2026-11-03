@@ -1,0 +1,81 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import os\nimport sys\nimport time\n\nimport requests\n\n\ndef _fmt_bytes(n):\n    for unit in (\"B\", \"KB\", \"MB\", \"GB\", \"TB\"):\n        if n < 1024 or unit == \"TB\":\n            return f\"{n:.1f}{unit}\" if unit != \"B\" else f\"{int(n)}B\"\n        n /= 1024\n\n\ndef _fmt_time(seconds):\n    if seconds is None or seconds != seconds or seconds == float(\"inf\"):\n        return \"--:--:--\"\n    seconds = int(seconds)\n    h, rem = divmod(seconds, 3600)\n    m, s = divmod(rem, 60)\n    return f\"{h:02d}:{m:02d}:{s:02d}\"\n\n\ndef _render_progress(done, total, speed, start_bytes):\n    if total:\n        pct = done / total * 100\n        filled = int(30 * done / total)\n        bar = \"#\" * filled + \"-\" * (30 - filled)\n        eta = (total - done) / speed if speed > 0 else None\n        line = (f\"\\r[{bar}] {pct:5.1f}% {_fmt_bytes(done)}/{_fmt_bytes(total)} \"\n                f\"{_fmt_bytes(speed)}/s ETA {_fmt_time(eta)}\")\n    else:\n        line = f\"\\r{_fmt_bytes(done)} downloaded  {_fmt_bytes(speed)}/s  (size unknown)\"\n    sys.stderr.write(line + \"   \")\n    sys.stderr.flush()\n\n\ndef download_file(url, dest_path, chunk_size=1024 * 1024, timeout=30,\n                  resume=True, max_retries=5, headers=None):\n    \"\"\"Stream url to dest_path in chunks, with progress bar and resume support.\"\"\"\n    base_headers = dict(headers or {})\n    attempt = 0\n    while True:\n        existing = os.path.getsize(dest_path) if resume and os.path.exists(dest_path) else 0\n        req_headers = dict(base_headers)\n        if existing:\n            req_headers[\"Range\"] = f\"bytes={existing}-\"\n        try:\n            with requests.get(url, stream=True, headers=req_headers, timeout=timeout) as resp:\n                if resp.status_code == 416:  # range not satisfiable: file already complete\n                    sys.stderr.write(\"\\nAlready fully downloaded.\\n\")\n                    return dest_path\n                resp.raise_for_status()\n\n                if existing and resp.status_code == 206:\n                    mode, offset = \"ab\", existing\n                    content_range = resp.headers.get(\"Content-Range\", \"\")\n                    tail = content_range.rsplit(\"/\", 1)[-1]\n                    total = int(tail) if tail.isdigit() else None\n                else:\n                    mode, offset = \"wb\", 0  # server ignored Range or fresh download\n                    length = resp.headers.get(\"Content-Length\")\n                    total = int(length) if length and length.isdigit() else None\n\n                done = offset\n                start_time = time.monotonic()\n                last_draw = 0.0\n                with open(dest_path, mode) as f:\n                    for chunk in resp.iter_content(chunk_size=chunk_size):\n                        if not chunk:\n                            continue\n                        f.write(chunk)\n                        done += len(chunk)\n                        now = time.monotonic()\n                        if now - last_draw >= 0.1:\n                            elapsed = max(now - start_time, 1e-9)\n                            _render_progress(done, total, (done - offset) / elapsed, offset)\n                            last_draw = now\n                elapsed = max(time.monotonic() - start_time, 1e-9)\n                _render_progress(done, total, (done - offset) / elapsed, offset)\n                sys.stderr.write(\"\\n\")\n\n                if total is not None and done < total:\n                    raise requests.exceptions.ChunkedEncodingError(\n                        f\"Incomplete download: {done}/{total} bytes\")\n                return dest_path\n        except (requests.exceptions.ConnectionError,\n                requests.exceptions.Timeout,\n                requests.exceptions.ChunkedEncodingError):\n            attempt += 1\n            if not resume or attempt > max_retries:\n                raise\n            wait = min(2 ** attempt, 30)\n            sys.stderr.write(f\"\\nConnection interrupted; resuming in {wait}s \"\n                             f\"(retry {attempt}/{max_retries})...\\n\")\n            time.sleep(wait)\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0689051,
+    "duration_ms": 22997,
+    "num_turns": 5
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that downloads a very large file from a URL straight to disk in chunks, so it never loads the whole thing into memory, and shows a live progress bar with percent complete, speed, and ETA. It should also handle a missing Content-Length header and ideally resume interrupted downloads.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport os\nimport sys\nimport time\n\nimport requests\n\n\ndef _fmt_bytes(n):\n    for unit in (\"B\", \"KB\", \"MB\", \"GB\", \"TB\"):\n        if n < 1024 or unit == \"TB\":\n            return f\"{n:.1f}{unit}\" if unit != \"B\" else f\"{int(n)}B\"\n        n /= 1024\n\n\ndef _fmt_time(seconds):\n    if seconds is None or seconds != seconds or seconds == float(\"inf\"):\n        return \"--:--:--\"\n    seconds = int(seconds)\n    h, rem = divmod(seconds, 3600)\n    m, s = divmod(rem, 60)\n    return f\"{h:02d}:{m:02d}:{s:02d}\"\n\n\ndef _render_progress(done, total, speed, start_bytes):\n    if total:\n        pct = done / total * 100\n        filled = int(30 * done / total)\n        bar = \"#\" * filled + \"-\" * (30 - filled)\n        eta = (total - done) / speed if speed > 0 else None\n        line = (f\"\\r[{bar}] {pct:5.1f}% {_fmt_bytes(done)}/{_fmt_bytes(total)} \"\n                f\"{_fmt_bytes(speed)}/s ETA {_fmt_time(eta)}\")\n    else:\n        line = f\"\\r{_fmt_bytes(done)} downloaded  {_fmt_bytes(speed)}/s  (size unknown)\"\n    sys.stderr.write(line + \"   \")\n    sys.stderr.flush()\n\n\ndef download_file(url, dest_path, chunk_size=1024 * 1024, timeout=30,\n                  resume=True, max_retries=5, headers=None):\n    \"\"\"Stream url to dest_path in chunks, with progress bar and resume support.\"\"\"\n    base_headers = dict(headers or {})\n    attempt = 0\n    while True:\n        existing = os.path.getsize(dest_path) if resume and os.path.exists(dest_path) else 0\n        req_headers = dict(base_headers)\n        if existing:\n            req_headers[\"Range\"] = f\"bytes={existing}-\"\n        try:\n            with requests.get(url, stream=True, headers=req_headers, timeout=timeout) as resp:\n                if resp.status_code == 416:  # range not satisfiable: file already complete\n                    sys.stderr.write(\"\\nAlready fully downloaded.\\n\")\n                    return dest_path\n                resp.raise_for_status()\n\n                if existing and resp.status_code == 206:\n                    mode, offset = \"ab\", existing\n                    content_range = resp.headers.get(\"Content-Range\", \"\")\n                    tail = content_range.rsplit(\"/\", 1)[-1]\n                    total = int(tail) if tail.isdigit() else None\n                else:\n                    mode, offset = \"wb\", 0  # server ignored Range or fresh download\n                    length = resp.headers.get(\"Content-Length\")\n                    total = int(length) if length and length.isdigit() else None\n\n                done = offset\n                start_time = time.monotonic()\n                last_draw = 0.0\n                with open(dest_path, mode) as f:\n                    for chunk in resp.iter_content(chunk_size=chunk_size):\n                        if not chunk:\n                            continue\n                        f.write(chunk)\n                        done += len(chunk)\n                        now = time.monotonic()\n                        if now - last_draw >= 0.1:\n                            elapsed = max(now - start_time, 1e-9)\n                            _render_progress(done, total, (done - offset) / elapsed, offset)\n                            last_draw = now\n                elapsed = max(time.monotonic() - start_time, 1e-9)\n                _render_progress(done, total, (done - offset) / elapsed, offset)\n                sys.stderr.write(\"\\n\")\n\n                if total is not None and done < total:\n                    raise requests.exceptions.ChunkedEncodingError(\n                        f\"Incomplete download: {done}/{total} bytes\")\n                return dest_path\n        except (requests.exceptions.ConnectionError,\n                requests.exceptions.Timeout,\n                requests.exceptions.ChunkedEncodingError):\n            attempt += 1\n            if not resume or attempt > max_retries:\n                raise\n            wait = min(2 ** attempt, 30)\n            sys.stderr.write(f\"\\nConnection interrupted; resuming in {wait}s \"\n                             f\"(retry {attempt}/{max_retries})...\\n\")\n            time.sleep(wait)\n```",
+  "request": "Write a Python function that downloads a very large file from a URL straight to disk in chunks, so it never loads the whole thing into memory, and shows a live progress bar with percent complete, speed, and ETA. It should also handle a missing Content-Length header and ideally resume interrupted downloads.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 7,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:25+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "download large file from URL in chunks to disk with progress bar and resume"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:05.543+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "GET a URL with retries and exponential backoff"
+      },
+      "result": {
+        "ids": [
+          "http.get_with_retry.requests"
+        ],
+        "scores": [
+          15.215
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:05.710+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 4029
+      },
+      "result": {
+        "statuses": [
+          [
+            "_fmt_bytes",
+            "none",
+            null
+          ],
+          [
+            "_fmt_time",
+            "none",
+            null
+          ],
+          [
+            "_render_progress",
+            "none",
+            null
+          ],
+          [
+            "download_file",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:15.010+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

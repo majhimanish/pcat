@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "issue a signed JWT access token for a user ID with expiry"}, "result": {"ids": ["auth.jwt.create_access_token"], "scores": [23.118]}, "timestamp": "2026-11-03T06:48:14.546+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "auth.jwt.create_access_token", "names": null}, "result": {"id": "auth.jwt.create_access_token@v1", "status": "active"}, "timestamp": "2026-11-03T06:48:16.109+00:00", "tool": "get_pattern"}

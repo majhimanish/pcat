@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Create a signed JWT access token with expiry for a user ID after login"}, "result": {"ids": ["auth.jwt.create_access_token"], "scores": [22.629]}, "timestamp": "2026-11-03T06:47:41.012+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "auth.jwt.create_access_token", "names": null}, "result": {"id": "auth.jwt.create_access_token@v1", "status": "active"}, "timestamp": "2026-11-03T06:47:42.356+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1696}, "result": {"statuses": [["create_access_token", "covered", "auth.jwt.create_access_token"], ["verify_access_token", "none", null]]}, "timestamp": "2026-11-03T06:47:46.809+00:00", "tool": "check_code"}

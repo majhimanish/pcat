@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Parse and validate uploaded users spreadsheet (xlsx or csv) with per-row errors"}, "result": {"ids": ["importers.users_csv.parse"], "scores": [25.887]}, "timestamp": "2026-11-03T06:54:15.623+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "importers.users_csv.parse", "names": null}, "result": {"id": "importers.users_csv.parse@v1", "status": "active"}, "timestamp": "2026-11-03T06:54:18.961+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 3026}, "result": {"statuses": [["import_users", "covered", "importers.users_csv.parse"], ["xlsx_to_csv_text", "none", null], ["import_users_upload", "none", null]]}, "timestamp": "2026-11-03T06:54:27.729+00:00", "tool": "check_code"}

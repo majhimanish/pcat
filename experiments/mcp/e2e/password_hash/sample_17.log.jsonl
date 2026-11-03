@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Hash and verify passwords for user registration and login"}, "result": {"ids": ["auth.password.pbkdf2"], "scores": [16.438]}, "timestamp": "2026-11-03T06:49:19.065+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "auth.password.pbkdf2", "names": null}, "result": {"id": "auth.password.pbkdf2@v1", "status": "active"}, "timestamp": "2026-11-03T06:49:20.447+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1463}, "result": {"statuses": [["hash_password", "covered", "auth.password.pbkdf2"], ["verify_password", "covered", "auth.password.pbkdf2"], ["needs_rehash", "covered", "auth.password.pbkdf2"]]}, "timestamp": "2026-11-03T06:49:24.603+00:00", "tool": "check_code"}

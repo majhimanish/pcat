@@ -1,0 +1,86 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import Callable\nfrom collections.abc import Mapping\nfrom typing import Any\nimport os\n\ndef load_settings(schema: Mapping[str, tuple[Callable[[str], Any], Any]], env: Mapping[str, str] | None=None, secret_names: tuple[str, ...]=()) -> dict[str, Any]:\n    env = os.environ if env is None else env\n    settings: dict[str, Any] = {}\n    errors: list[str] = []\n    for name, (parser, default) in schema.items():\n        raw = env.get(name)\n        if raw is None:\n            if default is ...:\n                errors.append(f'{name} is required')\n            else:\n                settings[name.lower()] = default\n            continue\n        try:\n            settings[name.lower()] = parser(raw)\n        except (ValueError, TypeError) as exc:\n            errors.append(f'{name}: invalid value' if name in secret_names else f'{name}: {exc}')\n    if errors:\n        raise ValueError('invalid configuration:\\n- ' + '\\n- '.join(errors))\n    return settings\n\ndef parse_bool(raw: str) -> bool:\n    value = raw.strip().lower()\n    if value in ('1', 'true', 'yes', 'on'):\n        return True\n    if value in ('0', 'false', 'no', 'off'):\n        return False\n    raise ValueError(f'expected a boolean, got {raw!r}')\n\ndef parse_port(raw: str) -> int:\n    try:\n        port = int(raw.strip())\n    except ValueError:\n        raise ValueError(f'expected an integer port, got {raw!r}') from None\n    if not 1 <= port <= 65535:\n        raise ValueError(f'port must be between 1 and 65535, got {port}')\n    return port\n\ndef parse_database_url(raw: str) -> str:\n    value = raw.strip()\n    if not value or '://' not in value:\n        raise ValueError('expected a URL like scheme://...')\n    return value\n\ndef load_config(env: Mapping[str, str] | None=None) -> dict[str, Any]:\n    return load_settings({'DATABASE_URL': (parse_database_url, 'sqlite:///./app.db'), 'PORT': (parse_port, 8000), 'DEBUG': (parse_bool, False)}, env=env, secret_names=('DATABASE_URL',))\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0558998,
+    "duration_ms": 17566,
+    "num_turns": 5
+  },
+  "group": "env_config",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import Callable\nfrom collections.abc import Mapping\nfrom typing import Any\nimport os\n\ndef load_settings(schema: Mapping[str, tuple[Callable[[str], Any], Any]], env: Mapping[str, str] | None=None, secret_names: tuple[str, ...]=()) -> dict[str, Any]:\n    env = os.environ if env is None else env\n    settings: dict[str, Any] = {}\n    errors: list[str] = []\n    for name, (parser, default) in schema.items():\n        raw = env.get(name)\n        if raw is None:\n            if default is ...:\n                errors.append(f'{name} is required')\n            else:\n                settings[name.lower()] = default\n            continue\n        try:\n            settings[name.lower()] = parser(raw)\n        except (ValueError, TypeError) as exc:\n            errors.append(f'{name}: invalid value' if name in secret_names else f'{name}: {exc}')\n    if errors:\n        raise ValueError('invalid configuration:\\n- ' + '\\n- '.join(errors))\n    return settings\n\ndef parse_bool(raw: str) -> bool:\n    value = raw.strip().lower()\n    if value in ('1', 'true', 'yes', 'on'):\n        return True\n    if value in ('0', 'false', 'no', 'off'):\n        return False\n    raise ValueError(f'expected a boolean, got {raw!r}')\n\ndef parse_port(raw: str) -> int:\n    try:\n        port = int(raw.strip())\n    except ValueError:\n        raise ValueError(f'expected an integer port, got {raw!r}') from None\n    if not 1 <= port <= 65535:\n        raise ValueError(f'port must be between 1 and 65535, got {port}')\n    return port\n\ndef parse_database_url(raw: str) -> str:\n    value = raw.strip()\n    if not value or '://' not in value:\n        raise ValueError('expected a URL like scheme://...')\n    return value\n\ndef load_config(env: Mapping[str, str] | None=None) -> dict[str, Any]:\n    return load_settings({'DATABASE_URL': (parse_database_url, 'sqlite:///./app.db'), 'PORT': (parse_port, 8000), 'DEBUG': (parse_bool, False)}, env=env, secret_names=('DATABASE_URL',))\n```",
+  "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 14,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:52:12+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Load settings from environment variables with a schema (database URL, port, debug flag) with defaults and validation"
+      },
+      "result": {
+        "ids": [
+          "config.env.load_settings"
+        ],
+        "scores": [
+          24.616
+        ]
+      },
+      "timestamp": "2026-11-03T06:51:57.389+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "config.env.load_settings",
+        "names": null
+      },
+      "result": {
+        "id": "config.env.load_settings@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:52:00.262+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1962
+      },
+      "result": {
+        "statuses": [
+          [
+            "load_settings",
+            "covered",
+            "config.env.load_settings"
+          ],
+          [
+            "parse_bool",
+            "covered",
+            "config.env.load_settings"
+          ],
+          [
+            "parse_port",
+            "none",
+            null
+          ],
+          [
+            "parse_database_url",
+            "none",
+            null
+          ],
+          [
+            "load_config",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:05.199+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

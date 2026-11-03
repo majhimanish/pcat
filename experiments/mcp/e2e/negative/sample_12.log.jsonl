@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "validate credit card number with Luhn check and detect card brand by prefix and length"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-03T06:55:18.065+00:00", "tool": "search_patterns"}
+{"arguments": {"length": 1160}, "result": {"statuses": [["luhn_check", "none", null], ["detect_card_brand", "none", null]]}, "timestamp": "2026-11-03T06:55:21.575+00:00", "tool": "check_code"}

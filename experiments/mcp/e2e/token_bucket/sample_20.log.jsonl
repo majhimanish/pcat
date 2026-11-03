@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Token-bucket rate limit check with retry-after for API clients"}, "result": {"ids": ["ratelimit.token_bucket.check"], "scores": [22.471]}, "timestamp": "2026-11-03T06:53:13.923+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "ratelimit.token_bucket.check", "names": null}, "result": {"id": "ratelimit.token_bucket.check@v1", "status": "active"}, "timestamp": "2026-11-03T06:53:15.429+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1361}, "result": {"statuses": [["check_rate_limit", "covered", "ratelimit.token_bucket.check"], ["rate_limit_response", "none", null]]}, "timestamp": "2026-11-03T06:53:20.052+00:00", "tool": "check_code"}

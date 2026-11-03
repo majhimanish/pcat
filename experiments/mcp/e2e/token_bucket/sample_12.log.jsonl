@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "rate limit per client with retry-after"}, "result": {"ids": ["ratelimit.token_bucket.check"], "scores": [16.411]}, "timestamp": "2026-11-03T06:52:46.678+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "ratelimit.token_bucket.check", "names": null}, "result": {"id": "ratelimit.token_bucket.check@v1", "status": "active"}, "timestamp": "2026-11-03T06:52:47.735+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1519}, "result": {"statuses": [["check_rate_limit", "covered", "ratelimit.token_bucket.check"], ["rate_limit_response", "none", null]]}, "timestamp": "2026-11-03T06:52:52.348+00:00", "tool": "check_code"}

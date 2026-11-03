@@ -1,0 +1,81 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import MutableMapping\nimport json\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef get_client_key(environ: dict) -> str:\n    api_key = environ.get('HTTP_X_API_KEY')\n    if api_key:\n        return 'key:' + api_key\n    return 'ip:' + environ.get('REMOTE_ADDR', 'unknown')\n\ndef make_rate_limit_middleware(app, requests_per_minute: int = 60):\n    buckets: dict[str, dict[str, float]] = {}\n    refill_rate = requests_per_minute / 60.0\n\n    def middleware(environ, start_response):\n        allowed, retry_after = check_rate_limit(\n            buckets, get_client_key(environ),\n            capacity=requests_per_minute, refill_rate=refill_rate,\n        )\n        if allowed:\n            return app(environ, start_response)\n        body = json.dumps({'error': 'rate limit exceeded'}).encode()\n        start_response('429 Too Many Requests', [\n            ('Content-Type', 'application/json'),\n            ('Content-Length', str(len(body))),\n            ('Retry-After', str(max(1, math.ceil(retry_after)))),\n        ])\n        return [body]\n\n    return middleware\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.060071900000000004,
+    "duration_ms": 17674,
+    "num_turns": 5
+  },
+  "group": "token_bucket",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import MutableMapping\nimport json\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef get_client_key(environ: dict) -> str:\n    api_key = environ.get('HTTP_X_API_KEY')\n    if api_key:\n        return 'key:' + api_key\n    return 'ip:' + environ.get('REMOTE_ADDR', 'unknown')\n\ndef make_rate_limit_middleware(app, requests_per_minute: int = 60):\n    buckets: dict[str, dict[str, float]] = {}\n    refill_rate = requests_per_minute / 60.0\n\n    def middleware(environ, start_response):\n        allowed, retry_after = check_rate_limit(\n            buckets, get_client_key(environ),\n            capacity=requests_per_minute, refill_rate=refill_rate,\n        )\n        if allowed:\n            return app(environ, start_response)\n        body = json.dumps({'error': 'rate limit exceeded'}).encode()\n        start_response('429 Too Many Requests', [\n            ('Content-Type', 'application/json'),\n            ('Content-Length', str(len(body))),\n            ('Retry-After', str(max(1, math.ceil(retry_after)))),\n        ])\n        return [body]\n\n    return middleware\n```",
+  "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 4,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:52:37+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "rate limit per client with retry-after"
+      },
+      "result": {
+        "ids": [
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          16.411
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:22.592+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "ratelimit.token_bucket.check",
+        "names": null
+      },
+      "result": {
+        "id": "ratelimit.token_bucket.check@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:52:24.751+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1963
+      },
+      "result": {
+        "statuses": [
+          [
+            "check_rate_limit",
+            "covered",
+            "ratelimit.token_bucket.check"
+          ],
+          [
+            "get_client_key",
+            "none",
+            null
+          ],
+          [
+            "make_rate_limit_middleware",
+            "none",
+            null
+          ],
+          [
+            "make_rate_limit_middleware.<locals>.middleware",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:30.686+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

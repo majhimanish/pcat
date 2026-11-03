@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "Paginate a SQLAlchemy query with page and page size, return records and total count"}, "result": {"ids": ["db.pagination.select_page"], "scores": [25.723]}, "timestamp": "2026-11-03T06:49:48.305+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "db.pagination.select_page", "names": null}, "result": {"id": "db.pagination.select_page@v1", "status": "active"}, "timestamp": "2026-11-03T06:49:49.472+00:00", "tool": "get_pattern"}

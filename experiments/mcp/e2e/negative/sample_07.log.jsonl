@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "download large file from URL in chunks to disk with progress bar and resume"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-03T06:55:05.543+00:00", "tool": "search_patterns"}
+{"arguments": {"limit": 5, "request": "GET a URL with retries and exponential backoff"}, "result": {"ids": ["http.get_with_retry.requests"], "scores": [15.215]}, "timestamp": "2026-11-03T06:55:05.710+00:00", "tool": "search_patterns"}
+{"arguments": {"length": 4029}, "result": {"statuses": [["_fmt_bytes", "none", null], ["_fmt_time", "none", null], ["_render_progress", "none", null], ["download_file", "none", null]]}, "timestamp": "2026-11-03T06:55:15.010+00:00", "tool": "check_code"}

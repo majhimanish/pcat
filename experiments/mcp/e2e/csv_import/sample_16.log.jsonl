@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Parse and validate uploaded users CSV/xlsx spreadsheet with per-row errors, duplicate emails, valid role"}, "result": {"ids": ["importers.users_csv.parse"], "scores": [29.405]}, "timestamp": "2026-11-03T06:54:20.216+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "importers.users_csv.parse", "names": null}, "result": {"id": "importers.users_csv.parse@v1", "status": "active"}, "timestamp": "2026-11-03T06:54:21.358+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 2876}, "result": {"statuses": [["load_user_table", "none", null], ["validate_user_rows", "none", null]]}, "timestamp": "2026-11-03T06:54:34.511+00:00", "tool": "check_code"}

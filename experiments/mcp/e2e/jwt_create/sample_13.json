@@ -1,0 +1,50 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from datetime import datetime\nfrom datetime import timedelta\nfrom datetime import timezone\nimport jwt\nimport uuid\n\nALGORITHM = 'HS256'\nMIN_SECRET_BYTES = 32\n\n\ndef create_access_token(user_id: str | int, secret: str, issuer: str, audience: str, expires_in: timedelta = timedelta(minutes=15), now: datetime | None = None) -> str:\n    if user_id is None or str(user_id) == '':\n        raise ValueError('user_id is required')\n    if not issuer or not audience:\n        raise ValueError('issuer and audience are required')\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    if expires_in <= timedelta(0):\n        raise ValueError('expires_in must be positive')\n    issued_at = now or datetime.now(timezone.utc)\n    if issued_at.tzinfo is None:\n        raise ValueError('now must be timezone-aware')\n    payload = {\n        'sub': str(user_id),\n        'iss': issuer,\n        'aud': audience,\n        'iat': issued_at,\n        'nbf': issued_at,\n        'exp': issued_at + expires_in,\n        'jti': uuid.uuid4().hex,\n    }\n    return jwt.encode(payload, secret, algorithm=ALGORITHM)\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0355867,
+    "duration_ms": 12559,
+    "num_turns": 4
+  },
+  "group": "jwt_create",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom datetime import datetime\nfrom datetime import timedelta\nfrom datetime import timezone\nimport jwt\nimport uuid\n\nALGORITHM = 'HS256'\nMIN_SECRET_BYTES = 32\n\n\ndef create_access_token(user_id: str | int, secret: str, issuer: str, audience: str, expires_in: timedelta = timedelta(minutes=15), now: datetime | None = None) -> str:\n    if user_id is None or str(user_id) == '':\n        raise ValueError('user_id is required')\n    if not issuer or not audience:\n        raise ValueError('issuer and audience are required')\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    if expires_in <= timedelta(0):\n        raise ValueError('expires_in must be positive')\n    issued_at = now or datetime.now(timezone.utc)\n    if issued_at.tzinfo is None:\n        raise ValueError('now must be timezone-aware')\n    payload = {\n        'sub': str(user_id),\n        'iss': issuer,\n        'aud': audience,\n        'iat': issued_at,\n        'nbf': issued_at,\n        'exp': issued_at + expires_in,\n        'jti': uuid.uuid4().hex,\n    }\n    return jwt.encode(payload, secret, algorithm=ALGORITHM)\n```",
+  "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 13,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:48:23+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "issue a signed JWT access token for a user ID with expiry"
+      },
+      "result": {
+        "ids": [
+          "auth.jwt.create_access_token"
+        ],
+        "scores": [
+          23.118
+        ]
+      },
+      "timestamp": "2026-11-03T06:48:14.546+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.jwt.create_access_token",
+        "names": null
+      },
+      "result": {
+        "id": "auth.jwt.create_access_token@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:48:16.109+00:00",
+      "tool": "get_pattern"
+    }
+  ]
+}

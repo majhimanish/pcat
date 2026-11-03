@@ -1,0 +1,66 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\n\nfrom sqlalchemy import Select, func, select\nfrom sqlalchemy.orm import Session\n\nMAX_PAGE_SIZE = 100\n\n\ndef paginate(\n    session: Session,\n    stmt: Select,\n    page: int = 1,\n    page_size: int = 20,\n    tiebreaker: Any = None,\n) -> dict[str, Any]:\n    \"\"\"Return one 1-based page of `stmt` plus the total matching row count.\n\n    `stmt` must already carry an ORDER BY (e.g. select(User).order_by(User.created_at)).\n    Pass a unique column (e.g. User.id) as `tiebreaker` so rows with equal sort keys\n    keep a deterministic order and never shift between pages.\n    \"\"\"\n    if page < 1:\n        raise ValueError('page must be >= 1')\n    if not 1 <= page_size <= MAX_PAGE_SIZE:\n        raise ValueError(f'page_size must be between 1 and {MAX_PAGE_SIZE}')\n\n    # Count over a subquery with ordering stripped, so the DB skips needless sorting.\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    # Appending a unique tiebreaker makes the ordering total and therefore stable.\n    page_stmt = stmt.order_by(tiebreaker) if tiebreaker is not None else stmt\n    result = session.execute(page_stmt.limit(page_size).offset((page - 1) * page_size))\n\n    single_entity = len(stmt.column_descriptions) == 1\n    items = list(result.scalars()) if single_entity else list(result)\n    pages = (total + page_size - 1) // page_size\n\n    return {\n        'items': items,\n        'total': total,\n        'page': page,\n        'page_size': page_size,\n        'pages': pages,\n    }\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.05201070000000001,
+    "duration_ms": 15433,
+    "num_turns": 5
+  },
+  "group": "paginate_query",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any\n\nfrom sqlalchemy import Select, func, select\nfrom sqlalchemy.orm import Session\n\nMAX_PAGE_SIZE = 100\n\n\ndef paginate(\n    session: Session,\n    stmt: Select,\n    page: int = 1,\n    page_size: int = 20,\n    tiebreaker: Any = None,\n) -> dict[str, Any]:\n    \"\"\"Return one 1-based page of `stmt` plus the total matching row count.\n\n    `stmt` must already carry an ORDER BY (e.g. select(User).order_by(User.created_at)).\n    Pass a unique column (e.g. User.id) as `tiebreaker` so rows with equal sort keys\n    keep a deterministic order and never shift between pages.\n    \"\"\"\n    if page < 1:\n        raise ValueError('page must be >= 1')\n    if not 1 <= page_size <= MAX_PAGE_SIZE:\n        raise ValueError(f'page_size must be between 1 and {MAX_PAGE_SIZE}')\n\n    # Count over a subquery with ordering stripped, so the DB skips needless sorting.\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n\n    # Appending a unique tiebreaker makes the ordering total and therefore stable.\n    page_stmt = stmt.order_by(tiebreaker) if tiebreaker is not None else stmt\n    result = session.execute(page_stmt.limit(page_size).offset((page - 1) * page_size))\n\n    single_entity = len(stmt.column_descriptions) == 1\n    items = list(result.scalars()) if single_entity else list(result)\n    pages = (total + page_size - 1) // page_size\n\n    return {\n        'items': items,\n        'total': total,\n        'page': page,\n        'page_size': page_size,\n        'pages': pages,\n    }\n```",
+  "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 17,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:50:21+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Paginate a SQLAlchemy select with page and page size, return total count and stable ordering"
+      },
+      "result": {
+        "ids": [
+          "db.pagination.select_page"
+        ],
+        "scores": [
+          27.807
+        ]
+      },
+      "timestamp": "2026-11-03T06:50:08.025+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "db.pagination.select_page",
+        "names": null
+      },
+      "result": {
+        "id": "db.pagination.select_page@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:50:09.106+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1042
+      },
+      "result": {
+        "statuses": [
+          [
+            "paginate",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:50:14.601+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

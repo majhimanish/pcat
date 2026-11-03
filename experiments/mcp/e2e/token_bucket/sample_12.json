@@ -1,0 +1,71 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import MutableMapping\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef rate_limit_response(buckets: MutableMapping[str, dict[str, float]], client_key: str, capacity: float=20.0, refill_rate: float=5.0) -> tuple[int, dict[str, str], dict[str, object]] | None:\n    allowed, retry_after = check_rate_limit(buckets, client_key, capacity=capacity, refill_rate=refill_rate)\n    if allowed:\n        return None\n    seconds = max(1, math.ceil(retry_after))\n    return (429, {'Retry-After': str(seconds)}, {'error': 'rate_limited', 'message': f'Too many requests. Retry in {seconds} seconds.', 'retry_after': seconds})\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.051981099999999995,
+    "duration_ms": 15192,
+    "num_turns": 5
+  },
+  "group": "token_bucket",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import MutableMapping\nimport math\nimport time\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\ndef rate_limit_response(buckets: MutableMapping[str, dict[str, float]], client_key: str, capacity: float=20.0, refill_rate: float=5.0) -> tuple[int, dict[str, str], dict[str, object]] | None:\n    allowed, retry_after = check_rate_limit(buckets, client_key, capacity=capacity, refill_rate=refill_rate)\n    if allowed:\n        return None\n    seconds = max(1, math.ceil(retry_after))\n    return (429, {'Retry-After': str(seconds)}, {'error': 'rate_limited', 'message': f'Too many requests. Retry in {seconds} seconds.', 'retry_after': seconds})\n```",
+  "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:52:59+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "rate limit per client with retry-after"
+      },
+      "result": {
+        "ids": [
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          16.411
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:46.678+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "ratelimit.token_bucket.check",
+        "names": null
+      },
+      "result": {
+        "id": "ratelimit.token_bucket.check@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:52:47.735+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1519
+      },
+      "result": {
+        "statuses": [
+          [
+            "check_rate_limit",
+            "covered",
+            "ratelimit.token_bucket.check"
+          ],
+          [
+            "rate_limit_response",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:52:52.348+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

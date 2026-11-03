@@ -1,0 +1,55 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import re\nfrom typing import Optional\n\n\ndef luhn_check(digits: str) -> bool:\n    total = 0\n    for i, ch in enumerate(reversed(digits)):\n        d = int(ch)\n        if i % 2 == 1:\n            d *= 2\n            if d > 9:\n                d -= 9\n        total += d\n    return total % 10 == 0\n\n\ndef detect_card_brand(number: str) -> Optional[str]:\n    if not isinstance(number, str):\n        return None\n    digits = re.sub(r\"[ -]\", \"\", number)\n    if not digits.isascii() or not digits.isdigit():\n        return None\n    n = len(digits)\n\n    if digits[0] == \"4\" and n in (13, 16, 19):\n        brand = \"Visa\"\n    elif n == 16 and (\n        51 <= int(digits[:2]) <= 55 or 2221 <= int(digits[:4]) <= 2720\n    ):\n        brand = \"Mastercard\"\n    elif n == 15 and digits[:2] in (\"34\", \"37\"):\n        brand = \"Amex\"\n    elif (\n        n in (16, 17, 18, 19)\n        and (\n            digits.startswith(\"6011\")\n            or digits.startswith(\"65\")\n            or 644 <= int(digits[:3]) <= 649\n            or 622126 <= int(digits[:6]) <= 622925\n        )\n    ):\n        brand = \"Discover\"\n    else:\n        return None\n\n    return brand if luhn_check(digits) else None\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0419459,
+    "duration_ms": 11939,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that checks whether a credit card number is plausibly valid before I charge it. It should strip spaces and dashes, run the Luhn check, and verify the length and prefix for the major card types (Visa, Mastercard, Amex, Discover), returning the detected card brand or None if it's invalid.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport re\nfrom typing import Optional\n\n\ndef luhn_check(digits: str) -> bool:\n    total = 0\n    for i, ch in enumerate(reversed(digits)):\n        d = int(ch)\n        if i % 2 == 1:\n            d *= 2\n            if d > 9:\n                d -= 9\n        total += d\n    return total % 10 == 0\n\n\ndef detect_card_brand(number: str) -> Optional[str]:\n    if not isinstance(number, str):\n        return None\n    digits = re.sub(r\"[ -]\", \"\", number)\n    if not digits.isascii() or not digits.isdigit():\n        return None\n    n = len(digits)\n\n    if digits[0] == \"4\" and n in (13, 16, 19):\n        brand = \"Visa\"\n    elif n == 16 and (\n        51 <= int(digits[:2]) <= 55 or 2221 <= int(digits[:4]) <= 2720\n    ):\n        brand = \"Mastercard\"\n    elif n == 15 and digits[:2] in (\"34\", \"37\"):\n        brand = \"Amex\"\n    elif (\n        n in (16, 17, 18, 19)\n        and (\n            digits.startswith(\"6011\")\n            or digits.startswith(\"65\")\n            or 644 <= int(digits[:3]) <= 649\n            or 622126 <= int(digits[:6]) <= 622925\n        )\n    ):\n        brand = \"Discover\"\n    else:\n        return None\n\n    return brand if luhn_check(digits) else None\n```",
+  "request": "Write a Python function that checks whether a credit card number is plausibly valid before I charge it. It should strip spaces and dashes, run the Luhn check, and verify the length and prefix for the major card types (Visa, Mastercard, Amex, Discover), returning the detected card brand or None if it's invalid.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:26+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "validate credit card number with Luhn check and detect card brand by prefix and length"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:18.065+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1160
+      },
+      "result": {
+        "statuses": [
+          [
+            "luhn_check",
+            "none",
+            null
+          ],
+          [
+            "detect_card_brand",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:21.575+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

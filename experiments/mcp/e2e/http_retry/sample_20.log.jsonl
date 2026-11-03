@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "retry HTTP API call on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx, configurable attempts and base delay"}, "result": {"ids": ["http.get_with_retry.requests", "retry.with_exponential_backoff"], "scores": [24.638, 22.359]}, "timestamp": "2026-11-03T06:51:12.754+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "http.get_with_retry.requests", "names": null}, "result": {"id": "http.get_with_retry.requests@v1", "status": "active"}, "timestamp": "2026-11-03T06:51:14.272+00:00", "tool": "get_pattern"}

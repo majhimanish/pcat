@@ -1,0 +1,97 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import json\nimport logging\nimport os\nimport signal\nimport threading\n\nimport pika\n\nlog = logging.getLogger(\"worker\")\n\nQUEUE = os.environ.get(\"JOB_QUEUE\", \"jobs\")\nDLX = os.environ.get(\"JOB_DLX\", \"jobs.dlx\")\nDLQ = os.environ.get(\"JOB_DLQ\", \"jobs.dead\")\nMAX_RETRIES = int(os.environ.get(\"JOB_MAX_RETRIES\", \"3\"))\nPREFETCH = int(os.environ.get(\"JOB_PREFETCH\", \"10\"))\n\n\ndef process_job(payload):\n    log.info(\"processing %s\", payload)\n\n\ndef declare_topology(channel):\n    channel.exchange_declare(exchange=DLX, exchange_type=\"fanout\", durable=True)\n    channel.queue_declare(queue=DLQ, durable=True)\n    channel.queue_bind(queue=DLQ, exchange=DLX)\n    channel.queue_declare(\n        queue=QUEUE, durable=True, arguments={\"x-dead-letter-exchange\": DLX}\n    )\n\n\ndef get_retry_count(properties):\n    headers = properties.headers or {}\n    return int(headers.get(\"x-retry-count\", 0))\n\n\ndef handle_message(channel, method, properties, body):\n    try:\n        process_job(json.loads(body))\n    except Exception:\n        log.exception(\"job failed\")\n        retries = get_retry_count(properties)\n        if retries < MAX_RETRIES:\n            headers = dict(properties.headers or {})\n            headers[\"x-retry-count\"] = retries + 1\n            channel.basic_publish(\n                exchange=\"\",\n                routing_key=QUEUE,\n                body=body,\n                properties=pika.BasicProperties(\n                    delivery_mode=2,\n                    content_type=properties.content_type,\n                    headers=headers,\n                ),\n            )\n            channel.basic_ack(method.delivery_tag)\n        else:\n            # Retries exhausted: reject without requeue so the DLX routes it to the DLQ.\n            channel.basic_nack(method.delivery_tag, requeue=False)\n        return\n    channel.basic_ack(method.delivery_tag)\n\n\ndef install_signal_handlers(stop_event):\n    def handler(signum, frame):\n        log.info(\"signal %s received, shutting down\", signum)\n        stop_event.set()\n\n    signal.signal(signal.SIGTERM, handler)\n    signal.signal(signal.SIGINT, handler)\n\n\ndef run_worker(url):\n    stop_event = threading.Event()\n    install_signal_handlers(stop_event)\n    connection = pika.BlockingConnection(pika.URLParameters(url))\n    try:\n        channel = connection.channel()\n        declare_topology(channel)\n        channel.basic_qos(prefetch_count=PREFETCH)\n        for method, properties, body in channel.consume(\n            QUEUE, inactivity_timeout=1\n        ):\n            if stop_event.is_set():\n                break\n            if method is None:\n                continue\n            handle_message(channel, method, properties, body)\n        # Cancels the consumer and requeues any prefetched, unacked messages.\n        channel.cancel()\n    finally:\n        if connection.is_open:\n            connection.close()\n\n\ndef main():\n    logging.basicConfig(level=logging.INFO)\n    run_worker(os.environ.get(\"AMQP_URL\", \"amqp://guest:guest@localhost:5672/%2F\"))\n\n\nif __name__ == \"__main__\":\n    main()\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0640574,
+    "duration_ms": 30300,
+    "num_turns": 5
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python worker that consumes jobs from a RabbitMQ queue using pika. It should ack messages after successful processing, retry or dead-letter failures, and shut down cleanly on SIGTERM.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport json\nimport logging\nimport os\nimport signal\nimport threading\n\nimport pika\n\nlog = logging.getLogger(\"worker\")\n\nQUEUE = os.environ.get(\"JOB_QUEUE\", \"jobs\")\nDLX = os.environ.get(\"JOB_DLX\", \"jobs.dlx\")\nDLQ = os.environ.get(\"JOB_DLQ\", \"jobs.dead\")\nMAX_RETRIES = int(os.environ.get(\"JOB_MAX_RETRIES\", \"3\"))\nPREFETCH = int(os.environ.get(\"JOB_PREFETCH\", \"10\"))\n\n\ndef process_job(payload):\n    log.info(\"processing %s\", payload)\n\n\ndef declare_topology(channel):\n    channel.exchange_declare(exchange=DLX, exchange_type=\"fanout\", durable=True)\n    channel.queue_declare(queue=DLQ, durable=True)\n    channel.queue_bind(queue=DLQ, exchange=DLX)\n    channel.queue_declare(\n        queue=QUEUE, durable=True, arguments={\"x-dead-letter-exchange\": DLX}\n    )\n\n\ndef get_retry_count(properties):\n    headers = properties.headers or {}\n    return int(headers.get(\"x-retry-count\", 0))\n\n\ndef handle_message(channel, method, properties, body):\n    try:\n        process_job(json.loads(body))\n    except Exception:\n        log.exception(\"job failed\")\n        retries = get_retry_count(properties)\n        if retries < MAX_RETRIES:\n            headers = dict(properties.headers or {})\n            headers[\"x-retry-count\"] = retries + 1\n            channel.basic_publish(\n                exchange=\"\",\n                routing_key=QUEUE,\n                body=body,\n                properties=pika.BasicProperties(\n                    delivery_mode=2,\n                    content_type=properties.content_type,\n                    headers=headers,\n                ),\n            )\n            channel.basic_ack(method.delivery_tag)\n        else:\n            # Retries exhausted: reject without requeue so the DLX routes it to the DLQ.\n            channel.basic_nack(method.delivery_tag, requeue=False)\n        return\n    channel.basic_ack(method.delivery_tag)\n\n\ndef install_signal_handlers(stop_event):\n    def handler(signum, frame):\n        log.info(\"signal %s received, shutting down\", signum)\n        stop_event.set()\n\n    signal.signal(signal.SIGTERM, handler)\n    signal.signal(signal.SIGINT, handler)\n\n\ndef run_worker(url):\n    stop_event = threading.Event()\n    install_signal_handlers(stop_event)\n    connection = pika.BlockingConnection(pika.URLParameters(url))\n    try:\n        channel = connection.channel()\n        declare_topology(channel)\n        channel.basic_qos(prefetch_count=PREFETCH)\n        for method, properties, body in channel.consume(\n            QUEUE, inactivity_timeout=1\n        ):\n            if stop_event.is_set():\n                break\n            if method is None:\n                continue\n            handle_message(channel, method, properties, body)\n        # Cancels the consumer and requeues any prefetched, unacked messages.\n        channel.cancel()\n    finally:\n        if connection.is_open:\n            connection.close()\n\n\ndef main():\n    logging.basicConfig(level=logging.INFO)\n    run_worker(os.environ.get(\"AMQP_URL\", \"amqp://guest:guest@localhost:5672/%2F\"))\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "request": "Write a Python worker that consumes jobs from a RabbitMQ queue using pika. It should ack messages after successful processing, retry or dead-letter failures, and shut down cleanly on SIGTERM.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 15,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:51+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "RabbitMQ pika worker consuming jobs with ack, retry, dead-letter, graceful SIGTERM shutdown"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:33.081+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "retry with exponential backoff"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:33.243+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 2860
+      },
+      "result": {
+        "statuses": [
+          [
+            "process_job",
+            "none",
+            null
+          ],
+          [
+            "declare_topology",
+            "none",
+            null
+          ],
+          [
+            "get_retry_count",
+            "none",
+            null
+          ],
+          [
+            "handle_message",
+            "none",
+            null
+          ],
+          [
+            "install_signal_handlers",
+            "none",
+            null
+          ],
+          [
+            "install_signal_handlers.<locals>.handler",
+            "none",
+            null
+          ],
+          [
+            "run_worker",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:42.416+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

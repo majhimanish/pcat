@@ -1,0 +1,76 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\nITERATIONS = 600000\nMIN_ITERATIONS = 600000\nMAX_ITERATIONS = 10000000\nSALT_BYTES = 16\n\ndef hash_password(password: str, iterations: int=ITERATIONS) -> str:\n    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:\n        raise ValueError(f'iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}')\n    salt = os.urandom(SALT_BYTES)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)\n    b64 = base64.b64encode\n    return f'pbkdf2_sha256${iterations}${b64(salt).decode()}${b64(key).decode()}'\n\ndef verify_password(password: str, stored: str) -> bool:\n    try:\n        scheme, iterations, salt_b64, key_b64 = stored.split('$')\n        if scheme != 'pbkdf2_sha256' or not 0 < int(iterations) <= MAX_ITERATIONS:\n            return False\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(key_b64, validate=True)\n        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, int(iterations), dklen=len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(key, expected)\n\ndef needs_rehash(stored: str, iterations: int=ITERATIONS) -> bool:\n    try:\n        scheme, stored_iterations, _, _ = stored.split('$')\n        count = int(stored_iterations)\n    except ValueError:\n        return True\n    return scheme != 'pbkdf2_sha256' or not iterations <= count <= MAX_ITERATIONS\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0562312,
+    "duration_ms": 13751,
+    "num_turns": 5
+  },
+  "group": "password_hash",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\nITERATIONS = 600000\nMIN_ITERATIONS = 600000\nMAX_ITERATIONS = 10000000\nSALT_BYTES = 16\n\ndef hash_password(password: str, iterations: int=ITERATIONS) -> str:\n    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:\n        raise ValueError(f'iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}')\n    salt = os.urandom(SALT_BYTES)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)\n    b64 = base64.b64encode\n    return f'pbkdf2_sha256${iterations}${b64(salt).decode()}${b64(key).decode()}'\n\ndef verify_password(password: str, stored: str) -> bool:\n    try:\n        scheme, iterations, salt_b64, key_b64 = stored.split('$')\n        if scheme != 'pbkdf2_sha256' or not 0 < int(iterations) <= MAX_ITERATIONS:\n            return False\n        salt = base64.b64decode(salt_b64, validate=True)\n        expected = base64.b64decode(key_b64, validate=True)\n        key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, int(iterations), dklen=len(expected))\n    except (ValueError, TypeError):\n        return False\n    return hmac.compare_digest(key, expected)\n\ndef needs_rehash(stored: str, iterations: int=ITERATIONS) -> bool:\n    try:\n        scheme, stored_iterations, _, _ = stored.split('$')\n        count = int(stored_iterations)\n    except ValueError:\n        return True\n    return scheme != 'pbkdf2_sha256' or not iterations <= count <= MAX_ITERATIONS\n```",
+  "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 3,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:48:47+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Hash and verify passwords for registration and login"
+      },
+      "result": {
+        "ids": [
+          "auth.password.pbkdf2"
+        ],
+        "scores": [
+          15.156
+        ]
+      },
+      "timestamp": "2026-11-03T06:48:36.284+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.password.pbkdf2",
+        "names": null
+      },
+      "result": {
+        "id": "auth.password.pbkdf2@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:48:37.347+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1463
+      },
+      "result": {
+        "statuses": [
+          [
+            "hash_password",
+            "covered",
+            "auth.password.pbkdf2"
+          ],
+          [
+            "verify_password",
+            "covered",
+            "auth.password.pbkdf2"
+          ],
+          [
+            "needs_rehash",
+            "covered",
+            "auth.password.pbkdf2"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:48:41.150+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "Parse and validate a users CSV/xlsx upload with per-row errors"}, "result": {"ids": ["importers.users_csv.parse"], "scores": [23.865]}, "timestamp": "2026-11-03T06:53:56.869+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "importers.users_csv.parse", "names": null}, "result": {"id": "importers.users_csv.parse@v1", "status": "active"}, "timestamp": "2026-11-03T06:53:57.877+00:00", "tool": "get_pattern"}

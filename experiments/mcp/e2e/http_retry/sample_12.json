@@ -1,0 +1,71 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport time\n\nimport requests\n\nRETRY_STATUSES = (500, 502, 503, 504)\n\n\ndef get_with_retry(\n    url: str,\n    session: requests.Session | None = None,\n    attempts: int = 4,\n    base_delay: float = 0.5,\n    max_delay: float = 30.0,\n    timeout: float = 10.0,\n    sleep=time.sleep,\n    rand=random.random,\n) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.get(url, timeout=timeout)\n        except requests.Timeout:\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0484897,
+    "duration_ms": 15019,
+    "num_turns": 5
+  },
+  "group": "http_retry",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport random\nimport time\n\nimport requests\n\nRETRY_STATUSES = (500, 502, 503, 504)\n\n\ndef get_with_retry(\n    url: str,\n    session: requests.Session | None = None,\n    attempts: int = 4,\n    base_delay: float = 0.5,\n    max_delay: float = 30.0,\n    timeout: float = 10.0,\n    sleep=time.sleep,\n    rand=random.random,\n) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.get(url, timeout=timeout)\n        except requests.Timeout:\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n```",
+  "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:51:02+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "retry HTTP request with exponential backoff and jitter, only on timeouts and 5xx"
+      },
+      "result": {
+        "ids": [
+          "http.get_with_retry.requests"
+        ],
+        "scores": [
+          24.159
+        ]
+      },
+      "timestamp": "2026-11-03T06:50:50.114+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "http.get_with_retry.requests",
+        "names": null
+      },
+      "result": {
+        "id": "http.get_with_retry.requests@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:50:51.187+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1196
+      },
+      "result": {
+        "statuses": [
+          [
+            "get_with_retry",
+            "none",
+            null
+          ],
+          [
+            "retry_after_seconds",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:50:55.507+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

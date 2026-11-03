@@ -1,0 +1,55 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import io\nfrom PIL import Image, ImageOps\n\n\ndef _prepare_for_format(img, fmt):\n    fmt = (fmt or \"JPEG\").upper()\n    if fmt == \"JPEG\" and img.mode not in (\"RGB\", \"L\"):\n        img = img.convert(\"RGB\")\n    return img, fmt\n\n\ndef make_thumbnail(source, max_size=(200, 200)):\n    \"\"\"Return thumbnail bytes for an uploaded image (path or file-like), preserving format.\"\"\"\n    with Image.open(source) as img:\n        fmt = img.format\n        img = ImageOps.exif_transpose(img)\n        img.thumbnail(max_size, Image.Resampling.LANCZOS)\n        img, fmt = _prepare_for_format(img, fmt)\n        buf = io.BytesIO()\n        save_kwargs = {\"quality\": 85, \"optimize\": True} if fmt == \"JPEG\" else {}\n        img.save(buf, format=fmt, **save_kwargs)\n        return buf.getvalue()\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0348324,
+    "duration_ms": 13321,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport io\nfrom PIL import Image, ImageOps\n\n\ndef _prepare_for_format(img, fmt):\n    fmt = (fmt or \"JPEG\").upper()\n    if fmt == \"JPEG\" and img.mode not in (\"RGB\", \"L\"):\n        img = img.convert(\"RGB\")\n    return img, fmt\n\n\ndef make_thumbnail(source, max_size=(200, 200)):\n    \"\"\"Return thumbnail bytes for an uploaded image (path or file-like), preserving format.\"\"\"\n    with Image.open(source) as img:\n        fmt = img.format\n        img = ImageOps.exif_transpose(img)\n        img.thumbnail(max_size, Image.Resampling.LANCZOS)\n        img, fmt = _prepare_for_format(img, fmt)\n        buf = io.BytesIO()\n        save_kwargs = {\"quality\": 85, \"optimize\": True} if fmt == \"JPEG\" else {}\n        img.save(buf, format=fmt, **save_kwargs)\n        return buf.getvalue()\n```",
+  "request": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 18,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:41+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "generate image thumbnail with Pillow keeping aspect ratio and EXIF rotation"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:33.593+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 751
+      },
+      "result": {
+        "statuses": [
+          [
+            "_save_format",
+            "none",
+            null
+          ],
+          [
+            "make_thumbnail",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:36.187+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import base64\nimport hashlib\nimport hmac\nimport os\n\nfrom fastapi import FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\nITERATIONS = 600000\nMIN_ITERATIONS = 600000\nMAX_ITERATIONS = 10000000\nSALT_BYTES = 16\n\napp = FastAPI()\n\n\nclass SignupRequest(BaseModel):\n    email: EmailStr\n    password: str = Field(min_length=8, max_length=128)\n    name: str = Field(min_length=1, max_length=100)\n\n\nclass UserPublic(BaseModel):\n    id: int\n    email: EmailStr\n    name: str\n\n\ndef hash_password(password: str, iterations: int=ITERATIONS) -> str:\n    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:\n        raise ValueError(f'iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}')\n    salt = os.urandom(SALT_BYTES)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)\n    b64 = base64.b64encode\n    return f'pbkdf2_sha256${iterations}${b64(salt).decode()}${b64(key).decode()}'\n\n\n@app.post(\"/signup\", response_model=UserPublic, status_code=status.HTTP_201_CREATED)\ndef signup(payload: SignupRequest) -> UserPublic:\n    from user_repository import create_user, get_user_by_email, EmailAlreadyExistsError\n\n    email = payload.email.lower()\n    if get_user_by_email(email) is not None:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=\"Email already registered\")\n    try:\n        user = create_user(email=email, name=payload.name.strip(), password_hash=hash_password(payload.password))\n    except EmailAlreadyExistsError:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=\"Email already registered\")\n    return UserPublic(id=user.id, email=user.email, name=user.name)\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.075879,
+    "duration_ms": 22487,
+    "num_turns": 8
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport base64\nimport hashlib\nimport hmac\nimport os\n\nfrom fastapi import FastAPI, HTTPException, status\nfrom pydantic import BaseModel, EmailStr, Field\n\nITERATIONS = 600000\nMIN_ITERATIONS = 600000\nMAX_ITERATIONS = 10000000\nSALT_BYTES = 16\n\napp = FastAPI()\n\n\nclass SignupRequest(BaseModel):\n    email: EmailStr\n    password: str = Field(min_length=8, max_length=128)\n    name: str = Field(min_length=1, max_length=100)\n\n\nclass UserPublic(BaseModel):\n    id: int\n    email: EmailStr\n    name: str\n\n\ndef hash_password(password: str, iterations: int=ITERATIONS) -> str:\n    if not MIN_ITERATIONS <= iterations <= MAX_ITERATIONS:\n        raise ValueError(f'iterations must be between {MIN_ITERATIONS} and {MAX_ITERATIONS}')\n    salt = os.urandom(SALT_BYTES)\n    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, iterations)\n    b64 = base64.b64encode\n    return f'pbkdf2_sha256${iterations}${b64(salt).decode()}${b64(key).decode()}'\n\n\n@app.post(\"/signup\", response_model=UserPublic, status_code=status.HTTP_201_CREATED)\ndef signup(payload: SignupRequest) -> UserPublic:\n    from user_repository import create_user, get_user_by_email, EmailAlreadyExistsError\n\n    email = payload.email.lower()\n    if get_user_by_email(email) is not None:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=\"Email already registered\")\n    try:\n        user = create_user(email=email, name=payload.name.strip(), password_hash=hash_password(payload.password))\n    except EmailAlreadyExistsError:\n        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=\"Email already registered\")\n    return UserPublic(id=user.id, email=user.email, name=user.name)\n```",
+  "request": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 16,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:48+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "hash password for user signup"
+      },
+      "result": {
+        "ids": [
+          "auth.password.pbkdf2"
+        ],
+        "scores": [
+          12.736
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:28.603+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "FastAPI signup endpoint with pydantic validation"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:28.718+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.password.pbkdf2",
+        "names": null
+      },
+      "result": {
+        "id": "auth.password.pbkdf2@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:55:29.774+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 587
+      },
+      "result": {
+        "statuses": [
+          [
+            "hash_password",
+            "covered",
+            "auth.password.pbkdf2"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:35.064+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 1679
+      },
+      "result": {
+        "statuses": [
+          [
+            "hash_password",
+            "covered",
+            "auth.password.pbkdf2"
+          ],
+          [
+            "signup",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:41.147+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

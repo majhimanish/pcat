@@ -1,0 +1,96 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, Iterable\nimport csv\nimport io\nimport os\n\nREQUIRED_COLUMNS = ('name', 'email')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _cell_to_text(value: Any) -> str:\n    if value is None:\n        return ''\n    if isinstance(value, float) and value.is_integer():\n        return str(int(value))\n    return str(value).strip()\n\n\ndef _read_csv_rows(data: bytes) -> tuple[list[str], Iterable[tuple[int, dict[str, Any]]]]:\n    text = data.decode('utf-8-sig')\n    reader = csv.DictReader(io.StringIO(text))\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    reader.fieldnames = header\n\n    def rows():\n        for row in reader:\n            yield reader.line_num, row\n\n    return header, rows()\n\n\ndef _read_excel_rows(data: bytes) -> tuple[list[str], Iterable[tuple[int, dict[str, Any]]]]:\n    from openpyxl import load_workbook\n\n    workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=True)\n    sheet = workbook.active\n    iterator = sheet.iter_rows(values_only=True)\n    first = next(iterator, None) or ()\n    header = [_cell_to_text(h).lstrip('\\ufeff').lower() for h in first]\n\n    def rows():\n        for number, values in enumerate(iterator, 2):\n            if all(v is None or _cell_to_text(v) == '' for v in values):\n                continue\n            row = {header[i]: _cell_to_text(v) for i, v in enumerate(values) if i < len(header)}\n            if any(_cell_to_text(v) for v in values[len(header):]):\n                row[None] = True\n            yield number, row\n\n    return header, rows()\n\n\ndef validate_user_upload(data: bytes, filename: str, max_rows: int = MAX_ROWS) -> dict[str, Any]:\n    \"\"\"Validate an uploaded users export (.csv or .xlsx).\n\n    Returns {'valid_users', 'invalid_rows', 'valid_count', 'invalid_count'}.\n    Each invalid row is {'row': <row/line number in the file>, 'errors': [reasons]}.\n    All rows are checked; validation does not stop at the first error.\n    Row values are never echoed back in error messages.\n    \"\"\"\n    extension = os.path.splitext(filename)[1].lower()\n    try:\n        if extension == '.csv':\n            header, rows = _read_csv_rows(data)\n        elif extension in ('.xlsx', '.xlsm'):\n            header, rows = _read_excel_rows(data)\n        else:\n            return _report([], [{'row': 1, 'errors': [f'unsupported file type: {extension or \"none\"}']}])\n    except Exception:\n        return _report([], [{'row': 1, 'errors': ['file could not be read']}])\n\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return _report([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n\n    valid, errors, seen = [], [], set()\n    try:\n        for count, (row_number, row) in enumerate(rows, 1):\n            if count > max_rows:\n                errors.append({'row': row_number, 'errors': [f'more than {max_rows} rows; stopped']})\n                break\n            name = (row.get('name') or '').strip()\n            email = (row.get('email') or '').strip().lower()\n            age_raw = (row.get('age') or '').strip()\n            local, _, domain = email.partition('@')\n            problems = [] if name else ['name is required']\n            if None in row:\n                problems.append('too many fields')\n            if (len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email\n                    or '@' in domain or '.' not in domain.strip('.')):\n                problems.append('email is invalid')\n            elif email in seen:\n                problems.append('duplicate email')\n            if age_raw and not (age_raw.isdigit() and int(age_raw) <= 150):\n                problems.append('age must be a whole number from 0 to 150')\n            if problems:\n                errors.append({'row': row_number, 'errors': problems})\n            else:\n                seen.add(email)\n                valid.append({'name': name, 'email': email,\n                              'age': int(age_raw) if age_raw else None})\n    except Exception:\n        errors.append({'row': 0, 'errors': ['file could not be fully read']})\n    return _report(valid, errors)\n\n\ndef _report(valid: list[dict[str, Any]], errors: list[dict[str, Any]]) -> dict[str, Any]:\n    return {\n        'valid_users': valid,\n        'invalid_rows': errors,\n        'valid_count': len(valid),\n        'invalid_count': len(errors),\n    }\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.08124619999999999,
+    "duration_ms": 27784,
+    "num_turns": 5
+  },
+  "group": "csv_import",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any, Iterable\nimport csv\nimport io\nimport os\n\nREQUIRED_COLUMNS = ('name', 'email')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _cell_to_text(value: Any) -> str:\n    if value is None:\n        return ''\n    if isinstance(value, float) and value.is_integer():\n        return str(int(value))\n    return str(value).strip()\n\n\ndef _read_csv_rows(data: bytes) -> tuple[list[str], Iterable[tuple[int, dict[str, Any]]]]:\n    text = data.decode('utf-8-sig')\n    reader = csv.DictReader(io.StringIO(text))\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    reader.fieldnames = header\n\n    def rows():\n        for row in reader:\n            yield reader.line_num, row\n\n    return header, rows()\n\n\ndef _read_excel_rows(data: bytes) -> tuple[list[str], Iterable[tuple[int, dict[str, Any]]]]:\n    from openpyxl import load_workbook\n\n    workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=True)\n    sheet = workbook.active\n    iterator = sheet.iter_rows(values_only=True)\n    first = next(iterator, None) or ()\n    header = [_cell_to_text(h).lstrip('\\ufeff').lower() for h in first]\n\n    def rows():\n        for number, values in enumerate(iterator, 2):\n            if all(v is None or _cell_to_text(v) == '' for v in values):\n                continue\n            row = {header[i]: _cell_to_text(v) for i, v in enumerate(values) if i < len(header)}\n            if any(_cell_to_text(v) for v in values[len(header):]):\n                row[None] = True\n            yield number, row\n\n    return header, rows()\n\n\ndef validate_user_upload(data: bytes, filename: str, max_rows: int = MAX_ROWS) -> dict[str, Any]:\n    \"\"\"Validate an uploaded users export (.csv or .xlsx).\n\n    Returns {'valid_users', 'invalid_rows', 'valid_count', 'invalid_count'}.\n    Each invalid row is {'row': <row/line number in the file>, 'errors': [reasons]}.\n    All rows are checked; validation does not stop at the first error.\n    Row values are never echoed back in error messages.\n    \"\"\"\n    extension = os.path.splitext(filename)[1].lower()\n    try:\n        if extension == '.csv':\n            header, rows = _read_csv_rows(data)\n        elif extension in ('.xlsx', '.xlsm'):\n            header, rows = _read_excel_rows(data)\n        else:\n            return _report([], [{'row': 1, 'errors': [f'unsupported file type: {extension or \"none\"}']}])\n    except Exception:\n        return _report([], [{'row': 1, 'errors': ['file could not be read']}])\n\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return _report([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n\n    valid, errors, seen = [], [], set()\n    try:\n        for count, (row_number, row) in enumerate(rows, 1):\n            if count > max_rows:\n                errors.append({'row': row_number, 'errors': [f'more than {max_rows} rows; stopped']})\n                break\n            name = (row.get('name') or '').strip()\n            email = (row.get('email') or '').strip().lower()\n            age_raw = (row.get('age') or '').strip()\n            local, _, domain = email.partition('@')\n            problems = [] if name else ['name is required']\n            if None in row:\n                problems.append('too many fields')\n            if (len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email\n                    or '@' in domain or '.' not in domain.strip('.')):\n                problems.append('email is invalid')\n            elif email in seen:\n                problems.append('duplicate email')\n            if age_raw and not (age_raw.isdigit() and int(age_raw) <= 150):\n                problems.append('age must be a whole number from 0 to 150')\n            if problems:\n                errors.append({'row': row_number, 'errors': problems})\n            else:\n                seen.add(email)\n                valid.append({'name': name, 'email': email,\n                              'age': int(age_raw) if age_raw else None})\n    except Exception:\n        errors.append({'row': 0, 'errors': ['file could not be fully read']})\n    return _report(valid, errors)\n\n\ndef _report(valid: list[dict[str, Any]], errors: list[dict[str, Any]]) -> dict[str, Any]:\n    return {\n        'valid_users': valid,\n        'invalid_rows': errors,\n        'valid_count': len(valid),\n        'invalid_count': len(errors),\n    }\n```",
+  "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 19,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:03+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Parse and validate a users CSV/Excel upload with per-row errors"
+      },
+      "result": {
+        "ids": [
+          "importers.users_csv.parse"
+        ],
+        "scores": [
+          23.865
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:37.725+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "importers.users_csv.parse",
+        "names": null
+      },
+      "result": {
+        "id": "importers.users_csv.parse@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:54:38.868+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 4005
+      },
+      "result": {
+        "statuses": [
+          [
+            "_cell_to_text",
+            "none",
+            null
+          ],
+          [
+            "_read_csv_rows",
+            "none",
+            null
+          ],
+          [
+            "_read_csv_rows.<locals>.rows",
+            "none",
+            null
+          ],
+          [
+            "_read_excel_rows",
+            "none",
+            null
+          ],
+          [
+            "_read_excel_rows.<locals>.rows",
+            "none",
+            null
+          ],
+          [
+            "validate_user_upload",
+            "none",
+            null
+          ],
+          [
+            "_report",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:50.285+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

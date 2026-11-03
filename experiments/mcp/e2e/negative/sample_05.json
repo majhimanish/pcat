@@ -1,0 +1,65 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import logging\nimport time\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\nLOG_DIR = Path(\"logs\")\nMAX_AGE_DAYS = 30\nRUN_HOUR = 2\n\n\ndef delete_old_logs(log_dir=LOG_DIR, max_age_days=MAX_AGE_DAYS):\n    \"\"\"Delete regular *.log* files older than max_age_days. Returns count deleted.\"\"\"\n    log_dir = Path(log_dir)\n    if not log_dir.is_dir():\n        logging.warning(\"Log directory %s does not exist\", log_dir)\n        return 0\n    cutoff = time.time() - max_age_days * 86400\n    deleted = 0\n    for path in log_dir.glob(\"*.log*\"):\n        try:\n            if path.is_file() and not path.is_symlink() and path.stat().st_mtime < cutoff:\n                path.unlink()\n                deleted += 1\n                logging.info(\"Deleted %s\", path)\n        except OSError as exc:\n            logging.error(\"Could not delete %s: %s\", path, exc)\n    return deleted\n\n\ndef seconds_until_next_run(now=None, hour=RUN_HOUR):\n    now = now or datetime.now()\n    target = now.replace(hour=hour, minute=0, second=0, microsecond=0)\n    if target <= now:\n        target += timedelta(days=1)\n    return (target - now).total_seconds()\n\n\ndef run_daily():\n    while True:\n        time.sleep(seconds_until_next_run())\n        count = delete_old_logs()\n        logging.info(\"Cleanup finished: %d file(s) deleted\", count)\n\n\ndef main():\n    logging.basicConfig(level=logging.INFO, format=\"%(asctime)s %(levelname)s %(message)s\")\n    run_daily()\n\n\nif __name__ == \"__main__\":\n    main()\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0452444,
+    "duration_ms": 12959,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport logging\nimport time\nfrom datetime import datetime, timedelta\nfrom pathlib import Path\n\nLOG_DIR = Path(\"logs\")\nMAX_AGE_DAYS = 30\nRUN_HOUR = 2\n\n\ndef delete_old_logs(log_dir=LOG_DIR, max_age_days=MAX_AGE_DAYS):\n    \"\"\"Delete regular *.log* files older than max_age_days. Returns count deleted.\"\"\"\n    log_dir = Path(log_dir)\n    if not log_dir.is_dir():\n        logging.warning(\"Log directory %s does not exist\", log_dir)\n        return 0\n    cutoff = time.time() - max_age_days * 86400\n    deleted = 0\n    for path in log_dir.glob(\"*.log*\"):\n        try:\n            if path.is_file() and not path.is_symlink() and path.stat().st_mtime < cutoff:\n                path.unlink()\n                deleted += 1\n                logging.info(\"Deleted %s\", path)\n        except OSError as exc:\n            logging.error(\"Could not delete %s: %s\", path, exc)\n    return deleted\n\n\ndef seconds_until_next_run(now=None, hour=RUN_HOUR):\n    now = now or datetime.now()\n    target = now.replace(hour=hour, minute=0, second=0, microsecond=0)\n    if target <= now:\n        target += timedelta(days=1)\n    return (target - now).total_seconds()\n\n\ndef run_daily():\n    while True:\n        time.sleep(seconds_until_next_run())\n        count = delete_old_logs()\n        logging.info(\"Cleanup finished: %d file(s) deleted\", count)\n\n\ndef main():\n    logging.basicConfig(level=logging.INFO, format=\"%(asctime)s %(levelname)s %(message)s\")\n    run_daily()\n\n\nif __name__ == \"__main__\":\n    main()\n```",
+  "request": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 5,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:07+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "delete log files older than 30 days from a folder, scheduled daily at 2 AM"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:54:57.842+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1475
+      },
+      "result": {
+        "statuses": [
+          [
+            "delete_old_logs",
+            "none",
+            null
+          ],
+          [
+            "seconds_until_next_run",
+            "none",
+            null
+          ],
+          [
+            "run_daily",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:02.040+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

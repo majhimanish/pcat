@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "Redis cache decorator with TTL for database lookup functions"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-03T06:55:10.574+00:00", "tool": "search_patterns"}
+{"arguments": {"length": 1381}, "result": {"statuses": [["get_redis_client", "none", null], ["_make_key", "none", null], ["redis_cache", "none", null], ["redis_cache.<locals>.decorator", "none", null], ["redis_cache.<locals>.decorator.<locals>.wrapper", "none", null]]}, "timestamp": "2026-11-03T06:55:13.901+00:00", "tool": "check_code"}

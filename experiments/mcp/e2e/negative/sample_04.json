@@ -1,0 +1,67 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import argparse\nimport html\nimport re\nimport sys\nfrom pathlib import Path\n\nimport markdown\n\nPAGE_TEMPLATE = \"\"\"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>{title}</title>\n<style>\nbody {{ max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; line-height: 1.6; color: #222; }}\nh1, h2, h3 {{ line-height: 1.25; }}\ncode {{ background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }}\npre {{ background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; }}\npre code {{ background: none; padding: 0; }}\nblockquote {{ margin-left: 0; padding-left: 1rem; border-left: 4px solid #ddd; color: #555; }}\ntable {{ border-collapse: collapse; }}\nth, td {{ border: 1px solid #ccc; padding: 0.4rem 0.8rem; }}\nimg {{ max-width: 100%; }}\n</style>\n</head>\n<body>\n{body}\n</body>\n</html>\n\"\"\"\n\n\ndef markdown_to_html_page(md_text, title=None):\n    if title is None:\n        match = re.search(r\"^#\\s+(.+?)\\s*#*\\s*$\", md_text, re.MULTILINE)\n        title = match.group(1) if match else \"Document\"\n    body = markdown.markdown(md_text, extensions=[\"extra\", \"sane_lists\"])\n    return PAGE_TEMPLATE.format(title=html.escape(title), body=body)\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=\"Convert a Markdown file to an HTML page.\")\n    parser.add_argument(\"input\", type=Path, help=\"path to the .md file\")\n    parser.add_argument(\"-o\", \"--output\", type=Path, help=\"output path (default: input with .html)\")\n    parser.add_argument(\"-t\", \"--title\", help=\"page title (default: first heading)\")\n    args = parser.parse_args(argv)\n\n    output = args.output or args.input.with_suffix(\".html\")\n    page = markdown_to_html_page(args.input.read_text(encoding=\"utf-8\"), args.title)\n    output.write_text(page, encoding=\"utf-8\")\n    print(f\"Wrote {output}\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.052161400000000004,
+    "duration_ms": 16022,
+    "num_turns": 5
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport argparse\nimport html\nimport re\nimport sys\nfrom pathlib import Path\n\nimport markdown\n\nPAGE_TEMPLATE = \"\"\"<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n<title>{title}</title>\n<style>\nbody {{ max-width: 46rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; line-height: 1.6; color: #222; }}\nh1, h2, h3 {{ line-height: 1.25; }}\ncode {{ background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }}\npre {{ background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; }}\npre code {{ background: none; padding: 0; }}\nblockquote {{ margin-left: 0; padding-left: 1rem; border-left: 4px solid #ddd; color: #555; }}\ntable {{ border-collapse: collapse; }}\nth, td {{ border: 1px solid #ccc; padding: 0.4rem 0.8rem; }}\nimg {{ max-width: 100%; }}\n</style>\n</head>\n<body>\n{body}\n</body>\n</html>\n\"\"\"\n\n\ndef markdown_to_html_page(md_text, title=None):\n    if title is None:\n        match = re.search(r\"^#\\s+(.+?)\\s*#*\\s*$\", md_text, re.MULTILINE)\n        title = match.group(1) if match else \"Document\"\n    body = markdown.markdown(md_text, extensions=[\"extra\", \"sane_lists\"])\n    return PAGE_TEMPLATE.format(title=html.escape(title), body=body)\n\n\ndef main(argv=None):\n    parser = argparse.ArgumentParser(description=\"Convert a Markdown file to an HTML page.\")\n    parser.add_argument(\"input\", type=Path, help=\"path to the .md file\")\n    parser.add_argument(\"-o\", \"--output\", type=Path, help=\"output path (default: input with .html)\")\n    parser.add_argument(\"-t\", \"--title\", help=\"page title (default: first heading)\")\n    args = parser.parse_args(argv)\n\n    output = args.output or args.input.with_suffix(\".html\")\n    page = markdown_to_html_page(args.input.read_text(encoding=\"utf-8\"), args.title)\n    output.write_text(page, encoding=\"utf-8\")\n    print(f\"Wrote {output}\")\n    return 0\n\n\nif __name__ == \"__main__\":\n    sys.exit(main())\n```",
+  "request": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 4,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:07+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "convert Markdown string to a complete HTML page with title and styling, CLI wrapper"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:54:53.687+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 1,
+        "request": "slugify text"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:54:53.756+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1956
+      },
+      "result": {
+        "statuses": [
+          [
+            "markdown_to_html_page",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:59.146+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

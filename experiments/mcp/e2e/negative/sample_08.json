@@ -1,0 +1,50 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from datetime import datetime, timezone\nfrom zoneinfo import ZoneInfo\n\n\ndef convert_timezone(ts: datetime, from_tz: str, to_tz: str) -> datetime:\n    \"\"\"Convert a timestamp from one user's IANA time zone to another's.\n\n    - Naive datetimes are treated as UTC.\n    - Timezone-aware datetimes keep their own tzinfo as the source of truth,\n      so the instant in time is never shifted.\n    - from_tz is validated (raises ZoneInfoNotFoundError / ValueError if it is\n      not a valid IANA name) so a bad source zone is caught early; the instant\n      itself is fully determined by ts.\n    - Daylight saving time is handled by zoneinfo when converting to to_tz.\n    \"\"\"\n    ZoneInfo(from_tz)  # validate the source zone name\n    target = ZoneInfo(to_tz)\n\n    if ts.tzinfo is None or ts.tzinfo.utcoffset(ts) is None:\n        ts = ts.replace(tzinfo=timezone.utc)\n\n    return ts.astimezone(target)\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0384443,
+    "duration_ms": 11967,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Can you write me a Python function that takes a timestamp and a user's IANA time zone name (like \"America/New_York\") and converts it to another user's time zone? I'd like it to use the standard library's zoneinfo, handle daylight saving time correctly, and work with both naive UTC and timezone-aware datetimes.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom datetime import datetime, timezone\nfrom zoneinfo import ZoneInfo\n\n\ndef convert_timezone(ts: datetime, from_tz: str, to_tz: str) -> datetime:\n    \"\"\"Convert a timestamp from one user's IANA time zone to another's.\n\n    - Naive datetimes are treated as UTC.\n    - Timezone-aware datetimes keep their own tzinfo as the source of truth,\n      so the instant in time is never shifted.\n    - from_tz is validated (raises ZoneInfoNotFoundError / ValueError if it is\n      not a valid IANA name) so a bad source zone is caught early; the instant\n      itself is fully determined by ts.\n    - Daylight saving time is handled by zoneinfo when converting to to_tz.\n    \"\"\"\n    ZoneInfo(from_tz)  # validate the source zone name\n    target = ZoneInfo(to_tz)\n\n    if ts.tzinfo is None or ts.tzinfo.utcoffset(ts) is None:\n        ts = ts.replace(tzinfo=timezone.utc)\n\n    return ts.astimezone(target)\n```",
+  "request": "Can you write me a Python function that takes a timestamp and a user's IANA time zone name (like \"America/New_York\") and converts it to another user's time zone? I'd like it to use the standard library's zoneinfo, handle daylight saving time correctly, and work with both naive UTC and timezone-aware datetimes.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 8,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:16+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "convert a timestamp between IANA time zones using zoneinfo"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:07.023+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 613
+      },
+      "result": {
+        "statuses": [
+          [
+            "convert_timezone",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:09.919+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

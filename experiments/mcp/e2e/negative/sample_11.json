@@ -1,0 +1,60 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import asyncio\nimport websockets\n\nCLIENTS = set()\n\n\nasync def broadcast(message):\n    targets = list(CLIENTS)\n    if not targets:\n        return\n    await asyncio.gather(\n        *(client.send(message) for client in targets),\n        return_exceptions=True,\n    )\n\n\nasync def handler(websocket):\n    CLIENTS.add(websocket)\n    try:\n        async for message in websocket:\n            await broadcast(message)\n    finally:\n        CLIENTS.discard(websocket)\n\n\nasync def main(host=\"0.0.0.0\", port=8765):\n    async with websockets.serve(handler, host, port):\n        await asyncio.Future()\n\n\nif __name__ == \"__main__\":\n    asyncio.run(main())\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0352914,
+    "duration_ms": 9467,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "I'm building a live chat in Python where messages need to get pushed out to every connected browser as soon as someone sends one. Can you write the server code for that, using WebSockets, so all connected clients get each new message in real time?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport asyncio\nimport websockets\n\nCLIENTS = set()\n\n\nasync def broadcast(message):\n    targets = list(CLIENTS)\n    if not targets:\n        return\n    await asyncio.gather(\n        *(client.send(message) for client in targets),\n        return_exceptions=True,\n    )\n\n\nasync def handler(websocket):\n    CLIENTS.add(websocket)\n    try:\n        async for message in websocket:\n            await broadcast(message)\n    finally:\n        CLIENTS.discard(websocket)\n\n\nasync def main(host=\"0.0.0.0\", port=8765):\n    async with websockets.serve(handler, host, port):\n        await asyncio.Future()\n\n\nif __name__ == \"__main__\":\n    asyncio.run(main())\n```",
+  "request": "I'm building a live chat in Python where messages need to get pushed out to every connected browser as soon as someone sends one. Can you write the server code for that, using WebSockets, so all connected clients get each new message in real time?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 11,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:18+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "WebSocket live chat server broadcasting messages to all connected clients"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:12.137+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 640
+      },
+      "result": {
+        "statuses": [
+          [
+            "broadcast",
+            "none",
+            null
+          ],
+          [
+            "handler",
+            "none",
+            null
+          ],
+          [
+            "main",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:14.601+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

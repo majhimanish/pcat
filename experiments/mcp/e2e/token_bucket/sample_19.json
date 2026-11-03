@@ -1,0 +1,66 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from collections.abc import MutableMapping\nimport json\nimport math\nimport threading\nimport time\n\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\n\ndef get_client_key(environ: dict) -> str:\n    \"\"\"Identify the client by API key if present, otherwise by IP address.\"\"\"\n    api_key = environ.get(\"HTTP_X_API_KEY\")\n    if api_key:\n        return \"key:\" + api_key\n    # Only trust X-Forwarded-For if you run behind a proxy you control.\n    forwarded = environ.get(\"HTTP_X_FORWARDED_FOR\")\n    if forwarded:\n        return \"ip:\" + forwarded.split(\",\")[0].strip()\n    return \"ip:\" + environ.get(\"REMOTE_ADDR\", \"unknown\")\n\n\ndef make_rate_limit_middleware(app, requests_per_minute: int = 60):\n    \"\"\"Wrap any WSGI app (Flask, Django, Falcon, ...) with per-client rate limiting.\n\n    Usage (Flask): app.wsgi_app = make_rate_limit_middleware(app.wsgi_app, 100)\n    \"\"\"\n    buckets: dict[str, dict[str, float]] = {}\n    lock = threading.Lock()\n    refill_rate = requests_per_minute / 60.0\n\n    def middleware(environ, start_response):\n        key = get_client_key(environ)\n        with lock:\n            allowed, retry_after = check_rate_limit(\n                buckets, key, capacity=requests_per_minute, refill_rate=refill_rate\n            )\n        if allowed:\n            return app(environ, start_response)\n\n        body = json.dumps({\n            \"error\": \"rate_limit_exceeded\",\n            \"message\": \"Too many requests. Please retry later.\",\n        }).encode(\"utf-8\")\n        start_response(\"429 Too Many Requests\", [\n            (\"Content-Type\", \"application/json\"),\n            (\"Content-Length\", str(len(body))),\n            (\"Retry-After\", str(max(1, math.ceil(retry_after)))),\n        ])\n        return [body]\n\n    return middleware\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.053942199999999996,
+    "duration_ms": 17583,
+    "num_turns": 5
+  },
+  "group": "token_bucket",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom collections.abc import MutableMapping\nimport json\nimport math\nimport threading\nimport time\n\n\ndef check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float=10.0, refill_rate: float=1.0, cost: float=1.0, now: float | None=None) -> tuple[bool, float]:\n    if capacity <= 0 or refill_rate <= 0 or cost <= 0:\n        raise ValueError('capacity, refill_rate and cost must be positive')\n    if cost > capacity:\n        raise ValueError('cost can never be satisfied: it exceeds capacity')\n    now = time.monotonic() if now is None else now\n    bucket = buckets.get(key)\n    if bucket is None:\n        bucket = buckets[key] = {'tokens': float(capacity), 'last': now}\n    elapsed = max(0.0, now - bucket['last'])\n    bucket['tokens'] = min(float(capacity), bucket['tokens'] + elapsed * refill_rate)\n    bucket['last'] = now\n    if bucket['tokens'] >= cost:\n        bucket['tokens'] -= cost\n        return (True, 0.0)\n    return (False, (cost - bucket['tokens']) / refill_rate)\n\n\ndef get_client_key(environ: dict) -> str:\n    \"\"\"Identify the client by API key if present, otherwise by IP address.\"\"\"\n    api_key = environ.get(\"HTTP_X_API_KEY\")\n    if api_key:\n        return \"key:\" + api_key\n    # Only trust X-Forwarded-For if you run behind a proxy you control.\n    forwarded = environ.get(\"HTTP_X_FORWARDED_FOR\")\n    if forwarded:\n        return \"ip:\" + forwarded.split(\",\")[0].strip()\n    return \"ip:\" + environ.get(\"REMOTE_ADDR\", \"unknown\")\n\n\ndef make_rate_limit_middleware(app, requests_per_minute: int = 60):\n    \"\"\"Wrap any WSGI app (Flask, Django, Falcon, ...) with per-client rate limiting.\n\n    Usage (Flask): app.wsgi_app = make_rate_limit_middleware(app.wsgi_app, 100)\n    \"\"\"\n    buckets: dict[str, dict[str, float]] = {}\n    lock = threading.Lock()\n    refill_rate = requests_per_minute / 60.0\n\n    def middleware(environ, start_response):\n        key = get_client_key(environ)\n        with lock:\n            allowed, retry_after = check_rate_limit(\n                buckets, key, capacity=requests_per_minute, refill_rate=refill_rate\n            )\n        if allowed:\n            return app(environ, start_response)\n\n        body = json.dumps({\n            \"error\": \"rate_limit_exceeded\",\n            \"message\": \"Too many requests. Please retry later.\",\n        }).encode(\"utf-8\")\n        start_response(\"429 Too Many Requests\", [\n            (\"Content-Type\", \"application/json\"),\n            (\"Content-Length\", str(len(body))),\n            (\"Retry-After\", str(max(1, math.ceil(retry_after)))),\n        ])\n        return [body]\n\n    return middleware\n```",
+  "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 19,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:53:25+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "rate limit per client with 429 and Retry-After"
+      },
+      "result": {
+        "ids": [
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          18.748
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:12.219+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "ratelimit.token_bucket.check",
+        "names": null
+      },
+      "result": {
+        "id": "ratelimit.token_bucket.check@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:53:13.516+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 963
+      },
+      "result": {
+        "statuses": [
+          [
+            "check_rate_limit",
+            "covered",
+            "ratelimit.token_bucket.check"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:18.114+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

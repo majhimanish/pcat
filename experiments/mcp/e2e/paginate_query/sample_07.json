@@ -1,0 +1,50 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from sqlalchemy import Select\nfrom sqlalchemy import func\nfrom sqlalchemy import select\nfrom sqlalchemy.orm import Session\nfrom typing import Any\nMAX_PAGE_SIZE = 100\n\ndef paginate(session: Session, stmt: Select, page: int=1, page_size: int=20) -> dict[str, Any]:\n    if page < 1:\n        raise ValueError('page must be >= 1')\n    if not 1 <= page_size <= MAX_PAGE_SIZE:\n        raise ValueError(f'page_size must be between 1 and {MAX_PAGE_SIZE}')\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    result = session.execute(stmt.limit(page_size).offset((page - 1) * page_size))\n    single_entity = len(stmt.column_descriptions) == 1\n    items = list(result.scalars()) if single_entity else list(result)\n    pages = (total + page_size - 1) // page_size\n    return {'items': items, 'total': total, 'page': page, 'page_size': page_size, 'pages': pages}\n\ndef list_page(session: Session, stmt: Select, order_by: tuple, page: int=1, page_size: int=20) -> dict[str, Any]:\n    # order_by must end with a unique column (e.g. the primary key) so that\n    # ordering is deterministic and rows never shift between pages.\n    if not order_by:\n        raise ValueError('order_by must include at least a unique column')\n    return paginate(session, stmt.order_by(None).order_by(*order_by), page=page, page_size=page_size)\n\n# Usage in an endpoint:\n#   result = list_page(\n#       session,\n#       select(User).where(User.active.is_(True)),\n#       order_by=(User.created_at.desc(), User.id),\n#       page=page,\n#       page_size=page_size,\n#   )\n#   return {\"items\": [u.to_dict() for u in result[\"items\"]],\n#           \"total\": result[\"total\"], \"pages\": result[\"pages\"],\n#           \"page\": result[\"page\"], \"page_size\": result[\"page_size\"]}\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0400366,
+    "duration_ms": 14419,
+    "num_turns": 4
+  },
+  "group": "paginate_query",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom sqlalchemy import Select\nfrom sqlalchemy import func\nfrom sqlalchemy import select\nfrom sqlalchemy.orm import Session\nfrom typing import Any\nMAX_PAGE_SIZE = 100\n\ndef paginate(session: Session, stmt: Select, page: int=1, page_size: int=20) -> dict[str, Any]:\n    if page < 1:\n        raise ValueError('page must be >= 1')\n    if not 1 <= page_size <= MAX_PAGE_SIZE:\n        raise ValueError(f'page_size must be between 1 and {MAX_PAGE_SIZE}')\n    count_stmt = select(func.count()).select_from(stmt.order_by(None).subquery())\n    total = session.execute(count_stmt).scalar_one()\n    result = session.execute(stmt.limit(page_size).offset((page - 1) * page_size))\n    single_entity = len(stmt.column_descriptions) == 1\n    items = list(result.scalars()) if single_entity else list(result)\n    pages = (total + page_size - 1) // page_size\n    return {'items': items, 'total': total, 'page': page, 'page_size': page_size, 'pages': pages}\n\ndef list_page(session: Session, stmt: Select, order_by: tuple, page: int=1, page_size: int=20) -> dict[str, Any]:\n    # order_by must end with a unique column (e.g. the primary key) so that\n    # ordering is deterministic and rows never shift between pages.\n    if not order_by:\n        raise ValueError('order_by must include at least a unique column')\n    return paginate(session, stmt.order_by(None).order_by(*order_by), page=page, page_size=page_size)\n\n# Usage in an endpoint:\n#   result = list_page(\n#       session,\n#       select(User).where(User.active.is_(True)),\n#       order_by=(User.created_at.desc(), User.id),\n#       page=page,\n#       page_size=page_size,\n#   )\n#   return {\"items\": [u.to_dict() for u in result[\"items\"]],\n#           \"total\": result[\"total\"], \"pages\": result[\"pages\"],\n#           \"page\": result[\"page\"], \"page_size\": result[\"page_size\"]}\n```",
+  "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 7,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:49:54+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Paginate a SQLAlchemy select with page and page size, total count, stable ordering"
+      },
+      "result": {
+        "ids": [
+          "db.pagination.select_page"
+        ],
+        "scores": [
+          26.942
+        ]
+      },
+      "timestamp": "2026-11-03T06:49:43.106+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "db.pagination.select_page",
+        "names": null
+      },
+      "result": {
+        "id": "db.pagination.select_page@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:49:45.413+00:00",
+      "tool": "get_pattern"
+    }
+  ]
+}

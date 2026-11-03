@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Create and verify a signed expiring token (JWT) after user login"}, "result": {"ids": ["auth.jwt.create_access_token", "auth.password.pbkdf2"], "scores": [15.776, 9.689]}, "timestamp": "2026-11-03T06:47:53.035+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "auth.jwt.create_access_token", "names": null}, "result": {"id": "auth.jwt.create_access_token@v1", "status": "active"}, "timestamp": "2026-11-03T06:47:54.306+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1538}, "result": {"statuses": [["create_access_token", "covered", "auth.jwt.create_access_token"], ["verify_access_token", "none", null]]}, "timestamp": "2026-11-03T06:48:02.919+00:00", "tool": "check_code"}

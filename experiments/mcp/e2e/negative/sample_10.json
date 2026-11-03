@@ -1,0 +1,70 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import functools\nimport hashlib\nimport json\n\nimport redis\n\n_client = None\n\n\ndef get_redis_client(url=\"redis://localhost:6379/0\"):\n    global _client\n    if _client is None:\n        _client = redis.Redis.from_url(url, decode_responses=True)\n    return _client\n\n\ndef _make_key(prefix, args, kwargs):\n    raw = json.dumps([args, kwargs], sort_keys=True, default=repr)\n    digest = hashlib.sha256(raw.encode()).hexdigest()\n    return f\"cache:{prefix}:{digest}\"\n\n\ndef redis_cache(ttl=300, prefix=None):\n    def decorator(func):\n        key_prefix = prefix or f\"{func.__module__}.{func.__qualname__}\"\n\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            key = _make_key(key_prefix, args, kwargs)\n            client = get_redis_client()\n            try:\n                cached = client.get(key)\n                if cached is not None:\n                    return json.loads(cached)\n            except redis.RedisError:\n                return func(*args, **kwargs)\n            result = func(*args, **kwargs)\n            try:\n                client.setex(key, ttl, json.dumps(result, default=str))\n            except (redis.RedisError, TypeError):\n                pass\n            return result\n\n        wrapper.invalidate = lambda *a, **k: get_redis_client().delete(\n            _make_key(key_prefix, a, k)\n        )\n        return wrapper\n\n    return decorator\n\n\n# Usage:\n# @redis_cache(ttl=300)\n# def get_user(user_id):\n#     ...\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0423656,
+    "duration_ms": 11191,
+    "num_turns": 4
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Can you add Redis caching to my slow database lookup functions in Python? I want results cached for about 5 minutes, ideally with a decorator so I can just slap it on the functions I want cached.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport functools\nimport hashlib\nimport json\n\nimport redis\n\n_client = None\n\n\ndef get_redis_client(url=\"redis://localhost:6379/0\"):\n    global _client\n    if _client is None:\n        _client = redis.Redis.from_url(url, decode_responses=True)\n    return _client\n\n\ndef _make_key(prefix, args, kwargs):\n    raw = json.dumps([args, kwargs], sort_keys=True, default=repr)\n    digest = hashlib.sha256(raw.encode()).hexdigest()\n    return f\"cache:{prefix}:{digest}\"\n\n\ndef redis_cache(ttl=300, prefix=None):\n    def decorator(func):\n        key_prefix = prefix or f\"{func.__module__}.{func.__qualname__}\"\n\n        @functools.wraps(func)\n        def wrapper(*args, **kwargs):\n            key = _make_key(key_prefix, args, kwargs)\n            client = get_redis_client()\n            try:\n                cached = client.get(key)\n                if cached is not None:\n                    return json.loads(cached)\n            except redis.RedisError:\n                return func(*args, **kwargs)\n            result = func(*args, **kwargs)\n            try:\n                client.setex(key, ttl, json.dumps(result, default=str))\n            except (redis.RedisError, TypeError):\n                pass\n            return result\n\n        wrapper.invalidate = lambda *a, **k: get_redis_client().delete(\n            _make_key(key_prefix, a, k)\n        )\n        return wrapper\n\n    return decorator\n\n\n# Usage:\n# @redis_cache(ttl=300)\n# def get_user(user_id):\n#     ...\n```",
+  "request": "Can you add Redis caching to my slow database lookup functions in Python? I want results cached for about 5 minutes, ideally with a decorator so I can just slap it on the functions I want cached.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 10,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:19+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Redis cache decorator with TTL for database lookup functions"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-03T06:55:10.574+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 1381
+      },
+      "result": {
+        "statuses": [
+          [
+            "get_redis_client",
+            "none",
+            null
+          ],
+          [
+            "_make_key",
+            "none",
+            null
+          ],
+          [
+            "redis_cache",
+            "none",
+            null
+          ],
+          [
+            "redis_cache.<locals>.decorator",
+            "none",
+            null
+          ],
+          [
+            "redis_cache.<locals>.decorator.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:55:13.901+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

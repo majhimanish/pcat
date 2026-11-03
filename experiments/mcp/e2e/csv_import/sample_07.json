@@ -1,0 +1,76 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\nimport csv\nimport io\n\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _read_csv(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict | None]]]:\n    text = content.decode('utf-8-sig', errors='replace')\n    reader = csv.DictReader(io.StringIO(text))\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    reader.fieldnames = header\n    rows = []\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            rows.append((reader.line_num, None))\n            break\n        rows.append((reader.line_num, row))\n    return header, rows\n\n\ndef _read_xlsx(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict | None]]]:\n    from openpyxl import load_workbook\n    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)\n    sheet = workbook.active\n    iterator = sheet.iter_rows(values_only=True)\n    first = next(iterator, None) or ()\n    header = [str(h).strip().lower() if h is not None else '' for h in first]\n    rows = []\n    for count, values in enumerate(iterator, 1):\n        number = count + 1  # header is row 1\n        if count > max_rows:\n            rows.append((number, None))\n            break\n        if all(v is None or str(v).strip() == '' for v in values):\n            continue\n        row = {}\n        for key, value in zip(header, values):\n            row[key] = '' if value is None else str(value)\n        if len(values) > len(header) and any(v not in (None, '') for v in values[len(header):]):\n            row[None] = True\n        rows.append((number, row))\n    workbook.close()\n    return header, rows\n\n\ndef validate_users_upload(\n    filename: str,\n    content: bytes,\n    max_rows: int = MAX_ROWS,\n    valid_roles: tuple[str, ...] = VALID_ROLES,\n) -> list[dict[str, Any]]:\n    \"\"\"Validate an uploaded CSV/XLSX of new users.\n\n    Returns a list of {\"row\": <row number as in the file>, \"errors\": [reasons]}\n    for every bad row; an empty list means the whole file is valid.\n    Cell values are never echoed back in the messages.\n    \"\"\"\n    name_lower = filename.lower()\n    if name_lower.endswith('.csv'):\n        header, rows = _read_csv(content, max_rows)\n    elif name_lower.endswith('.xlsx'):\n        header, rows = _read_xlsx(content, max_rows)\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]\n\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}]\n\n    errors, seen = [], set()\n    for number, row in rows:\n        if row is None:\n            errors.append({'row': number, 'errors': [f'more than {max_rows} rows; stopped']})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        role = (row.get('role') or '').strip().lower()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if not email:\n            problems.append('email is required')\n        elif (len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email\n              or '@' in domain or '.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if not role:\n            problems.append('role is required')\n        elif role not in valid_roles:\n            problems.append(f\"role must be one of: {', '.join(valid_roles)}\")\n        if problems:\n            errors.append({'row': number, 'errors': problems})\n        elif email:\n            seen.add(email)\n    return errors\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0750001,
+    "duration_ms": 26301,
+    "num_turns": 5
+  },
+  "group": "csv_import",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any\nimport csv\nimport io\n\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _read_csv(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict | None]]]:\n    text = content.decode('utf-8-sig', errors='replace')\n    reader = csv.DictReader(io.StringIO(text))\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    reader.fieldnames = header\n    rows = []\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            rows.append((reader.line_num, None))\n            break\n        rows.append((reader.line_num, row))\n    return header, rows\n\n\ndef _read_xlsx(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict | None]]]:\n    from openpyxl import load_workbook\n    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)\n    sheet = workbook.active\n    iterator = sheet.iter_rows(values_only=True)\n    first = next(iterator, None) or ()\n    header = [str(h).strip().lower() if h is not None else '' for h in first]\n    rows = []\n    for count, values in enumerate(iterator, 1):\n        number = count + 1  # header is row 1\n        if count > max_rows:\n            rows.append((number, None))\n            break\n        if all(v is None or str(v).strip() == '' for v in values):\n            continue\n        row = {}\n        for key, value in zip(header, values):\n            row[key] = '' if value is None else str(value)\n        if len(values) > len(header) and any(v not in (None, '') for v in values[len(header):]):\n            row[None] = True\n        rows.append((number, row))\n    workbook.close()\n    return header, rows\n\n\ndef validate_users_upload(\n    filename: str,\n    content: bytes,\n    max_rows: int = MAX_ROWS,\n    valid_roles: tuple[str, ...] = VALID_ROLES,\n) -> list[dict[str, Any]]:\n    \"\"\"Validate an uploaded CSV/XLSX of new users.\n\n    Returns a list of {\"row\": <row number as in the file>, \"errors\": [reasons]}\n    for every bad row; an empty list means the whole file is valid.\n    Cell values are never echoed back in the messages.\n    \"\"\"\n    name_lower = filename.lower()\n    if name_lower.endswith('.csv'):\n        header, rows = _read_csv(content, max_rows)\n    elif name_lower.endswith('.xlsx'):\n        header, rows = _read_xlsx(content, max_rows)\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]\n\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}]\n\n    errors, seen = [], set()\n    for number, row in rows:\n        if row is None:\n            errors.append({'row': number, 'errors': [f'more than {max_rows} rows; stopped']})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        role = (row.get('role') or '').strip().lower()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if not email:\n            problems.append('email is required')\n        elif (len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email\n              or '@' in domain or '.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if not role:\n            problems.append('role is required')\n        elif role not in valid_roles:\n            problems.append(f\"role must be one of: {', '.join(valid_roles)}\")\n        if problems:\n            errors.append({'row': number, 'errors': problems})\n        elif email:\n            seen.add(email)\n    return errors\n```",
+  "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 7,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:54:07+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Parse and validate a users CSV/XLSX upload with per-row errors"
+      },
+      "result": {
+        "ids": [
+          "importers.users_csv.parse"
+        ],
+        "scores": [
+          23.865
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:45.634+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "importers.users_csv.parse",
+        "names": null
+      },
+      "result": {
+        "id": "importers.users_csv.parse@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:53:46.635+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 3334
+      },
+      "result": {
+        "statuses": [
+          [
+            "_read_csv",
+            "none",
+            null
+          ],
+          [
+            "_read_xlsx",
+            "none",
+            null
+          ],
+          [
+            "validate_users_upload",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:53:56.055+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

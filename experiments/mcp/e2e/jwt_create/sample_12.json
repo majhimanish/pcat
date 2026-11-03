@@ -1,0 +1,71 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from datetime import datetime\nfrom datetime import timedelta\nfrom datetime import timezone\nimport jwt\nimport uuid\nALGORITHM = 'HS256'\nMIN_SECRET_BYTES = 32\n\ndef create_access_token(user_id: str | int, secret: str, issuer: str, audience: str, expires_in: timedelta=timedelta(minutes=15), now: datetime | None=None) -> str:\n    if user_id is None or str(user_id) == '':\n        raise ValueError('user_id is required')\n    if not issuer or not audience:\n        raise ValueError('issuer and audience are required')\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    if expires_in <= timedelta(0):\n        raise ValueError('expires_in must be positive')\n    issued_at = now or datetime.now(timezone.utc)\n    if issued_at.tzinfo is None:\n        raise ValueError('now must be timezone-aware')\n    payload = {'sub': str(user_id), 'iss': issuer, 'aud': audience, 'iat': issued_at, 'nbf': issued_at, 'exp': issued_at + expires_in, 'jti': uuid.uuid4().hex}\n    return jwt.encode(payload, secret, algorithm=ALGORITHM)\n\ndef verify_access_token(token: str, secret: str, issuer: str, audience: str, leeway: timedelta=timedelta(seconds=10)) -> dict:\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    return jwt.decode(\n        token,\n        secret,\n        algorithms=[ALGORITHM],\n        issuer=issuer,\n        audience=audience,\n        leeway=leeway,\n        options={'require': ['sub', 'iss', 'aud', 'iat', 'nbf', 'exp', 'jti']},\n    )\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.052673300000000006,
+    "duration_ms": 22608,
+    "num_turns": 5
+  },
+  "group": "jwt_create",
+  "model": "claude-sonnet-5-5",
+  "prompt": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom datetime import datetime\nfrom datetime import timedelta\nfrom datetime import timezone\nimport jwt\nimport uuid\nALGORITHM = 'HS256'\nMIN_SECRET_BYTES = 32\n\ndef create_access_token(user_id: str | int, secret: str, issuer: str, audience: str, expires_in: timedelta=timedelta(minutes=15), now: datetime | None=None) -> str:\n    if user_id is None or str(user_id) == '':\n        raise ValueError('user_id is required')\n    if not issuer or not audience:\n        raise ValueError('issuer and audience are required')\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    if expires_in <= timedelta(0):\n        raise ValueError('expires_in must be positive')\n    issued_at = now or datetime.now(timezone.utc)\n    if issued_at.tzinfo is None:\n        raise ValueError('now must be timezone-aware')\n    payload = {'sub': str(user_id), 'iss': issuer, 'aud': audience, 'iat': issued_at, 'nbf': issued_at, 'exp': issued_at + expires_in, 'jti': uuid.uuid4().hex}\n    return jwt.encode(payload, secret, algorithm=ALGORITHM)\n\ndef verify_access_token(token: str, secret: str, issuer: str, audience: str, leeway: timedelta=timedelta(seconds=10)) -> dict:\n    if len(secret.encode('utf-8')) < MIN_SECRET_BYTES:\n        raise ValueError(f'secret must be at least {MIN_SECRET_BYTES} bytes')\n    return jwt.decode(\n        token,\n        secret,\n        algorithms=[ALGORITHM],\n        issuer=issuer,\n        audience=audience,\n        leeway=leeway,\n        options={'require': ['sub', 'iss', 'aud', 'iat', 'nbf', 'exp', 'jti']},\n    )\n```",
+  "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 12,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:48:22+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Create a signed JWT access token with expiry and verify it"
+      },
+      "result": {
+        "ids": [
+          "auth.jwt.create_access_token"
+        ],
+        "scores": [
+          18.569
+        ]
+      },
+      "timestamp": "2026-11-03T06:48:02.850+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.jwt.create_access_token",
+        "names": null
+      },
+      "result": {
+        "id": "auth.jwt.create_access_token@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T06:48:04.241+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1600
+      },
+      "result": {
+        "statuses": [
+          [
+            "create_access_token",
+            "covered",
+            "auth.jwt.create_access_token"
+          ],
+          [
+            "verify_access_token",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:48:14.929+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

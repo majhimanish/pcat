@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "haversine distance between two latitude/longitude points in kilometres"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-03T06:55:03.999+00:00", "tool": "search_patterns"}
+{"arguments": {"length": 1000}, "result": {"statuses": [["haversine_km", "none", null]]}, "timestamp": "2026-11-03T06:55:07.438+00:00", "tool": "check_code"}

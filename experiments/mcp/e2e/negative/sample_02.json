@@ -1,0 +1,100 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import hashlib\nimport hmac\nimport os\nimport secrets\nimport smtplib\nimport sqlite3\nimport time\nfrom email.message import EmailMessage\nfrom urllib.parse import quote\n\nTOKEN_TTL_SECONDS = 3600\n\n\ndef get_db(path=\"app.db\"):\n    conn = sqlite3.connect(path)\n    conn.execute(\n        \"CREATE TABLE IF NOT EXISTS password_resets (\"\n        \"token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL, \"\n        \"expires_at REAL NOT NULL, used INTEGER NOT NULL DEFAULT 0)\"\n    )\n    return conn\n\n\ndef hash_token(token):\n    return hashlib.sha256(token.encode(\"utf-8\")).hexdigest()\n\n\ndef create_reset_token(conn, user_id, ttl=TOKEN_TTL_SECONDS):\n    token = secrets.token_urlsafe(32)\n    conn.execute(\"DELETE FROM password_resets WHERE user_id = ? OR expires_at < ?\", (user_id, time.time()))\n    conn.execute(\n        \"INSERT INTO password_resets (token_hash, user_id, expires_at) VALUES (?, ?, ?)\",\n        (hash_token(token), user_id, time.time() + ttl),\n    )\n    conn.commit()\n    return token\n\n\ndef send_reset_email(to_addr, token):\n    base_url = os.environ.get(\"APP_BASE_URL\", \"https://example.com\")\n    link = f\"{base_url}/reset-password?token={quote(token)}\"\n    msg = EmailMessage()\n    msg[\"Subject\"] = \"Reset your password\"\n    msg[\"From\"] = os.environ[\"SMTP_FROM\"]\n    msg[\"To\"] = to_addr\n    msg.set_content(\n        f\"We received a request to reset your password.\\n\\n{link}\\n\\n\"\n        f\"This link expires in {TOKEN_TTL_SECONDS // 60} minutes. \"\n        \"If you did not request it, ignore this email.\"\n    )\n    host = os.environ[\"SMTP_HOST\"]\n    port = int(os.environ.get(\"SMTP_PORT\", \"587\"))\n    with smtplib.SMTP(host, port, timeout=10) as server:\n        server.starttls()\n        server.login(os.environ[\"SMTP_USER\"], os.environ[\"SMTP_PASSWORD\"])\n        server.send_message(msg)\n\n\ndef request_password_reset(conn, email):\n    row = conn.execute(\"SELECT id FROM users WHERE email = ?\", (email,)).fetchone()\n    if row is not None:\n        token = create_reset_token(conn, row[0])\n        send_reset_email(email, token)\n    return True\n\n\ndef verify_reset_token(conn, token):\n    row = conn.execute(\n        \"SELECT token_hash, user_id, expires_at, used FROM password_resets WHERE token_hash = ?\",\n        (hash_token(token),),\n    ).fetchone()\n    if row is None or row[3] or row[2] < time.time():\n        return None\n    if not hmac.compare_digest(row[0], hash_token(token)):\n        return None\n    return row[1]\n\n\ndef consume_reset_token(conn, token):\n    user_id = verify_reset_token(conn, token)\n    if user_id is None:\n        return None\n    cur = conn.execute(\n        \"UPDATE password_resets SET used = 1 WHERE token_hash = ? AND used = 0\",\n        (hash_token(token),),\n    )\n    conn.commit()\n    return user_id if cur.rowcount == 1 else None\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.06447510000000001,
+    "duration_ms": 22189,
+    "num_turns": 5
+  },
+  "group": "negative",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport hashlib\nimport hmac\nimport os\nimport secrets\nimport smtplib\nimport sqlite3\nimport time\nfrom email.message import EmailMessage\nfrom urllib.parse import quote\n\nTOKEN_TTL_SECONDS = 3600\n\n\ndef get_db(path=\"app.db\"):\n    conn = sqlite3.connect(path)\n    conn.execute(\n        \"CREATE TABLE IF NOT EXISTS password_resets (\"\n        \"token_hash TEXT PRIMARY KEY, user_id INTEGER NOT NULL, \"\n        \"expires_at REAL NOT NULL, used INTEGER NOT NULL DEFAULT 0)\"\n    )\n    return conn\n\n\ndef hash_token(token):\n    return hashlib.sha256(token.encode(\"utf-8\")).hexdigest()\n\n\ndef create_reset_token(conn, user_id, ttl=TOKEN_TTL_SECONDS):\n    token = secrets.token_urlsafe(32)\n    conn.execute(\"DELETE FROM password_resets WHERE user_id = ? OR expires_at < ?\", (user_id, time.time()))\n    conn.execute(\n        \"INSERT INTO password_resets (token_hash, user_id, expires_at) VALUES (?, ?, ?)\",\n        (hash_token(token), user_id, time.time() + ttl),\n    )\n    conn.commit()\n    return token\n\n\ndef send_reset_email(to_addr, token):\n    base_url = os.environ.get(\"APP_BASE_URL\", \"https://example.com\")\n    link = f\"{base_url}/reset-password?token={quote(token)}\"\n    msg = EmailMessage()\n    msg[\"Subject\"] = \"Reset your password\"\n    msg[\"From\"] = os.environ[\"SMTP_FROM\"]\n    msg[\"To\"] = to_addr\n    msg.set_content(\n        f\"We received a request to reset your password.\\n\\n{link}\\n\\n\"\n        f\"This link expires in {TOKEN_TTL_SECONDS // 60} minutes. \"\n        \"If you did not request it, ignore this email.\"\n    )\n    host = os.environ[\"SMTP_HOST\"]\n    port = int(os.environ.get(\"SMTP_PORT\", \"587\"))\n    with smtplib.SMTP(host, port, timeout=10) as server:\n        server.starttls()\n        server.login(os.environ[\"SMTP_USER\"], os.environ[\"SMTP_PASSWORD\"])\n        server.send_message(msg)\n\n\ndef request_password_reset(conn, email):\n    row = conn.execute(\"SELECT id FROM users WHERE email = ?\", (email,)).fetchone()\n    if row is not None:\n        token = create_reset_token(conn, row[0])\n        send_reset_email(email, token)\n    return True\n\n\ndef verify_reset_token(conn, token):\n    row = conn.execute(\n        \"SELECT token_hash, user_id, expires_at, used FROM password_resets WHERE token_hash = ?\",\n        (hash_token(token),),\n    ).fetchone()\n    if row is None or row[3] or row[2] < time.time():\n        return None\n    if not hmac.compare_digest(row[0], hash_token(token)):\n        return None\n    return row[1]\n\n\ndef consume_reset_token(conn, token):\n    user_id = verify_reset_token(conn, token)\n    if user_id is None:\n        return None\n    cur = conn.execute(\n        \"UPDATE password_resets SET used = 1 WHERE token_hash = ? AND used = 0\",\n        (hash_token(token),),\n    )\n    conn.commit()\n    return user_id if cur.rowcount == 1 else None\n```",
+  "request": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 2,
+  "status": "ok",
+  "timestamp": "2026-11-03T06:55:06+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "password reset token generate store expiring, send email SMTP, verify token"
+      },
+      "result": {
+        "ids": [
+          "auth.password.pbkdf2"
+        ],
+        "scores": [
+          10.729
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:47.546+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "hash and verify passwords"
+      },
+      "result": {
+        "ids": [
+          "auth.password.pbkdf2"
+        ],
+        "scores": [
+          12.41
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:47.609+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "length": 2760
+      },
+      "result": {
+        "statuses": [
+          [
+            "get_db",
+            "none",
+            null
+          ],
+          [
+            "hash_token",
+            "none",
+            null
+          ],
+          [
+            "create_reset_token",
+            "none",
+            null
+          ],
+          [
+            "send_reset_email",
+            "none",
+            null
+          ],
+          [
+            "request_password_reset",
+            "none",
+            null
+          ],
+          [
+            "verify_reset_token",
+            "none",
+            null
+          ],
+          [
+            "consume_reset_token",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T06:54:55.862+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

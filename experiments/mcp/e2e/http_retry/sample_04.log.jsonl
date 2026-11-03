@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "HTTP GET with retries and exponential backoff with jitter, retry on timeouts and 5xx, not 4xx"}, "result": {"ids": ["http.get_with_retry.requests"], "scores": [27.211]}, "timestamp": "2026-11-03T06:50:24.795+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "http.get_with_retry.requests", "names": null}, "result": {"id": "http.get_with_retry.requests@v1", "status": "active"}, "timestamp": "2026-11-03T06:50:25.913+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1224}, "result": {"statuses": [["get_with_retry", "covered", "http.get_with_retry.requests"], ["retry_after_seconds", "none", null]]}, "timestamp": "2026-11-03T06:50:30.525+00:00", "tool": "check_code"}
