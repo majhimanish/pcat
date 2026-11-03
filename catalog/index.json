@@ -60,6 +60,109 @@
     },
     {
       "behavior": {
+        "errors": "collect_all_then_value_error",
+        "exports": "load_settings+parse_bool",
+        "required_marker": "ellipsis",
+        "result_keys": "lower_case_variable_names",
+        "secret_values_in_errors": "never",
+        "source": "injectable_mapping_default_os_environ",
+        "style": "caller_supplied_schema"
+      },
+      "category": "config",
+      "fingerprint": "714b9e2489e151c5464aad756e97eb8ca007edd963b12e82bd940ccc9d15879f",
+      "id": "config.env.load_settings",
+      "path": "catalog/config/env.load_settings",
+      "status": "active",
+      "title": "Load settings from environment variables with a schema",
+      "variant_of": "config.env",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "api": "sqlalchemy_2_select_and_session",
+        "bad_page_or_size": "raises_value_error",
+        "count": "subquery_without_order_by",
+        "max_page_size": 100,
+        "page_numbering": "one_based",
+        "past_last_page": "empty_items_real_totals",
+        "returns": "dict_items_total_page_page_size_pages"
+      },
+      "category": "db",
+      "fingerprint": "109903bf01b7b00f9b60a9644e9b3fbb8593af9b6faf72af5f5086101496233f",
+      "id": "db.pagination.select_page",
+      "path": "catalog/db/pagination.select_page",
+      "requires": [
+        "sqlalchemy>=2.0,<3"
+      ],
+      "status": "active",
+      "title": "Paginate a SQLAlchemy 2.0 select (page dict)",
+      "variant_of": "db.pagination",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "backoff": "capped_exponential_full_jitter",
+        "client_errors": "raised_without_retry",
+        "default_attempts": 4,
+        "library": "requests",
+        "on_exhausted": "raises_last_error",
+        "retries_on": "connection_errors+timeouts+429+500+502+503+504",
+        "retry_after": "numeric_seconds_capped_at_max_delay",
+        "timeout_always_set": true
+      },
+      "category": "http",
+      "fingerprint": "c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0",
+      "id": "http.get_with_retry.requests",
+      "path": "catalog/http/get_with_retry.requests",
+      "requires": [
+        "requests>=2.31,<3"
+      ],
+      "status": "active",
+      "title": "GET a URL with retries and exponential backoff (requests)",
+      "variant_of": "http.get_with_retry",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "duplicate_emails": "rejected_case_insensitive",
+        "email_check": "structural_no_regex",
+        "error_record": "row_line_number_and_messages",
+        "input": "str_or_text_stream",
+        "max_rows_default": 10000,
+        "required_columns": "name+email",
+        "returns": "valid_rows_and_row_errors",
+        "values_in_errors": "never"
+      },
+      "category": "importers",
+      "fingerprint": "6309caa9bb3d5838ac61d407ffc8d31d594b76f5bf0c815845bccc25621bfec7",
+      "id": "importers.users_csv.parse",
+      "path": "catalog/importers/users_csv.parse",
+      "status": "active",
+      "title": "Parse and validate a users CSV with per-row errors",
+      "variant_of": "importers.users_csv",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "clock": "monotonic_injectable_now",
+        "clock_going_backwards": "no_refill",
+        "concurrency": "single_process_not_thread_safe",
+        "cost_over_capacity": "raises_value_error",
+        "new_key": "starts_full",
+        "returns": "allowed_and_retry_after_seconds",
+        "state": "dict_key_to_tokens_and_last"
+      },
+      "category": "ratelimit",
+      "fingerprint": "db071827f76c8404571e5048036b7cac39c7d822bc2a3dd23944d54b941f3015",
+      "id": "ratelimit.token_bucket.check",
+      "path": "catalog/ratelimit/token_bucket.check",
+      "status": "active",
+      "title": "Token-bucket rate limit check with retry-after",
+      "variant_of": "ratelimit.token_bucket",
+      "version": 1
+    },
+    {
+      "behavior": {
         "delay": "exponential",
         "delay_cap": "max_delay",
         "jitter": "none",
