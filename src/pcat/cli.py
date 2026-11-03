@@ -522,6 +522,42 @@ def lint(
         raise typer.Exit(1)
 
 
+approvals_app = typer.Typer(no_args_is_help=True, help="Human confirmation of proposed approvals.")
+app.add_typer(approvals_app, name="approvals")
+
+
+@approvals_app.command("check")
+@_guard
+def approvals_check(
+    paths: Optional[List[Path]] = typer.Argument(None, help="Files or directories to lint (default: .)."),
+    repo: str = typer.Option(..., "--repo", help="OWNER/REPO of the pull request."),
+    pr: int = typer.Option(..., "--pr", help="Pull request number."),
+    config: Path = typer.Option(Path(".pcat/approvers.yaml"), "--config", help="Approver config."),
+    base: Optional[str] = typer.Option(None, "--base", help="Base ref (default: merge base with the PR base)."),
+    fail_on: str = typer.Option("high", "--fail-on", help="As for pcat lint."),
+    catalog: Optional[Path] = typer.Option(None, "--catalog", help="Repository root containing catalog/."),
+) -> None:
+    """Fail unless every proposed approval in the pull request is confirmed by an approver.
+
+    Reads reviews and comments through the GitHub API (token from GITHUB_TOKEN). An
+    approver confirms with an approving review of the latest commit or a comment
+    containing '/pcat approve' posted after it. Also fails on unapproved deviations.
+    """
+    import os
+
+    from pcat import approvals
+
+    cfg = approvals.load_config(config)
+    client = approvals.GitHubClient(os.environ.get("GITHUB_TOKEN"),
+                                    os.environ.get("GITHUB_API_URL", "https://api.github.com"))
+    pull = approvals.fetch_pull_request(client, repo, pr)
+    result = approvals.check(pull, [str(p) for p in (paths or [Path(".")])], _catalog_root(catalog),
+                             Path.cwd(), cfg, base, fail_on)
+    typer.echo(approvals.format_result(result, cfg), nl=False)
+    if result.failed:
+        raise typer.Exit(1)
+
+
 def _catalog_root_or_none() -> Optional[Path]:
     try:
         return _root()

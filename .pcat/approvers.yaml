@@ -1,0 +1,7 @@
+# Who may confirm proposed `# pcat-allow` approvals in pull requests (v4.1).
+# One developer owns this repository, so the author may confirm their own
+# proposals (allow_author: true). That is solo-developer mode: it weakens the
+# guarantee that a second person reviewed every approved deviation.
+approvers: [majhimanish]
+codeowners: false
+allow_author: true

@@ -1,0 +1,76 @@
+# Example workflow for client repositories (v4.1): fail a pull request while a
+# proposed `# pcat-allow: PCxxx #<hash> -- reason` approval is unconfirmed, or
+# while marked code has an unapproved deviation.
+#
+# Copy to .github/workflows/pcat-approvals.yml (keep that file name: the re-run
+# step looks the workflow up by it) and add .pcat/approvers.yaml:
+#
+#   approvers: [alice, bob]   # GitHub usernames
+#   codeowners: true          # also anyone CODEOWNERS lists for the changed file
+#   allow_author: false       # true only for solo development (weaker guarantee)
+#
+# Confirm proposals with an approving review of the latest commit or a comment
+# containing "/pcat approve" posted after it. Make "pcat-approvals" a required
+# status check in the branch protection of the target branch.
+name: pcat-approvals
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  pull_request_review:
+    types: [submitted, dismissed]
+  issue_comment:
+    types: [created, edited]
+
+permissions:
+  contents: read
+  pull-requests: read
+  issues: read
+  actions: write  # to re-run the pull_request check once a review or comment confirms
+
+concurrency:
+  group: pcat-approvals-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  approvals:
+    # Comments only matter on pull requests and only when they carry the command.
+    if: >-
+      github.event_name != 'issue_comment' ||
+      (github.event.issue.pull_request && contains(github.event.comment.body, '/pcat approve'))
+    runs-on: ubuntu-latest
+    env:
+      PR: ${{ github.event.pull_request.number || github.event.issue.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: refs/pull/${{ github.event.pull_request.number || github.event.issue.number }}/head
+          fetch-depth: 0  # the merge base with the target branch must be available
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ vars.PCAT_CATALOG_REPOSITORY || format('{0}/pcat', github.repository_owner) }}
+          path: .pcat-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ./.pcat-catalog
+      - name: pcat approvals check
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pcat approvals check --repo "${{ github.repository }}" --pr "$PR" --catalog .pcat-catalog
+
+      # A comment-triggered run does not appear on the pull request, and a review run
+      # appears next to the earlier failed pull_request run, which stays red. So when
+      # this run passes, re-run the failed pull_request run for the head commit: it
+      # now sees the confirmation and turns green.
+      - name: Re-run the pull request check
+        if: success() && github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          sha=$(gh api "repos/${{ github.repository }}/pulls/$PR" --jq .head.sha)
+          for id in $(gh run list --repo "${{ github.repository }}" --workflow pcat-approvals.yml \
+                        --event pull_request --commit "$sha" --json databaseId,conclusion \
+                        --jq '.[] | select(.conclusion == "failure") | .databaseId'); do
+            gh run rerun "$id" --failed --repo "${{ github.repository }}"
+          done

@@ -81,6 +81,12 @@ class Report:
 
     @property
     def proposals(self) -> list[dict]:
+        """Approvals new since the base ref (confirmed in the pull request or not)."""
+        return [a for a in self.approvals if a["state"] in ("proposed", "proposed-confirmed")]
+
+    @property
+    def waiting(self) -> list[dict]:
+        """Proposals nobody has confirmed yet."""
         return [a for a in self.approvals if a["state"] == "proposed"]
 
     @property
@@ -191,15 +197,17 @@ def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviatio
             stale.append(item)
             continue
         state = "confirmed" if base_keys is None or (info.qualname, a.code, a.hash) in base_keys else "proposed"
+        if state == "proposed" and _is_confirmed(confirmed_proposals, path, info.qualname, a.code, a.hash):
+            state = "proposed-confirmed"  # proposed in this pull request and confirmed by an approver
         records.append({**record, "state": state})
-        if a.code not in current or state == "confirmed":
+        if a.code not in current or state != "proposed":
             current[a.code] = (a, state)
     out = []
     for d in devs:
         item = d.to_dict()
         found = current.get(d.code)
         state = found[1] if found else None
-        item["approved"] = state == "confirmed" or (state == "proposed" and confirmed_proposals)
+        item["approved"] = state in ("confirmed", "proposed-confirmed")
         item["approval"] = found[0].reason if found else None
         item["approval_state"] = state
         item["hash"] = current_hash
@@ -207,9 +215,28 @@ def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviatio
     return out, stale, messages, records
 
 
+def _is_confirmed(confirmed, path: str, function: str, code: str, hash_: str | None) -> bool:
+    if isinstance(confirmed, bool):
+        return confirmed
+    return (normalize_path(path), function, code, hash_) in confirmed
+
+
+def normalize_path(path: str) -> str:
+    return path[2:] if path.startswith("./") else path
+
+
+def approval_keys(source: str) -> set[tuple]:
+    """(function, code, hash) of every well-formed approval in `source` (for the base ref)."""
+    try:
+        infos = provenance.functions(source)
+    except (SyntaxError, ValueError):
+        return set()
+    return {(i.qualname, a.code, a.hash) for i in infos for a in i.approvals if not a.problem and a.hash}
+
+
 def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool,
                 lines: set[int] | None = None, base_keys: set[tuple] | None = None,
-                confirmed_proposals: bool = False) -> tuple[list[Finding], list[Message]]:
+                confirmed_proposals=False, base_source: str | None = None) -> tuple[list[Finding], list[Message]]:
     """Findings for one file's source. `lines`: only functions touching these lines."""
     try:
         tree = ast.parse(source)
@@ -286,6 +313,14 @@ def parse_diff_lines(diff_text: str) -> set[int]:
     return lines
 
 
+def base_source(path: Path, ref: str) -> str | None:
+    """The file's content at `ref`, or None if it did not exist there."""
+    folder = path.parent if path.parent.as_posix() else Path(".")
+    proc = subprocess.run(["git", "-C", str(folder), "show", f"{ref}:./{path.name}"],
+                          capture_output=True, text=True)
+    return proc.stdout if proc.returncode == 0 else None
+
+
 def changed_lines(path: Path, ref: str) -> set[int] | None:
     """Lines of `path` changed since `ref`: None = whole file (untracked), set() = unchanged."""
     folder = path.parent if path.parent.as_posix() else Path(".")
@@ -304,29 +339,84 @@ def changed_lines(path: Path, ref: str) -> set[int] | None:
     return parse_diff_lines(proc.stdout)
 
 
+class ChangedFiles:
+    """Files changed since a ref, one `git diff --name-only` (+ untracked list) per repository."""
+
+    def __init__(self, ref: str):
+        self.ref = ref
+        self._repos: dict[str, set[str] | None] = {}
+
+    def _toplevel(self, folder: Path) -> str | None:
+        proc = subprocess.run(["git", "-C", str(folder), "rev-parse", "--show-toplevel"],
+                              capture_output=True, text=True)
+        return proc.stdout.strip() if proc.returncode == 0 else None
+
+    def maybe_changed(self, path: Path) -> bool:
+        top = self._toplevel(path.parent)
+        if top is None:
+            return True  # changed_lines() reports the missing repository
+        if top not in self._repos:
+            known = subprocess.run(["git", "-C", top, "rev-parse", "--verify", "--quiet",
+                                    f"{self.ref}^{{commit}}"], capture_output=True, text=True)
+            if known.returncode != 0:  # e.g. a nested clone that never had this ref
+                self._repos[top] = None
+                return False
+            diff = subprocess.run(["git", "-C", top, "diff", "--name-only", "--no-renames", self.ref, "--"],
+                                  capture_output=True, text=True)
+            untracked = subprocess.run(["git", "-C", top, "ls-files", "--others", "--exclude-standard"],
+                                       capture_output=True, text=True)
+            if diff.returncode != 0:
+                raise PcatError(f"git diff against {self.ref!r} failed: {diff.stderr.strip()}")
+            names = diff.stdout.splitlines() + untracked.stdout.splitlines()
+            self._repos[top] = {str((Path(top) / n).resolve()) for n in names}
+        return self._repos[top] is not None and str(path.resolve()) in self._repos[top]
+
+    @property
+    def missing_ref(self) -> list[str]:
+        return sorted(top for top, names in self._repos.items() if names is None)
+
+    @property
+    def resolved_any(self) -> bool:
+        return any(names is not None for names in self._repos.values())
+
+
 def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on: str = "high",
-               changed_since: str | None = None) -> Report:
+               changed_since: str | None = None, confirmed_proposals=False) -> Report:
     if fail_on not in FAIL_LEVELS:
         raise PcatError(f"--fail-on must be one of {', '.join(FAIL_LEVELS)}")
     catalog = Catalog(root)
     files, _, _ = miner.discover(paths, miner.MineSettings())
     findings: list[Finding] = []
     messages: list[Message] = []
+    changed = ChangedFiles(changed_since) if changed_since else None
     for f in files:
+        if changed is not None and not changed.maybe_changed(Path(f.abs_path)):
+            continue
         base = Path(paths[f.input_index])
         shown = (base / f.rel).as_posix() if base.is_dir() else base.as_posix()
         data = Path(f.abs_path).read_bytes()
         if miner._is_generated(data):
             continue
         lines = None
+        base_keys = None
+        old = None
         if changed_since:
             lines = changed_lines(Path(f.abs_path), changed_since)
             if lines is not None and not lines:
                 continue
+            old = base_source(Path(f.abs_path), changed_since)
+            base_keys = approval_keys(old) if old is not None else set()
         source = data.decode("utf-8", errors="replace")
-        got, msgs = lint_source(source, shown, catalog, include_inferred, lines)
+        got, msgs = lint_source(source, shown, catalog, include_inferred, lines, base_keys,
+                                confirmed_proposals, old)
         findings.extend(got)
         messages.extend(msgs)
+    if changed is not None:
+        if changed.missing_ref and not changed.resolved_any:
+            raise PcatError(f"--changed-since {changed_since!r}: no such commit in the repository")
+        for top in changed.missing_ref:
+            messages.append(Message(top, 1, "warning",
+                                    f"skipped: {changed_since!r} is not a commit in this repository"))
     findings.sort(key=lambda x: (x.path, x.line, x.function))
     messages.sort(key=lambda m: (m.path, m.line, m.level, m.text))
     return Report(findings, messages, len(files), fail_on, include_inferred, changed_since)
@@ -348,7 +438,7 @@ def format_text(report: Report, show_diff: bool = True) -> str:
         for d in f.deviations:
             if d["approved"]:
                 tag = f" [approved ({d['approval_state']}): {d['approval']}]"
-            elif d.get("approval_state") == "proposed":
+            elif d.get("approval_state") == "proposed":  # proposed, not (yet) confirmed
                 tag = f" [proposed approval, needs confirmation: {d['approval']}]" + (
                     " [fails]" if id(d) in failing else "")
             else:
@@ -362,8 +452,8 @@ def format_text(report: Report, show_diff: bool = True) -> str:
     if report.approvals and report.base_ref is None:
         out.append("note: no base ref: approvals treated as confirmed (use --changed-since to tell "
                    "confirmed approvals from proposed ones)")
-    elif report.proposals:
-        out.append(f"note: {len(report.proposals)} proposed approval(s) since {report.base_ref} approve "
+    elif report.waiting:
+        out.append(f"note: {len(report.waiting)} proposed approval(s) since {report.base_ref} approve "
                    "nothing until confirmed in the pull request (see `pcat approvals check`)")
     s = report.to_dict()["summary"]
     dev = s["deviations"]

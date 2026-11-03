@@ -114,3 +114,209 @@ def test_check_code_shows_hash_and_template(narrowed):
     h = hash_of(narrowed)
     assert analysis["hash"] == h and analysis["approval_template"] == f"# pcat-allow: <code> #{h} -- <reason>"
     assert all(d["hash"] == h for d in analysis["deviations"])
+
+
+# Part B: states against a base ref -----------------------------------------
+
+
+def git(cwd: Path, *args: str) -> str:
+    proc = subprocess.run(["git", "-c", "user.name=t", "-c", "user.email=t@example.com", *args],
+                          cwd=cwd, check=True, capture_output=True, text=True)
+    return proc.stdout.strip()
+
+
+def commit_file(repo: Path, text: str, message: str) -> str:
+    (repo / "client.py").write_text(text)
+    git(repo, "add", ".")
+    git(repo, "commit", "-q", "-m", message)
+    return git(repo, "rev-parse", "HEAD")
+
+
+@pytest.fixture
+def repo(tmp_path) -> Path:
+    path = tmp_path / "repo"
+    path.mkdir()
+    git(path, "init", "-q")
+    return path
+
+
+def states(repo: Path, base: str) -> list[tuple[str, str]]:
+    data = lint_json(str(repo / "client.py"), "--changed-since", base)
+    return [(a["code"], a["state"]) for f in data["findings"] for a in f["approvals"]]
+
+
+def test_confirmed_proposed_and_stale_against_base(repo, narrowed):
+    h = hash_of(narrowed)
+    approved = with_approval(narrowed, f"# pcat-allow: PC100 #{h} -- {REASON}")
+    base0 = commit_file(repo, narrowed, "narrowed, no approval")
+    commit_file(repo, approved, "proposal")
+    assert states(repo, base0) == [("PC100", "proposed")]  # new since base: a proposal
+    out = lint(str(repo / "client.py"), "--changed-since", base0)
+    assert out.exit_code == 1 and "[proposed approval, needs confirmation:" in out.output
+    assert "1 proposed approval(s) since" in out.output
+    base1 = git(repo, "rev-parse", "HEAD")
+    # same approval line already on the base ref: confirmed (a comment-only edit keeps the hash)
+    commit_file(repo, approved.replace("    for attempt in", "    # one try per attempt\n    for attempt in"),
+                "touch")
+    assert states(repo, base1) == [("PC100", "confirmed")]
+    assert lint(str(repo / "client.py"), "--changed-since", base1).exit_code == 0
+    # the code changed after approval: stale
+    commit_file(repo, approved.replace("attempts < 1", "attempts < 2"), "change the code")
+    assert states(repo, base1) == [("PC100", "stale")]
+
+
+def test_without_base_all_approvals_are_confirmed(repo, narrowed):
+    commit_file(repo, with_approval(narrowed, f"# pcat-allow: PC100 #{hash_of(narrowed)} -- {REASON}"), "x")
+    data = lint_json(str(repo / "client.py"))
+    assert data["approval_states"] == "no base ref: approvals treated as confirmed"
+    assert data["findings"][0]["approvals"][0]["state"] == "confirmed" and not data["failed"]
+
+
+# Part B: the GitHub gate (fake API) -----------------------------------------
+
+
+from pcat import approvals  # noqa: E402
+
+HEAD_TIME = "2026-11-03T10:00:00Z"
+
+
+def review(user, state="APPROVED", commit="HEAD", at="2026-11-03T11:00:00Z"):
+    return {"user": {"login": user}, "state": state, "commit_id": commit, "submitted_at": at}
+
+
+def comment(user, body="/pcat approve", at="2026-11-03T11:00:00Z"):
+    return {"user": {"login": user}, "body": body, "created_at": at}
+
+
+class FakeClient:
+    def __init__(self, head: str, base: str, author="author", reviews=(), comments=()):
+        self.data = {
+            "/repos/o/r/pulls/7": {"user": {"login": author}, "head": {"sha": head}, "base": {"sha": base}},
+            f"/repos/o/r/commits/{head}": {"commit": {"committer": {"date": HEAD_TIME}}},
+            "/repos/o/r/pulls/7/reviews": [{**r, "commit_id": head if r["commit_id"] == "HEAD" else r["commit_id"]}
+                                           for r in reviews],
+            "/repos/o/r/issues/7/comments": list(comments),
+        }
+        self.calls = []
+
+    def get(self, path, params=None):
+        self.calls.append(path)
+        return self.data[path]
+
+    def get_all(self, path):
+        return self.get(path)
+
+
+@pytest.fixture
+def proposal_repo(repo, narrowed, monkeypatch):
+    base = commit_file(repo, narrowed, "narrowed, no approval")
+    head = commit_file(repo, with_approval(narrowed, f"# pcat-allow: PC100 #{hash_of(narrowed)} -- {REASON}"),
+                       "agent proposes an approval")
+    monkeypatch.chdir(repo)
+    return repo, base, head
+
+
+def gate(proposal_repo, config, **kw):
+    repo, base, head = proposal_repo
+    pr = approvals.fetch_pull_request(FakeClient(head, base, **kw), "o/r", 7)
+    return approvals.check(pr, ["."], REPO_ROOT, repo, config)
+
+
+OWNER = approvals.Config(approvers=("owner",))
+
+
+def test_unconfirmed_proposal_fails_and_says_who_may_confirm(proposal_repo):
+    result = gate(proposal_repo, OWNER)
+    assert result.failed and len(result.waiting) == 1 and result.waiting[0]["may_confirm"] == ["owner"]
+    text = approvals.format_result(result, OWNER)
+    assert "WAITING client.py:" in text and f"PC100 #" in text and "in `fetch`" in text
+    assert "may confirm: @owner, by an approving review of commit" in text
+    assert "or a comment containing '/pcat approve' posted after 2026-11-03 10:00:00Z" in text
+    assert "1 waiting, 0 confirmed" in text and text.rstrip().endswith("FAIL")
+
+
+def test_review_after_last_commit_confirms(proposal_repo):
+    result = gate(proposal_repo, OWNER, reviews=[review("Owner")])
+    assert not result.failed and result.confirmed[0]["confirmed_by"] == ["owner"]
+    text = approvals.format_result(result, OWNER)
+    assert "CONFIRMED client.py:" in text and "by @owner" in text and text.rstrip().endswith("OK")
+    dev = result.report.findings[0].deviations[0]
+    assert dev["approved"] and dev["approval_state"] == "proposed-confirmed"
+
+
+def test_review_of_an_older_commit_does_not_count(proposal_repo):
+    assert gate(proposal_repo, OWNER, reviews=[review("owner", commit="0" * 40)]).failed
+
+
+def test_later_changes_requested_cancels_approval(proposal_repo):
+    result = gate(proposal_repo, OWNER, reviews=[review("owner"), review("owner", "CHANGES_REQUESTED",
+                                                                         at="2026-11-03T12:00:00Z")])
+    assert result.failed
+
+
+def test_comment_command_after_last_commit_confirms_before_does_not(proposal_repo):
+    assert not gate(proposal_repo, OWNER, comments=[comment("owner", "looks fine\n/pcat approve")]).failed
+    assert gate(proposal_repo, OWNER, comments=[comment("owner", at="2026-11-03T09:00:00Z")]).failed
+    assert gate(proposal_repo, OWNER, comments=[comment("owner", body="/pcat approved?")]).failed
+
+
+def test_non_approver_is_ignored(proposal_repo):
+    assert gate(proposal_repo, OWNER, reviews=[review("stranger")], comments=[comment("stranger")]).failed
+
+
+def test_allow_author(proposal_repo):
+    off = approvals.Config(approvers=("owner",), allow_author=False)
+    on = approvals.Config(approvers=("owner",), allow_author=True)
+    assert gate(proposal_repo, off, author="owner", comments=[comment("owner")]).failed
+    result = gate(proposal_repo, on, author="owner", comments=[comment("owner")])
+    assert not result.failed
+    assert "allow_author is on" in approvals.format_result(result, on)
+
+
+def test_codeowners(proposal_repo):
+    repo, _, _ = proposal_repo
+    (repo / ".github").mkdir()
+    (repo / ".github" / "CODEOWNERS").write_text("* @someone\n*.py @carol @org/team\n/docs/ @dora\n")
+    config = approvals.Config(codeowners=True)
+    result = gate(proposal_repo, config)
+    assert result.waiting[0]["may_confirm"] == ["carol"]
+    assert not gate(proposal_repo, config, reviews=[review("carol")]).failed
+    assert gate(proposal_repo, config, reviews=[review("dora")]).failed
+
+
+def test_codeowners_rules():
+    m = approvals._codeowners_matches
+    assert m("*", "a/b.py") and m("*.py", "a/b.py") and not m("*.md", "a/b.py")
+    assert m("/src/", "src/x/y.py") and not m("/src/", "lib/src.py")
+    assert m("docs/", "a/docs/x.md") and m("/a/b.py", "a/b.py") and m("src/*", "src/x.py")
+
+
+def test_config_loading(tmp_path):
+    path = tmp_path / "approvers.yaml"
+    path.write_text("approvers: ['@Alice', bob]\nallow_author: true\n")
+    assert approvals.load_config(path) == approvals.Config(("alice", "bob"), False, True)
+    for bad, msg in [("approvers: alice\n", "list"), ("approvers: [a]\nextra: 1\n", "unknown keys"),
+                     ("codeowners: false\n", "list approvers"), ("approvers: [a]\nallow_author: yes-ish\n", "true or false")]:
+        path.write_text(bad)
+        with pytest.raises(approvals.PcatError, match=msg):
+            approvals.load_config(path)
+
+
+def test_cli_approvals_check(proposal_repo, monkeypatch):
+    repo, base, head = proposal_repo
+    (repo / ".pcat").mkdir()
+    (repo / ".pcat" / "approvers.yaml").write_text("approvers: [owner]\n")
+    fake = FakeClient(head, base)
+    monkeypatch.setattr(approvals, "GitHubClient", lambda token, api: fake)
+    args = ["approvals", "check", "--repo", "o/r", "--pr", "7", "--catalog", str(REPO_ROOT)]
+    out = CliRunner().invoke(app, args)
+    assert out.exit_code == 1 and "WAITING" in out.output and "@owner" in out.output, out.output
+    fake.data["/repos/o/r/issues/7/comments"] = [comment("owner")]
+    out = CliRunner().invoke(app, args)
+    assert out.exit_code == 0 and "CONFIRMED" in out.output, out.output
+
+
+def test_changed_since_unknown_commit_is_an_error(repo, narrowed):
+    commit_file(repo, narrowed, "x")
+    out = lint(str(repo / "client.py"), "--changed-since", "0" * 40)
+    assert out.exit_code == 1 and "no such commit" in out.output

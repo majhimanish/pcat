@@ -372,16 +372,49 @@ above `--fail-on` (default `high`; `never` always exits 0), or a marker names an
 unknown pattern. Inferred findings never fail. `--include-inferred` defaults to on
 for text output and off for `json`/`github`. Renaming never counts as a deviation.
 
-**Approving a deviation:** write the reason in a comment directly above the
-function's marker or `def` (one code per line, reason after `--`, at least 10
-characters). Approved deviations stay in the report, marked approved; an approval
-whose code no longer occurs is reported as stale (a warning).
+**Approving a deviation (v4.1):** write the reason in a comment directly above
+the function's marker or `def`, with the function's current hash (shown next to
+every deviation by `pcat lint` and `check_code`): one code per line, reason after
+`--`, at least 10 characters.
 
 ```python
-# pcat-allow: PC101 -- this API only treats timeouts as transient; connection errors must fail fast
+# pcat-allow: PC100 #3f9a1c2e -- this API only treats timeouts as transient; connection errors must fail fast
 # pcat: http.get_with_retry.requests@v1
 def fetch_with_retry(url, ...):
 ```
+
+The hash is the first 8 hex characters of the function's canonical fingerprint,
+so comments and renames keep it, but any code change makes the approval
+**stale**: it approves nothing until someone re-approves the new code (v4
+approvals without a hash are stale too; the message shows the line to write).
+With `--changed-since REF` every approval is **confirmed** (the same line, code
+and hash existed at `REF`: it was reviewed when it merged) or **proposed** (new
+in this change). A proposal approves nothing until a human confirms it:
+
+```bash
+pcat approvals check --repo OWNER/REPO --pr 42    # needs GITHUB_TOKEN; exit 1 while waiting
+```
+
+An approver confirms by submitting an **approving review** of the pull request's
+latest commit, or a **comment containing `/pcat approve`** posted after that
+commit. A new commit needs a new confirmation. Approvers are listed in
+`.pcat/approvers.yaml`:
+
+```yaml
+approvers: [alice, bob]   # GitHub usernames
+codeowners: true          # also anyone CODEOWNERS lists for the changed file (users, not teams)
+allow_author: false       # true lets the PR author confirm their own proposals
+```
+
+`allow_author: true` is **solo-developer mode**: it weakens the guarantee (nobody
+else looked at the deviation) and is meant for development only. This repository
+uses it because it has one developer. The command prints every waiting proposal
+and who may confirm it, then fails until each is confirmed and no unapproved
+deviation remains. `docs/ci/pcat-approvals.yml` runs it on `pull_request`,
+`pull_request_review` and `issue_comment`, so a review or `/pcat approve`
+comment re-runs the check without a new commit. Agents using the MCP server may
+*propose* approvals (with the hash and a reason) and are told to say that a
+human must confirm them.
 
 **Guards** are the properties a reviewer cared about, declared per pattern in
 `pattern.yaml` (metadata only; validation check 11 requires each to hold on the

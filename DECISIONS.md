@@ -786,3 +786,41 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      output (`approved (confirmed)`); `test_serving.py` expects a code approval
      to be `proposed`, and the instructions to show `#<hash>` and to say a human
      must confirm.
+171. **Approval states.** With `--changed-since REF`, an approval is `confirmed`
+     when `REF`'s version of the file has a well-formed approval with the same
+     function (qualname), code and hash (the reason may differ), `proposed`
+     otherwise; `stale` as in 168. Without a base ref every current approval is
+     `confirmed` and the output says so (text note, JSON `approval_states`).
+     A `proposed` approval approves nothing in `pcat lint`, so its deviation still
+     fails; only `pcat approvals check` can turn it into `proposed-confirmed`.
+172. **`pcat approvals check` is the whole pull-request gate.** It lints the
+     changes since the merge base of the PR base and `HEAD` (marked code only),
+     reads reviews/comments, marks proposals confirmed, re-lints with them
+     applied and fails on waiting proposals *or* remaining failing deviations.
+     A confirmation is PR-wide: one valid confirmation by a user who may confirm
+     a proposal's file confirms that proposal (all proposals are visible in the
+     PR at the head commit). It warns if the checked-out commit is not the PR head.
+173. **What counts as a confirmation.** A user's latest decisive review
+     (APPROVED / CHANGES_REQUESTED / DISMISSED) whose `commit_id` is the head
+     commit, if APPROVED; or a comment matching `/pcat approve` (as a word, case-
+     sensitive) created after the head commit's committer date. Committer dates
+     can be set by the author; the review route is the stronger one. Logins
+     compare case-insensitively.
+174. **Who may confirm** = `approvers` ∪ (with `codeowners: true`) the users the
+     last matching CODEOWNERS rule names for the file (`.github/`, root or
+     `docs/` CODEOWNERS; gitignore-like matching, simplified); teams and e-mail
+     owners are not resolved. Without `allow_author`, the PR author is removed.
+     The config must name approvers or enable codeowners; unknown keys are errors.
+175. **Re-running on reviews and comments.** Comment-triggered runs do not show on
+     the PR, and a review run shows next to the earlier failed `pull_request` run.
+     So after a passing review/comment run, the workflow re-runs failed
+     `pull_request` runs of `pcat-approvals.yml` for the head commit (`gh run
+     rerun --failed`, needs `actions: write`); they then see the confirmation.
+176. **`--changed-since` speed and nested clones.** Changed files come from one
+     `git diff --name-only REF --` plus the untracked list per repository; files
+     in a repository where `REF` is not a commit (e.g. gitignored clones under
+     `.bench/`) are skipped with a warning; if no repository knows `REF`, it is an
+     error.
+177. **This repository** installs the gate (`.github/workflows/pcat-approvals.yml`,
+     `.pcat/approvers.yaml` = `majhimanish`, `allow_author: true` because there is
+     one developer; documented as solo-developer mode).
