@@ -76,3 +76,72 @@ def inference_summary(items: list[dict], threshold: float) -> dict:
         "not_derived_inferred_as_derived": fp,
         "not_derived_correct": len(neg) - fp,
     }
+
+
+# --------------------------------------------------------------------------- #
+# Replay and feedback-run scoring
+# --------------------------------------------------------------------------- #
+
+SEVERITIES = ("none", "low", "medium", "high")
+
+
+def fetched_patterns(tool_calls: list[dict]) -> list[str]:
+    """Pattern ids the agent fetched with get_pattern, in call order (without @vN)."""
+    out = []
+    for call in tool_calls:
+        if call["tool"] == "get_pattern":
+            got = (call.get("result") or {}).get("id") or call["arguments"].get("id")
+            if got and "error" not in (call.get("result") or {}):
+                pid = got.split("@")[0]
+                if pid not in out:
+                    out.append(pid)
+    return out
+
+
+def worst(analyses: list[dict], approved: bool = False) -> str:
+    """Highest severity among deviations (unapproved only, unless approved=True)."""
+    rank = 0
+    for a in analyses:
+        for d in a["deviations"]:
+            if approved or not d["approved"]:
+                rank = max(rank, SEVERITIES.index(d["severity"]))
+    return SEVERITIES[rank]
+
+
+def codes(analyses: list[dict]) -> list[str]:
+    return sorted({d["code"] for a in analyses for d in a["deviations"]})
+
+
+def high_codes(analyses: list[dict]) -> list[str]:
+    return sorted({d["code"] for a in analyses for d in a["deviations"] if d["severity"] == "high"})
+
+
+def confusion(rows: list[dict]) -> dict:
+    """outcome -> worst severity -> count."""
+    table: dict[str, dict[str, int]] = {}
+    for r in rows:
+        table.setdefault(r["outcome"], {s: 0 for s in SEVERITIES})[r["worst"]] += 1
+    return dict(sorted(table.items()))
+
+
+def replay_checks(rows: list[dict]) -> dict:
+    """The spec's expectations for the v3 replay, evaluated on scored rows."""
+    exact = [r for r in rows if r["outcome"] == "matched"]
+    misses = [r for r in rows if r["outcome"] != "matched"]
+    precision = [r for r in exact if set(r["codes"]) - {"PC109"}]
+    http = [r for r in misses if r["task"] == "http_retry"]
+    pag = [r for r in misses if r["task"] == "paginate_query"]
+    csv_switched = [r for r in misses if r["task"] == "csv_import" and r["switched_library"]]
+    return {
+        "exact_matches": len(exact),
+        "exact_with_deviation_other_than_PC109": len(precision),
+        "exact_flagged_above_low": sum(r["worst"] in ("medium", "high") for r in exact),
+        "misses": len(misses),
+        "misses_with_a_deviation": sum(bool(r["codes"]) for r in misses),
+        "http_misses": len(http),
+        "http_misses_high_PC100_or_PC101": sum(bool({"PC100", "PC101"} & set(r["high_codes"])) for r in http),
+        "pagination_misses": len(pag),
+        "pagination_misses_with_PC106": sum("PC106" in r["codes"] for r in pag),
+        "csv_misses_switched_library": len(csv_switched),
+        "csv_switched_with_PC103": sum("PC103" in r["codes"] for r in csv_switched),
+    }
