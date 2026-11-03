@@ -339,7 +339,15 @@ def run_pattern_tests(folder: Path) -> tuple[bool, str]:
         return False, f"timed out after {TEST_TIMEOUT_SECONDS}s"
     output = (proc.stdout + proc.stderr).strip()
     summary = output.splitlines()[-1] if output else ""
-    return proc.returncode == 0, summary
+    # Exit code 5 ("no tests ran") is a pass only when the tests were skipped,
+    # e.g. a module-level pytest.importorskip for a library listed in `requires`
+    # that is not installed. A test file with no tests at all still fails.
+    skipped_only = (
+        proc.returncode == 5
+        and "skipped" in summary
+        and not any(word in summary for word in ("failed", "error"))
+    )
+    return proc.returncode == 0 or skipped_only, summary
 
 
 def validate(

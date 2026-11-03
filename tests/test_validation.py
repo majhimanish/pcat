@@ -292,7 +292,7 @@ def test_migrate_fingerprints_reports_and_rewrites(root):
     other = (pattern_dir(root, REC) / "pattern.yaml").read_text()
     rows = cat.migrate_fingerprints(root)
     by_key = {r.key: r for r in rows}
-    assert len(rows) == 6
+    assert len(rows) == len(cat.load_catalog(root))  # v2.2: no longer only the 6 seeds
     assert [r.key for r in rows if r.changed] == [f"{ITER}@v1"]
     row = by_key[f"{ITER}@v1"]
     assert row.old == FAKE_FP and row.new == cat.analyze_pattern(cat.get_one(root, ITER)).fingerprint
@@ -343,3 +343,16 @@ def test_base_rejects_comment_only_impl_change(git_root):
     assert cat.validate(git_root, run_tests=False) == []  # fingerprint unchanged
     problems = cat.validate(git_root, run_tests=False, base="HEAD")
     assert any("impl.py changed" in p.message for p in problems)
+
+
+# v2.2: pattern tests that skip because a required library is missing ------- #
+def test_check8_tests_skipped_for_missing_library_pass(root):
+    test = pattern_dir(root, ITER) / "test_impl.py"
+    test.write_text('import pytest\n\npytest.importorskip("no_such_library_for_pcat")\n' + test.read_text())
+    assert cat.validate(root, [ITER]) == []
+
+
+def test_check8_test_file_without_tests_still_fails(root):
+    (pattern_dir(root, ITER) / "test_impl.py").write_text("# no tests here\n")
+    problems = cat.validate(root, [ITER])
+    assert any(p.check == "8" and "no tests ran" in p.message for p in problems)
