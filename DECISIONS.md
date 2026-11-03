@@ -601,3 +601,31 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 142. **`mcp` extra in CI.** CI installs `.[dev,catalog,mcp]`; server tests skip
      cleanly without `mcp` (`importorskip`). The stdio test starts `pcat serve`
      as a subprocess from another directory.
+
+## v4 — deviation linter (`docs/specs/v4-linter.md`)
+
+143. **Marker placement.** `get_pattern` puts `# pcat: <id>@v<N>` directly above
+     the entry point *and every export* (`hash_password`, `verify_password`,
+     `needs_rehash` all get one), since exports are reviewed public functions
+     whose guards (e.g. `hmac.compare_digest` in `verify_password`) should be
+     able to fail CI. The marker must be in the contiguous comment block directly
+     above the function (above its decorators); a blank line breaks the block.
+     A marker without `@vN` means the latest active version. Malformed `# pcat:`
+     lines and a second marker on one function are reported, not fatal. Markers
+     work on methods and nested functions too. The response also has a `marker` key.
+144. **Inference measure.** v2.1's difflib ratio between the function's shape
+     text (miner's per-function canonicalization: the function alone, literals
+     blanked) and each catalog entry point's and export's shape text; the best
+     match wins (ties: pattern id, version, function). Only active patterns.
+145. **Inference calibration** (`scripts/lint_eval.py calibrate`,
+     `experiments/linter/inference_calibration.json`). Derived: in each of the
+     140 v3 positive samples, the function most similar to each function of the
+     pattern it fetched (one-to-one), 200 functions. Not derived: every
+     non-trivial function of the 40 v2.1 FastAPI A/B samples and the 20 v3
+     negative samples, except functions `check_code` marks covered/near (the
+     two PBKDF2 sub-task uses are really derived), 187 functions. Trivial
+     functions (single return/pass) are skipped. Rule as in v3 (decision 132):
+     maximise accuracy, take the median of the best range, round to 2 decimals.
+     Result **0.56**: 199/200 derived found, 1/187 not-derived flagged (a
+     hand-rolled PBKDF2 `hash_password` in a v2.1 sample, 0.583). The labelling
+     uses similarity itself, so the derived scores are an optimistic upper bound.

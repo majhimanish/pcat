@@ -16,7 +16,7 @@ from typing import Any
 
 from pcat import canonical, miner
 from pcat import catalog as cat
-from pcat import search
+from pcat import provenance, search
 from pcat.errors import PcatError
 
 NO_MATCH_MESSAGE = (
@@ -53,8 +53,9 @@ class CatalogService:
             "common application task, call search_patterns with a short description of what "
             f"you need. The catalog currently covers: {topics}. If a pattern fits, call "
             "get_pattern and use its code, adapting only names and what the request explicitly "
-            "requires (keep its structure, checks and library). If nothing fits, write the code "
-            "normally. Afterwards, call check_code on your final code to confirm which "
+            "requires (keep its structure, checks and library). Keep the '# pcat: <id>@v<N>' "
+            "comment above each pattern function: it records where the code came from. If "
+            "nothing fits, write the code normally. Afterwards, call check_code on your final code to confirm which "
             "functions match a reviewed pattern."
         )
 
@@ -111,6 +112,12 @@ class CatalogService:
             same = False
         if not same:
             raise PcatError("these names make two names collide; choose different names")
+        marker = provenance.marker_line(meta.id, meta.version)
+        public = {analysis.name_map[k] for k in analysis.name_map if k[0] == "f" and "." not in k
+                  and (k == "f0" or analysis.name_map[k] in meta.exports)}
+        public_placeholders = sorted(k for k, v in analysis.name_map.items()
+                                     if "." not in k and k[0] == "f" and v in public)
+        code = provenance.add_markers(code, marker, [mapping[k] for k in public_placeholders])
         result: dict[str, Any] = {
             "id": meta.id,
             "version": meta.version,
@@ -122,6 +129,7 @@ class CatalogService:
             "requires": meta.requires,
             "usage": meta.usage,
             "code": code,
+            "marker": marker,
             "names": {k: v for k, v in analysis.name_map.items()},
         }
         if meta.status == "deprecated":

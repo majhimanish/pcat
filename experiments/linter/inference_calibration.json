@@ -1,0 +1,4883 @@
+{
+  "candidates": [
+    {
+      "accuracy": 0.5168,
+      "threshold": 0.0
+    },
+    {
+      "accuracy": 0.5194,
+      "threshold": 0.26255
+    },
+    {
+      "accuracy": 0.522,
+      "threshold": 0.29835
+    },
+    {
+      "accuracy": 0.5245,
+      "threshold": 0.30345
+    },
+    {
+      "accuracy": 0.5271,
+      "threshold": 0.3111
+    },
+    {
+      "accuracy": 0.5297,
+      "threshold": 0.317
+    },
+    {
+      "accuracy": 0.5323,
+      "threshold": 0.31825
+    },
+    {
+      "accuracy": 0.5349,
+      "threshold": 0.3197
+    },
+    {
+      "accuracy": 0.5375,
+      "threshold": 0.32225
+    },
+    {
+      "accuracy": 0.5401,
+      "threshold": 0.32415
+    },
+    {
+      "accuracy": 0.5426,
+      "threshold": 0.3271
+    },
+    {
+      "accuracy": 0.5452,
+      "threshold": 0.3315
+    },
+    {
+      "accuracy": 0.5478,
+      "threshold": 0.334
+    },
+    {
+      "accuracy": 0.5504,
+      "threshold": 0.33475
+    },
+    {
+      "accuracy": 0.553,
+      "threshold": 0.33505
+    },
+    {
+      "accuracy": 0.5556,
+      "threshold": 0.3355
+    },
+    {
+      "accuracy": 0.5581,
+      "threshold": 0.3402
+    },
+    {
+      "accuracy": 0.5607,
+      "threshold": 0.3454
+    },
+    {
+      "accuracy": 0.5633,
+      "threshold": 0.3462
+    },
+    {
+      "accuracy": 0.5659,
+      "threshold": 0.3469
+    },
+    {
+      "accuracy": 0.5685,
+      "threshold": 0.34795
+    },
+    {
+      "accuracy": 0.5711,
+      "threshold": 0.3486
+    },
+    {
+      "accuracy": 0.5736,
+      "threshold": 0.34965
+    },
+    {
+      "accuracy": 0.5762,
+      "threshold": 0.3507
+    },
+    {
+      "accuracy": 0.5788,
+      "threshold": 0.35105
+    },
+    {
+      "accuracy": 0.5814,
+      "threshold": 0.3528
+    },
+    {
+      "accuracy": 0.584,
+      "threshold": 0.35485
+    },
+    {
+      "accuracy": 0.5866,
+      "threshold": 0.357
+    },
+    {
+      "accuracy": 0.5891,
+      "threshold": 0.3592
+    },
+    {
+      "accuracy": 0.5917,
+      "threshold": 0.363
+    },
+    {
+      "accuracy": 0.5943,
+      "threshold": 0.3678
+    },
+    {
+      "accuracy": 0.5969,
+      "threshold": 0.3695
+    },
+    {
+      "accuracy": 0.5995,
+      "threshold": 0.37035
+    },
+    {
+      "accuracy": 0.6021,
+      "threshold": 0.374
+    },
+    {
+      "accuracy": 0.6047,
+      "threshold": 0.3775
+    },
+    {
+      "accuracy": 0.6072,
+      "threshold": 0.3784
+    },
+    {
+      "accuracy": 0.6098,
+      "threshold": 0.379
+    },
+    {
+      "accuracy": 0.6124,
+      "threshold": 0.38015
+    },
+    {
+      "accuracy": 0.615,
+      "threshold": 0.38125
+    },
+    {
+      "accuracy": 0.6202,
+      "threshold": 0.38295
+    },
+    {
+      "accuracy": 0.6227,
+      "threshold": 0.38515
+    },
+    {
+      "accuracy": 0.6253,
+      "threshold": 0.38645
+    },
+    {
+      "accuracy": 0.6279,
+      "threshold": 0.388
+    },
+    {
+      "accuracy": 0.6305,
+      "threshold": 0.3891
+    },
+    {
+      "accuracy": 0.6331,
+      "threshold": 0.39
+    },
+    {
+      "accuracy": 0.6357,
+      "threshold": 0.3913
+    },
+    {
+      "accuracy": 0.6382,
+      "threshold": 0.39205
+    },
+    {
+      "accuracy": 0.6408,
+      "threshold": 0.39355
+    },
+    {
+      "accuracy": 0.646,
+      "threshold": 0.395
+    },
+    {
+      "accuracy": 0.6486,
+      "threshold": 0.39555
+    },
+    {
+      "accuracy": 0.6512,
+      "threshold": 0.3961
+    },
+    {
+      "accuracy": 0.6537,
+      "threshold": 0.3964
+    },
+    {
+      "accuracy": 0.6563,
+      "threshold": 0.397
+    },
+    {
+      "accuracy": 0.6589,
+      "threshold": 0.3994
+    },
+    {
+      "accuracy": 0.6615,
+      "threshold": 0.40145
+    },
+    {
+      "accuracy": 0.6641,
+      "threshold": 0.40195
+    },
+    {
+      "accuracy": 0.6667,
+      "threshold": 0.4029
+    },
+    {
+      "accuracy": 0.6693,
+      "threshold": 0.40365
+    },
+    {
+      "accuracy": 0.6718,
+      "threshold": 0.40495
+    },
+    {
+      "accuracy": 0.6744,
+      "threshold": 0.4077
+    },
+    {
+      "accuracy": 0.6848,
+      "threshold": 0.4095
+    },
+    {
+      "accuracy": 0.6873,
+      "threshold": 0.4101
+    },
+    {
+      "accuracy": 0.6899,
+      "threshold": 0.41065
+    },
+    {
+      "accuracy": 0.6925,
+      "threshold": 0.41175
+    },
+    {
+      "accuracy": 0.6951,
+      "threshold": 0.4133
+    },
+    {
+      "accuracy": 0.6977,
+      "threshold": 0.4141
+    },
+    {
+      "accuracy": 0.7003,
+      "threshold": 0.4145
+    },
+    {
+      "accuracy": 0.7028,
+      "threshold": 0.41485
+    },
+    {
+      "accuracy": 0.7054,
+      "threshold": 0.4167
+    },
+    {
+      "accuracy": 0.708,
+      "threshold": 0.4188
+    },
+    {
+      "accuracy": 0.7106,
+      "threshold": 0.4197
+    },
+    {
+      "accuracy": 0.7132,
+      "threshold": 0.4208
+    },
+    {
+      "accuracy": 0.7183,
+      "threshold": 0.42365
+    },
+    {
+      "accuracy": 0.7209,
+      "threshold": 0.42705
+    },
+    {
+      "accuracy": 0.7235,
+      "threshold": 0.42845
+    },
+    {
+      "accuracy": 0.7261,
+      "threshold": 0.43035
+    },
+    {
+      "accuracy": 0.7287,
+      "threshold": 0.43275
+    },
+    {
+      "accuracy": 0.7313,
+      "threshold": 0.43605
+    },
+    {
+      "accuracy": 0.7339,
+      "threshold": 0.43875
+    },
+    {
+      "accuracy": 0.7364,
+      "threshold": 0.439
+    },
+    {
+      "accuracy": 0.739,
+      "threshold": 0.4401
+    },
+    {
+      "accuracy": 0.7416,
+      "threshold": 0.4414
+    },
+    {
+      "accuracy": 0.7442,
+      "threshold": 0.442
+    },
+    {
+      "accuracy": 0.7519,
+      "threshold": 0.4431
+    },
+    {
+      "accuracy": 0.7545,
+      "threshold": 0.44465
+    },
+    {
+      "accuracy": 0.7571,
+      "threshold": 0.44555
+    },
+    {
+      "accuracy": 0.7597,
+      "threshold": 0.4461
+    },
+    {
+      "accuracy": 0.7649,
+      "threshold": 0.44665
+    },
+    {
+      "accuracy": 0.7674,
+      "threshold": 0.4502
+    },
+    {
+      "accuracy": 0.7778,
+      "threshold": 0.4537
+    },
+    {
+      "accuracy": 0.7829,
+      "threshold": 0.4547
+    },
+    {
+      "accuracy": 0.7855,
+      "threshold": 0.45675
+    },
+    {
+      "accuracy": 0.7907,
+      "threshold": 0.45815
+    },
+    {
+      "accuracy": 0.8036,
+      "threshold": 0.4584
+    },
+    {
+      "accuracy": 0.8062,
+      "threshold": 0.45935
+    },
+    {
+      "accuracy": 0.8088,
+      "threshold": 0.46115
+    },
+    {
+      "accuracy": 0.8114,
+      "threshold": 0.46255
+    },
+    {
+      "accuracy": 0.814,
+      "threshold": 0.4644
+    },
+    {
+      "accuracy": 0.8217,
+      "threshold": 0.4677
+    },
+    {
+      "accuracy": 0.8269,
+      "threshold": 0.4716
+    },
+    {
+      "accuracy": 0.8295,
+      "threshold": 0.47375
+    },
+    {
+      "accuracy": 0.832,
+      "threshold": 0.474
+    },
+    {
+      "accuracy": 0.8346,
+      "threshold": 0.47415
+    },
+    {
+      "accuracy": 0.8372,
+      "threshold": 0.4753
+    },
+    {
+      "accuracy": 0.8398,
+      "threshold": 0.47735
+    },
+    {
+      "accuracy": 0.8527,
+      "threshold": 0.47855
+    },
+    {
+      "accuracy": 0.8553,
+      "threshold": 0.47895
+    },
+    {
+      "accuracy": 0.8579,
+      "threshold": 0.47985
+    },
+    {
+      "accuracy": 0.863,
+      "threshold": 0.48125
+    },
+    {
+      "accuracy": 0.8656,
+      "threshold": 0.48235
+    },
+    {
+      "accuracy": 0.8682,
+      "threshold": 0.4834
+    },
+    {
+      "accuracy": 0.8708,
+      "threshold": 0.48415
+    },
+    {
+      "accuracy": 0.8786,
+      "threshold": 0.48615
+    },
+    {
+      "accuracy": 0.8811,
+      "threshold": 0.4886
+    },
+    {
+      "accuracy": 0.8863,
+      "threshold": 0.48955
+    },
+    {
+      "accuracy": 0.8992,
+      "threshold": 0.49025
+    },
+    {
+      "accuracy": 0.9018,
+      "threshold": 0.49205
+    },
+    {
+      "accuracy": 0.9044,
+      "threshold": 0.49415
+    },
+    {
+      "accuracy": 0.9121,
+      "threshold": 0.4949
+    },
+    {
+      "accuracy": 0.9147,
+      "threshold": 0.4951
+    },
+    {
+      "accuracy": 0.9173,
+      "threshold": 0.4976
+    },
+    {
+      "accuracy": 0.9199,
+      "threshold": 0.5018
+    },
+    {
+      "accuracy": 0.9225,
+      "threshold": 0.5041
+    },
+    {
+      "accuracy": 0.9251,
+      "threshold": 0.50615
+    },
+    {
+      "accuracy": 0.9328,
+      "threshold": 0.5109
+    },
+    {
+      "accuracy": 0.9483,
+      "threshold": 0.51595
+    },
+    {
+      "accuracy": 0.9509,
+      "threshold": 0.5183
+    },
+    {
+      "accuracy": 0.9561,
+      "threshold": 0.5234
+    },
+    {
+      "accuracy": 0.9587,
+      "threshold": 0.5286
+    },
+    {
+      "accuracy": 0.9612,
+      "threshold": 0.53125
+    },
+    {
+      "accuracy": 0.9664,
+      "threshold": 0.5335
+    },
+    {
+      "accuracy": 0.969,
+      "threshold": 0.53505
+    },
+    {
+      "accuracy": 0.9664,
+      "threshold": 0.5394
+    },
+    {
+      "accuracy": 0.969,
+      "threshold": 0.54505
+    },
+    {
+      "accuracy": 0.9716,
+      "threshold": 0.548
+    },
+    {
+      "accuracy": 0.9742,
+      "threshold": 0.55195
+    },
+    {
+      "accuracy": 0.9922,
+      "threshold": 0.5573
+    },
+    {
+      "accuracy": 0.9948,
+      "threshold": 0.56175
+    },
+    {
+      "accuracy": 0.9922,
+      "threshold": 0.57295
+    },
+    {
+      "accuracy": 0.9897,
+      "threshold": 0.5822
+    },
+    {
+      "accuracy": 0.9922,
+      "threshold": 0.58935
+    },
+    {
+      "accuracy": 0.9897,
+      "threshold": 0.6047
+    },
+    {
+      "accuracy": 0.9871,
+      "threshold": 0.63045
+    },
+    {
+      "accuracy": 0.9845,
+      "threshold": 0.65045
+    },
+    {
+      "accuracy": 0.9819,
+      "threshold": 0.6565
+    },
+    {
+      "accuracy": 0.9793,
+      "threshold": 0.6876
+    },
+    {
+      "accuracy": 0.9767,
+      "threshold": 0.7225
+    },
+    {
+      "accuracy": 0.9742,
+      "threshold": 0.8211
+    },
+    {
+      "accuracy": 0.9716,
+      "threshold": 0.92915
+    },
+    {
+      "accuracy": 0.969,
+      "threshold": 0.96355
+    },
+    {
+      "accuracy": 0.9535,
+      "threshold": 0.99095
+    },
+    {
+      "accuracy": 0.4832,
+      "threshold": 2.0
+    }
+  ],
+  "chosen_threshold": 0.56,
+  "constant": 0.6,
+  "items": [
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/01"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/02"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/03"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/04"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/05"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/06"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/07"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/08"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/09"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/10"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/11"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/12"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/13"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/14"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/15"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/16"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/17"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "issue_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/18"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/19"
+    },
+    {
+      "expected": "auth.jwt.create_access_token:create_access_token",
+      "function": "create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          1.0
+        ]
+      ],
+      "source": "v3/jwt_create/20"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/01"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/01"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/01"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/02"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/02"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/02"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/03"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/03"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/03"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/04"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/04"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/04"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/05"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/05"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/05"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/06"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/06"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/06"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/07"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/07"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/07"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/08"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/08"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/08"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/09"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/09"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/09"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/10"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/10"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/10"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/11"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/11"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/11"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/12"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/12"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/12"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/13"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/13"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/13"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/14"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/14"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/14"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/15"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/15"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/15"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/16"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/16"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/16"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/17"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/17"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/17"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/18"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/18"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/18"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/19"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/19"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/19"
+    },
+    {
+      "expected": "auth.password.pbkdf2:hash_password",
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/20"
+    },
+    {
+      "expected": "auth.password.pbkdf2:verify_password",
+      "function": "verify_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/20"
+    },
+    {
+      "expected": "auth.password.pbkdf2:needs_rehash",
+      "function": "needs_rehash",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          1.0
+        ]
+      ],
+      "source": "v3/password_hash/20"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/01"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/02"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/03"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/04"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/05"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/06"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/07"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/08"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/09"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/10"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/11"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          0.9452
+        ]
+      ],
+      "source": "v3/paginate_query/12"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/13"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/14"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/15"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/16"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          0.9131
+        ]
+      ],
+      "source": "v3/paginate_query/17"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/18"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/19"
+    },
+    {
+      "expected": "db.pagination.select_page:paginate",
+      "function": "paginate",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          1.0
+        ]
+      ],
+      "source": "v3/paginate_query/20"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/01"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/02"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/03"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/04"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/05"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/06"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/07"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/08"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/09"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "call_payments_api",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/10"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/11"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/12"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/13"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/14"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/15"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/16"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.9819
+        ]
+      ],
+      "source": "v3/http_retry/17"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/18"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/19"
+    },
+    {
+      "expected": "http.get_with_retry.requests:get_with_retry",
+      "function": "get_with_retry",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          1.0
+        ]
+      ],
+      "source": "v3/http_retry/20"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/01"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/01"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/02"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/02"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/03"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/03"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/04"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/04"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/05"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/05"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/06"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/06"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/07"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/07"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/08"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/08"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/09"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/09"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/10"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/10"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/11"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/11"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/12"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/12"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/13"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/13"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/14"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/14"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/15"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/15"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/16"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/16"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/17"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/17"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/18"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/18"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/19"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/19"
+    },
+    {
+      "expected": "config.env.load_settings:load_settings",
+      "function": "load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/20"
+    },
+    {
+      "expected": "config.env.load_settings:parse_bool",
+      "function": "parse_bool",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          1.0
+        ]
+      ],
+      "source": "v3/env_config/20"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/01"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/02"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/03"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/04"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/05"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/06"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/07"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/08"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/09"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/10"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/11"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/12"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/13"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/14"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/15"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/16"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/17"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/18"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/19"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check:check_rate_limit",
+      "function": "check_rate_limit",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check:check_rate_limit",
+          1.0
+        ]
+      ],
+      "source": "v3/token_bucket/20"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.7291
+        ]
+      ],
+      "source": "v3/csv_import/01"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.5957
+        ]
+      ],
+      "source": "v3/csv_import/02"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/03"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/04"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.6472
+        ]
+      ],
+      "source": "v3/csv_import/05"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.5814
+        ]
+      ],
+      "source": "v3/csv_import/06"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.7159
+        ]
+      ],
+      "source": "v3/csv_import/07"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/08"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/09"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/10"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.6137
+        ]
+      ],
+      "source": "v3/csv_import/11"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.5364
+        ]
+      ],
+      "source": "v3/csv_import/12"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/13"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/14"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/15"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_user_rows",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.5645
+        ]
+      ],
+      "source": "v3/csv_import/16"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_users_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.6593
+        ]
+      ],
+      "source": "v3/csv_import/17"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/18"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "validate_user_upload",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.6537
+        ]
+      ],
+      "source": "v3/csv_import/19"
+    },
+    {
+      "expected": "importers.users_csv.parse:import_users",
+      "function": "import_users",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          1.0
+        ]
+      ],
+      "source": "v3/csv_import/20"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_01"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4843
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_01"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3207
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_01"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4535
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4334
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "UserCreateRequest.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5077
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_03"
+    },
+    {
+      "expected": null,
+      "function": "UserCreateRequest.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4899
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_03"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3587
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_03"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4948
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4094
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "get_create_user_fn",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4138
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3949
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_05"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4094
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_05"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4283
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_05"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5077
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_06"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_06"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3949
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_06"
+    },
+    {
+      "expected": null,
+      "function": "UserCreateRequest.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5046
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "UserCreateRequest.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.378
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_08"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_08"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4258
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_08"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4535
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4458
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.password_strength",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4464
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_10"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3597
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_10"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.password_strength",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.458
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_11"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3788
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_11"
+    },
+    {
+      "expected": null,
+      "function": "get_create_user_repo",
+      "ranked": [
+        [
+          "collections.group_by.dict_of_lists:group_by",
+          0.4144
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4843
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "retry.with_exponential_backoff:retry_with_exponential_backoff",
+          0.3475
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_13"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4094
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_13"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4422
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_13"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4948
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4094
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3893
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_15"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4899
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_15"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3858
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_15"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4535
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "get_create_user_fn",
+      "ranked": [
+        [
+          "collections.group_by.dict_of_lists:group_by",
+          0.4201
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3187
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3922
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_18"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.3512
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_18"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.528
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "validate_user_input",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          0.4146
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "collections.group_by.dict_of_lists:group_by",
+          0.3353
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5556
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4899
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4422
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/A/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4215
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_01"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5188
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "save_user",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4469
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "validate_password_strength",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3871
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "retry.with_exponential_backoff:retry_with_exponential_backoff",
+          0.3178
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_02"
+    },
+    {
+      "expected": null,
+      "function": "create_user_handler",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3463
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_03"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.484
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_email",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.559
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_password",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4658
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "verify_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5333
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4014
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_04"
+    },
+    {
+      "expected": null,
+      "function": "create_user_in_db",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4539
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_05"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4555
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_05"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4215
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_06"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4892
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4899
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4783
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "save_user",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.4585
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.396
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_07"
+    },
+    {
+      "expected": null,
+      "function": "create_user_handler",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.371
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_08"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_username",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5077
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_email",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4828
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_password",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4658
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.488
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3348
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_09"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4783
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_10"
+    },
+    {
+      "expected": null,
+      "function": "create_user_in_db",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.3966
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_10"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4791
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_10"
+    },
+    {
+      "expected": null,
+      "function": "save_user",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4742
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_11"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5188
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_11"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.2958
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_11"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4806
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4899
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4783
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "save_user_to_db",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.4024
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4106
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_12"
+    },
+    {
+      "expected": null,
+      "function": "create_user_route",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.406
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_13"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4892
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.495
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5141
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "verify_password",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.5333
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.3347
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_14"
+    },
+    {
+      "expected": null,
+      "function": "create_user_in_db",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4539
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_15"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3974
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_15"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.password_must_be_strong",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4464
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "save_user_in_memory",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4736
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.5477
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3919
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_16"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4948
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.validate_password",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4583
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4783
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "create_user_in_store",
+      "ranked": [
+        [
+          "db.pagination.select_page:paginate",
+          0.4039
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "create_user_endpoint",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4387
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_17"
+    },
+    {
+      "expected": null,
+      "function": "create_user_route",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.4015
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_18"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_username",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4806
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.validate_password",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4658
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4843
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.3488
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_19"
+    },
+    {
+      "expected": null,
+      "function": "UserCreate.password_strength",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.458
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "hash_password",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:hash_password",
+          0.4783
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "create_user_in_repo",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.3962
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "create_user",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3951
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "create_app",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4453
+        ]
+      ],
+      "source": "v2.1/fastapi_create_user/B/sample_20"
+    },
+    {
+      "expected": null,
+      "function": "SignupRequest.name_not_blank",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5424
+        ]
+      ],
+      "source": "v3/negative/01"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.3553
+        ]
+      ],
+      "source": "v3/negative/01"
+    },
+    {
+      "expected": null,
+      "function": "get_db",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4739
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "create_reset_token",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:needs_rehash",
+          0.3814
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "send_reset_email",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          0.3461
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "request_password_reset",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4696
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "verify_reset_token",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5178
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "consume_reset_token",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4764
+        ]
+      ],
+      "source": "v3/negative/02"
+    },
+    {
+      "expected": null,
+      "function": "make_thumbnail",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          0.3693
+        ]
+      ],
+      "source": "v3/negative/03"
+    },
+    {
+      "expected": null,
+      "function": "save_thumbnail",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4906
+        ]
+      ],
+      "source": "v3/negative/03"
+    },
+    {
+      "expected": null,
+      "function": "markdown_to_html_page",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4819
+        ]
+      ],
+      "source": "v3/negative/04"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3505
+        ]
+      ],
+      "source": "v3/negative/04"
+    },
+    {
+      "expected": null,
+      "function": "delete_old_logs",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3697
+        ]
+      ],
+      "source": "v3/negative/05"
+    },
+    {
+      "expected": null,
+      "function": "seconds_until_next_run",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.377
+        ]
+      ],
+      "source": "v3/negative/05"
+    },
+    {
+      "expected": null,
+      "function": "run_daily",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4183
+        ]
+      ],
+      "source": "v3/negative/05"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3162
+        ]
+      ],
+      "source": "v3/negative/05"
+    },
+    {
+      "expected": null,
+      "function": "haversine_km",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3907
+        ]
+      ],
+      "source": "v3/negative/06"
+    },
+    {
+      "expected": null,
+      "function": "_fmt_bytes",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4696
+        ]
+      ],
+      "source": "v3/negative/07"
+    },
+    {
+      "expected": null,
+      "function": "_fmt_time",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.5337
+        ]
+      ],
+      "source": "v3/negative/07"
+    },
+    {
+      "expected": null,
+      "function": "_render_progress",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.4193
+        ]
+      ],
+      "source": "v3/negative/07"
+    },
+    {
+      "expected": null,
+      "function": "download_file",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          0.2293
+        ]
+      ],
+      "source": "v3/negative/07"
+    },
+    {
+      "expected": null,
+      "function": "convert_timezone",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4422
+        ]
+      ],
+      "source": "v3/negative/08"
+    },
+    {
+      "expected": null,
+      "function": "_sanitize_sheet_name",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.444
+        ]
+      ],
+      "source": "v3/negative/09"
+    },
+    {
+      "expected": null,
+      "function": "_format_sheet",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3333
+        ]
+      ],
+      "source": "v3/negative/09"
+    },
+    {
+      "expected": null,
+      "function": "export_report_to_xlsx",
+      "ranked": [
+        [
+          "config.env.load_settings:load_settings",
+          0.3792
+        ]
+      ],
+      "source": "v3/negative/09"
+    },
+    {
+      "expected": null,
+      "function": "get_redis_client",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4151
+        ]
+      ],
+      "source": "v3/negative/10"
+    },
+    {
+      "expected": null,
+      "function": "_make_key",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4321
+        ]
+      ],
+      "source": "v3/negative/10"
+    },
+    {
+      "expected": null,
+      "function": "redis_cache",
+      "ranked": [
+        [
+          "http.get_with_retry.requests:get_with_retry",
+          0.3845
+        ]
+      ],
+      "source": "v3/negative/10"
+    },
+    {
+      "expected": null,
+      "function": "redis_cache.<locals>.decorator",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3811
+        ]
+      ],
+      "source": "v3/negative/10"
+    },
+    {
+      "expected": null,
+      "function": "redis_cache.<locals>.decorator.<locals>.wrapper",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.4788
+        ]
+      ],
+      "source": "v3/negative/10"
+    },
+    {
+      "expected": null,
+      "function": "broadcast",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.463
+        ]
+      ],
+      "source": "v3/negative/11"
+    },
+    {
+      "expected": null,
+      "function": "handler",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4286
+        ]
+      ],
+      "source": "v3/negative/11"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "search.binary_search.recursive:binary_search",
+          0.3814
+        ]
+      ],
+      "source": "v3/negative/11"
+    },
+    {
+      "expected": null,
+      "function": "luhn_check",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.5483
+        ]
+      ],
+      "source": "v3/negative/12"
+    },
+    {
+      "expected": null,
+      "function": "detect_card_brand",
+      "ranked": [
+        [
+          "importers.users_csv.parse:import_users",
+          0.3238
+        ]
+      ],
+      "source": "v3/negative/12"
+    },
+    {
+      "expected": null,
+      "function": "generate_ticket_qr",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          0.3357
+        ]
+      ],
+      "source": "v3/negative/13"
+    },
+    {
+      "expected": null,
+      "function": "format_record",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3297
+        ]
+      ],
+      "source": "v3/negative/14"
+    },
+    {
+      "expected": null,
+      "function": "make_json_formatter",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4392
+        ]
+      ],
+      "source": "v3/negative/14"
+    },
+    {
+      "expected": null,
+      "function": "configure_logging",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4128
+        ]
+      ],
+      "source": "v3/negative/14"
+    },
+    {
+      "expected": null,
+      "function": "process_job",
+      "ranked": [
+        [
+          "search.binary_search.recursive:binary_search",
+          0.4034
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "declare_topology",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3447
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "get_retry_count",
+      "ranked": [
+        [
+          "search.binary_search.recursive:binary_search",
+          0.4935
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "handle_message",
+      "ranked": [
+        [
+          "auth.password.pbkdf2:verify_password",
+          0.3663
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "install_signal_handlers",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.441
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "install_signal_handlers.<locals>.handler",
+      "ranked": [
+        [
+          "search.binary_search.recursive:binary_search",
+          0.3889
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "run_worker",
+      "ranked": [
+        [
+          "retry.with_exponential_backoff:retry_with_exponential_backoff",
+          0.3544
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3245
+        ]
+      ],
+      "source": "v3/negative/15"
+    },
+    {
+      "expected": null,
+      "function": "signup",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.306
+        ]
+      ],
+      "source": "v3/negative/16"
+    },
+    {
+      "expected": null,
+      "function": "_connect",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4096
+        ]
+      ],
+      "source": "v3/negative/17"
+    },
+    {
+      "expected": null,
+      "function": "create_reset_token",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4388
+        ]
+      ],
+      "source": "v3/negative/17"
+    },
+    {
+      "expected": null,
+      "function": "send_reset_email",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token:create_access_token",
+          0.3484
+        ]
+      ],
+      "source": "v3/negative/17"
+    },
+    {
+      "expected": null,
+      "function": "request_password_reset",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.4952
+        ]
+      ],
+      "source": "v3/negative/17"
+    },
+    {
+      "expected": null,
+      "function": "verify_reset_token",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.5036
+        ]
+      ],
+      "source": "v3/negative/17"
+    },
+    {
+      "expected": null,
+      "function": "_prepare_for_format",
+      "ranked": [
+        [
+          "config.env.load_settings:parse_bool",
+          0.5292
+        ]
+      ],
+      "source": "v3/negative/18"
+    },
+    {
+      "expected": null,
+      "function": "make_thumbnail",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.3509
+        ]
+      ],
+      "source": "v3/negative/18"
+    },
+    {
+      "expected": null,
+      "function": "extract_title",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4535
+        ]
+      ],
+      "source": "v3/negative/19"
+    },
+    {
+      "expected": null,
+      "function": "markdown_to_html_page",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4602
+        ]
+      ],
+      "source": "v3/negative/19"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.3009
+        ]
+      ],
+      "source": "v3/negative/19"
+    },
+    {
+      "expected": null,
+      "function": "delete_old_logs",
+      "ranked": [
+        [
+          "search.binary_search.iterative:binary_search",
+          0.4621
+        ]
+      ],
+      "source": "v3/negative/20"
+    },
+    {
+      "expected": null,
+      "function": "seconds_until",
+      "ranked": [
+        [
+          "text.slugify.ascii:slugify",
+          0.4741
+        ]
+      ],
+      "source": "v3/negative/20"
+    },
+    {
+      "expected": null,
+      "function": "run_daily",
+      "ranked": [
+        [
+          "sort.merge_sort.recursive:merge_sort",
+          0.4418
+        ]
+      ],
+      "source": "v3/negative/20"
+    },
+    {
+      "expected": null,
+      "function": "main",
+      "ranked": [
+        [
+          "search.binary_search.recursive:binary_search",
+          0.4107
+        ]
+      ],
+      "source": "v3/negative/20"
+    }
+  ],
+  "summary": {
+    "derived": 200,
+    "derived_inferred_correctly": 199,
+    "derived_inferred_wrong_pattern": 0,
+    "derived_missed": 1,
+    "not_derived": 187,
+    "not_derived_correct": 186,
+    "not_derived_inferred_as_derived": 1,
+    "threshold": 0.56
+  }
+}
