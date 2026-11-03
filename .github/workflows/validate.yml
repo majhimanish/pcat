@@ -25,6 +25,11 @@ jobs:
       - name: Tool tests
         run: pytest tests/
 
+      - name: Catalog review variant tests
+        run: |
+          pip install -r docs/catalog-review/requirements.txt
+          pytest docs/catalog-review/variants
+
       - name: Validate catalog
         run: pcat validate
 

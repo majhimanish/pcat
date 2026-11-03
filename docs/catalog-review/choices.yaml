@@ -1,0 +1,45 @@
+# Owner's choices for v2.2 Part 2 (docs/specs/v2.2-app-catalog.md).
+# Change status to final when done; Part 2 then turns each choice into a catalog
+# pattern. variant: one of the labels listed for the task, or defer.
+status: draft          # owner changes to: final
+choices:
+  jwt_create:
+    # options: jwt_minimal_claims, jwt_registered_claims, defer
+    variant: jwt_registered_claims
+    pattern_id: auth.jwt.create_access_token
+    notes: ""
+  password_hash:
+    # options: password_scrypt, password_pbkdf2, defer
+    variant: password_scrypt
+    pattern_id: auth.password.scrypt
+    notes: ""
+  paginate_query:
+    # options: paginate_tuple, paginate_page_dict, paginate_legacy_query, defer
+    variant: paginate_page_dict
+    pattern_id: db.pagination.select_page
+    notes: ""
+  http_retry:
+    # options: retry_requests, retry_urllib, defer
+    variant: retry_requests
+    pattern_id: http.get_with_retry.requests
+    notes: ""
+  env_config:
+    # options: env_collect_errors, env_fail_fast, env_schema_loader, defer
+    variant: env_schema_loader
+    pattern_id: config.env.load_settings
+    notes: ""
+  token_bucket:
+    # options: bucket_bool, bucket_retry_after, defer
+    variant: bucket_retry_after
+    pattern_id: ratelimit.token_bucket.check
+    notes: ""
+  csv_import:
+    # options: csv_text_stream, csv_file_path, defer
+    variant: csv_text_stream
+    pattern_id: importers.users_csv.parse
+    notes: ""
+  fastapi_create_user:
+    # options: fastapi_body_params, defer
+    variant: defer
+    pattern_id: web.fastapi.create_user
+    notes: ""

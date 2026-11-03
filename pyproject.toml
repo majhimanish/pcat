@@ -26,6 +26,7 @@ pcat = "pcat.cli:app"
 where = ["src"]
 
 [tool.pytest.ini_options]
-# Only the tool's own tests. Catalog pattern tests all import a module named
-# `impl`, so they must run one folder at a time (`pcat validate` does that).
-testpaths = ["tests"]
+# The tool's own tests plus the v2.2 catalog-review variants (which skip when
+# their third-party libraries are missing). Catalog pattern tests all import a
+# module named `impl`, so they run one folder at a time via `pcat validate`.
+testpaths = ["tests", "docs/catalog-review/variants"]
