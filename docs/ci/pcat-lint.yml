@@ -1,0 +1,63 @@
+# Reusable workflow: run `pcat lint` on a client repository's pull requests.
+#
+# Copy this file to .github/workflows/pcat-lint.yml in the repository that holds
+# the catalog (or in each client repository), then call it from a client:
+#
+#   jobs:
+#     pcat:
+#       uses: <org>/<catalog-repo>/.github/workflows/pcat-lint.yml@main
+#       with:
+#         paths: src
+#
+# Deviations appear as annotations on the pull request diff. Only unapproved
+# deviations of code marked `# pcat: <id>@v<N>` at or above `fail-on` fail the
+# job; approve one with `# pcat-allow: PC101 -- <reason>` above the function.
+name: pcat-lint
+
+on:
+  workflow_call:
+    inputs:
+      paths:
+        description: Space-separated files or directories to lint
+        type: string
+        default: "."
+      fail-on:
+        description: high, medium, low or never
+        type: string
+        default: high
+      catalog-repository:
+        description: owner/name of the catalog repository
+        type: string
+        default: ${{ github.repository_owner }}/pcat
+      catalog-ref:
+        description: Catalog branch or tag to lint against
+        type: string
+        default: main
+      python-version:
+        type: string
+        default: "3.11"
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # --changed-since needs the base commit
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.catalog-repository }}
+          ref: ${{ inputs.catalog-ref }}
+          path: .pcat-catalog
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ inputs.python-version }}
+      - run: pip install ./.pcat-catalog
+      - name: pcat lint (changed functions only on pull requests)
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          changed=""
+          if [ -n "$BASE_REF" ]; then changed="--changed-since origin/$BASE_REF"; fi
+          pcat lint ${{ inputs.paths }} --catalog .pcat-catalog --format github \
+            --fail-on ${{ inputs.fail-on }} $changed

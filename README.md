@@ -20,7 +20,7 @@ canonicalizer, `pcat` CLI, validation, CI) and a **miner** that measures how muc
 code repeats and promotes repeated functions into patterns (see
 [Mining](#mining-finding-candidate-patterns)), and an **MCP server** that serves
 the catalog to coding agents (see [Serving the catalog](#serving-the-catalog-to-coding-agents-mcp)).
-A linter is planned next (see [Planned extensions](#planned-extensions)).
+A **deviation linter** reports how derived code differs from its pattern (see [Deviation linter](#deviation-linter-pcat-lint)).
 
 ## Quick start
 
@@ -328,19 +328,89 @@ searched in 160/160 runs, fetched the right pattern in 140/140 and produced the
 reviewed pattern exactly in 122/140 (87%; 0 of 135 without the catalog in v2.1).
 Most misses were adaptations to the request (xlsx input, pandas, narrower retries).
 
-## Planned extensions
+## Deviation linter (`pcat lint`)
+
+Code that came from a pattern carries a marker, which `get_pattern` writes above
+the entry point and every export:
+
+```python
+# pcat: http.get_with_retry.requests@v1
+def fetch_with_retry(url, ...):
+```
+
+`pcat lint` finds marked functions (and, advisory only, unmarked functions that
+look derived from a pattern) and reports **what** changed, in your names:
+
+```bash
+pcat lint src/ --catalog /path/to/pcat                 # text, includes inferred functions
+pcat lint src/ --catalog /path/to/pcat --format github --changed-since origin/main
+```
+
+```
+client.py:27: PC100 high: `get_with_retry` no longer handles `requests.ConnectionError`
+  (it catches requests.Timeout); the reviewed pattern must catch it [guard must_catch] [fails]
+```
+
+| Code | Deviation | Severity |
+|---|---|---|
+| `PC100` | a reviewed guard is violated (see below) | high |
+| `PC101` | exception type removed from or narrowed in an `except` | high |
+| `PC102` | `raise` or validation branch (`if …: raise`) removed | high |
+| `PC103` | library swapped (a required library dropped, or replaced by another) | high |
+| `PC104` | broad `except` (`Exception`, bare) added | medium |
+| `PC105` | call removed | medium |
+| `PC106` | private attribute or `_name` access added | medium |
+| `PC107` | signature changed (parameter added/removed, default changed) | medium |
+| `PC108` | call added | low |
+| `PC109` | literal value changed (not covered by a guard) | low |
+| `PC110` | other structural change | low |
+
+The exit code is 1 when an **unapproved** deviation of **marked** code is at or
+above `--fail-on` (default `high`; `never` always exits 0), or a marker names an
+unknown pattern. Inferred findings never fail. `--include-inferred` defaults to on
+for text output and off for `json`/`github`. Renaming never counts as a deviation.
+
+**Approving a deviation:** write the reason in a comment directly above the
+function's marker or `def` (one code per line, reason after `--`, at least 10
+characters). Approved deviations stay in the report, marked approved; an approval
+whose code no longer occurs is reported as stale (a warning).
+
+```python
+# pcat-allow: PC101 -- this API only treats timeouts as transient; connection errors must fail fast
+# pcat: http.get_with_retry.requests@v1
+def fetch_with_retry(url, ...):
+```
+
+**Guards** are the properties a reviewer cared about, declared per pattern in
+`pattern.yaml` (metadata only; validation check 11 requires each to hold on the
+pattern itself). Kinds: `must_catch`, `must_call`, `must_not_call`,
+`must_not_import`, `must_raise` (with `names`) and `min_value`/`max_value` (with
+`target`, a constant or parameter default, and `value`):
+
+```yaml
+guards:
+- kind: must_catch
+  names: [requests.ConnectionError, requests.Timeout]
+  reason: connection errors and timeouts are transient and must be retried
+- kind: min_value
+  target: MIN_ITERATIONS
+  value: 600000
+```
+
+**CI for client repositories:** `docs/ci/pcat-lint.yml` is a reusable GitHub
+Actions workflow that installs pcat from the catalog repository and runs
+`pcat lint --format github --changed-since origin/<base>` on pull requests, so
+deviations appear as annotations on the diff.
+
+## Tools outside this package
 
 Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
 "patterns": [...]}`, where each entry has `id, version, title, category,
 variant_of, behavior, status, fingerprint, path, summary, entry_point, requires,
 exports, keywords, use_when, usage` (sorted by id and version; `use_when` and
-`usage` may be null). The MCP server (`pcat serve`) searches this index. A
-tool that fingerprints code must use the same rules version. The catalog's
-internals can change without breaking these tools.
-
-- **Linter** (`v4-linter.md`, planned): in application CI, fingerprint new
-  functions (`pcat find` is the seed of this), flag reimplementations of
-  catalog patterns, uses of deprecated versions, and near-misses.
+`usage` may be null). A tool that fingerprints code must use the same rules
+version. The catalog's internals can change without breaking these tools.
+In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern folders.
 
 ## Further reading
 

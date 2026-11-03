@@ -473,6 +473,55 @@ def serve(
     mcp_server.serve(root, log)
 
 
+def _catalog_root(catalog: Optional[Path]) -> Path:
+    if catalog is None:
+        return _root()
+    catalog = catalog.resolve()
+    root = catalog.parent if catalog.name == cat.CATALOG_DIR and catalog.is_dir() else catalog
+    if not (root / cat.CATALOG_DIR).is_dir():
+        raise PcatError(f"no {cat.CATALOG_DIR}/ under {root}")
+    return root
+
+
+@app.command()
+@_guard
+def lint(
+    paths: List[Path] = typer.Argument(..., help="Python files or directories to check."),
+    changed_since: Optional[str] = typer.Option(
+        None, "--changed-since", help="Only functions whose lines changed relative to this git ref."
+    ),
+    output_format: str = typer.Option("text", "--format", help="text, json or github (annotations)."),
+    fail_on: str = typer.Option(
+        "high", "--fail-on", help="Exit 1 on unapproved deviations of marked code at or above this: "
+        "high, medium, low or never."
+    ),
+    include_inferred: Optional[bool] = typer.Option(
+        None, "--include-inferred/--no-include-inferred",
+        help="Also check unmarked functions that look derived (advisory). Default: on for text, off otherwise.",
+    ),
+    catalog: Optional[Path] = typer.Option(
+        None, "--catalog", help="Repository root containing catalog/ (default: --root or nearest parent)."
+    ),
+    diff: bool = typer.Option(True, "--diff/--no-diff", help="Show diffs in text output."),
+) -> None:
+    """Report how code derived from catalog patterns deviates from them (PC100-PC110)."""
+    from pcat import lint as lint_mod
+
+    if output_format not in lint_mod.FORMATS:
+        raise PcatError(f"--format must be one of {', '.join(lint_mod.FORMATS)}")
+    inferred = (output_format == "text") if include_inferred is None else include_inferred
+    report = lint_mod.lint_paths([str(p) for p in paths], _catalog_root(catalog),
+                                 include_inferred=inferred, fail_on=fail_on, changed_since=changed_since)
+    if output_format == "json":
+        typer.echo(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    elif output_format == "github":
+        typer.echo(lint_mod.format_github(report), nl=False)
+    else:
+        typer.echo(lint_mod.format_text(report, show_diff=diff), nl=False)
+    if report.failed:
+        raise typer.Exit(1)
+
+
 def _catalog_root_or_none() -> Optional[Path]:
     try:
         return _root()

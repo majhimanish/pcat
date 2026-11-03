@@ -702,3 +702,32 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      reviewer's spelling of library names. Output is sorted by severity, code,
      line, message. The diff (pattern in the user's names vs the user's code,
      comments and docstrings removed) is capped at 80 lines.
+156. **`pcat lint` scope.** Files come from the miner's discovery with default
+     filters (tests, generated files and skip-dirs excluded). Every function
+     (top-level, methods, nested) is considered. A marked function is compared
+     with the pattern function of the same name, else the most similar public
+     function of that pattern. Inferred functions are compared with the
+     function inference picked. `--catalog` (repo root or its `catalog/`)
+     defaults to `--root`/the nearest catalog, like `serve`.
+157. **Failing.** Exit 1 iff (a) a marked function has an unapproved deviation
+     at or above `--fail-on`, or (b) a marker names an unknown pattern (marked
+     code that cannot be checked must not pass silently); `--fail-on never`
+     always exits 0. Malformed markers, invalid or stale approvals, unparsable
+     files and markers of deprecated patterns are warnings.
+158. **Approvals** apply per code to the function whose comment block holds
+     them and approve every deviation with that code there. Invalid approvals
+     (no reason, reason < 10 characters, several codes, unknown code) approve
+     nothing. Stale = a valid approval whose code has no deviation.
+159. **`--changed-since REF`:** lines from `git diff --unified=0 REF -- file`
+     (new side; a pure deletion touches the line after it); untracked files
+     count as fully changed. A function is selected when its span, including
+     its marker/approval comment block, touches a changed line.
+160. **Formats.** `text` (default) shows deviations and, when an unapproved
+     medium/high deviation exists, the diff (`--no-diff` hides it). `json` is the
+     full deterministic report. `github` prints workflow commands: `error` for
+     failing deviations, `warning` for others and inferred ones, `notice` for
+     approved ones. `--include-inferred` defaults to on for text, off otherwise.
+161. **PC110 explanation.** A changed region is not reported as PC110 when every
+     new statement in it is already explained by a specific deviation (narrowed
+     handler, added broad except, private access, added call) and it replaces at
+     most as many pattern statements, or all removed statements are explained.

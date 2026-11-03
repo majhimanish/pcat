@@ -537,6 +537,7 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     u_broad = [(h, f) for h, t, f in u_handlers if codeunit.is_broad(h, t)]
     for h, f in u_broad[p_broad:]:
         attributed_u.add(id(h))
+        attributed_lines.add(h.lineno)
         what = "a bare `except:`" if h.type is None else f"`except {ast.unparse(h.type)}`"
         emit("PC104", f"`{f.name}` adds {what}, which also hides unexpected errors", h.lineno, f.name)
 
@@ -582,12 +583,14 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
         if key in suppressed["nocall"] or key in helper_names:
             continue
         c = u_keys[key]
+        attributed_lines.add(c.line)
         emit("PC108", f"`{c.func}` adds a call to `{c.display}`", c.line, c.func)
 
     # PC106: private access ------------------------------------------------
     p_priv = _private_names(pu)
     for shown, (line, fname) in sorted(_private_names(uu).items(), key=lambda x: (x[1][0], x[0])):
         if shown not in p_priv:
+            attributed_lines.add(line)
             emit("PC106", f"`{fname}` uses private `{shown.lstrip('.')}`"
                  + (" (an attribute)" if shown.startswith(".") else ""), line, fname)
 
@@ -657,9 +660,10 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
                 continue
             shape_match = False
             removed, added = pe[i1:i2], ue[j1:j2]
-            if (all(id(e.node) in attributed_p for e in removed)
-                    and all(id(e.node) in attributed_u or getattr(e.node, "lineno", None) in attributed_lines
-                            for e in added)):
+            added_explained = all(id(e.node) in attributed_u or getattr(e.node, "lineno", None)
+                                  in attributed_lines for e in added)
+            if added_explained and (all(id(e.node) in attributed_p for e in removed)
+                                    or (added and len(removed) <= len(added))):
                 continue
             line = (getattr(added[0].node, "lineno", None) if added else None) or (
                 getattr(ue[j1 - 1].node, "end_lineno", None) if j1 > 0 else None) or uf.lineno
