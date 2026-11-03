@@ -198,6 +198,8 @@ def index_entries(patterns: list[Pattern]) -> list[dict]:
         meta = p.meta.model_dump()
         entry = {k: meta[k] for k in INDEX_FIELDS if k != "path"}
         entry["path"] = p.rel
+        if meta["requires"]:  # only present when a pattern needs third-party packages
+            entry["requires"] = sorted(meta["requires"], key=str.lower)
         entries.append(entry)
     return sorted(entries, key=lambda e: (e["id"], e["version"]))
 

@@ -18,6 +18,13 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=7.4"]
+# Everything the catalog's patterns import (union of every pattern.yaml `requires`;
+# tests/test_catalog_requires.py keeps them in sync). CI installs it.
+catalog = [
+    "pyjwt>=2.8,<3",
+    "requests>=2.31,<3",
+    "sqlalchemy>=2.0,<3",
+]
 
 [project.scripts]
 pcat = "pcat.cli:app"

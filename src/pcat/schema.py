@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import keyword
+import re
 from typing import Literal, Optional, Union
 
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, field_validator, model_validator
@@ -11,6 +12,11 @@ ID_PATTERN = r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$"
 # A reference is an id, optionally pinned to a version: "search.foo" or "search.foo@v2".
 REF_PATTERN = r"^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+(@v[1-9][0-9]*)?$"
 FINGERPRINT_PATTERN = r"^[0-9a-f]{64}$"
+# A pip requirement without markers or URLs: name, optional extras, version specifiers.
+REQUIREMENT_PATTERN = (
+    r"[A-Za-z0-9][A-Za-z0-9._-]*(\[[A-Za-z0-9._,-]+\])?"
+    r"(\s*(==|!=|>=|<=|~=|>|<)\s*[0-9A-Za-z.*+!_-]+(\s*,\s*(==|!=|>=|<=|~=|>|<)\s*[0-9A-Za-z.*+!_-]+)*)?"
+)
 
 BehaviorValue = Union[StrictBool, StrictInt, float, str, None]
 
@@ -33,12 +39,26 @@ class PatternMeta(BaseModel):
     replaced_by: Optional[str] = Field(default=None, pattern=REF_PATTERN)
     keep_annotations: StrictBool = True
     fingerprint: Optional[str] = Field(default=None, pattern=FINGERPRINT_PATTERN)
+    # Third-party distributions the pattern imports, as pip requirement strings
+    # (e.g. "pyjwt>=2.8,<3"). Metadata only: never part of the fingerprint.
+    requires: list[str] = Field(default_factory=list)
 
     @field_validator("entry_point")
     @classmethod
     def _entry_point_is_identifier(cls, value: str) -> str:
         if not value.isidentifier() or keyword.iskeyword(value):
             raise ValueError(f"{value!r} is not a valid Python function name")
+        return value
+
+    @field_validator("requires")
+    @classmethod
+    def _requires_are_requirements(cls, value: list[str]) -> list[str]:
+        for item in value:
+            if not re.fullmatch(REQUIREMENT_PATTERN, item):
+                raise ValueError(f"{item!r} is not a requirement like 'name>=1.0,<2'")
+        names = [re.match(r"[A-Za-z0-9._-]+", item).group(0).lower() for item in value]
+        if len(names) != len(set(names)):
+            raise ValueError("requires lists a distribution more than once")
         return value
 
     @model_validator(mode="after")
