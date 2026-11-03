@@ -1,0 +1,21 @@
+id: auth.password.pbkdf2
+version: 1
+title: Hash and verify passwords (PBKDF2-HMAC-SHA256)
+summary: hash_password stores a salted PBKDF2-HMAC-SHA256 hash with its iteration count (at least 600,000); verify_password checks it in constant time; needs_rehash says when to upgrade an old hash.
+category: auth
+variant_of: auth.password
+behavior:
+  algorithm: pbkdf2_hmac_sha256
+  min_iterations: 600000
+  iterations_stored_in_hash: true
+  format: pbkdf2_sha256$iterations$salt_b64$key_b64
+  salt_bytes: 16
+  compare: constant_time
+  malformed_hash: returns_false
+  exports: hash_password+verify_password+needs_rehash
+entry_point: hash_password
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 6aa1d0682d282360563b4669d7adec56e4f1f916617d70096a3b8c76ee9686d7

@@ -24,6 +24,26 @@
     },
     {
       "behavior": {
+        "algorithm": "pbkdf2_hmac_sha256",
+        "compare": "constant_time",
+        "exports": "hash_password+verify_password+needs_rehash",
+        "format": "pbkdf2_sha256$iterations$salt_b64$key_b64",
+        "iterations_stored_in_hash": true,
+        "malformed_hash": "returns_false",
+        "min_iterations": 600000,
+        "salt_bytes": 16
+      },
+      "category": "auth",
+      "fingerprint": "6aa1d0682d282360563b4669d7adec56e4f1f916617d70096a3b8c76ee9686d7",
+      "id": "auth.password.pbkdf2",
+      "path": "catalog/auth/password.pbkdf2",
+      "status": "active",
+      "title": "Hash and verify passwords (PBKDF2-HMAC-SHA256)",
+      "variant_of": "auth.password",
+      "version": 1
+    },
+    {
+      "behavior": {
         "input": "any_iterable",
         "item_order": "preserved",
         "key_order": "first_seen",
