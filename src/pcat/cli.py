@@ -189,19 +189,29 @@ def new(pattern_id: str = typer.Argument(..., metavar="ID")) -> None:
 @_guard
 def add(
     file: Path = typer.Argument(..., exists=True, dir_okay=False, help="Python file to import from."),
-    function: str = typer.Option(..., "--function", help="Name of the top-level function."),
+    function: List[str] = typer.Option(
+        ...,
+        "--function",
+        help="Top-level function to import; repeat to export several (the first is the entry point).",
+    ),
     pattern_id: str = typer.Option(..., "--id", help="New pattern id."),
 ) -> None:
-    """Import a function (and the helpers it calls) from existing code into a new pattern."""
+    """Import functions (and the helpers they call) from existing code into a new pattern."""
     _add_pattern(file, function, pattern_id)
 
 
-def _add_pattern(file: Path, function: str, pattern_id: str) -> None:
-    """Shared by `add` and `promote`: create a pattern folder from a source function."""
+def _add_pattern(file: Path, functions: str | List[str], pattern_id: str) -> None:
+    """Shared by `add` and `promote`: create a pattern folder from source functions.
+
+    The first function is the pattern's entry point; any others are exported
+    alongside it (e.g. hash_password and verify_password).
+    """
+    names = [functions] if isinstance(functions, str) else list(dict.fromkeys(functions))
+    function = names[0]
     root = _root()
     folder = _check_new_id(root, pattern_id)
     source = file.read_text(encoding="utf-8")
-    impl = canonical.extract_function(source, function)
+    impl = canonical.extract_function(source, names)
     result = canonical.analyze(impl, function)
 
     summary = "TODO: one sentence describing what this pattern does."
@@ -228,7 +238,10 @@ def _add_pattern(file: Path, function: str, pattern_id: str) -> None:
         cat.TEST_FILE: TEST_TEMPLATE.format(entry_point=function),
     }
     _write_pattern(folder, files)
-    helpers = [f for f in canonical.list_functions(impl) if f != function]
+    exported = names[1:]
+    helpers = [f for f in canonical.list_functions(impl) if f not in names]
+    if exported:
+        typer.echo(f"imported {function} (entry point) and {', '.join(exported)}")
     if helpers:
         typer.echo(f"imported {function} with helpers: {', '.join(helpers)}")
     _next_steps(root, folder, pattern_id)

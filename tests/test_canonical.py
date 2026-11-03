@@ -646,3 +646,63 @@ def test_extract_ignores_locals_that_shadow_module_names():
         """
     )
     assert list_functions(extract_function(code, "f")) == ["f"]
+
+
+# --------------------------------------------------------------------------- #
+# v2.2: extracting several functions for one pattern
+# --------------------------------------------------------------------------- #
+
+PAIR = src(
+    '''
+    import hashlib
+    import hmac
+    import os
+
+    ROUNDS = 1000
+    UNUSED = 5
+
+
+    def _digest(password, salt, rounds):
+        return hashlib.pbkdf2_hmac("sha256", password.encode(), salt, rounds)
+
+
+    def hash_password(password):
+        salt = os.urandom(16)
+        return salt + _digest(password, salt, ROUNDS)
+
+
+    def verify_password(password, stored):
+        # constant-time comparison
+        return hmac.compare_digest(_digest(password, stored[:16], ROUNDS), stored[16:])
+
+
+    def unrelated():
+        return UNUSED
+    '''
+)
+
+
+def test_extract_several_functions_merges_their_dependencies():
+    out = extract_function(PAIR, ["hash_password", "verify_password"])
+    assert list_functions(out) == ["_digest", "hash_password", "verify_password"]
+    assert "import hmac" in out and "import os" in out and "ROUNDS = 1000" in out
+    assert "UNUSED" not in out and "unrelated" not in out
+    assert "# constant-time comparison" in out
+    # Canonical form: entry point f0, the other exported function is a helper.
+    text = canonicalize(out, "hash_password")
+    assert text.index("def f0(") < text.index("def f1(") < text.index("def f2(")
+
+
+def test_extract_single_name_unchanged_by_list_form():
+    assert extract_function(PAIR, "hash_password") == extract_function(PAIR, ["hash_password"])
+    assert "verify_password" not in extract_function(PAIR, "hash_password")
+    assert extract_function(PAIR, ["verify_password", "verify_password"]) == extract_function(
+        PAIR, "verify_password"
+    )
+
+
+def test_extract_several_rejects_unknown_or_empty():
+    with pytest.raises(CanonicalizationError, match="no top-level function named 'nope'"):
+        extract_function(PAIR, ["hash_password", "nope"])
+    with pytest.raises(CanonicalizationError, match="no function names"):
+        extract_function(PAIR, [])

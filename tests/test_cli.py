@@ -372,3 +372,29 @@ def test_migrate_fingerprints_command_reports_each_error(root):
     assert result.exit_code == 1
     errors = [line for line in result.output.splitlines() if line.startswith("error: ")]
     assert len(errors) == 3  # header + one line per broken pattern
+
+
+# v2.2 ----------------------------------------------------------------------- #
+
+def test_add_several_functions_exports_all(root, tmp_path):
+    from test_canonical import PAIR
+
+    source = tmp_path / "pw.py"
+    source.write_text(PAIR)
+    result = pcat(root, "add", source, "--function", "hash_password",
+                  "--function", "verify_password", "--id", "auth.password.demo")
+    assert result.exit_code == 0, result.output
+    assert "hash_password (entry point) and verify_password" in result.output
+    folder = pattern_dir(root, "auth.password.demo")
+    impl = (folder / "impl.py").read_text()
+    assert canonical.list_functions(impl) == ["_digest", "hash_password", "verify_password"]
+    meta = yaml.safe_load((folder / "pattern.yaml").read_text())
+    assert meta["entry_point"] == "hash_password"
+    assert meta["fingerprint"] == canonical.analyze(impl, "hash_password").fingerprint
+    (folder / "test_impl.py").write_text(
+        "from impl import hash_password, verify_password\n\n\n"
+        "def test_round_trip():\n    s = hash_password('pw')\n"
+        "    assert verify_password('pw', s) and not verify_password('px', s)\n"
+    )
+    assert pcat(root, "index").exit_code == 0
+    assert pcat(root, "validate", "auth.password.demo").exit_code == 0

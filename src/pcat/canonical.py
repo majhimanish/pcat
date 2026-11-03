@@ -33,7 +33,7 @@ import ast
 import hashlib
 import keyword
 import re
-from collections.abc import Iterator
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 
 from pcat.errors import CanonicalizationError, RenderError
@@ -228,8 +228,12 @@ def render(canonical_text: str, name_map: dict[str, str]) -> str:
     return _unparse(mod.imports, mod.body)
 
 
-def extract_function(source: str, name: str) -> str:
-    """Return source for top-level function `name` and everything it needs.
+def extract_function(source: str, name: str | Sequence[str]) -> str:
+    """Return source for top-level function `name` (or several) and everything it needs.
+
+    `name` may be a list of function names; each is extracted as if on its own
+    and the results are merged (a pattern can export e.g. hash and verify). For
+    a single name the output is unchanged.
 
     That is: other top-level functions it references (transitively), the
     literal constants those functions use, and the imports whose bound names
@@ -252,12 +256,16 @@ def extract_function(source: str, name: str) -> str:
             funcs[stmt.name] = stmt
         elif _is_literal_constant(stmt):
             consts[_const_name(stmt)] = stmt
-    if name not in funcs:
-        raise CanonicalizationError(f"no top-level function named {name!r}")
+    names = [name] if isinstance(name, str) else list(dict.fromkeys(name))
+    if not names:
+        raise CanonicalizationError("no function names given")
+    for wanted in names:
+        if wanted not in funcs:
+            raise CanonicalizationError(f"no top-level function named {wanted!r}")
 
     selected: set[str] = set()
     used: set[str] = set()
-    todo = [name]
+    todo = list(reversed(names))
     while todo:
         current = todo.pop()
         if current in selected:
