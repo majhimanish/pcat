@@ -353,8 +353,8 @@ def main() -> int:
     e.add_argument("--groups", default="", help="comma-separated tasks and/or 'negative'")
     e.add_argument("--model", default=variance.DEFAULT_MODEL)
     e.add_argument("--jobs", type=int, default=6)
-    args = parser.parse_args()
     sub.add_parser("e2e-analyze")
+    args = parser.parse_args()
     return {"heldout": cmd_heldout, "retrieval": cmd_retrieval, "e2e": cmd_e2e,
             "e2e-analyze": cmd_e2e_analyze}[args.command](args)
 

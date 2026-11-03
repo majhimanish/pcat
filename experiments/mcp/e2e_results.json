@@ -1,0 +1,4873 @@
+{
+  "negative": {
+    "samples": [
+      {
+        "checked": false,
+        "code_patterns": [
+          "auth.password.pbkdf2"
+        ],
+        "cost_usd": 0.1748312,
+        "got": [
+          "auth.password.pbkdf2"
+        ],
+        "queries": [
+          "hash password for user signup",
+          "FastAPI signup endpoint with validation"
+        ],
+        "request": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.",
+        "sample": 1,
+        "search_results": [
+          [
+            "auth.password.pbkdf2"
+          ],
+          []
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": true
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.06447510000000001,
+        "got": [],
+        "queries": [
+          "password reset token generate store expiring, send email SMTP, verify token",
+          "hash and verify passwords"
+        ],
+        "request": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.",
+        "sample": 2,
+        "search_results": [
+          [
+            "auth.password.pbkdf2"
+          ],
+          [
+            "auth.password.pbkdf2"
+          ]
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0400347,
+        "got": [],
+        "queries": [
+          "generate image thumbnail with Pillow keeping aspect ratio and EXIF rotation"
+        ],
+        "request": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?",
+        "sample": 3,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.052161400000000004,
+        "got": [],
+        "queries": [
+          "convert Markdown string to a complete HTML page with title and styling, CLI wrapper",
+          "slugify text"
+        ],
+        "request": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.",
+        "sample": 4,
+        "search_results": [
+          [],
+          []
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0452444,
+        "got": [],
+        "queries": [
+          "delete log files older than 30 days from a folder, scheduled daily at 2 AM"
+        ],
+        "request": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?",
+        "sample": 5,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.04116450000000001,
+        "got": [],
+        "queries": [
+          "haversine distance between two latitude/longitude points in kilometres"
+        ],
+        "request": "Write a Python function that takes two (latitude, longitude) pairs in decimal degrees and returns the distance between them in kilometres using the haversine formula. Please include a docstring and a quick example showing it works.",
+        "sample": 6,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0689051,
+        "got": [],
+        "queries": [
+          "download large file from URL in chunks to disk with progress bar and resume",
+          "GET a URL with retries and exponential backoff"
+        ],
+        "request": "Write a Python function that downloads a very large file from a URL straight to disk in chunks, so it never loads the whole thing into memory, and shows a live progress bar with percent complete, speed, and ETA. It should also handle a missing Content-Length header and ideally resume interrupted downloads.",
+        "sample": 7,
+        "search_results": [
+          [],
+          [
+            "http.get_with_retry.requests"
+          ]
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0384443,
+        "got": [],
+        "queries": [
+          "convert a timestamp between IANA time zones using zoneinfo"
+        ],
+        "request": "Can you write me a Python function that takes a timestamp and a user's IANA time zone name (like \"America/New_York\") and converts it to another user's time zone? I'd like it to use the standard library's zoneinfo, handle daylight saving time correctly, and work with both naive UTC and timezone-aware datetimes.",
+        "sample": 8,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.05067450000000001,
+        "got": [],
+        "queries": [
+          "export report data to xlsx workbook with one sheet per section, header formatting, auto-sized columns"
+        ],
+        "request": "Add a function to my Python project that exports the report data to a single .xlsx workbook with one sheet per section (e.g. summary, details, errors), using pandas/openpyxl. Include header formatting and auto-sized columns, and take the output path as a parameter.",
+        "sample": 9,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0423656,
+        "got": [],
+        "queries": [
+          "Redis cache decorator with TTL for database lookup functions"
+        ],
+        "request": "Can you add Redis caching to my slow database lookup functions in Python? I want results cached for about 5 minutes, ideally with a decorator so I can just slap it on the functions I want cached.",
+        "sample": 10,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0352914,
+        "got": [],
+        "queries": [
+          "WebSocket live chat server broadcasting messages to all connected clients"
+        ],
+        "request": "I'm building a live chat in Python where messages need to get pushed out to every connected browser as soon as someone sends one. Can you write the server code for that, using WebSockets, so all connected clients get each new message in real time?",
+        "sample": 11,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0419459,
+        "got": [],
+        "queries": [
+          "validate credit card number with Luhn check and detect card brand by prefix and length"
+        ],
+        "request": "Write a Python function that checks whether a credit card number is plausibly valid before I charge it. It should strip spaces and dashes, run the Luhn check, and verify the length and prefix for the major card types (Visa, Mastercard, Amex, Discover), returning the detected card brand or None if it's invalid.",
+        "sample": 12,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0393147,
+        "got": [],
+        "queries": [
+          "generate a QR code PNG image from a ticket ID string with error handling"
+        ],
+        "request": "Write a Python function that takes a ticket ID string and generates a QR code image encoding it, saving it as a PNG file. Please use the `qrcode` library and make sure it handles errors gracefully if the ID is empty or the save path isn't writable.",
+        "sample": 13,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.040389800000000003,
+        "got": [],
+        "queries": [
+          "structured JSON lines logging with custom formatter using standard logging module"
+        ],
+        "request": "Can you switch my app's logging over to structured JSON lines, one JSON object per line with fields like timestamp, level, logger name, and message? I'd like it to use the standard `logging` module with a custom formatter and be configured in one place so everything else in the project just picks it up.",
+        "sample": 14,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0640574,
+        "got": [],
+        "queries": [
+          "RabbitMQ pika worker consuming jobs with ack, retry, dead-letter, graceful SIGTERM shutdown",
+          "retry with exponential backoff"
+        ],
+        "request": "Write a Python worker that consumes jobs from a RabbitMQ queue using pika. It should ack messages after successful processing, retry or dead-letter failures, and shut down cleanly on SIGTERM.",
+        "sample": 15,
+        "search_results": [
+          [],
+          []
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [
+          "auth.password.pbkdf2"
+        ],
+        "cost_usd": 0.075879,
+        "got": [
+          "auth.password.pbkdf2"
+        ],
+        "queries": [
+          "hash password for user signup",
+          "FastAPI signup endpoint with pydantic validation"
+        ],
+        "request": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.",
+        "sample": 16,
+        "search_results": [
+          [
+            "auth.password.pbkdf2"
+          ],
+          []
+        ],
+        "searched": true,
+        "turns": 8,
+        "used_pattern": true
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.058851200000000006,
+        "got": [],
+        "queries": [
+          "password reset token generation, expiring token, send email over SMTP",
+          "hash and verify passwords"
+        ],
+        "request": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.",
+        "sample": 17,
+        "search_results": [
+          [],
+          [
+            "auth.password.pbkdf2"
+          ]
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0348324,
+        "got": [],
+        "queries": [
+          "generate image thumbnail with Pillow keeping aspect ratio and EXIF rotation"
+        ],
+        "request": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?",
+        "sample": 18,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.05221769999999999,
+        "got": [],
+        "queries": [
+          "convert Markdown to HTML page with template and CLI",
+          "slugify text for title"
+        ],
+        "request": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.",
+        "sample": 19,
+        "search_results": [
+          [],
+          [
+            "text.slugify.ascii"
+          ]
+        ],
+        "searched": true,
+        "turns": 5,
+        "used_pattern": false
+      },
+      {
+        "checked": true,
+        "code_patterns": [],
+        "cost_usd": 0.0363541,
+        "got": [],
+        "queries": [
+          "delete log files older than 30 days on a daily 2 AM schedule"
+        ],
+        "request": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?",
+        "sample": 20,
+        "search_results": [
+          []
+        ],
+        "searched": true,
+        "turns": 4,
+        "used_pattern": false
+      }
+    ],
+    "summary": {
+      "check_rate": 0.95,
+      "code_uses_pattern": 0.1,
+      "fetched_pattern": 0.1,
+      "ok": 20,
+      "samples": 20,
+      "search_rate": 1.0
+    }
+  },
+  "note": "v3 end-to-end; prompts differ from v2.1, so baselines are indicative",
+  "tasks": {
+    "csv_import": {
+      "pattern": "importers.users_csv.parse",
+      "samples": [
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0763456,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate an uploaded users CSV/xlsx spreadsheet with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.523,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.080096,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users CSV/XLSX upload with per-row errors"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.43,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0771046,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors"
+          ],
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.765,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.08043020000000001,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors, required fields, email format, duplicates"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.74,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.077705,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users spreadsheet upload (csv/xlsx) with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.263,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.093569,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate an uploaded users CSV/xlsx with per-row errors (required fields, email format, duplicates, role)"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.474,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0750001,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users CSV/XLSX upload with per-row errors"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.517,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0737057,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors"
+          ],
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.769,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.07285340000000001,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.755,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0787699,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users spreadsheet upload (xlsx or csv) with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.731,
+          "turns": 6
+        },
+        {
+          "checked": false,
+          "code_patterns": [],
+          "cost_usd": 0.0686903,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users CSV/xlsx upload with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.406,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0751593,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate an uploaded users CSV/XLSX with per-row errors"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.346,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.06910050000000001,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors"
+          ],
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.807,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.07495940000000001,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate uploaded users spreadsheet (CSV or Excel) with per-row errors report"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.751,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0690939,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate uploaded users spreadsheet (xlsx or csv) with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.758,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.08656240000000001,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate uploaded users CSV/xlsx spreadsheet with per-row errors, duplicate emails, valid role"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.419,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0681477,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users CSV/XLSX upload with per-row errors (required fields, email format, duplicates, valid roles)"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.517,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0727793,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate an uploaded users spreadsheet (CSV or Excel) with per-row errors"
+          ],
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.733,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.08124619999999999,
+          "found": {},
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Parse and validate a users CSV/Excel upload with per-row errors"
+          ],
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.513,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "importers.users_csv.parse"
+          ],
+          "cost_usd": 0.0713377,
+          "found": {
+            "import_users": "covered"
+          },
+          "got": [
+            "importers.users_csv.parse"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Parse and validate an uploaded users spreadsheet (csv or xlsx) with per-row errors"
+          ],
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "importers.users_csv.parse"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.745,
+          "turns": 5
+        }
+      ],
+      "summary": {
+        "check_rate": 0.95,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 0.731,
+        "ok": 20,
+        "outcomes": {
+          "fetched_but_changed": 10,
+          "matched": 10
+        },
+        "pattern_match_exact": 0.5,
+        "pattern_match_shape": 0.5,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "env_config": {
+      "pattern": "config.env.load_settings",
+      "samples": [
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.057076699999999994,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with defaults and validation (database URL, port, debug flag)"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric port or an out-of-range one)?",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.683,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.056489300000000006,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults, validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric or out-of-range port)?",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.683,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0584481,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults and validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if any value is invalid (like a non-numeric or out-of-range port or a debug value that isn't a proper boolean)?",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.058959700000000004,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults and validation"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.653,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0418379,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema, validate port and debug flag"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should validate the values, for example making sure the port is an integer in the valid range and the debug flag is a real boolean, and raise a clear error if anything is invalid.",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.649,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0562859,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with defaults and validation (database URL, port, debug flag)"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric port or an out-of-range one)?",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0557341,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag) with validation"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric or out-of-range port)?",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.055823399999999995,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag)"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if any value is invalid (like a non-numeric or out-of-range port or a debug value that isn't a proper boolean)?",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.642,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.054089,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag) with validation"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.683,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0563601,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema, validate port and debug flag"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should validate the values, for example making sure the port is an integer in the valid range and the debug flag is a real boolean, and raise a clear error if anything is invalid.",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0560389,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults, validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric port or an out-of-range one)?",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.056032700000000005,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults, validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric or out-of-range port)?",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.05531480000000001,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, with defaults and validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if any value is invalid (like a non-numeric or out-of-range port or a debug value that isn't a proper boolean)?",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.654,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0558998,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag) with defaults and validation"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.649,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0555721,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, with defaults and validation"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should validate the values, for example making sure the port is an integer in the valid range and the debug flag is a real boolean, and raise a clear error if anything is invalid.",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.645,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0537793,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults, validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric port or an out-of-range one)?",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.683,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0556369,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag) with validation"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric or out-of-range port)?",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.055286199999999994,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, defaults, validation errors"
+          ],
+          "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if any value is invalid (like a non-numeric or out-of-range port or a debug value that isn't a proper boolean)?",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.654,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.056633199999999995,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema (database URL, port, debug flag)"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.652,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "config.env.load_settings"
+          ],
+          "cost_usd": 0.0393579,
+          "found": {
+            "load_settings": "covered",
+            "parse_bool": "covered"
+          },
+          "got": [
+            "config.env.load_settings"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Load settings from environment variables with a schema: database URL, port, debug flag, with defaults and validation"
+          ],
+          "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should validate the values, for example making sure the port is an integer in the valid range and the debug flag is a real boolean, and raise a clear error if anything is invalid.",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "config.env.load_settings"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.64,
+          "turns": 4
+        }
+      ],
+      "summary": {
+        "check_rate": 0.9,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 0.652,
+        "ok": 20,
+        "outcomes": {
+          "matched": 20
+        },
+        "pattern_match_exact": 1.0,
+        "pattern_match_shape": 1.0,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "http_retry": {
+      "pattern": "http.get_with_retry.requests",
+      "samples": [
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0518672,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP GET with retries and exponential backoff with jitter, retry on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0522194,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "retry HTTP request with exponential backoff and jitter, only on timeouts and 5xx"
+          ],
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [],
+          "cost_usd": 0.0418089,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "retry HTTP API call with exponential backoff and jitter, retry on timeouts and 5xx, not on 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.052415199999999995,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP GET with retries and exponential backoff with jitter, retry on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.053488999999999995,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "retry HTTP API call on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx"
+          ],
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0488156,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "GET a URL with retries and exponential backoff, retry on timeouts and 5xx, not 4xx, with jitter"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0493029,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "retry HTTP request with exponential backoff and jitter, only on timeouts and 5xx"
+          ],
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.051011,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "retry HTTP API call with exponential backoff and jitter, retry on timeouts and 5xx but not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.049714499999999995,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP call with retry and exponential backoff with jitter, retry on timeouts and 5xx, not on 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0517296,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "retry HTTP API call on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx, configurable attempts and base delay"
+          ],
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0494608,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP API call with retry and exponential backoff with jitter, retry on timeouts and 5xx but not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.0484897,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "retry HTTP request with exponential backoff and jitter, only on timeouts and 5xx"
+          ],
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0509086,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP call with retry and exponential backoff with jitter, retry on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0490843,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP GET with retries and exponential backoff with jitter, retry on timeouts and 5xx, not on 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0384531,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "retry HTTP API call on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx, configurable max attempts and base delay"
+          ],
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0485594,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP call with retries and exponential backoff with jitter, retry on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.04971779999999999,
+          "found": {},
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "HTTP request retry with exponential backoff and jitter, retry only on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "http.get_with_retry.requests"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.869,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.0522364,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "retry HTTP API call with exponential backoff and jitter on timeouts and 5xx, not 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.048977900000000005,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "HTTP call with retries and exponential backoff with jitter on timeouts and 5xx, not on 4xx"
+          ],
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "http.get_with_retry.requests"
+          ],
+          "cost_usd": 0.038666599999999995,
+          "found": {
+            "get_with_retry": "covered"
+          },
+          "got": [
+            "http.get_with_retry.requests"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "retry HTTP API call on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx, configurable attempts and base delay"
+          ],
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "http.get_with_retry.requests",
+              "retry.with_exponential_backoff"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.886,
+          "turns": 4
+        }
+      ],
+      "summary": {
+        "check_rate": 0.85,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 0.886,
+        "ok": 20,
+        "outcomes": {
+          "fetched_but_changed": 6,
+          "matched": 14
+        },
+        "pattern_match_exact": 0.7,
+        "pattern_match_shape": 0.7,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "jwt_create": {
+      "pattern": "auth.jwt.create_access_token",
+      "samples": [
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0550603,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token for a user ID with expiry, and verify it"
+          ],
+          "request": "Write a function in my Python project that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.848,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.056132,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "create and verify a signed JWT access token with expiry"
+          ],
+          "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0377892,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "issue a signed JWT access token for a user ID with expiry"
+          ],
+          "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0563183,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry claim and verify it"
+          ],
+          "request": "After a user logs in, I need to issue them a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code for that (a JWT with an expiry claim would be fine), including a function to verify it?",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0566087,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry for a user ID, and verify it"
+          ],
+          "request": "Write a Python function that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0568989,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry for a user ID after login"
+          ],
+          "request": "Write a function in my Python project that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.813,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0545849,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create and verify a signed expiring token (JWT) after user login"
+          ],
+          "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token",
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.837,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.046618400000000004,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "issue a signed JWT access token with expiry for a user id"
+          ],
+          "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0532952,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry claim after login, and verify it"
+          ],
+          "request": "After a user logs in, I need to issue them a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code for that (a JWT with an expiry claim would be fine), including a function to verify it?",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0539757,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry for a user ID, and verify it"
+          ],
+          "request": "Write a Python function that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0542556,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry for a user ID, and verify it"
+          ],
+          "request": "Write a function in my Python project that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.052673300000000006,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry and verify it"
+          ],
+          "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.837,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0355867,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "issue a signed JWT access token for a user ID with expiry"
+          ],
+          "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0532806,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry claim and verify it"
+          ],
+          "request": "After a user logs in, I need to issue them a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code for that (a JWT with an expiry claim would be fine), including a function to verify it?",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.055096900000000004,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "create signed JWT access token with expiry and verify it"
+          ],
+          "request": "Write a Python function that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.053940400000000006,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "create a signed JWT access token with expiry after login, and verify it"
+          ],
+          "request": "Write a function in my Python project that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0532615,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry, and verify it"
+          ],
+          "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0471384,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "issue a signed JWT access token with expiry for a user id"
+          ],
+          "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.0535472,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry claim after login, and verify it"
+          ],
+          "request": "After a user logs in, I need to issue them a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code for that (a JWT with an expiry claim would be fine), including a function to verify it?",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.816,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.jwt.create_access_token"
+          ],
+          "cost_usd": 0.05298649999999999,
+          "found": {
+            "create_access_token": "covered"
+          },
+          "got": [
+            "auth.jwt.create_access_token"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Create a signed JWT access token with expiry for a user ID, and verify it"
+          ],
+          "request": "Write a Python function that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "auth.jwt.create_access_token"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.86,
+          "turns": 5
+        }
+      ],
+      "summary": {
+        "check_rate": 0.9,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 0.816,
+        "ok": 20,
+        "outcomes": {
+          "matched": 20
+        },
+        "pattern_match_exact": 1.0,
+        "pattern_match_shape": 1.0,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "paginate_query": {
+      "pattern": "db.pagination.select_page",
+      "samples": [
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0371398,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy query with page and page size, returning page records and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0550176,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page and page size, total count, stable ordering"
+          ],
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.834,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0369348,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "paginate a SQLAlchemy select returning page of records and total count"
+          ],
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0370435,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0474898,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page number, page size and total count"
+          ],
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0455184,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size, and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0400366,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page and page size, total count, stable ordering"
+          ],
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.873,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0342374,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy query with page and page size, return records and total count"
+          ],
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0342461,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0342343,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page number, page size, and total count"
+          ],
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0342461,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size, and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.051365299999999996,
+          "found": {},
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Paginate a SQLAlchemy select with page and page size, total count, stable ordering"
+          ],
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.867,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.034273,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy query with page and page size, returning records and total count"
+          ],
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.034242999999999996,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size, and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0447501,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page number, page size and total count"
+          ],
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0446818,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page, page size and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [],
+          "cost_usd": 0.05201070000000001,
+          "found": {},
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": false,
+          "match_shape": false,
+          "outcome": "fetched_but_changed",
+          "queries": [
+            "Paginate a SQLAlchemy select with page and page size, return total count and stable ordering"
+          ],
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.929,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0342859,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy query with page and page size, returning records and total count"
+          ],
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0447665,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page and page size, returning records and total count"
+          ],
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "db.pagination.select_page"
+          ],
+          "cost_usd": 0.0447545,
+          "found": {
+            "paginate": "covered"
+          },
+          "got": [
+            "db.pagination.select_page"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Paginate a SQLAlchemy select with page number, page size and total count"
+          ],
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "db.pagination.select_page"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        }
+      ],
+      "summary": {
+        "check_rate": 0.45,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 1.0,
+        "ok": 20,
+        "outcomes": {
+          "fetched_but_changed": 2,
+          "matched": 18
+        },
+        "pattern_match_exact": 0.9,
+        "pattern_match_shape": 0.9,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "password_hash": {
+      "pattern": "auth.password.pbkdf2",
+      "samples": [
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.16466460000000002,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for sign-up and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app, so I need code that stores users' passwords securely and then checks a typed password against the stored one at login. Can you write that for me?",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0414464,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and then verify a typed password at login. Can you write the functions for hashing a password when someone registers and checking it when they log in?",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0562312,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.05612399999999999,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store users' passwords securely and then verify a typed password at login. Can you write the functions to hash a password when someone registers and check it against the stored hash when they log in?",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.041412000000000004,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need functions to store a user's password safely when they register, then check a typed password against it when they log in. Can you write that for me?",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.053450899999999996,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords for sign-up and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app, so I need code that stores users' passwords securely and then checks a typed password against the stored one at login. Can you write that for me?",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0386954,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and then verify a typed password at login. Can you write the functions for hashing a password when someone registers and checking it when they log in?",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0386054,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0533683,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store users' passwords securely and then verify a typed password at login. Can you write the functions to hash a password when someone registers and check it against the stored hash when they log in?",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0385806,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need functions to store a user's password safely when they register, then check a typed password against it when they log in. Can you write that for me?",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0386973,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords for sign-up and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app, so I need code that stores users' passwords securely and then checks a typed password against the stored one at login. Can you write that for me?",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.054333,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for user registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and then verify a typed password at login. Can you write the functions for hashing a password when someone registers and checking it when they log in?",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0385655,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0533365,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store users' passwords securely and then verify a typed password at login. Can you write the functions to hash a password when someone registers and check it against the stored hash when they log in?",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0386836,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify passwords for sign-up and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need functions to store a user's password safely when they register, then check a typed password against it when they log in. Can you write that for me?",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.05344310000000001,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "hash and verify user passwords for sign-up and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app, so I need code that stores users' passwords securely and then checks a typed password against the stored one at login. Can you write that for me?",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0534466,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for user registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and then verify a typed password at login. Can you write the functions for hashing a password when someone registers and checking it when they log in?",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0385796,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": false,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.0389725,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need to store users' passwords securely and then verify a typed password at login. Can you write the functions to hash a password when someone registers and check it against the stored hash when they log in?",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 4
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "auth.password.pbkdf2"
+          ],
+          "cost_usd": 0.053432299999999995,
+          "found": {
+            "hash_password": "covered",
+            "needs_rehash": "covered",
+            "verify_password": "covered"
+          },
+          "got": [
+            "auth.password.pbkdf2"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Hash and verify passwords for user registration and login"
+          ],
+          "request": "I'm adding sign-up and login to my Python app and need functions to store a user's password safely when they register, then check a typed password against it when they log in. Can you write that for me?",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "auth.password.pbkdf2"
+            ]
+          ],
+          "searched": true,
+          "similarity": 1.0,
+          "turns": 5
+        }
+      ],
+      "summary": {
+        "check_rate": 0.45,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 1.0,
+        "ok": 20,
+        "outcomes": {
+          "matched": 20
+        },
+        "pattern_match_exact": 1.0,
+        "pattern_match_shape": 1.0,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    },
+    "token_bucket": {
+      "pattern": "ratelimit.token_bucket.check",
+      "samples": [
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.056001300000000004,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can make too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 1,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.768,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.054365899999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+          "retrieved": true,
+          "sample": 2,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.803,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.055309899999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "Add rate limiting to my Python API so each client can only make a limited number of requests per time window, and when someone goes over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 3,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.808,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.060071900000000004,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 4,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.725,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.055598499999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 5,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.808,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0518253,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can make too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 6,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0498023,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+          "retrieved": true,
+          "sample": 7,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0516503,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so each client can only make a limited number of requests per time window, and when someone goes over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 8,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.05501640000000001,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client per minute with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 9,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.721,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0506277,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 10,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.884,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0510349,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can make too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 11,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.051981099999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+          "retrieved": true,
+          "sample": 12,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.802,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.050413099999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so each client can only make a limited number of requests per time window, and when someone goes over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 13,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.884,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0560782,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 14,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.68,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0526913,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Token-bucket rate limit check with retry-after per client"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 15,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.808,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0512485,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can make too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 16,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0511551,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with retry-after"
+          ],
+          "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+          "retrieved": true,
+          "sample": 17,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.803,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.050726299999999995,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so each client can only make a limited number of requests per time window, and when someone goes over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 18,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.872,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.053942199999999996,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "rate limit per client with 429 and Retry-After"
+          ],
+          "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 19,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.662,
+          "turns": 5
+        },
+        {
+          "checked": true,
+          "code_patterns": [
+            "ratelimit.token_bucket.check"
+          ],
+          "cost_usd": 0.0517645,
+          "found": {
+            "check_rate_limit": "covered"
+          },
+          "got": [
+            "ratelimit.token_bucket.check"
+          ],
+          "library_agreement": true,
+          "match_exact": true,
+          "match_shape": true,
+          "outcome": "matched",
+          "queries": [
+            "Token-bucket rate limit check with retry-after for API clients"
+          ],
+          "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+          "retrieved": true,
+          "sample": 20,
+          "search_results": [
+            [
+              "ratelimit.token_bucket.check"
+            ]
+          ],
+          "searched": true,
+          "similarity": 0.835,
+          "turns": 5
+        }
+      ],
+      "summary": {
+        "check_rate": 1.0,
+        "correct_retrieval": 1.0,
+        "library_agreement": 1.0,
+        "median_similarity": 0.808,
+        "ok": 20,
+        "outcomes": {
+          "matched": 20
+        },
+        "pattern_match_exact": 1.0,
+        "pattern_match_shape": 1.0,
+        "samples": 20,
+        "search_rate": 1.0
+      }
+    }
+  },
+  "total_cost_usd_estimate": 8.65
+}
