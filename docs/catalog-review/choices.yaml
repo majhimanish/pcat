@@ -1,7 +1,7 @@
 # Owner's choices for v2.2 Part 2 (docs/specs/v2.2-app-catalog.md).
 # Change status to final when done; Part 2 then turns each choice into a catalog
 # pattern. variant: one of the labels listed for the task, or defer.
-status: draft          # owner changes to: final
+status: final          # owner changes to: final
 choices:
   jwt_create:
     # options: jwt_minimal_claims, jwt_registered_claims, defer
@@ -10,9 +10,9 @@ choices:
     notes: ""
   password_hash:
     # options: password_scrypt, password_pbkdf2, defer
-    variant: password_scrypt
-    pattern_id: auth.password.scrypt
-    notes: ""
+    variant: password_pbkdf2
+    pattern_id: auth.password.pbkdf2
+    notes: "Use PBKDF2-HMAC-SHA256 with at least 600,000 iterations (OWASP recommendation); keep the iteration count stored in the hash so it can be raised later. Pattern id changed from the scrypt proposal to match the algorithm (owner's choice)."
   paginate_query:
     # options: paginate_tuple, paginate_page_dict, paginate_legacy_query, defer
     variant: paginate_page_dict
