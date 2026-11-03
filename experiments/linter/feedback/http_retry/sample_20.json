@@ -1,0 +1,152 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport requests\nimport time\nimport uuid\nRETRY_STATUSES = (500, 502, 503, 504)\n\n# pcat-allow: PC100 -- payments API call is a POST; retries are made safe by sending one Idempotency-Key reused across all attempts\n# pcat: http.get_with_retry.requests@v1\ndef post_payment_with_retry(url: str, payload: dict, session: requests.Session | None=None, attempts: int=4, base_delay: float=0.5, max_delay: float=30.0, timeout: float=10.0, sleep=time.sleep, rand=random.random) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    headers = {'Idempotency-Key': str(uuid.uuid4())}\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.post(url, json=payload, headers=headers, timeout=timeout)\n        except (requests.ConnectionError, requests.Timeout):\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.08166960000000001,
+    "duration_ms": 27316,
+    "num_turns": 6
+  },
+  "group": "http_retry",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport random\nimport requests\nimport time\nimport uuid\nRETRY_STATUSES = (500, 502, 503, 504)\n\n# pcat-allow: PC100 -- payments API call is a POST; retries are made safe by sending one Idempotency-Key reused across all attempts\n# pcat: http.get_with_retry.requests@v1\ndef post_payment_with_retry(url: str, payload: dict, session: requests.Session | None=None, attempts: int=4, base_delay: float=0.5, max_delay: float=30.0, timeout: float=10.0, sleep=time.sleep, rand=random.random) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    headers = {'Idempotency-Key': str(uuid.uuid4())}\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.post(url, json=payload, headers=headers, timeout=timeout)\n        except (requests.ConnectionError, requests.Timeout):\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n```",
+  "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 20,
+  "status": "ok",
+  "timestamp": "2026-11-03T13:04:51+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "retry HTTP call to external API on timeouts and 5xx with exponential backoff and jitter, no retry on 4xx"
+      },
+      "result": {
+        "ids": [
+          "http.get_with_retry.requests",
+          "retry.with_exponential_backoff"
+        ],
+        "scores": [
+          24.638,
+          11.274
+        ]
+      },
+      "timestamp": "2026-11-03T13:04:28.710+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "http.get_with_retry.requests",
+        "names": null
+      },
+      "result": {
+        "id": "http.get_with_retry.requests@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T13:04:30.772+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1303,
+        "pattern_id": "http.get_with_retry.requests"
+      },
+      "result": {
+        "deviations": [
+          [
+            "post_payment_with_retry",
+            "http.get_with_retry.requests@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "post_payment_with_retry",
+            "none",
+            null
+          ],
+          [
+            "retry_after_seconds",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T13:04:38.583+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 1517,
+        "pattern_id": "http.get_with_retry.requests"
+      },
+      "result": {
+        "deviations": [
+          [
+            "post_payment_with_retry",
+            "http.get_with_retry.requests@v1",
+            [
+              [
+                "PC100",
+                true
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "post_payment_with_retry",
+            "none",
+            null
+          ],
+          [
+            "retry_after_seconds",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T13:04:44.297+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

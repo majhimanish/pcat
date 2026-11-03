@@ -1,0 +1,86 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "import random\nimport requests\nimport time\n\n# 4xx (including 429) is deliberately excluded: only 5xx responses are retried.\nRETRY_STATUSES = (500, 502, 503, 504)\n\n\n# pcat: http.get_with_retry.requests@v1\ndef get_with_retry(url: str, session: requests.Session | None=None, attempts: int=4, base_delay: float=0.5, max_delay: float=30.0, timeout: float=10.0, sleep=time.sleep, rand=random.random) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.get(url, timeout=timeout)\n        except (requests.ConnectionError, requests.Timeout):\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n\n\ndef fetch_payments(url: str, session: requests.Session | None=None, max_attempts: int=4, base_delay: float=0.5) -> requests.Response:\n    \"\"\"Call the external payments API; `max_attempts` and `base_delay` are configurable.\"\"\"\n    return get_with_retry(url, session=session, attempts=max_attempts, base_delay=base_delay)\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.056489700000000004,
+    "duration_ms": 14848,
+    "num_turns": 5
+  },
+  "group": "http_retry",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nimport random\nimport requests\nimport time\n\n# 4xx (including 429) is deliberately excluded: only 5xx responses are retried.\nRETRY_STATUSES = (500, 502, 503, 504)\n\n\n# pcat: http.get_with_retry.requests@v1\ndef get_with_retry(url: str, session: requests.Session | None=None, attempts: int=4, base_delay: float=0.5, max_delay: float=30.0, timeout: float=10.0, sleep=time.sleep, rand=random.random) -> requests.Response:\n    if attempts < 1:\n        raise ValueError('attempts must be >= 1')\n    session = session or requests.Session()\n    for attempt in range(attempts):\n        last = attempt == attempts - 1\n        try:\n            response = session.get(url, timeout=timeout)\n        except (requests.ConnectionError, requests.Timeout):\n            if last:\n                raise\n            hint = None\n        else:\n            if response.status_code not in RETRY_STATUSES or last:\n                response.raise_for_status()\n                return response\n            hint = retry_after_seconds(response.headers.get('Retry-After'))\n        backoff = min(max_delay, base_delay * 2 ** attempt) * rand()\n        sleep(min(max_delay, hint) if hint is not None else backoff)\n    raise AssertionError('unreachable')\n\n\ndef retry_after_seconds(value: str | None) -> float | None:\n    return float(value) if value and value.strip().isdigit() else None\n\n\ndef fetch_payments(url: str, session: requests.Session | None=None, max_attempts: int=4, base_delay: float=0.5) -> requests.Response:\n    \"\"\"Call the external payments API; `max_attempts` and `base_delay` are configurable.\"\"\"\n    return get_with_retry(url, session=session, attempts=max_attempts, base_delay=base_delay)\n```",
+  "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 15,
+  "status": "ok",
+  "timestamp": "2026-11-03T13:04:21+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "HTTP call with retries on timeouts and 5xx, exponential backoff with jitter, no retry on 4xx, configurable attempts and base delay"
+      },
+      "result": {
+        "ids": [
+          "http.get_with_retry.requests",
+          "retry.with_exponential_backoff"
+        ],
+        "scores": [
+          23.023,
+          22.359
+        ]
+      },
+      "timestamp": "2026-11-03T13:04:09.592+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "http.get_with_retry.requests",
+        "names": null
+      },
+      "result": {
+        "id": "http.get_with_retry.requests@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-03T13:04:10.717+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1264,
+        "pattern_id": "http.get_with_retry.requests@v1"
+      },
+      "result": {
+        "deviations": [
+          [
+            "get_with_retry",
+            "http.get_with_retry.requests@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "get_with_retry",
+            "covered",
+            "http.get_with_retry.requests"
+          ],
+          [
+            "retry_after_seconds",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-03T13:04:15.438+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

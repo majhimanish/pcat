@@ -1,0 +1,5 @@
+{"arguments": {"limit": 5, "request": "Parse and validate a users spreadsheet upload (xlsx or csv) with per-row errors"}, "result": {"ids": ["importers.users_csv.parse"], "scores": [25.887]}, "timestamp": "2026-11-03T13:06:17.961+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "importers.users_csv.parse", "names": null}, "result": {"id": "importers.users_csv.parse@v1", "status": "active"}, "timestamp": "2026-11-03T13:06:18.827+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 1908, "pattern_id": "importers.users_csv.parse"}, "result": {"deviations": [["import_users", "importers.users_csv.parse@v1", []]], "statuses": [["import_users", "covered", "importers.users_csv.parse"]]}, "timestamp": "2026-11-03T13:06:27.865+00:00", "tool": "check_code"}
+{"arguments": {"length": 992}, "result": {"deviations": [], "statuses": [["_cell_to_text", "none", null], ["xlsx_to_csv_text", "none", null]]}, "timestamp": "2026-11-03T13:06:31.094+00:00", "tool": "check_code"}
+{"arguments": {"length": 542}, "result": {"deviations": [], "statuses": [["validate_uploaded_users", "none", null]]}, "timestamp": "2026-11-03T13:06:37.972+00:00", "tool": "check_code"}

@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Paginate a SQLAlchemy select returning page of records and total count"}, "result": {"ids": ["db.pagination.select_page"], "scores": [24.173]}, "timestamp": "2026-11-03T13:03:13.405+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "db.pagination.select_page", "names": null}, "result": {"id": "db.pagination.select_page@v1", "status": "active"}, "timestamp": "2026-11-03T13:03:15.277+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 974, "pattern_id": "db.pagination.select_page"}, "result": {"deviations": [["paginate", "db.pagination.select_page@v1", []]], "statuses": [["paginate", "covered", "db.pagination.select_page"]]}, "timestamp": "2026-11-03T13:03:18.126+00:00", "tool": "check_code"}

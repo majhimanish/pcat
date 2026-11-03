@@ -152,6 +152,9 @@ pattern. From the logs and code:
   "statement must have an ORDER BY" check that reads SQLAlchemy's private
   `stmt._order_by_clauses`. A reasonable worry, but not asked for and built on a
   private attribute.
+  *Erratum (v4 replay):* only sample 12 reads `_order_by_clauses`; sample 17 adds
+  an unrequested `tiebreaker` parameter for a stable ORDER BY instead (no private
+  access). Both are unrequested rewrites, so the counts above are unchanged.
 
 `check_code` was called in 79% of positive samples but did not prevent these:
 the agent saw `none` for its rewritten function and submitted anyway. The tool
