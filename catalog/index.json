@@ -3,6 +3,27 @@
   "patterns": [
     {
       "behavior": {
+        "algorithm": "HS256",
+        "claims": "sub+iss+aud+iat+nbf+exp+jti",
+        "clock": "injectable_aware_datetime",
+        "default_lifetime_minutes": 15,
+        "returns": "str",
+        "secret": "parameter_min_32_bytes"
+      },
+      "category": "auth",
+      "fingerprint": "85b3a9a425177cf2ee9cff9c64070a6d50455b44095644ae0b98d63d1964a084",
+      "id": "auth.jwt.create_access_token",
+      "path": "catalog/auth/jwt.create_access_token",
+      "requires": [
+        "pyjwt>=2.8,<3"
+      ],
+      "status": "active",
+      "title": "Create a signed JWT access token (registered claims)",
+      "variant_of": "auth.jwt",
+      "version": 1
+    },
+    {
+      "behavior": {
         "input": "any_iterable",
         "item_order": "preserved",
         "key_order": "first_seen",

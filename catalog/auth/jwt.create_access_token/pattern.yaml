@@ -1,0 +1,21 @@
+id: auth.jwt.create_access_token
+version: 1
+title: Create a signed JWT access token (registered claims)
+summary: Return an HS256-signed JWT for a user id with sub, iss, aud, iat, nbf, exp and a random jti; the secret, issuer, audience, lifetime and clock are parameters.
+category: auth
+variant_of: auth.jwt
+behavior:
+  algorithm: HS256
+  claims: sub+iss+aud+iat+nbf+exp+jti
+  secret: parameter_min_32_bytes
+  clock: injectable_aware_datetime
+  default_lifetime_minutes: 15
+  returns: str
+entry_point: create_access_token
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+requires:
+  - pyjwt>=2.8,<3
+fingerprint: 85b3a9a425177cf2ee9cff9c64070a6d50455b44095644ae0b98d63d1964a084
