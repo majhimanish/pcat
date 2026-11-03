@@ -1,0 +1,23 @@
+id: http.get_with_retry.requests
+version: 1
+title: GET a URL with retries and exponential backoff (requests)
+summary: GET with requests, retrying connection errors, timeouts, 429 and 5xx with capped exponential backoff, full jitter and numeric Retry-After; session, sleep and randomness are injectable.
+category: http
+variant_of: http.get_with_retry
+behavior:
+  library: requests
+  retries_on: connection_errors+timeouts+429+500+502+503+504
+  client_errors: raised_without_retry
+  backoff: capped_exponential_full_jitter
+  retry_after: numeric_seconds_capped_at_max_delay
+  default_attempts: 4
+  timeout_always_set: true
+  on_exhausted: raises_last_error
+entry_point: get_with_retry
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+requires:
+  - requests>=2.31,<3
+fingerprint: c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0
