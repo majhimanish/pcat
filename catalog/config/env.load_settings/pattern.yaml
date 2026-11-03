@@ -1,0 +1,20 @@
+id: config.env.load_settings
+version: 1
+title: Load settings from environment variables with a schema
+summary: Parse environment variables described by a caller-supplied schema of (parser, default) pairs; defaults for missing values, ... marks required ones, every problem is reported at once and secret values are never echoed.
+category: config
+variant_of: config.env
+behavior:
+  style: caller_supplied_schema
+  required_marker: ellipsis
+  errors: collect_all_then_value_error
+  secret_values_in_errors: never
+  source: injectable_mapping_default_os_environ
+  result_keys: lower_case_variable_names
+  exports: load_settings+parse_bool
+entry_point: load_settings
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 714b9e2489e151c5464aad756e97eb8ca007edd963b12e82bd940ccc9d15879f
