@@ -1,0 +1,2655 @@
+{
+  "calibration": {
+    "candidates": [
+      {
+        "accuracy": 0.8222,
+        "threshold": 0.0
+      },
+      {
+        "accuracy": 0.8444,
+        "threshold": 2.424031
+      },
+      {
+        "accuracy": 0.8667,
+        "threshold": 2.868896
+      },
+      {
+        "accuracy": 0.8889,
+        "threshold": 3.0563
+      },
+      {
+        "accuracy": 0.9111,
+        "threshold": 3.261009
+      },
+      {
+        "accuracy": 0.9333,
+        "threshold": 3.448301
+      },
+      {
+        "accuracy": 0.9556,
+        "threshold": 4.254625
+      },
+      {
+        "accuracy": 0.9778,
+        "threshold": 5.375062
+      },
+      {
+        "accuracy": 1.0,
+        "threshold": 9.084338
+      },
+      {
+        "accuracy": 0.9333,
+        "threshold": 13.208426
+      },
+      {
+        "accuracy": 0.9111,
+        "threshold": 14.730597
+      },
+      {
+        "accuracy": 0.8889,
+        "threshold": 15.546552
+      },
+      {
+        "accuracy": 0.8667,
+        "threshold": 15.886705
+      },
+      {
+        "accuracy": 0.8444,
+        "threshold": 16.260889
+      },
+      {
+        "accuracy": 0.8222,
+        "threshold": 16.421473
+      },
+      {
+        "accuracy": 0.8,
+        "threshold": 16.49068
+      },
+      {
+        "accuracy": 0.7778,
+        "threshold": 17.166659
+      },
+      {
+        "accuracy": 0.7556,
+        "threshold": 18.139445
+      },
+      {
+        "accuracy": 0.7333,
+        "threshold": 18.655181
+      },
+      {
+        "accuracy": 0.7111,
+        "threshold": 19.000616
+      },
+      {
+        "accuracy": 0.6889,
+        "threshold": 19.299588
+      },
+      {
+        "accuracy": 0.6667,
+        "threshold": 19.488108
+      },
+      {
+        "accuracy": 0.6444,
+        "threshold": 20.079333
+      },
+      {
+        "accuracy": 0.6222,
+        "threshold": 20.798952
+      },
+      {
+        "accuracy": 0.6,
+        "threshold": 21.373531
+      },
+      {
+        "accuracy": 0.5778,
+        "threshold": 22.237445
+      },
+      {
+        "accuracy": 0.5556,
+        "threshold": 22.838307
+      },
+      {
+        "accuracy": 0.5333,
+        "threshold": 23.354537
+      },
+      {
+        "accuracy": 0.5111,
+        "threshold": 23.742726
+      },
+      {
+        "accuracy": 0.4889,
+        "threshold": 23.803267
+      },
+      {
+        "accuracy": 0.4667,
+        "threshold": 23.959209
+      },
+      {
+        "accuracy": 0.4444,
+        "threshold": 24.445115
+      },
+      {
+        "accuracy": 0.4222,
+        "threshold": 24.974688
+      },
+      {
+        "accuracy": 0.4,
+        "threshold": 25.233436
+      },
+      {
+        "accuracy": 0.3778,
+        "threshold": 25.904176
+      },
+      {
+        "accuracy": 0.3556,
+        "threshold": 26.68298
+      },
+      {
+        "accuracy": 0.3333,
+        "threshold": 27.007445
+      },
+      {
+        "accuracy": 0.3111,
+        "threshold": 27.182644
+      },
+      {
+        "accuracy": 0.2889,
+        "threshold": 27.653661
+      },
+      {
+        "accuracy": 0.2667,
+        "threshold": 30.021013
+      },
+      {
+        "accuracy": 0.2444,
+        "threshold": 32.739668
+      },
+      {
+        "accuracy": 0.2222,
+        "threshold": 34.487292
+      }
+    ],
+    "chosen_threshold": 9.08,
+    "set": "development"
+  },
+  "development": {
+    "false_match_rate": 0.0,
+    "false_matches": [],
+    "negatives": 10,
+    "per_task": {
+      "csv_import": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "env_config": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "http_retry": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "jwt_create": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "paginate_query": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "password_hash": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "token_bucket": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      }
+    },
+    "positives": 35,
+    "threshold": 9.08,
+    "top1": 1.0,
+    "top1_ignoring_threshold": 1.0,
+    "top3": 1.0
+  },
+  "development_items": [
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          18.838854
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          6.450537
+        ],
+        [
+          "auth.password.pbkdf2",
+          6.248269
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.547746
+        ]
+      ],
+      "request": "I need a helper that generates a JWT access token for a given user ID. The token should be signed and expire after a configurable amount of time.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          20.978656
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.633814
+        ],
+        [
+          "auth.password.pbkdf2",
+          2.873922
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "config.env.load_settings",
+          1.615159
+        ]
+      ],
+      "request": "Python: function to issue a signed access token (JWT) containing the user's id and an expiration.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          15.63915
+        ],
+        [
+          "auth.password.pbkdf2",
+          5.888586
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.629854
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "config.env.load_settings",
+          2.349297
+        ]
+      ],
+      "request": "Can you write the code to mint a JWT for a user? It needs the user id in it, an expiry, and it has to be signed with our secret key.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          19.436799
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          5.427831
+        ],
+        [
+          "auth.password.pbkdf2",
+          3.923063
+        ],
+        [
+          "importers.users_csv.parse",
+          3.333986
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.547746
+        ]
+      ],
+      "request": "Implement create_access_token(user_id) that returns a signed JWT which expires after some minutes.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          26.459018
+        ],
+        [
+          "auth.password.pbkdf2",
+          5.199128
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.030078
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ]
+      ],
+      "request": "Write a function for our auth service that builds and signs a JWT access token for a user id, with an exp claim.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          17.807383
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.361309
+        ],
+        [
+          "auth.jwt.create_access_token",
+          3.570726
+        ],
+        [
+          "config.env.load_settings",
+          3.230318
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ]
+      ],
+      "request": "I need two functions: one that hashes a user's password for storage and one that checks a login password against the stored hash.",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          12.409613
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.650426
+        ]
+      ],
+      "request": "Python password hashing: hash_password(plain) and verify_password(plain, hashed). Make it secure.",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          16.525934
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.650426
+        ]
+      ],
+      "request": "Write the code we use at signup to hash passwords, plus the check we run at login to see if the password matches the hash.",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          12.409613
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.650426
+        ]
+      ],
+      "request": "Give me functions to securely hash passwords and verify them later.",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          12.409613
+        ],
+        [
+          "text.slugify.ascii",
+          3.541187
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.650426
+        ]
+      ],
+      "request": "Implement password storage helpers: turn a plaintext password into a hash, and verify a plaintext password against a hash.",
+      "task": "password_hash"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          27.25734
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.247022
+        ],
+        [
+          "importers.users_csv.parse",
+          2.587108
+        ],
+        [
+          "search.binary_search.iterative",
+          0.983624
+        ],
+        [
+          "sort.merge_sort.recursive",
+          0.949519
+        ]
+      ],
+      "request": "I need a pagination helper for SQLAlchemy: given a query, a page number and a page size, return the items on that page and the total number of results.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          23.738944
+        ],
+        [
+          "importers.users_csv.parse",
+          7.551036
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.942338
+        ],
+        [
+          "config.env.load_settings",
+          1.615159
+        ],
+        [
+          "auth.password.pbkdf2",
+          1.281449
+        ]
+      ],
+      "request": "Write paginate(query, page, per_page) for SQLAlchemy that returns the page's rows and the total count.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          23.746508
+        ],
+        [
+          "config.env.load_settings",
+          1.615159
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.615159
+        ],
+        [
+          "search.binary_search.iterative",
+          0.983624
+        ],
+        [
+          "sort.merge_sort.recursive",
+          0.949519
+        ]
+      ],
+      "request": "Our API endpoints need paging. Write a function that takes a SQLAlchemy query and returns one page of results plus how many results there are in total.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          18.471507
+        ],
+        [
+          "importers.users_csv.parse",
+          4.696008
+        ],
+        [
+          "http.get_with_retry.requests",
+          4.188053
+        ],
+        [
+          "retry.with_exponential_backoff",
+          1.9511
+        ],
+        [
+          "search.binary_search.iterative",
+          1.595109
+        ]
+      ],
+      "request": "SQLAlchemy: function to get page N of a query with a page size, and the overall row count.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          25.117538
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.247022
+        ],
+        [
+          "search.binary_search.iterative",
+          0.983624
+        ],
+        [
+          "sort.merge_sort.recursive",
+          0.949519
+        ],
+        [
+          "search.binary_search.recursive",
+          0.93867
+        ]
+      ],
+      "request": "Implement a generic paginate function for SQLAlchemy queries returning items, total, page and page size.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          33.487292
+        ],
+        [
+          "retry.with_exponential_backoff",
+          10.537083
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.976566
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ],
+        [
+          "search.binary_search.recursive",
+          2.084857
+        ]
+      ],
+      "request": "I need to fetch a URL over HTTP but the server is flaky. Write a function that retries the GET request with exponential backoff when it fails.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          16.38752
+        ],
+        [
+          "retry.with_exponential_backoff",
+          8.849815
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.218993
+        ]
+      ],
+      "request": "Python: http GET helper with retry and exponential backoff.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          19.539417
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          10.476292
+        ],
+        [
+          "retry.with_exponential_backoff",
+          7.727209
+        ],
+        [
+          "importers.users_csv.parse",
+          4.584899
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ]
+      ],
+      "request": "Write fetch_with_retry(url) that makes a GET request and, on errors, retries a few times, waiting longer after each failure.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          14.007239
+        ],
+        [
+          "retry.with_exponential_backoff",
+          6.324196
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.976566
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ]
+      ],
+      "request": "Give me a function to download a URL that retries failed requests with exponentially increasing delays.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          22.706484
+        ],
+        [
+          "retry.with_exponential_backoff",
+          11.133612
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.976566
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ]
+      ],
+      "request": "Implement a GET request wrapper that retries on network errors and 5xx responses using exponential backoff.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          23.860027
+        ],
+        [
+          "importers.users_csv.parse",
+          6.5718
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          1.603736
+        ]
+      ],
+      "request": "I need to read our app's configuration from environment variables. Write a function that loads them, applies defaults, and validates the values.",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          16.134259
+        ],
+        [
+          "importers.users_csv.parse",
+          3.555167
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          2.612849
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.461745
+        ],
+        [
+          "db.pagination.select_page",
+          2.192664
+        ]
+      ],
+      "request": "Python: load config from env vars with defaults and validation, return it as a dict.",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          22.970131
+        ],
+        [
+          "http.get_with_retry.requests",
+          5.814694
+        ],
+        [
+          "importers.users_csv.parse",
+          3.581678
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ]
+      ],
+      "request": "Write load_settings() that reads settings like the database URL, port and debug flag from the environment, using defaults when they're missing and failing on invalid values.",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          16.455426
+        ],
+        [
+          "importers.users_csv.parse",
+          5.703695
+        ]
+      ],
+      "request": "Give me a function to parse and validate environment-variable settings with sensible defaults.",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          24.831839
+        ],
+        [
+          "importers.users_csv.parse",
+          4.12245
+        ],
+        [
+          "db.pagination.select_page",
+          2.386382
+        ],
+        [
+          "retry.with_exponential_backoff",
+          2.283797
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.890457
+        ]
+      ],
+      "request": "Implement configuration loading from os.environ: defaults for missing values, type conversion, and errors for invalid ones.",
+      "task": "env_config"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          28.049982
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          4.480807
+        ],
+        [
+          "auth.jwt.create_access_token",
+          3.50173
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.23024
+        ],
+        [
+          "db.pagination.select_page",
+          2.978509
+        ]
+      ],
+      "request": "I need a rate limiter. Write a function that uses a token bucket, kept in a plain dict, to decide whether a request is allowed.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          25.349335
+        ],
+        [
+          "auth.password.pbkdf2",
+          4.389872
+        ],
+        [
+          "auth.jwt.create_access_token",
+          4.099675
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.23024
+        ],
+        [
+          "db.pagination.select_page",
+          2.515007
+        ]
+      ],
+      "request": "Python: token bucket rate limit check, state stored in a dictionary, returns True if the request is allowed.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          26.906942
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          8.110661
+        ],
+        [
+          "auth.jwt.create_access_token",
+          3.50173
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.23024
+        ],
+        [
+          "db.pagination.select_page",
+          2.978509
+        ]
+      ],
+      "request": "Write allow_request(buckets, key) that implements token-bucket rate limiting per key, with the buckets stored in a dict.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          19.162377
+        ],
+        [
+          "auth.jwt.create_access_token",
+          5.641532
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          4.480807
+        ],
+        [
+          "db.pagination.select_page",
+          2.978509
+        ],
+        [
+          "importers.users_csv.parse",
+          2.022063
+        ]
+      ],
+      "request": "Give me a function for token-bucket rate limiting where each client's bucket lives in a dict.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          20.619249
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          6.348764
+        ],
+        [
+          "db.pagination.select_page",
+          5.854267
+        ],
+        [
+          "auth.password.pbkdf2",
+          4.650413
+        ],
+        [
+          "auth.jwt.create_access_token",
+          3.50173
+        ]
+      ],
+      "request": "Implement a token bucket check: refill tokens based on elapsed time, then consume one if available. Keep the bucket state in a dict.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          21.768407
+        ],
+        [
+          "config.env.load_settings",
+          8.625512
+        ],
+        [
+          "db.pagination.select_page",
+          4.931886
+        ],
+        [
+          "text.slugify.ascii",
+          2.592698
+        ],
+        [
+          "retry.with_exponential_backoff",
+          2.283797
+        ]
+      ],
+      "request": "I need to import users from a CSV file. Write a function that parses it, validates every row, and gives back the good rows plus a list of errors for the bad ones.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          31.992044
+        ],
+        [
+          "config.env.load_settings",
+          4.383955
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.518245
+        ],
+        [
+          "db.pagination.select_page",
+          2.515007
+        ],
+        [
+          "retry.with_exponential_backoff",
+          2.283797
+        ]
+      ],
+      "request": "Python: parse users CSV (name, email, age), validate rows, return (valid_rows, errors) with the row number for each error.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          27.107948
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          5.675792
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.629854
+        ],
+        [
+          "auth.password.pbkdf2",
+          3.606655
+        ],
+        [
+          "text.slugify.ascii",
+          3.110635
+        ]
+      ],
+      "request": "Write import_users_csv(text) that reads CSV content, checks each user row, and returns valid users and errors keyed by row.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          15.453954
+        ],
+        [
+          "config.env.load_settings",
+          3.230318
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.518245
+        ],
+        [
+          "db.pagination.select_page",
+          2.515007
+        ],
+        [
+          "auth.password.pbkdf2",
+          1.281449
+        ]
+      ],
+      "request": "Give me a function that validates a CSV of users row by row and returns the valid records and the problems found.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          24.058391
+        ],
+        [
+          "config.env.load_settings",
+          3.964456
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "retry.with_exponential_backoff",
+          2.283797
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.9203
+        ]
+      ],
+      "request": "Implement CSV user import with validation: collect valid rows and a per-row error report.",
+      "task": "csv_import"
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          3.518188
+        ],
+        [
+          "search.binary_search.recursive",
+          2.084857
+        ],
+        [
+          "db.pagination.select_page",
+          1.328083
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.299704
+        ]
+      ],
+      "request": "Write a function that sends an email with an attachment over SMTP.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          2.968997
+        ]
+      ],
+      "request": "Resize an uploaded image to a 200x200 thumbnail and save it as JPEG.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          5.759063
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.620824
+        ],
+        [
+          "auth.jwt.create_access_token",
+          1.9203
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          1.867958
+        ],
+        [
+          "config.env.load_settings",
+          1.615159
+        ]
+      ],
+      "request": "Add a FastAPI POST endpoint that validates the input with a Pydantic model and creates a user.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "config.env.load_settings",
+          2.768796
+        ],
+        [
+          "importers.users_csv.parse",
+          2.713573
+        ]
+      ],
+      "request": "Parse a date string like '3rd March 2024' into a datetime object.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          4.991061
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.030078
+        ],
+        [
+          "text.slugify.ascii",
+          2.592698
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          1.867958
+        ]
+      ],
+      "request": "Upload a local file to an S3 bucket with boto3.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "collections.group_by.dict_of_lists",
+          3.378414
+        ]
+      ],
+      "request": "Generate a PDF invoice from an order dictionary.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "config.env.load_settings",
+          2.349297
+        ],
+        [
+          "importers.users_csv.parse",
+          1.559615
+        ]
+      ],
+      "request": "Run a cleanup job every night at 2am.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          2.079267
+        ]
+      ],
+      "request": "Broadcast chat messages to all connected websocket clients.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [],
+      "request": "Post a message to a Slack channel when a deploy finishes.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [],
+      "request": "Compress a folder into a zip archive.",
+      "task": null
+    }
+  ],
+  "heldout": {
+    "false_match_rate": 0.1333,
+    "false_matches": [
+      {
+        "got": "importers.users_csv.parse",
+        "request": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.",
+        "score": 14.695
+      },
+      {
+        "got": "auth.password.pbkdf2",
+        "request": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.",
+        "score": 12.011
+      }
+    ],
+    "negatives": 15,
+    "per_task": {
+      "csv_import": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "env_config": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "http_retry": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "jwt_create": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "paginate_query": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "password_hash": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      },
+      "token_bucket": {
+        "misses": [],
+        "n": 5,
+        "top1": 5,
+        "top3": 5
+      }
+    },
+    "positives": 35,
+    "threshold": 9.08,
+    "top1": 1.0,
+    "top1_ignoring_threshold": 1.0,
+    "top3": 1.0
+  },
+  "heldout_items": [
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          28.969709
+        ],
+        [
+          "auth.password.pbkdf2",
+          14.079363
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          9.368756
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.629854
+        ],
+        [
+          "importers.users_csv.parse",
+          3.333986
+        ]
+      ],
+      "request": "Write a function in my Python project that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          13.933801
+        ],
+        [
+          "auth.password.pbkdf2",
+          9.268259
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          6.450537
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.162905
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ]
+      ],
+      "request": "After a user logs in, I need to hand back a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code to generate it (and a matching verify function)?",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          22.327583
+        ],
+        [
+          "auth.password.pbkdf2",
+          9.268259
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          5.024195
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.162905
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ]
+      ],
+      "request": "Write a function for my Python project that takes a logged-in user's ID and issues a signed JWT with an expiry, so other services can verify it and it stops working after a set time.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          25.289133
+        ],
+        [
+          "auth.password.pbkdf2",
+          9.268259
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          8.529804
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.162905
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ]
+      ],
+      "request": "After a user logs in, I need to issue them a signed token that our other services can verify on their own and that expires after a set time. Can you write the Python code for that (a JWT with an expiry claim would be fine), including a function to verify it?",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.jwt.create_access_token",
+      "ranked": [
+        [
+          "auth.jwt.create_access_token",
+          28.969709
+        ],
+        [
+          "auth.password.pbkdf2",
+          14.079363
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          9.368756
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.629854
+        ],
+        [
+          "importers.users_csv.parse",
+          3.333986
+        ]
+      ],
+      "request": "Write a Python function that takes a user ID after a successful login and returns a signed JWT with an expiry time, so our other services can verify it with a shared secret or public key. Include a matching verify function that rejects expired or tampered tokens.",
+      "task": "jwt_create"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          14.705045
+        ],
+        [
+          "auth.jwt.create_access_token",
+          6.641843
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "db.pagination.select_page",
+          2.386382
+        ]
+      ],
+      "request": "I'm adding sign-up and login to my Python app, so I need code that stores users' passwords securely and then checks a typed password against the stored one at login. Can you write that for me?",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          23.369845
+        ],
+        [
+          "auth.jwt.create_access_token",
+          8.292269
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ]
+      ],
+      "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and then verify a typed password at login. Can you write the functions for hashing a password when someone registers and checking it when they log in?",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          25.43451
+        ],
+        [
+          "auth.jwt.create_access_token",
+          8.292269
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ]
+      ],
+      "request": "I'm adding sign-up and login to my Python app and need to store user passwords securely and verify them when someone logs in. Can you write the functions for hashing a password on registration and checking a typed password against the stored hash at login?",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          25.43451
+        ],
+        [
+          "auth.jwt.create_access_token",
+          8.292269
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          2.757573
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ]
+      ],
+      "request": "I'm adding sign-up and login to my Python app and need to store users' passwords securely and then verify a typed password at login. Can you write the functions to hash a password when someone registers and check it against the stored hash when they log in?",
+      "task": "password_hash"
+    },
+    {
+      "expected": "auth.password.pbkdf2",
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          15.655044
+        ],
+        [
+          "auth.jwt.create_access_token",
+          6.641843
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.361309
+        ],
+        [
+          "importers.users_csv.parse",
+          2.768941
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ]
+      ],
+      "request": "I'm adding sign-up and login to my Python app and need functions to store a user's password safely when they register, then check a typed password against it when they log in. Can you write that for me?",
+      "task": "password_hash"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          22.214897
+        ],
+        [
+          "config.env.load_settings",
+          3.941709
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.045897
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.584188
+        ],
+        [
+          "search.binary_search.iterative",
+          2.456031
+        ]
+      ],
+      "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          26.617754
+        ],
+        [
+          "sort.merge_sort.recursive",
+          8.424076
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          4.273953
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.737748
+        ]
+      ],
+      "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          26.617754
+        ],
+        [
+          "auth.password.pbkdf2",
+          4.296113
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.584188
+        ],
+        [
+          "search.binary_search.iterative",
+          2.456031
+        ],
+        [
+          "search.binary_search.recursive",
+          2.343783
+        ]
+      ],
+      "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          23.865324
+        ],
+        [
+          "importers.users_csv.parse",
+          6.820668
+        ],
+        [
+          "config.env.load_settings",
+          3.941709
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          3.720076
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.584188
+        ]
+      ],
+      "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "db.pagination.select_page",
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          28.888373
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.737748
+        ],
+        [
+          "importers.users_csv.parse",
+          2.587108
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.584188
+        ],
+        [
+          "search.binary_search.iterative",
+          2.456031
+        ]
+      ],
+      "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+      "task": "paginate_query"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          26.528921
+        ],
+        [
+          "retry.with_exponential_backoff",
+          20.006729
+        ],
+        [
+          "config.env.load_settings",
+          4.661057
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.822729
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ]
+      ],
+      "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          35.016144
+        ],
+        [
+          "retry.with_exponential_backoff",
+          20.618022
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          8.978054
+        ],
+        [
+          "importers.users_csv.parse",
+          5.149944
+        ],
+        [
+          "sort.merge_sort.recursive",
+          2.832992
+        ]
+      ],
+      "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          31.122564
+        ],
+        [
+          "retry.with_exponential_backoff",
+          30.129139
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          5.639452
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ],
+        [
+          "sort.merge_sort.recursive",
+          1.883473
+        ]
+      ],
+      "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          26.528921
+        ],
+        [
+          "retry.with_exponential_backoff",
+          23.686374
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.822729
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ],
+        [
+          "sort.merge_sort.recursive",
+          1.883473
+        ]
+      ],
+      "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "http.get_with_retry.requests",
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          28.076667
+        ],
+        [
+          "retry.with_exponential_backoff",
+          25.754003
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.035716
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ],
+        [
+          "db.pagination.select_page",
+          1.650426
+        ]
+      ],
+      "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+      "task": "http_retry"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          27.411458
+        ],
+        [
+          "http.get_with_retry.requests",
+          6.753331
+        ],
+        [
+          "retry.with_exponential_backoff",
+          4.471365
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ]
+      ],
+      "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric port or an out-of-range one)?",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          25.796298
+        ],
+        [
+          "http.get_with_retry.requests",
+          6.753331
+        ],
+        [
+          "retry.with_exponential_backoff",
+          4.471365
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ]
+      ],
+      "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if a value is invalid (like a non-numeric or out-of-range port)?",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          25.796298
+        ],
+        [
+          "http.get_with_retry.requests",
+          6.753331
+        ],
+        [
+          "retry.with_exponential_backoff",
+          6.658933
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ]
+      ],
+      "request": "Can you add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults, and raises a clear error if any value is invalid (like a non-numeric or out-of-range port or a debug value that isn't a proper boolean)?",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          25.796298
+        ],
+        [
+          "http.get_with_retry.requests",
+          6.753331
+        ],
+        [
+          "importers.users_csv.parse",
+          4.584899
+        ],
+        [
+          "retry.with_exponential_backoff",
+          4.471365
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ]
+      ],
+      "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should raise a clear error if a value is invalid, like a non-numeric or out-of-range port or an unparseable debug value.",
+      "task": "env_config"
+    },
+    {
+      "expected": "config.env.load_settings",
+      "ranked": [
+        [
+          "config.env.load_settings",
+          28.88055
+        ],
+        [
+          "importers.users_csv.parse",
+          9.134636
+        ],
+        [
+          "http.get_with_retry.requests",
+          4.659253
+        ],
+        [
+          "retry.with_exponential_backoff",
+          4.471365
+        ],
+        [
+          "text.slugify.ascii",
+          2.731313
+        ]
+      ],
+      "request": "Add a config module that loads the database URL, port, and debug flag from environment variables at startup, with sensible defaults for each. It should validate the values, for example making sure the port is an integer in the valid range and the debug flag is a real boolean, and raise a clear error if anything is invalid.",
+      "task": "env_config"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          23.963215
+        ],
+        [
+          "http.get_with_retry.requests",
+          16.218222
+        ],
+        [
+          "retry.with_exponential_backoff",
+          7.630981
+        ],
+        [
+          "db.pagination.select_page",
+          6.305236
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.737748
+        ]
+      ],
+      "request": "Add rate limiting to my Python API so that no single client can make too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          18.27734
+        ],
+        [
+          "http.get_with_retry.requests",
+          11.90168
+        ],
+        [
+          "db.pagination.select_page",
+          5.440655
+        ],
+        [
+          "retry.with_exponential_backoff",
+          4.331819
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.139802
+        ]
+      ],
+      "request": "I need to add rate limiting to my Python API so no single client can hammer it with too many requests in a short window, and blocked clients should get a response telling them how long to wait before retrying. Can you write that for me?",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          28.324523
+        ],
+        [
+          "http.get_with_retry.requests",
+          13.329872
+        ],
+        [
+          "db.pagination.select_page",
+          7.633319
+        ],
+        [
+          "retry.with_exponential_backoff",
+          7.630981
+        ],
+        [
+          "importers.users_csv.parse",
+          6.899155
+        ]
+      ],
+      "request": "Add rate limiting to my Python API so each client can only make a limited number of requests per time window, and when someone goes over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          29.057977
+        ],
+        [
+          "http.get_with_retry.requests",
+          13.329872
+        ],
+        [
+          "db.pagination.select_page",
+          7.633319
+        ],
+        [
+          "retry.with_exponential_backoff",
+          7.630981
+        ],
+        [
+          "importers.users_csv.parse",
+          6.899155
+        ]
+      ],
+      "request": "Add rate limiting to my Python API so that each client (by IP or API key) can only make a limited number of requests per minute, and when they go over the limit, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "ratelimit.token_bucket.check",
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          23.963215
+        ],
+        [
+          "http.get_with_retry.requests",
+          16.218222
+        ],
+        [
+          "retry.with_exponential_backoff",
+          7.630981
+        ],
+        [
+          "db.pagination.select_page",
+          6.305236
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.737748
+        ]
+      ],
+      "request": "Add rate limiting to my Python API so that no single client can send too many requests in a short window, and when someone gets blocked, return a 429 response with a Retry-After header telling them how many seconds to wait before trying again.",
+      "task": "token_bucket"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          32.12978
+        ],
+        [
+          "config.env.load_settings",
+          8.625512
+        ],
+        [
+          "sort.merge_sort.recursive",
+          6.492086
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          5.230532
+        ],
+        [
+          "db.pagination.select_page",
+          3.410084
+        ]
+      ],
+      "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          35.711458
+        ],
+        [
+          "config.env.load_settings",
+          11.394309
+        ],
+        [
+          "sort.merge_sort.recursive",
+          11.375988
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          5.230532
+        ],
+        [
+          "db.pagination.select_page",
+          3.410084
+        ]
+      ],
+      "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          37.271073
+        ],
+        [
+          "config.env.load_settings",
+          19.345103
+        ],
+        [
+          "sort.merge_sort.recursive",
+          8.37556
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          7.098489
+        ],
+        [
+          "http.get_with_retry.requests",
+          6.4841
+        ]
+      ],
+      "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          37.271073
+        ],
+        [
+          "config.env.load_settings",
+          16.114784
+        ],
+        [
+          "sort.merge_sort.recursive",
+          11.375988
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          7.098489
+        ],
+        [
+          "http.get_with_retry.requests",
+          3.438203
+        ]
+      ],
+      "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+      "task": "csv_import"
+    },
+    {
+      "expected": "importers.users_csv.parse",
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          28.548102
+        ],
+        [
+          "config.env.load_settings",
+          9.104431
+        ],
+        [
+          "sort.merge_sort.recursive",
+          6.492086
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          5.230532
+        ],
+        [
+          "db.pagination.select_page",
+          3.410084
+        ]
+      ],
+      "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+      "task": "csv_import"
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          14.695115
+        ],
+        [
+          "auth.password.pbkdf2",
+          9.633399
+        ],
+        [
+          "auth.jwt.create_access_token",
+          7.729164
+        ],
+        [
+          "sort.merge_sort.recursive",
+          7.478241
+        ],
+        [
+          "config.env.load_settings",
+          5.324396
+        ]
+      ],
+      "request": "Add a FastAPI POST /signup endpoint that takes the sign-up data (email, password, name), validates it with a Pydantic model, and creates the user through our existing user repository. Return a 201 with the new user's public info, and a proper error response for invalid input or an email that's already registered.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "auth.password.pbkdf2",
+          12.010914
+        ],
+        [
+          "auth.jwt.create_access_token",
+          7.072456
+        ],
+        [
+          "importers.users_csv.parse",
+          6.287129
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.030078
+        ],
+        [
+          "search.binary_search.recursive",
+          2.084857
+        ]
+      ],
+      "request": "Add a \"forgot password\" flow to my Python app that emails users a password reset link containing a secure, expiring token. Write the code to generate and store the token, send the email over SMTP, and verify the token when they click the link.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          4.528612
+        ],
+        [
+          "auth.password.pbkdf2",
+          2.064665
+        ],
+        [
+          "collections.group_by.dict_of_lists",
+          1.867958
+        ]
+      ],
+      "request": "I need a Python function that takes an uploaded photo and generates a small thumbnail of it (say 200x200 max), keeping the aspect ratio. Can you write it using Pillow and make sure it handles different formats like JPEG and PNG and respects EXIF rotation?",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "text.slugify.ascii",
+          6.133885
+        ],
+        [
+          "db.pagination.select_page",
+          5.674386
+        ],
+        [
+          "http.get_with_retry.requests",
+          4.188053
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "search.binary_search.iterative",
+          0.983624
+        ]
+      ],
+      "request": "Write a Python function that takes a Markdown string and returns a complete HTML page, with the Markdown converted to HTML and wrapped in a basic template with a title and some simple styling. I'd also like a small CLI wrapper so I can run it on a .md file and get a .html file out.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          3.63416
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "auth.password.pbkdf2",
+          3.014664
+        ],
+        [
+          "config.env.load_settings",
+          2.349297
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ]
+      ],
+      "request": "I need a script in my Python project that cleans up old stuff automatically every night. Can you write it so it runs at 2 AM daily and deletes log files older than 30 days from the logs/ folder?",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ],
+        [
+          "config.env.load_settings",
+          2.094078
+        ],
+        [
+          "search.binary_search.iterative",
+          0.983624
+        ],
+        [
+          "sort.merge_sort.recursive",
+          0.949519
+        ],
+        [
+          "search.binary_search.recursive",
+          0.93867
+        ]
+      ],
+      "request": "Write a Python function that takes two (latitude, longitude) pairs in decimal degrees and returns the distance between them in kilometres using the haversine formula. Please include a docstring and a quick example showing it works.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "config.env.load_settings",
+          7.650946
+        ],
+        [
+          "text.slugify.ascii",
+          5.32401
+        ],
+        [
+          "http.get_with_retry.requests",
+          4.862874
+        ],
+        [
+          "importers.users_csv.parse",
+          1.559615
+        ]
+      ],
+      "request": "Write a Python function that downloads a very large file from a URL straight to disk in chunks, so it never loads the whole thing into memory, and shows a live progress bar with percent complete, speed, and ETA. It should also handle a missing Content-Length header and ideally resume interrupted downloads.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          5.058925
+        ],
+        [
+          "sort.merge_sort.recursive",
+          3.907898
+        ],
+        [
+          "auth.password.pbkdf2",
+          3.606655
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.207472
+        ],
+        [
+          "text.slugify.ascii",
+          1.999744
+        ]
+      ],
+      "request": "Can you write me a Python function that takes a timestamp and a user's IANA time zone name (like \"America/New_York\") and converts it to another user's time zone? I'd like it to use the standard library's zoneinfo, handle daylight saving time correctly, and work with both naive UTC and timezone-aware datetimes.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          6.412434
+        ],
+        [
+          "sort.merge_sort.recursive",
+          4.883902
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.83684
+        ],
+        [
+          "config.env.load_settings",
+          3.964456
+        ],
+        [
+          "db.pagination.select_page",
+          2.386382
+        ]
+      ],
+      "request": "Add a function to my Python project that exports the report data to a single .xlsx workbook with one sheet per section (e.g. summary, details, errors), using pandas/openpyxl. Include header formatting and auto-sized columns, and take the output path as a parameter.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "db.pagination.select_page",
+          2.139802
+        ],
+        [
+          "search.binary_search.iterative",
+          1.982263
+        ],
+        [
+          "search.binary_search.recursive",
+          1.852696
+        ]
+      ],
+      "request": "Can you add Redis caching to my slow database lookup functions in Python? I want results cached for about 5 minutes, ideally with a decorator so I can just slap it on the functions I want cached.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          6.282131
+        ],
+        [
+          "config.env.load_settings",
+          3.964456
+        ],
+        [
+          "sort.merge_sort.recursive",
+          3.907898
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          3.683003
+        ],
+        [
+          "importers.users_csv.parse",
+          3.581678
+        ]
+      ],
+      "request": "I'm building a live chat in Python where messages need to get pushed out to every connected browser as soon as someone sends one. Can you write the server code for that, using WebSockets, so all connected clients get each new message in real time?",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "ratelimit.token_bucket.check",
+          7.021606
+        ],
+        [
+          "importers.users_csv.parse",
+          5.57723
+        ],
+        [
+          "auth.password.pbkdf2",
+          5.345196
+        ],
+        [
+          "config.env.load_settings",
+          5.324396
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.143604
+        ]
+      ],
+      "request": "Write a Python function that checks whether a credit card number is plausibly valid before I charge it. It should strip spaces and dashes, run the Luhn check, and verify the length and prefix for the major card types (Visa, Mastercard, Amex, Discover), returning the detected card brand or None if it's invalid.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "text.slugify.ascii",
+          2.592698
+        ],
+        [
+          "importers.users_csv.parse",
+          2.562836
+        ],
+        [
+          "retry.with_exponential_backoff",
+          2.283797
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.139802
+        ],
+        [
+          "http.get_with_retry.requests",
+          1.890457
+        ]
+      ],
+      "request": "Write a Python function that takes a ticket ID string and generates a QR code image encoding it, saving it as a PNG file. Please use the `qrcode` library and make sure it handles errors gracefully if the ID is empty or the save path isn't writable.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "importers.users_csv.parse",
+          6.602031
+        ],
+        [
+          "config.env.load_settings",
+          5.324396
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.361309
+        ],
+        [
+          "db.pagination.select_page",
+          3.714465
+        ],
+        [
+          "auth.jwt.create_access_token",
+          2.139802
+        ]
+      ],
+      "request": "Can you switch my app's logging over to structured JSON lines, one JSON object per line with fields like timestamp, level, logger name, and message? I'd like it to use the standard `logging` module with a custom formatter and be configured in one place so everything else in the project just picks it up.",
+      "task": null
+    },
+    {
+      "expected": null,
+      "ranked": [
+        [
+          "http.get_with_retry.requests",
+          4.415973
+        ],
+        [
+          "ratelimit.token_bucket.check",
+          4.035716
+        ],
+        [
+          "retry.with_exponential_backoff",
+          3.756144
+        ],
+        [
+          "auth.password.pbkdf2",
+          3.113806
+        ],
+        [
+          "text.slugify.ascii",
+          2.592698
+        ]
+      ],
+      "request": "Write a Python worker that consumes jobs from a RabbitMQ queue using pika. It should ack messages after successful processing, retry or dead-letter failures, and shut down cleanly on SIGTERM.",
+      "task": null
+    }
+  ],
+  "search_constants": {
+    "BM25_B": 0.75,
+    "BM25_K1": 1.5,
+    "MATCH_THRESHOLD": 9.08
+  }
+}

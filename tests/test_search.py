@@ -76,3 +76,12 @@ def test_cli_search(root):
     assert out.exit_code == 0 and out.output.splitlines()[0].startswith("importers.users_csv.parse")
     none = CliRunner().invoke(app, ["--root", str(root), "search", "zzqv xylophone"])
     assert none.exit_code == 0 and "no reviewed pattern fits" in none.output
+
+
+def test_calibrated_threshold_rejects_unrelated_requests_and_accepts_fitting_ones():
+    idx = index()
+    assert search.MATCH_THRESHOLD == 9.08  # calibrated on the v3 development set only
+    for unrelated in ("resize an image to a thumbnail", "send an email with an attachment",
+                      "compress a folder into a zip archive"):
+        assert idx.search(unrelated) == [], unrelated
+    assert idx.search("hash user passwords and verify them at login")[0].id == "auth.password.pbkdf2"

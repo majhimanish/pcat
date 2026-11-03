@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # Calibrated in v3 Part D on the development set only (scripts/mcp_eval.py retrieval).
-MATCH_THRESHOLD = 0.0
+MATCH_THRESHOLD = 9.08  # dev-set midpoint between 5.76 (best negative) and 12.41 (worst positive)
 
 BM25_K1 = 1.5
 BM25_B = 0.75
