@@ -1,0 +1,29 @@
+{
+  "note": "One-sentence developer needs for the held-out set (v3 Part D). Written from the task, not from pattern metadata. Fresh claude -p processes turn each into a request; 5 per cataloged task, 1 per negative.",
+  "positives": {
+    "jwt_create": "A backend developer needs to give a user who just logged in a signed token that other services can verify and that stops working after a while.",
+    "password_hash": "A developer building sign-up and login needs to save users' passwords safely and later check whether a typed password is correct.",
+    "paginate_query": "A developer's API endpoint lists database records through SQLAlchemy and must return them one page at a time together with how many records exist in total.",
+    "http_retry": "A developer's service calls an unreliable external HTTP API that sometimes times out or returns server errors, so the call should be attempted again with growing pauses.",
+    "env_config": "A developer wants the application to read its settings, such as the database address, port and debug switch, from environment variables at startup, with defaults and rejecting bad values.",
+    "token_bucket": "A developer needs to stop any single client from making too many API requests in a short time and tell blocked clients when they can try again.",
+    "csv_import": "Staff upload a spreadsheet export of new users to an admin tool, and the developer must read it, check every row, and report which rows are wrong and why."
+  },
+  "negatives": [
+    "A developer must expose a FastAPI endpoint that accepts sign-up data, validates it and creates the user through a repository.",
+    "A developer needs to email users a link to reset their forgotten password.",
+    "A developer wants to make small thumbnails of photos users upload.",
+    "A developer needs to turn Markdown documents into HTML pages.",
+    "A developer wants a maintenance task to run automatically every night.",
+    "A developer needs the distance in kilometres between two GPS coordinates.",
+    "A developer must download very large files to disk while showing progress.",
+    "A developer needs to convert timestamps between users' time zones.",
+    "A developer wants to export a report as an Excel workbook with several sheets.",
+    "A developer wants to cache slow database lookups in Redis for a few minutes.",
+    "A developer is building a live chat that pushes messages to every connected browser.",
+    "A developer needs to check whether a credit card number is plausibly valid before charging it.",
+    "A developer wants to generate a QR code image for a ticket.",
+    "A developer wants the application's logs written as structured JSON lines.",
+    "A developer needs a worker that consumes jobs from a RabbitMQ queue."
+  ]
+}

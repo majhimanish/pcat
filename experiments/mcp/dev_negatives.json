@@ -1,0 +1,15 @@
+{
+  "note": "Development-set negatives: common tasks with no catalog pattern (written for v3 Part D).",
+  "requests": [
+    "Write a function that sends an email with an attachment over SMTP.",
+    "Resize an uploaded image to a 200x200 thumbnail and save it as JPEG.",
+    "Add a FastAPI POST endpoint that validates the input with a Pydantic model and creates a user.",
+    "Parse a date string like '3rd March 2024' into a datetime object.",
+    "Upload a local file to an S3 bucket with boto3.",
+    "Generate a PDF invoice from an order dictionary.",
+    "Run a cleanup job every night at 2am.",
+    "Broadcast chat messages to all connected websocket clients.",
+    "Post a message to a Slack channel when a deploy finishes.",
+    "Compress a folder into a zip archive."
+  ]
+}
