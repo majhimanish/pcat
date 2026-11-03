@@ -125,3 +125,26 @@ when you fix it; add one whenever you take a shortcut.
   teams. *Fix:* weight by distinct inputs/files.
 - **Fragment normalization does not check placeholder collisions** (a free name
   like `v0` can merge shapes), and `else: if` is treated as `elif`. Both are rare.
+
+## Variance experiment (v2.1)
+
+- **One model through one backend.** All samples are Claude Sonnet 5.5 via
+  `claude -p`, which adds Claude Code's system prompt and a little hosting
+  context, and hides the temperature. *Fix:* re-run with `ANTHROPIC_API_KEY`
+  (bare API calls) and at least one more model; compare.
+- **The CLI can answer as a skill** (2 samples became `/security-review` output).
+  *Fix:* prefer the API backend; with the CLI, disable skills/slash commands
+  (`--disable-slash-commands`) and check that responses contain code.
+- **20 samples hit the ceiling.** A and B often have 20/20 distinct shapes, so the
+  data cannot rank them. *Fix:* 50–100 samples per cell for the main tasks.
+- **"No classes" conflicts with idiomatic FastAPI**, leaving 1–2 valid samples in
+  A/B for that task (only the supplementary metric covers it). *Fix:* support
+  classes in canonicalization, or ask for models in a separate block.
+- **References are arbitrary sampled outputs** and sit directly in the prompt.
+  *Fix:* use reviewed catalog patterns and a real retrieval step (MCP lookup),
+  and run each reference's tests against the condition-C samples.
+- **Strict shape equality overstates differences**; the 0.90 similarity threshold
+  for near-shape groups is a judgment call. *Fix:* report the full similarity
+  distribution, or a semantic check (do two samples pass the same tests?).
+- **`third_party` uses the running interpreter's `sys.stdlib_module_names`**, so
+  import-set columns could differ slightly across Python versions.

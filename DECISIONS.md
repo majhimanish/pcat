@@ -403,3 +403,18 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      near-shape groups: single-linkage clusters of samples with similarity
      ≥ 0.90. The threshold is a judgment call, chosen before looking at
      condition C; the spec's metrics stay the headline.
+104. **CLI artifacts are kept, not regenerated.** Two `jwt_create` C samples are
+     the CLI answering as its `/security-review` skill instead of writing code;
+     they are stored as generated and count as `syntax_error`. Re-rolling them
+     would select on the outcome. 31 samples report 2–3 turns although all tools
+     were disallowed; their responses are ordinary code, so they are kept.
+105. **References fall back to sample 01.** Every condition-B shape was unique for
+     seven tasks, so the spec's tie-break chose B sample 01 there (02 for
+     `fastapi_create_user`, whose only valid samples are 02 and 06). The write-up
+     notes that the references are effectively arbitrary.
+106. **Committed run data:** samples, `analysis.json`, `table.md` and the `pcat
+     mine` reports (JSON and HTML) for runs `smoke` and `main`; nothing is
+     regenerated after commit. Analysis of a full run takes about 1.5 minutes,
+     mostly the pairwise similarity metric.
+107. **Write-up averages** ("mean effective shapes") use only task/condition cells
+     with at least 10 valid samples, which excludes `fastapi_create_user` A and B.

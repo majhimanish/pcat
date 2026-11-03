@@ -15,21 +15,21 @@ approved patterns instead of producing a new variation per prompt.
   fingerprint validate index show render find`), 10 validation checks plus an
   optional `--base` immutability check, GitHub Actions CI, CODEOWNERS, 6 seed
   patterns. Spec: `docs/specs/v1-catalog.md`.
-- **v1.1 (done):** canonicalization rules v2 (`CANONICAL_VERSION = 2`):
-  keyword arguments at calls to the pattern's own functions are renamed;
-  literal module constants allowed (`cN`); `pcat migrate-fingerprints`;
-  `index.json` records `canonical_version`; `--base` allows fingerprint changes
-  only with a rules bump and byte-identical `impl.py`. Spec:
-  `docs/specs/v1.1-canonicalizer-fix.md`. Seed fingerprints did not change.
+- **v1.1 (done):** rules v2 (`CANONICAL_VERSION = 2`): helper keywords renamed,
+  literal constants (`cN`), `pcat migrate-fingerprints`, versioned `index.json`,
+  stricter `--base`. Spec: `docs/specs/v1.1-canonicalizer-fix.md`.
 - **v2 (done):** pattern miner. `pcat mine` clusters repeated function shapes
   and block fragments across repos, reports catalog coverage (`report.json` +
   `report.html`); `pcat promote` turns a function cluster into a pattern via the
   `pcat add` flow. Spec: `docs/specs/v2-miner.md`. Benchmark on
   requests/flask/fastapi: `docs/benchmarks/v2-results.md` (0% coverage; all
   default clusters were FastAPI tutorial copies; library code barely repeats).
+- **v2.1 (done):** LLM output variance experiment (`experiments/variance/`,
+  `src/pcat/variance.py`, `scripts/variance.py`). 480 Claude Sonnet 5.5 samples:
+  same prompt → effective shapes 15.7 of 20 on average; paraphrased 17.4; with a
+  reference in the prompt 2.0. Write-up: `docs/benchmarks/v2.1-variance.md`.
 - **Planned next:** v3 MCP server (serve the catalog to coding agents), v4 linter
-  (flag application code that reimplements or uses deprecated patterns). Before
-  v4, re-run the benchmark on application code (see the results doc).
+  (flag application code that reimplements or uses deprecated patterns).
 
 ## Setup and commands
 
@@ -46,6 +46,7 @@ pcat migrate-fingerprints   # after bumping CANONICAL_VERSION; prints old/new ta
 pcat mine <path>... --out <dir> [--jobs N]   # report.json + report.html; cache in .pcat-cache/
 pcat promote <fn-cluster-id> --report <dir>/report.json --id <pattern-id> [--member N]
 python scripts/benchmark.py # clones pinned OSS repos into .bench/ and mines them (not in CI)
+python scripts/variance.py generate|analyze|reference|report --run-id <id>  # needs API key or `claude`
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -82,7 +83,11 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `tests/` — tool tests; `conftest.py` gives a `root` fixture with a temp copy
   of the seed catalog; `tests/fixtures/miner/` holds miner fixture code
   (excluded from collection).
-- `scripts/benchmark.py`, `docs/benchmarks/` — miner benchmark and its results.
+- `src/pcat/variance.py` — variance experiment logic (backends, extraction,
+  snippet normalization, metrics, references); `scripts/variance.py` drives it.
+- `experiments/variance/` — `tasks.yaml` (frozen prompts), `runs/<id>/<task>/<A|B|C>/
+  sample_NN.{py,json}`, `analysis.json`, `mine-*` reports, `references/` (not catalog).
+- `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
 
 ## Invariants (never break these)
 
@@ -122,9 +127,9 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 
 - `DECISIONS.md` — every assumption made so far (read before changing behavior)
 - `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
-- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`,
-  `v2-miner.md`; later `v3-mcp.md`, `v4-linter.md`)
-- `docs/benchmarks/v2-results.md` — what mining real code found
+- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-…`, `v2-miner.md`,
+  `v2.1-variance-experiment.md`; later `v3-mcp.md`, `v4-linter.md`)
+- `docs/benchmarks/` — `v2-results.md` (mining), `v2.1-variance.md` (LLM variance)
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
 ## Rule for later sessions
