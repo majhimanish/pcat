@@ -163,11 +163,6 @@ when you fix it; add one whenever you take a shortcut.
 
 ## Application catalog (v2.2 Part 2)
 
-- **Exported functions are not recorded as such.** In a multi-function pattern
-  (`auth.password.pbkdf2`, `config.env.load_settings`) only `entry_point` is
-  named; the other public functions look like helpers in the canonical form and
-  in `index.json`. *Fix:* an optional `exports` list in `pattern.yaml` and the
-  index (metadata only).
 - **Skipped tests count as passing.** Without the `catalog` extra, `pcat validate`
   passes third-party patterns whose tests were all skipped. CI installs the extra,
   so it verifies them there. *Fix:* report skipped patterns in `validate` output,
@@ -175,9 +170,6 @@ when you fix it; add one whenever you take a shortcut.
 - **`requires` is not checked against imports.** Nothing verifies that a pattern
   importing `jwt` declares `pyjwt`. *Fix:* map top-level imports to distributions
   (`importlib.metadata.packages_distributions`) during validation.
-- **`requires` appears in `index.json` only when non-empty** (to keep existing
-  entries byte-identical); consumers must default it. *Fix:* add it to every
-  entry in the next deliberate index-format change.
 - **FastAPI create-user is deferred** until patterns can contain classes
   (Pydantic models). The tested class-free variant stays in `docs/catalog-review/`.
 - **Seed-specific assumptions** may remain in docs or examples (e.g.
@@ -185,3 +177,43 @@ when you fix it; add one whenever you take a shortcut.
   application patterns make better examples.
 - **Owner and review are placeholders**: every pattern's `owner` is
   `@platform-team` and CODEOWNERS still names that placeholder team.
+
+## MCP server and search (v3)
+
+- **"Nothing fits" is the weak spot.** 2 of 15 held-out negatives matched above
+  the threshold (FastAPI sign-up → CSV importer at 14.70, forgot-password →
+  pbkdf2 at 12.01); the first scores above the lowest held-out positive, so no
+  BM25 threshold separates it. *Fix:* rerank the top hits with embeddings or a
+  cheap LLM judgment of `use_when`, or let `search_patterns` return a "partial
+  fit" band instead of a hard cut.
+- **Terse queries fall below the threshold.** "throttle API calls per client"
+  scores 6.92 (< 9.08) although `ratelimit.token_bucket.check` is the right
+  answer; agents wrote descriptive queries in the evaluation, people may not.
+  *Fix:* synonyms in `keywords` (throttle), or return below-threshold hits
+  marked as weak.
+- **Agents still change patterns after fetching them.** 18 of 140 end-to-end
+  samples fetched the right pattern and changed its structure: request-driven
+  (xlsx input, pandas) but also a silent regression (`http_retry` narrowed to
+  `requests.Timeout`, dropping connection-error retries) and an unasked check
+  reading SQLAlchemy's private `_order_by_clauses`. `check_code` reported `none`
+  and the agent submitted anyway. *Fix:* `check_code` (and the v4 linter)
+  should say what differs from the pattern; CI should flag near-misses.
+- **The evaluation favours the server.** One model (claude-sonnet-5-5), only the
+  pcat tools allowed, an explicit repo note, requests written by the same model
+  family from needs I wrote, a 13-pattern catalog. *Fix:* rerun with file/shell
+  tools, no note, real developer requests, a larger catalog and another model.
+- **Dev set contamination.** Metadata and dev negatives were written by the
+  author of the v2.1 tasks; dev numbers are optimistic. Use only held-out-style
+  sets to judge future search changes.
+- **Search is lexical and English-only**, rebuilt per process from `index.json`
+  (fine at 13 patterns; untested at hundreds).
+- **`check_code` matches only entry points and exports**, by whole-function
+  fingerprint; a pattern inlined into a larger function, or split differently,
+  is `none`.
+- **FastMCP logs INFO lines to stderr** on every request; harmless for stdio
+  clients but noisy in terminals. *Fix:* set the SDK's log level in `serve`.
+- **Cost figures are CLI estimates** (`total_cost_usd`), which may reflect plan
+  usage rather than billing.
+- **The tool-call log grows without bound** and has timestamps (it is
+  evaluation output, not a deterministic artifact). *Fix:* rotate, or keep it
+  out of repositories.

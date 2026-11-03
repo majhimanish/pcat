@@ -11,29 +11,31 @@ approved patterns instead of producing a new variation per prompt.
 
 ## Status
 
-- **v1 (done):** catalog format, canonicalizer, `pcat` CLI, 10 validation checks +
-  `--base`, CI, CODEOWNERS, 6 seed patterns. Spec: `docs/specs/v1-catalog.md`.
-- **v1.1 (done):** rules v2 (`CANONICAL_VERSION = 2`): helper keywords renamed,
-  literal constants (`cN`), `pcat migrate-fingerprints`, versioned `index.json`,
-  stricter `--base`. Spec: `docs/specs/v1.1-canonicalizer-fix.md`.
+- **v1 / v1.1 (done):** catalog format, canonicalizer (`CANONICAL_VERSION = 2`),
+  `pcat` CLI, 10 validation checks + `--base`, CI, CODEOWNERS, 6 seeds,
+  `migrate-fingerprints`, versioned `index.json`. Specs: `docs/specs/v1*.md`.
 - **v2 (done):** miner: `pcat mine` (function/fragment clusters, coverage),
   `pcat promote`. Benchmark: `docs/benchmarks/v2-results.md` (library code barely repeats).
-- **v2.1 (done):** LLM output variance experiment (`experiments/variance/`,
-  `src/pcat/variance.py`, `scripts/variance.py`). 480 Claude Sonnet 5.5 samples:
-  same prompt → effective shapes 15.7 of 20 on average; paraphrased 17.4; with a
-  reference in the prompt 2.0. Write-up: `docs/benchmarks/v2.1-variance.md`.
+- **v2.1 (done):** LLM output variance (`experiments/variance/`, `variance.py`):
+  480 samples; effective shapes 15.7/20 same prompt, 17.4 paraphrased, 2.0 with a
+  reference in the prompt. Write-up: `docs/benchmarks/v2.1-variance.md`.
 - **v2.2 (done):** application catalog. `docs/catalog-review/` compares 17 tested
   variants; the owner's `choices.yaml` (final) became 7 patterns (`auth.*`, `db.*`,
   `http.*`, `config.*`, `ratelimit.*`, `importers.*`; FastAPI deferred until patterns
   support classes). Added: multi-function `pcat add`, `requires` metadata, `catalog` extra.
-- **Planned next:** v3 MCP server (serve the catalog to coding agents), v4 linter
-  (flag application code that reimplements or uses deprecated patterns).
+- **v3 (done):** MCP server. Metadata `exports`/`keywords`/`use_when`/`usage`;
+  BM25 `pcat search` (threshold 9.08, dev-calibrated); `pcat serve` (tools
+  `search_patterns`, `get_pattern`, `check_code`). Retrieval top-1 35/35 dev and
+  held-out, false matches 0/10 dev, 2/15 held-out; end to end 160 runs: searched
+  100%, right pattern fetched 140/140, pattern in code 87%. `docs/benchmarks/v3-mcp.md`.
+- **Planned next:** v4 linter (flag application code that reimplements or uses
+  deprecated patterns; report what differs from a fetched pattern).
 
 ## Setup and commands
 
 ```bash
 python3.11 -m venv .venv && . .venv/bin/activate
-pip install -e ".[dev,catalog]"  # catalog = libraries the patterns import (CI installs it)
+pip install -e ".[dev,catalog,mcp]"  # catalog = pattern libraries; mcp = pcat serve (CI: all)
 pytest                      # tool tests + review variants; validates the real catalog
 pcat validate               # all checks incl. every pattern's tests
 pcat validate --skip-tests  # fast
@@ -45,6 +47,9 @@ pcat mine <path>... --out <dir> [--jobs N]   # report.json + report.html; cache 
 pcat promote <fn-cluster-id> --report <dir>/report.json --id <pattern-id> [--member N]
 python scripts/benchmark.py # clones pinned OSS repos into .bench/ and mines them (not in CI)
 python scripts/variance.py generate|analyze|reference|report --run-id <id>  # needs API key or `claude`
+pcat search "<request>" [--limit N]          # BM25 over index.json; below threshold = no match
+pcat serve [--catalog PATH] [--log FILE]     # MCP stdio server (claude mcp add pcat -- pcat serve …)
+python scripts/mcp_eval.py heldout|retrieval|e2e|e2e-analyze   # v3 evaluation (heldout/e2e need `claude`)
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -58,33 +63,31 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 
 ## Architecture
 
-- `src/pcat/canonical.py` — canonicalization rules and `CANONICAL_VERSION`,
-  fingerprint, name map, AST-based `render`, `extract_function` (function +
-  helpers + used constants + used imports). Owns every fingerprint.
-- `src/pcat/schema.py` — pydantic `PatternMeta` for `pattern.yaml` (unknown keys
-  rejected, cross-field rules).
-- `src/pcat/catalog.py` — on-disk layout, loading, `index.json` generation,
-  all validation checks (`validate`), per-pattern pytest runner, `--base` git
-  check, `migrate_fingerprints`.
-- `src/pcat/shape.py` — `SHAPE_VERSION`; shape text = canonical text with literal
-  values blanked (True/False/None/... kept). Never changes canonical fingerprints.
-- `src/pcat/miner.py` — `MINER_VERSION` (cache format); file discovery and
-  filters, per-file analysis (functions + fragments, cached by content hash and
-  rule versions, process pool), clustering, coverage, report JSON, promotion
-  target selection.
-- `src/pcat/report_html.py` — renders report.json data as one self-contained page.
-- `src/pcat/cli.py` — typer app; thin layer over the modules above; errors
-  become `error: …` + exit 1.
-- `src/pcat/errors.py` — `PcatError` and subclasses.
-- `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`),
+- `src/pcat/canonical.py` — rules, `CANONICAL_VERSION`, fingerprint, name map,
+  AST `render`, `extract_function` (function + helpers + constants + imports).
+- `src/pcat/schema.py` — pydantic `PatternMeta` for `pattern.yaml` (extra keys rejected).
+- `src/pcat/catalog.py` — layout, loading, `index.json`, all validation checks,
+  per-pattern pytest runner, `--base` git check, `migrate_fingerprints`.
+- `src/pcat/shape.py` — `SHAPE_VERSION`; canonical text with literal values blanked.
+- `src/pcat/miner.py` — `MINER_VERSION`; discovery, cached per-file analysis
+  (process pool), clustering, coverage, report JSON, promotion targets.
+  `report_html.py` renders report.json as one self-contained page.
+- `src/pcat/search.py` — tokenizer, BM25 `SearchIndex` over `index.json`,
+  `MATCH_THRESHOLD` (recalibrate only on the dev set; `mcp_eval.py retrieval`).
+- `src/pcat/serving.py` — `CatalogService`: the three tools as plain functions,
+  server instructions, JSONL call log. `mcp_server.py` wraps it with FastMCP
+  (only module importing `mcp`).
+- `src/pcat/evaluation.py` — v3 request sets, retrieval metrics, threshold
+  calibration, end-to-end scoring; `scripts/mcp_eval.py` drives it.
+- `src/pcat/cli.py` — typer app, thin; errors → `error: …` + exit 1. `errors.py`: `PcatError`.
+- `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`, v3 fields),
   `impl.py`, `test_impl.py`; `catalog/index.json` is generated. App patterns + 6 seeds.
-- `tests/` — tool tests; `conftest.py` gives a `root` fixture with a temp copy
-  of the seed catalog; `tests/fixtures/miner/` holds miner fixture code
-  (excluded from collection).
-- `src/pcat/variance.py` — variance experiment logic (backends, extraction,
-  snippet normalization, metrics, references); `scripts/variance.py` drives it.
-- `experiments/variance/` — `tasks.yaml` (frozen prompts), `runs/<id>/<task>/<A|B|C>/
-  sample_NN.{py,json}`, `analysis.json`, `mine-*` reports, `references/` (not catalog).
+- `tests/` — tool tests; `root` fixture = temp copy of the catalog;
+  `tests/fixtures/miner/` (excluded from collection).
+- `src/pcat/variance.py` — variance logic (backends incl. `claude -p`, extraction,
+  similarity, metrics); `scripts/variance.py`. Data: `experiments/variance/` (frozen).
+- `experiments/mcp/` — v3 dev negatives, held-out needs/requests (frozen),
+  `retrieval.json`, `e2e/<task>/sample_NN.{json,log.jsonl}`, `e2e_results.json`.
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
 - `docs/catalog-review/` — v2.2 comparison doc, `choices.yaml`, `variants/<task>/`
   (+ tests, in pytest testpaths; skip without `requirements.txt` libraries).
@@ -102,9 +105,9 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
    Changes go in `<pattern_id>@v<N+1>/`; the old one becomes
    `status: deprecated` + `replaced_by`.
 3. **`catalog/index.json` is the only interface for out-of-process tools** (MCP
-   server, linter). Add fields compatibly; never require them to read pattern
-   folders. In-package commands (`validate`, `mine`) may read folders via
-   `catalog.py`; the miner does, because the index lacks shape fingerprints.
+   linter). Add fields compatibly; never require them to read pattern folders.
+   In-package commands (`validate`, `mine`, `serve`) may read folders via
+   `catalog.py` (the index lacks code and shape fingerprints); search uses the index only.
 4. **Output is deterministic and byte-identical across machines**: sorted
    iteration everywhere, `\n` line endings, `json.dumps(sort_keys=True,
    indent=2)`, no timestamps, no absolute paths in generated files. Miner
@@ -128,8 +131,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `DECISIONS.md` — every assumption made so far (read before changing behavior)
 - `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-…`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`; later `v3-mcp.md`, `v4-linter.md`)
-- `docs/benchmarks/` — `v2-results.md` (mining), `v2.1-variance.md` (LLM variance)
+  `v2.1-…`, `v2.2-app-catalog.md`, `v3-mcp-server.md`; later `v4-linter.md`)
+- `docs/benchmarks/` — `v2-results.md` (mining), `v2.1-variance.md`, `v3-mcp.md`
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
 ## Rule for later sessions

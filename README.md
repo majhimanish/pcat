@@ -18,14 +18,15 @@ the environment, rate limiting and CSV import (`auth.*`, `db.*`, `http.*`,
 This repository has the catalog and its review workflow (file format,
 canonicalizer, `pcat` CLI, validation, CI) and a **miner** that measures how much
 code repeats and promotes repeated functions into patterns (see
-[Mining](#mining-finding-candidate-patterns)). An MCP server and a linter are
-planned next (see [Planned extensions](#planned-extensions)).
+[Mining](#mining-finding-candidate-patterns)), and an **MCP server** that serves
+the catalog to coding agents (see [Serving the catalog](#serving-the-catalog-to-coding-agents-mcp)).
+A linter is planned next (see [Planned extensions](#planned-extensions)).
 
 ## Quick start
 
 ```bash
 python -m venv .venv && . .venv/bin/activate     # Python 3.11+
-pip install -e ".[dev,catalog]"   # catalog = libraries the patterns import
+pip install -e ".[dev,catalog,mcp]"   # catalog = libraries the patterns import; mcp = pcat serve
 pytest                  # tool tests; also validates the catalog (third-party pattern
                         # tests skip if the catalog extra is not installed)
 pcat validate           # all catalog checks, including every pattern's tests
@@ -319,11 +320,20 @@ line per tool call.
 > HTTP retries, config loading, rate limiting, CSV import), use the pcat tools:
 > `search_patterns`, then `get_pattern` if one fits; run `check_code` on the result.
 
+**Measured (v3, `docs/benchmarks/v3-mcp.md`):** search returned the right pattern
+first for 35/35 development and 35/35 held-out requests; 2 of 15 held-out
+unrelated requests got a match anyway. With the server connected, Claude Code
+searched in 160/160 runs, fetched the right pattern in 140/140 and produced the
+reviewed pattern exactly in 122/140 (87%; 0 of 135 without the catalog in v2.1).
+Most misses were adaptations to the request (xlsx input, pandas, narrower retries).
+
 ## Planned extensions
 
 Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
 "patterns": [...]}`, where each entry has `id, version, title, category,
-variant_of, behavior, status, fingerprint, path` (sorted by id and version). A
+variant_of, behavior, status, fingerprint, path, summary, entry_point, requires,
+exports, keywords, use_when, usage` (sorted by id and version; `use_when` and
+`usage` may be null). The MCP server (`pcat serve`) searches this index. A
 tool that fingerprints code must use the same rules version. The catalog's
 internals can change without breaking these tools.
 
@@ -337,5 +347,5 @@ internals can change without breaking these tools.
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`)
-- `docs/benchmarks/` — miner benchmark and variance experiment results
+  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`)
+- `docs/benchmarks/` — miner benchmark, variance experiment and MCP results

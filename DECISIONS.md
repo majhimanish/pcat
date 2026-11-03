@@ -511,3 +511,93 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      (miner-style), shape and exact, plus the closest similarity. Result for B:
      0 of 135 matched (closest 0.39–0.85); A and C also 0. Sanity-checked: a
      pattern matches itself, and a renamed/re-commented copy matches by shape.
+
+## v3 — MCP server (`docs/specs/v3-mcp-server.md`)
+
+128. **Metadata authorship.** `keywords`, `use_when` and `usage` for all 13
+     patterns were written from each `impl.py`, its tests and `summary` only,
+     without opening `tasks.yaml`. The same author had read the v2.1 tasks in
+     earlier phases, so the dev set is contaminated in spirit; the held-out set is
+     the real retrieval measurement.
+129. **Field rules.** `exports`: identifiers, unique, not the entry point, each a
+     top-level function in `impl.py` (check 3). `keywords`: 5–15 non-empty,
+     unique case-insensitively. `use_when`/`usage`: optional non-empty strings
+     (multi-line `usage` is written as a YAML literal block). All are metadata
+     only: not in fingerprints and not immutable, so they can be improved on
+     approved versions; `--base` still rejects any `impl.py` change.
+130. **Index format.** Every entry now always has `summary`, `entry_point`,
+     `requires` (sorted, `[]` when none — supersedes 122's "only when non-empty"),
+     `exports`, `keywords`, `use_when`, `usage` (`null` when unset), so the
+     server and later the linter never need pattern folders for search.
+     `canonical_version` and the existing keys are unchanged.
+131. **Search.** BM25 with k1 = 1.5, b = 0.75 and Lucene's smoothed idf
+     `ln((N - df + 0.5) / (df + 0.5) + 1)` (always positive). Document = id
+     tokens, title, summary, category, keywords, use_when, entry point, exports.
+     Query terms are de-duplicated. Tokenizer: lowercase, split on anything not
+     `a-z0-9`, fixed stop-word list (function words plus "function", "python",
+     "code", "helper", "implement", "make", "create", which appear in nearly
+     every request), then one ordered suffix rule (`ations`, `ation`, …, `s`;
+     words ending in `ss` untouched; stem must keep ≥ 3 characters). "get" is
+     not a stop word (`http.get_with_retry`). Ties: id, then version.
+132. **Threshold.** Calibrated on the 45 dev requests only: candidates are the
+     midpoints between adjacent distinct top-1 scores (plus 0 and above the
+     max); accuracy = positives whose top-1 is right *and* ≥ threshold plus
+     negatives whose best score is below it; among equally accurate candidates
+     the median is taken, rounded to 2 decimals. Result 9.08 (dev accuracy 1.0;
+     best negative 5.76, worst positive 12.41). A test pins the constant to the
+     value the calibration reproduces.
+133. **Serving reads folders.** `get_pattern` needs the code and `check_code`
+     needs per-function fingerprints, neither of which is in the index, so
+     `serving.py` (in-package, like `validate`/`mine`) loads patterns through
+     `catalog.py`; search uses only `index.json` (invariant 3 updated).
+134. **`get_pattern`.** Accepts `id` or `id@vN`; renders with the existing
+     `render` and rejects unknown name keys (listing the valid ones) and names
+     that collide (re-canonicalizing the rendered code must give the pattern's
+     canonical text). Deprecated versions are returned with a `warning`.
+135. **`check_code`.** Reuses the miner's per-function analysis (no fragments).
+     A function is `covered` when its exact fingerprint equals a catalog entry
+     point's or export's, `near` when only its shape fingerprint does. Only
+     active patterns; private helpers are not matched on their own. Syntax
+     errors return `{"error": …, "functions": []}`.
+136. **Server.** FastMCP from the `mcp` SDK (`mcp>=1.2,<2`, tested with 1.30),
+     stdio only. `mcp_server.py` is the only module importing `mcp`; tool errors
+     (`PcatError`) become MCP tool errors. Instructions are generated from the
+     active patterns' categories and titles. `--catalog` accepts a repo root or
+     its `catalog/` folder and is resolved before anything else, so the server
+     works from any working directory. The log is JSONL with a result
+     *summary* (ids, scores, statuses), not full results, plus a timestamp
+     (the log is evaluation output, not a generated catalog file).
+137. **Dev negatives.** 10 common tasks I wrote with no pattern
+     (`experiments/mcp/dev_negatives.json`), including a FastAPI endpoint.
+138. **Held-out set.** 7 positive needs and 15 negative needs, one sentence each,
+     written from the task descriptions (not metadata). Each request came from a
+     fresh `claude -p` (claude-sonnet-5-5) in an empty folder with all tools
+     disabled, 5 per positive need and 1 per negative; `clean_request` keeps the
+     first paragraph without quotes or a "Request:" label. A usage-limit
+     interruption failed 36 of 50 on the first run; `--resume` regenerated only
+     the failed ones. Committed (`5a68b6e`) before evaluation.
+139. **No improvement round.** Held-out top-1 was 100%, above the spec's 80% bar,
+     so tokenizer and metadata were left as calibrated on dev.
+140. **End-to-end setup.** v2.1's `CliGenerator` plus `--mcp-config` (one config
+     per sample pointing at `pcat serve --catalog <repo> --log <sample log>`),
+     `--strict-mcp-config` (already in the generator), `--disable-slash-commands`
+     (v2.1 saw skill output) and `--allowedTools` for the three pcat tools only;
+     stdin is `/dev/null` so `claude -p` never waits for input. 20 samples per
+     task cycle its 5 held-out requests; 20 negatives cycle the 15 negative
+     requests. claude-sonnet-5-5, 6 parallel jobs.
+141. **End-to-end scoring.** *Correct retrieval* = `get_pattern` called with the
+     task's pattern id (any version). *Pattern match* = every pattern function
+     (entry point + exports) appears as covered/near for that pattern in
+     `check_code` of the final code block (shape = covered or near; exact =
+     covered). *Library agreement* = the code imports every `requires` library,
+     or none of the catalog's third-party libraries for stdlib patterns.
+     *Similarity* = v2.1 shape-text similarity of the whole snippet to the
+     pattern's `impl.py`. Each miss gets the first applicable outcome:
+     did_not_search, search_missed, found_but_not_fetched, fetched_other_pattern,
+     fetched_but_changed. Whether a fetched-but-changed sample adapted for the
+     request or rewrote unasked, and whether a negative's pattern use was a
+     fitting sub-task, was judged by reading the code (recorded in
+     `docs/benchmarks/v3-mcp.md`).
+142. **`mcp` extra in CI.** CI installs `.[dev,catalog,mcp]`; server tests skip
+     cleanly without `mcp` (`importorskip`). The stdio test starts `pcat serve`
+     as a subprocess from another directory.
