@@ -162,11 +162,14 @@ def test_index_format(root):
     assert list(doc) == ["canonical_version", "patterns"]
     assert doc["canonical_version"] == canonical.CANONICAL_VERSION == 2
     entries = doc["patterns"]
-    assert [e["id"] for e in entries] == SEED_IDS
-    assert set(entries[0]) == {
+    ids = [e["id"] for e in entries]
+    # v2.2: the catalog holds application patterns besides the seeds; entries stay sorted.
+    assert ids == sorted(ids) and set(SEED_IDS) <= set(ids)
+    seed = next(e for e in entries if e["id"] == SEED_IDS[0])
+    assert set(seed) == {
         "id", "version", "title", "category", "variant_of", "behavior", "status", "fingerprint", "path",
     }
-    assert entries[0]["path"] == "catalog/collections/group_by.dict_of_lists"
+    assert seed["path"] == "catalog/collections/group_by.dict_of_lists"
 
 
 def test_show(root):
@@ -360,8 +363,9 @@ def test_migrate_fingerprints_command(root):
     assert lines[0].split() == ["id", "old", "new", "status"]
     row = next(line for line in lines if line.startswith(f"{ITER}@v1"))
     assert row.split()[1] == "0" * 64 and row.split()[3] == "changed"
-    assert sum("unchanged" in line for line in lines) == 5
-    assert "1 of 6 fingerprint(s) changed; rules version 2" in result.output
+    total = len(cat.load_catalog(root))  # v2.2: no longer only the 6 seeds
+    assert sum("unchanged" in line for line in lines) == total - 1
+    assert f"1 of {total} fingerprint(s) changed; rules version 2" in result.output
     assert pcat(root, "validate", "--skip-tests").exit_code == 0
 
 

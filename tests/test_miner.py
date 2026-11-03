@@ -12,6 +12,7 @@ from typer.testing import CliRunner
 
 from conftest import REPO_ROOT
 from pcat import canonical, miner, shape
+from pcat import catalog as cat
 from pcat.cli import app
 from pcat.miner import MineSettings
 
@@ -162,7 +163,7 @@ def test_function_that_cannot_canonicalize_is_filtered_not_fatal():
 # Coverage ---------------------------------------------------------------------- #
 def test_catalog_coverage_exact_and_near(report):
     cov = report["coverage"]
-    assert cov["catalog_patterns"] == 6
+    assert cov["catalog_patterns"] == len(cat.load_catalog(REPO_ROOT))  # v2.2: seeds + app patterns
     assert cov["covered"] == 1 and cov["near_covered"] == 1
     assert cov["covered_percent"] == round(100 / cov["functions"], 2)
     row = next(p for p in cov["patterns"] if p["pattern"] == "search.binary_search.iterative@v1")
