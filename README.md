@@ -272,6 +272,53 @@ python scripts/catalog_review_doc.py                  # regenerate the compariso
 python scripts/catalog_coverage.py --condition B      # v2.1 samples vs the catalog patterns
 ```
 
+## Serving the catalog to coding agents (MCP)
+
+`pcat serve` runs an [MCP](https://modelcontextprotocol.io) server over stdio
+with three tools:
+
+| Tool | What it does |
+|---|---|
+| `search_patterns(request, limit=5)` | BM25 search over pattern metadata; returns matches above a calibrated threshold, or an empty list ("no reviewed pattern fits") |
+| `get_pattern(id, names=None)` | the pattern's code rendered with your names, plus `requires`, `exports`, `usage`, version and status (deprecated patterns carry a warning) |
+| `check_code(code)` | per function: `covered` (matches a pattern), `near` (same structure, other literals) or `none` |
+
+The server also sends instructions telling the agent to search before writing
+common application code, use a fitting pattern, and check its result.
+
+```bash
+pip install -e ".[mcp]"          # in the environment that runs the server
+pcat search "hash a password before storing it"   # same search from the shell
+```
+
+**Claude Code** (from the application repository):
+
+```bash
+claude mcp add pcat -- pcat serve --catalog /path/to/pcat
+# or share it with the team via .mcp.json:
+claude mcp add --scope project pcat -- pcat serve --catalog /path/to/pcat
+```
+
+**Other MCP clients** (Claude Desktop, IDE plugins, …): add a stdio server:
+
+```json
+{
+  "mcpServers": {
+    "pcat": {"command": "pcat", "args": ["serve", "--catalog", "/path/to/pcat"]}
+  }
+}
+```
+
+Use the absolute path of the `pcat` executable if the client does not run in
+the environment where it is installed. `--log calls.jsonl` appends one JSON
+line per tool call.
+
+**Suggested line for the application repository's `CLAUDE.md`:**
+
+> Before writing common application code (auth tokens, passwords, pagination,
+> HTTP retries, config loading, rate limiting, CSV import), use the pcat tools:
+> `search_patterns`, then `get_pattern` if one fits; run `check_code` on the result.
+
 ## Planned extensions
 
 Out-of-process tools read **only `catalog/index.json`**: `{"canonical_version": N,
@@ -280,9 +327,6 @@ variant_of, behavior, status, fingerprint, path` (sorted by id and version). A
 tool that fingerprints code must use the same rules version. The catalog's
 internals can change without breaking these tools.
 
-- **MCP server** (`v3-mcp.md`, planned): serve the catalog to coding agents —
-  search by summary/behavior, fetch rendered code with the caller's names
-  (`render`), so agents reuse approved code instead of improvising.
 - **Linter** (`v4-linter.md`, planned): in application CI, fingerprint new
   functions (`pcat find` is the seed of this), flag reimplementations of
   catalog patterns, uses of deprecated versions, and near-misses.

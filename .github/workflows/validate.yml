@@ -20,7 +20,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install
-        run: pip install -e ".[dev,catalog]"
+        run: pip install -e ".[dev,catalog,mcp]"
 
       - name: Tool tests
         run: pytest tests/

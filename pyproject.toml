@@ -25,6 +25,8 @@ catalog = [
     "requests>=2.31,<3",
     "sqlalchemy>=2.0,<3",
 ]
+# `pcat serve`: the catalog as an MCP server for coding agents.
+mcp = ["mcp>=1.2,<2"]
 
 [project.scripts]
 pcat = "pcat.cli:app"

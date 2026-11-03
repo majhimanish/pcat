@@ -450,6 +450,29 @@ def search(
         typer.echo(f"{h.id:<{width}}  {h.score:6.2f}  {h.entry['title']}")
 
 
+@app.command()
+@_guard
+def serve(
+    catalog: Optional[Path] = typer.Option(
+        None, "--catalog", help="Repository root containing catalog/ (or the catalog/ folder itself)."
+    ),
+    log: Optional[Path] = typer.Option(None, "--log", help="Append one JSON line per tool call."),
+) -> None:
+    """Serve the catalog to coding agents over MCP (stdio). Needs the `mcp` extra."""
+    if catalog is not None:  # MCP clients start servers from any directory
+        catalog = catalog.resolve()
+        root = catalog.parent if catalog.name == cat.CATALOG_DIR and catalog.is_dir() else catalog
+    else:
+        root = _root()
+    if not (root / cat.CATALOG_DIR / cat.INDEX_FILE).is_file():
+        raise PcatError(f"no {cat.CATALOG_DIR}/{cat.INDEX_FILE} under {root}")
+    try:
+        from pcat import mcp_server
+    except ImportError:
+        raise PcatError('the MCP server needs the mcp extra: pip install "pcat[mcp]"') from None
+    mcp_server.serve(root, log)
+
+
 def _catalog_root_or_none() -> Optional[Path]:
     try:
         return _root()
