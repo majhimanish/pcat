@@ -18,7 +18,8 @@ SALT_BYTES = 16
 def hash_password(password: str, n: int = SCRYPT_N, r: int = SCRYPT_R, p: int = SCRYPT_P) -> str:
     """Return a salted scrypt hash of `password` for storage."""
     salt = os.urandom(SALT_BYTES)
-    key = hashlib.scrypt(password.encode("utf-8"), salt=salt, n=n, r=r, p=p, maxmem=MAXMEM, dklen=32)
+    key = hashlib.scrypt(password.encode("utf-8"), salt=salt, n=n, r=r, p=p,
+                         maxmem=MAXMEM, dklen=32)
     b64 = base64.b64encode
     return f"scrypt${n}${r}${p}${b64(salt).decode()}${b64(key).decode()}"
 

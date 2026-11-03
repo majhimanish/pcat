@@ -20,11 +20,12 @@ def parse_bool(raw: str) -> bool:
 
 
 def load_settings(env: Mapping[str, str] | None = None) -> dict[str, Any]:
-    """Return {"database_url", "port", "debug", "log_level"}; raise ValueError on the first error."""
+    """Return the settings dict; raise ValueError at the first problem."""
     env = os.environ if env is None else env
     database_url = env.get("DATABASE_URL", "").strip()
     if "://" not in database_url:
-        raise ValueError("DATABASE_URL is required and must look like scheme://...")  # value not echoed
+        # The value is never echoed: it usually contains a password.
+        raise ValueError("DATABASE_URL is required and must look like scheme://...")
     try:
         port = int(env.get("PORT", "8000"))
     except ValueError:

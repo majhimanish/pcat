@@ -11,7 +11,9 @@ from sqlalchemy.orm import Session
 MAX_PAGE_SIZE = 100
 
 
-def paginate(session: Session, stmt: Select, page: int = 1, page_size: int = 20) -> tuple[list[Any], int]:
+def paginate(
+    session: Session, stmt: Select, page: int = 1, page_size: int = 20
+) -> tuple[list[Any], int]:
     """Return (items on 1-based `page`, total rows) for `stmt`.
 
     `stmt` must have a deterministic ORDER BY, or pages may overlap or skip rows.

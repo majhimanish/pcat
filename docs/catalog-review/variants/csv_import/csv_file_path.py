@@ -12,24 +12,27 @@ MAX_ROWS = 10000
 MAX_EMAIL_LENGTH = 254
 
 
-def import_users_file(path: str | os.PathLike, max_rows: int = MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def import_users_file(
+    path: str | os.PathLike, max_rows: int = MAX_ROWS
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Return (valid users, errors); each error is {"row": line number, "errors": [messages]}."""
     with open(path, newline="", encoding="utf-8-sig") as handle:  # utf-8-sig drops an Excel BOM
         return _import_rows(csv.DictReader(handle), max_rows)
 
 
-def _import_rows(reader: csv.DictReader, max_rows: int) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    header = [h.strip().lstrip("﻿").lower() for h in reader.fieldnames or []]
+def _import_rows(
+    reader: csv.DictReader, max_rows: int
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    header = [h.strip().lstrip("\ufeff").lower() for h in reader.fieldnames or []]
     missing = [c for c in REQUIRED_COLUMNS if c not in header]
     if missing:
         return [], [{"row": 1, "errors": [f"missing columns: {', '.join(missing)}"]}]
     reader.fieldnames = header
-    valid: list[dict[str, Any]] = []
-    errors: list[dict[str, Any]] = []
-    seen: set[str] = set()
+    valid, errors, seen = [], [], set()  # types: see the return annotation
     for count, row in enumerate(reader, 1):
         if count > max_rows:
-            errors.append({"row": reader.line_num, "errors": [f"more than {max_rows} rows; stopped"]})
+            stop = f"more than {max_rows} rows; stopped"
+            errors.append({"row": reader.line_num, "errors": [stop]})
             break
         name = (row.get("name") or "").strip()
         email = (row.get("email") or "").strip().lower()
@@ -38,7 +41,8 @@ def _import_rows(reader: csv.DictReader, max_rows: int) -> tuple[list[dict[str, 
         problems = [] if name else ["name is required"]
         if None in row:
             problems.append("too many fields")
-        if len(email) > MAX_EMAIL_LENGTH or not local or "." not in domain.strip(".") or "@" in domain or " " in email:
+        if (len(email) > MAX_EMAIL_LENGTH or not local or " " in email
+                or "@" in domain or "." not in domain.strip(".")):
             problems.append("email is invalid")
         elif email in seen:
             problems.append("duplicate email")

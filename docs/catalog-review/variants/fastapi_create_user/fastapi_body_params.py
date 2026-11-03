@@ -31,11 +31,17 @@ def create_user(
     hash_password: Annotated[Callable[[str], str], Depends(get_password_hasher)],
 ) -> dict[str, Any]:
     """POST /users: validate, hash the password, store; 201 with the public fields."""
-    user = save({"username": username, "email": email.lower(), "password_hash": hash_password(password)})
+    user = save({
+        "username": username,
+        "email": email.lower(),
+        "password_hash": hash_password(password),
+    })
     if user is None:
         raise HTTPException(status.HTTP_409_CONFLICT, "username or email already registered")
     return {"id": user["id"], "username": user["username"], "email": user["email"]}
 
 
 def register_routes(app_or_router: Any) -> None:
-    app_or_router.add_api_route("/users", create_user, methods=["POST"], status_code=status.HTTP_201_CREATED)
+    app_or_router.add_api_route(
+        "/users", create_user, methods=["POST"], status_code=status.HTTP_201_CREATED
+    )

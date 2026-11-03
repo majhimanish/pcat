@@ -20,12 +20,13 @@ def parse_bool(raw: str) -> bool:
 
 
 def load_settings(env: Mapping[str, str] | None = None) -> dict[str, Any]:
-    """Return {"database_url", "port", "debug", "log_level"}; raise ValueError listing all errors."""
+    """Return the settings dict; raise ValueError listing every problem."""
     env = os.environ if env is None else env
     errors: list[str] = []
     settings: dict[str, Any] = {"database_url": env.get("DATABASE_URL", "").strip()}
     if "://" not in settings["database_url"]:
-        errors.append("DATABASE_URL is required and must look like scheme://...")  # value not echoed: may hold a password
+        # The value is never echoed: it usually contains a password.
+        errors.append("DATABASE_URL is required and must look like scheme://...")
     try:
         settings["port"] = int(env.get("PORT", "8000"))
         if not 1 <= settings["port"] <= 65535:

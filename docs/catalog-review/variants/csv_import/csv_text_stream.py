@@ -12,20 +12,21 @@ MAX_ROWS = 10000
 MAX_EMAIL_LENGTH = 254
 
 
-def import_users(source: str | TextIO, max_rows: int = MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+def import_users(
+    source: str | TextIO, max_rows: int = MAX_ROWS
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Return (valid users, errors); each error is {"row": line number, "errors": [messages]}."""
     reader = csv.DictReader(io.StringIO(source) if isinstance(source, str) else source)
-    header = [h.strip().lstrip("﻿").lower() for h in reader.fieldnames or []]
+    header = [h.strip().lstrip("\ufeff").lower() for h in reader.fieldnames or []]
     missing = [c for c in REQUIRED_COLUMNS if c not in header]
     if missing:
         return [], [{"row": 1, "errors": [f"missing columns: {', '.join(missing)}"]}]
     reader.fieldnames = header
-    valid: list[dict[str, Any]] = []
-    errors: list[dict[str, Any]] = []
-    seen: set[str] = set()
+    valid, errors, seen = [], [], set()  # types: see the return annotation
     for count, row in enumerate(reader, 1):
         if count > max_rows:
-            errors.append({"row": reader.line_num, "errors": [f"more than {max_rows} rows; stopped"]})
+            stop = f"more than {max_rows} rows; stopped"
+            errors.append({"row": reader.line_num, "errors": [stop]})
             break
         name = (row.get("name") or "").strip()
         email = (row.get("email") or "").strip().lower()
@@ -34,7 +35,8 @@ def import_users(source: str | TextIO, max_rows: int = MAX_ROWS) -> tuple[list[d
         problems = [] if name else ["name is required"]
         if None in row:
             problems.append("too many fields")
-        if len(email) > MAX_EMAIL_LENGTH or not local or "." not in domain.strip(".") or "@" in domain or " " in email:
+        if (len(email) > MAX_EMAIL_LENGTH or not local or " " in email
+                or "@" in domain or "." not in domain.strip(".")):
             problems.append("email is invalid")
         elif email in seen:
             problems.append("duplicate email")

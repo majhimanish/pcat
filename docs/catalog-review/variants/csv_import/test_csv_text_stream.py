@@ -30,7 +30,7 @@ def test_valid_rows_and_per_row_errors():
 
 
 def test_accepts_a_text_stream_and_bom_and_header_case():
-    valid, errors = import_users(io.StringIO("﻿Name,EMAIL\nZed,zed@example.org\n"))
+    valid, errors = import_users(io.StringIO("\ufeffName,EMAIL\nZed,zed@example.org\n"))
     assert valid == [{"name": "Zed", "email": "zed@example.org", "age": None}] and errors == []
 
 

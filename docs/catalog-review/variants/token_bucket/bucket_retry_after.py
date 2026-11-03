@@ -7,9 +7,10 @@ import time
 from collections.abc import MutableMapping
 
 
-def check_rate_limit(buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float = 10.0,
-                     refill_rate: float = 1.0, cost: float = 1.0,
-                     now: float | None = None) -> tuple[bool, float]:
+def check_rate_limit(
+    buckets: MutableMapping[str, dict[str, float]], key: str, capacity: float = 10.0,
+    refill_rate: float = 1.0, cost: float = 1.0, now: float | None = None,
+) -> tuple[bool, float]:
     """Refill `key`'s bucket, then take `cost` tokens if available.
 
     Returns (True, 0.0) when allowed, else (False, seconds until it would be),
