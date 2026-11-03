@@ -862,3 +862,13 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      a stdlib import (`json`) and medium for a third-party one.
 184. **Replay output.** The v4.1 replay writes `experiments/linter/replay_v4.1.json`
      (default of `replay --out`); `replay.json` stays the frozen v4 result.
+185. **Demo pull request.** Branch `pcat-approval-demo` adds
+     `examples/approval-demo/` (narrowed `get_with_retry` with its marker and an
+     agent-style `# pcat-allow: PC100 #6db40061 -- …`), PR #1 to `main`, left open.
+     Its `pcat-approvals` run failed with the proposal listed as WAITING. The PR's
+     author is the owner (opened with the owner's GitHub credentials), and GitHub
+     refuses self-approving reviews, so the owner confirms with a `/pcat approve`
+     comment (counts because `allow_author: true`). I did not confirm it myself:
+     a confirmation by the agent would defeat the purpose.
+186. **CLAUDE.md** was compressed (status merged per phase, checklist folded) to
+     stay at 150 lines.

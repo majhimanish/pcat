@@ -358,14 +358,15 @@ client.py:27: PC100 high: `get_with_retry` no longer handles `requests.Connectio
 | `PC100` | a reviewed guard is violated (see below) | high |
 | `PC101` | exception type removed from or narrowed in an `except` | high |
 | `PC102` | `raise` or validation branch (`if …: raise`) removed | high |
-| `PC103` | library swapped (a required library dropped, or replaced by another) | high |
+| `PC103` | library swapped: a required library dropped or replaced (high), a new third-party library (medium), only standard-library modules changed (low) | high/medium/low |
 | `PC104` | broad `except` (`Exception`, bare) added | medium |
 | `PC105` | call removed | medium |
 | `PC106` | private attribute or `_name` access added | medium |
 | `PC107` | signature changed (parameter added/removed, default changed) | medium |
 | `PC108` | call added | low |
 | `PC109` | literal value changed (not covered by a guard) | low |
-| `PC110` | other structural change | low |
+| `PC110` | other structural change (never on a line that has another deviation) | low |
+| `PC111` | with `--changed-since`: the marker was removed but the function still looks derived from the same pattern | high |
 
 The exit code is 1 when an **unapproved** deviation of **marked** code is at or
 above `--fail-on` (default `high`; `never` always exits 0), or a marker names an
@@ -414,13 +415,21 @@ deviation remains. `docs/ci/pcat-approvals.yml` runs it on `pull_request`,
 `pull_request_review` and `issue_comment`, so a review or `/pcat approve`
 comment re-runs the check without a new commit. Agents using the MCP server may
 *propose* approvals (with the hash and a reason) and are told to say that a
-human must confirm them.
+human must confirm them. Make `pcat-approvals` a required check in branch
+protection, or a red check can still be merged. Pull request #1 in this
+repository is a demo left open: it fails until the owner confirms its proposal.
+
+Replaying the v4 agent samples with the v4.1 rules (addendum in
+`docs/benchmarks/v4-linter.md`): all 20 HTTP samples are now flagged high for
+dropping 429 from the retry statuses (v4: low), and 25 of 140 would fail CI
+(v4: 12).
 
 **Guards** are the properties a reviewer cared about, declared per pattern in
 `pattern.yaml` (metadata only; validation check 11 requires each to hold on the
 pattern itself). Kinds: `must_catch`, `must_call`, `must_not_call`,
-`must_not_import`, `must_raise` (with `names`) and `min_value`/`max_value` (with
-`target`, a constant or parameter default, and `value`):
+`must_not_import`, `must_raise` (with `names`), `min_value`/`max_value` (with
+`target`, a constant or parameter default, and `value`) and `must_include` (with
+`target` and `values`: a collection that must still contain them):
 
 ```yaml
 guards:
@@ -430,6 +439,9 @@ guards:
 - kind: min_value
   target: MIN_ITERATIONS
   value: 600000
+- kind: must_include
+  target: RETRY_STATUSES
+  values: [429, 500, 502, 503, 504]
 ```
 
 **Measured (v4, `docs/benchmarks/v4-linter.md`):** replayed on the 140 v3 agent
@@ -460,6 +472,7 @@ In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern fold
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
-  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`)
+  `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`,
+  `v4.1-human-approval.md`)
 - `docs/benchmarks/` — miner benchmark, variance experiment, MCP and linter results
 - `docs/ci/pcat-lint.yml` — reusable workflow that lints client pull requests

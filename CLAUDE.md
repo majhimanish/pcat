@@ -11,24 +11,23 @@ approved patterns instead of producing a new variation per prompt.
 
 ## Status
 
-- **v1 / v1.1 (done):** catalog format, canonicalizer (`CANONICAL_VERSION = 2`),
-  `pcat` CLI, validation checks + `--base`, CI, CODEOWNERS, 6 seeds,
-  `migrate-fingerprints`, versioned `index.json`. Specs: `docs/specs/v1*.md`.
-- **v2 (done):** miner `pcat mine`, `pcat promote` (library code barely repeats).
-- **v2.1 (done):** LLM variance, 480 samples: effective shapes 15.7/20 same prompt,
-  17.4 paraphrased, 2.0 with a reference in the prompt.
-- **v2.2 (done):** owner's `docs/catalog-review/choices.yaml` → 7 application
-  patterns (`auth.*`, `db.*`, `http.*`, `config.*`, `ratelimit.*`, `importers.*`;
-  FastAPI deferred: no classes). Multi-function `pcat add`, `requires`, `catalog` extra.
-- **v3 (done):** MCP server `pcat serve` (`search_patterns`, `get_pattern`,
-  `check_code`), BM25 `pcat search` (threshold 9.08). Retrieval top-1 35/35 dev and
-  held-out; end to end: right pattern fetched 140/140, pattern in code 87%.
-- **v4 (done):** deviation linter. Markers `# pcat: <id>@vN` (written by
-  `get_pattern`), inferred provenance (threshold 0.56), `guards` in pattern.yaml
-  (check 11), deviation codes PC100–PC110, `pcat lint` with `# pcat-allow`
-  approvals, `check_code(code, pattern_id)`. Replay: 0/122 exact matches above low,
-  18/18 misses flagged; feedback run: unapproved high 12/60 → 0/60 (mostly approved,
-  not fixed). Next: human-confirmed approvals, guards grown from observed deviations.
+- **v1 / v1.1:** catalog format, canonicalizer (`CANONICAL_VERSION = 2`), CLI,
+  validation + `--base`, CI, 6 seeds, `migrate-fingerprints`. **v2:** miner
+  (`pcat mine`, `pcat promote`). **v2.1:** LLM variance (480 samples; a reference in
+  the prompt cuts effective shapes 17.4 → 2.0). **v2.2:** 7 application patterns
+  from the owner's `docs/catalog-review/choices.yaml` (FastAPI deferred: no classes).
+- **v3:** MCP server `pcat serve` (`search_patterns`, `get_pattern`, `check_code`),
+  BM25 `pcat search`; right pattern fetched 140/140, pattern in code 87%.
+- **v4:** deviation linter: markers `# pcat: <id>@vN`, inferred provenance (0.56),
+  `guards` (check 11), PC100–PC110, `pcat lint`, `check_code(code, pattern_id)`.
+- **v4.1 (done):** approvals carry the function hash (`# pcat-allow: PC100 #<hash> --
+  reason`) and are confirmed / proposed / stale against the base ref; proposals
+  need a human (`pcat approvals check`, `.pcat/approvers.yaml`, workflow
+  `pcat-approvals.yml`); PC111 (marker removed); `must_include` (429); graded PC103;
+  quieter PC110. Replay addendum: 20/20 HTTP samples flagged for dropping 429.
+  Demo PR #1 (left open) shows the gate failing until confirmed.
+- **Next ideas:** guards grown from observed deviations; team CODEOWNERS; a signed
+  confirmation that does not rely on commit dates.
 
 ## Setup and commands
 
@@ -50,6 +49,7 @@ pcat search "<request>" [--limit N]          # BM25 over index.json; below thres
 pcat serve [--catalog PATH] [--log FILE]     # MCP stdio server (claude mcp add pcat -- pcat serve …)
 python scripts/mcp_eval.py heldout|retrieval|e2e|e2e-analyze   # v3 evaluation (heldout/e2e need `claude`)
 pcat lint <path>... [--changed-since REF] [--format text|json|github] [--fail-on high] [--catalog P]
+pcat approvals check --repo OWNER/REPO --pr N   # GITHUB_TOKEN; fails while proposals wait
 python scripts/lint_eval.py calibrate|replay|feedback|feedback-analyze   # v4 evaluation
 ```
 
@@ -81,7 +81,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `src/pcat/provenance.py` — markers/approvals in the comment block above a function,
   `INFERENCE_THRESHOLD`, inference. `guards.py` — guard checks (validation check 11).
 - `src/pcat/deviation.py` — PC100–PC110 (codes, severities, alignment, diff).
-  `lint.py` — `pcat lint` (approvals, `--changed-since`, text/json/github).
+  `lint.py` — `pcat lint` (approval states, PC111, `--changed-since`, text/json/github).
+  `approvals.py` — approver config, CODEOWNERS, GitHub client, confirmation gate.
   `linteval.py` + `scripts/lint_eval.py` — v4 evaluation; data in `experiments/linter/`.
 - `src/pcat/cli.py` — typer app, thin; errors → `error: …` + exit 1. `errors.py`: `PcatError`.
 - `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`, v3 fields, `guards`),
@@ -91,7 +92,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `scripts/variance.py`. Data (frozen): `experiments/variance/`, `experiments/mcp/`
   (v3 held-out set, `e2e/<task>/sample_NN.{json,log.jsonl}`, results).
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
-  `docs/ci/pcat-lint.yml` — reusable workflow for client repositories.
+  `docs/ci/pcat-{lint,approvals}.yml` — workflows for client repositories; this repo
+  runs `.github/workflows/pcat-approvals.yml` with `.pcat/approvers.yaml` (solo mode).
 - `docs/catalog-review/` — v2.2 comparison doc, `choices.yaml`, `variants/<task>/`
   (+ tests, in pytest testpaths; skip without `requirements.txt` libraries).
 
@@ -131,10 +133,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 
 ## Where to look
 
-- `DECISIONS.md` — every assumption made so far (read before changing behavior)
-- `KNOWN_GAPS.md` — limitations and suggested fixes (good backlog)
-- `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-…`, `v2-miner.md`,
-  `v2.1-…`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`)
+- `DECISIONS.md` (every assumption; read before changing behavior), `KNOWN_GAPS.md` (backlog)
+- `docs/specs/` — phase specs (`v1-catalog.md` … `v4-linter.md`, `v4.1-human-approval.md`)
 - `docs/benchmarks/` — `v2-results.md`, `v2.1-variance.md`, `v3-mcp.md`, `v4-linter.md`
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
@@ -145,9 +145,6 @@ specs; save the spec verbatim in `docs/specs/`; build; update the handoff files.
 
 ## Before you finish any session
 
-- [ ] `pytest` passes
-- [ ] `pcat validate` passes
-- [ ] `pcat index` run and `catalog/index.json` committed
-- [ ] `CLAUDE.md` (status, architecture) and `KNOWN_GAPS.md` updated
-- [ ] new assumptions recorded in `DECISIONS.md`
+- [ ] `pytest` and `pcat validate` pass; `pcat index` run and `catalog/index.json` committed
+- [ ] `CLAUDE.md` (status, architecture, ≤ 150 lines), `KNOWN_GAPS.md`, `DECISIONS.md` updated
 - [ ] all work committed; `git status` clean

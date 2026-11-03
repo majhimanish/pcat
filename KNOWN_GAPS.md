@@ -220,25 +220,15 @@ when you fix it; add one whenever you take a shortcut.
 
 ## Deviation linter (v4)
 
-- **Approvals are written by agents.** In the feedback run the agent itself added
-  every `# pcat-allow` line (5 HTTP `PC100` approvals keep connection errors
-  unretried). Nothing distinguishes a reviewer's approval from an agent's.
-  *Fix:* treat approvals as proposals until confirmed (e.g. a reviewer handle in
-  the approval, checked in CI against the pull request's approving reviews).
-- **Removing the marker escapes CI.** Only marked code can fail; an agent (or a
-  person) that deletes `# pcat: …` turns findings into advisory inferred ones. All
-  60 feedback samples kept the marker, but nothing enforces it. *Fix:* fail on
-  changed functions that are inferred as derived with high deviations, or require
-  a marker on them.
-- **Guards cover only what was written down.** 20/20 HTTP samples dropped `429`
-  from `RETRY_STATUSES` and it is only `PC109` low: there is no guard kind for
-  "this tuple/set must still contain X". *Fix:* a `must_contain` guard kind
-  (values in a constant), and guard proposals from observed deviations.
-- **Severity is rule-based and sometimes off.** `PC103` fires for dropping a stdlib
-  plumbing module next to a new library (`io` → `openpyxl` in a v3 CSV sample);
-  `PC110` can repeat a line already reported by a `must_not_call` guard. *Fix:*
-  count only modules that provide the pattern's core calls for `PC103`; attribute
-  every guard's line in the PC110 explanation.
+- **Approvals are written by agents.** *Addressed in v4.1:* new approvals are
+  proposals until an approver confirms the pull request (`pcat approvals check`).
+- **Removing the marker escapes CI.** *Addressed in v4.1* by PC111, with limits
+  (see v4.1 gaps).
+- **Guards cover only what was written down.** v4.1 added `must_include` and the
+  429 guard; other unguarded behaviour changes stay low. *Fix:* propose guards
+  from observed deviations.
+- **Severity is rule-based.** v4.1 graded PC103 and stopped PC110 repeating lines;
+  severities are still fixed per rule, not per pattern.
 - **Guard matching is by name.** `must_call: hmac.compare_digest` rejects the
   identical `secrets.compare_digest`; `must_catch` knows builtin superclasses but
   not third-party ones (`requests.RequestException`); a `min_value`/`max_value`
@@ -260,4 +250,36 @@ when you fix it; add one whenever you take a shortcut.
 - **`check_code` is skipped when the agent thinks nothing changed** (11/20 pagination
   feedback samples called it). Harmless here; `pcat lint` in CI is the backstop.
 - **`--changed-since` runs git once per file**; slow on very large trees.
+
+## Human approval (v4.1)
+
+- **Nothing makes the gate required.** `pcat-approvals` fails, but the pull
+  request can still be merged unless branch protection lists it as a required
+  check. *Fix:* the owner adds `pcat-approvals / approvals` as a required status
+  check on `main`.
+- **Solo mode in this repository.** `.pcat/approvers.yaml` has `allow_author: true`,
+  so the author confirms their own proposals: the check proves a human looked,
+  not a second human. GitHub also refuses self-approving reviews, so here the
+  only route is the `/pcat approve` comment.
+- **Comment confirmations trust commit dates.** A comment counts if posted after
+  the head commit's committer date, which the author can set. The review route
+  (bound to `commit_id`) is stronger. *Fix:* compare against the time the head
+  commit was pushed (the `synchronize` event / timeline API).
+- **A confirmation covers the whole pull request**, not one proposal; an approver
+  cannot confirm one proposal and reject another except by changing the code.
+- **CODEOWNERS support is partial**: users only (no `@org/team`), simplified
+  pattern matching, last matching rule wins.
+- **Re-running needs `actions: write` and runs from the default branch's workflow.**
+  Pull requests from forks get read-only tokens, so the comment/review run cannot
+  re-run the original check there; the comment-triggered run itself is not shown
+  on the pull request.
+- **The hash covers the function only.** Changing a helper or a module constant
+  does not make an approval stale (`must_include`/value guards still check
+  constants). *Fix:* hash the unit (function + helpers + constants it reads).
+- **PC111 needs a base ref and the same qualname.** Renaming the function while
+  removing the marker, or linting without `--changed-since`, escapes it; it also
+  relies on inference (threshold 0.56).
+- **The confirmation path was not exercised on GitHub.** The demo pull request
+  shows the failing state; the passing path (comment → re-run → green) is covered
+  by mocked tests only until the owner confirms the demo.
 
