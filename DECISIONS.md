@@ -899,3 +899,26 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      `high_not_covered_by_a_proposal` excludes those. The approval census classes
      every `# pcat-allow` line in the final code as confirmable (hash matches the
      function), stale_hash, no_hash (v4 format) or invalid.
+190. **v5 catalog layout.** Each app's catalog is a catalog *root*
+     (`experiments/v5/catalogs/<app>/catalog/<category>/<id>/` plus `index.json`,
+     with `REVIEW.md` next to `catalog/`), so `pcat --root`, `serve --catalog` and
+     `lint --catalog` work unchanged. `owner: "@v5-self-review"` marks them as
+     reviewed by the agent, not the owner.
+191. **House patterns:** 9 (healthchecks), 9 (CTFd), 8 (LNbits), extracted with
+     `pcat add` from the pinned source, bodies verbatim. Hand-assembled when the
+     extractor refuses a module-level class (healthchecks `authorize_read` and the
+     two email senders import the class-using pieces from their app module; LNbits
+     `require_api_key`, `check_admin` import their module-level objects). Edits: one
+     relative import made absolute (LNbits `get_account_by_field`). Security
+     weaknesses in house code (non-constant-time badge signature compare, JWT
+     without iss/aud/jti) are kept verbatim and noted in `REVIEW.md`, since the
+     patterns describe the house way that tasks are compared with.
+192. **Pattern tests stub the framework and the app** (`sys.modules` fakes in each
+     `test_impl.py`; Django, Flask, FastAPI and the app packages are not installed),
+     so they test the pattern's logic against the stubs' contract; `requires` still
+     names the framework (Django/Flask/FastAPI, PyJWT, loguru) because derived code
+     uses it. `tests/test_v5_catalogs.py` runs `validate` (with pattern tests) on
+     every v5 catalog and checks the generic copies are byte-identical.
+193. **Skipped candidates:** class methods and classes (model methods, Pydantic
+     validators, `KeyChecker`, Flask-RESTX resources, `TokenBucket.authorize_*`),
+     and `checks.post_action`, whose extraction pulled in a v5 task's target.

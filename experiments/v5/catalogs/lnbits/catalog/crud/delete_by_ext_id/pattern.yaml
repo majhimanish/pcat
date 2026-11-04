@@ -1,0 +1,26 @@
+id: crud.delete_by_ext_id
+version: 1
+title: Delete rows belonging to an extension
+summary: Async DELETE with a keyword-only extension id and an optional connection for transactions.
+category: crud
+variant_of: null
+behavior:
+  framework: lnbits db
+  keyword_only: true
+entry_point: delete_dbversion
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 9f2da61a1a1f9406bbffe63e4be46defe0791a7c882235bee5dc15fe18cd71d3
+keywords:
+- delete
+- remove
+- extension
+- crud
+- database
+- query
+- uninstall
+use_when: Remove the database records tied to an extension (its version row, its install record) when
+  it is uninstalled.
+usage: await delete_dbversion(ext_id=ext.id, conn=conn)

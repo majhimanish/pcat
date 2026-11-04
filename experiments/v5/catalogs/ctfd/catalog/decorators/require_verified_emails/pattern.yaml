@@ -1,0 +1,33 @@
+id: decorators.require_verified_emails
+version: 1
+title: Require a verified email when verification is on
+summary: Decorator that, when email verification is enabled, blocks logged-in non-admins with unconfirmed
+  addresses (403 for JSON, redirect to confirm page).
+category: decorators
+variant_of: null
+behavior:
+  framework: flask
+  config_key: verify_emails
+  admins_exempt: true
+entry_point: require_verified_emails
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 979185ae6ffc8709a6f12a0d6493254ab3e816dbbeca47309f579b455dc09d5d
+requires:
+- flask>=3.0,<4
+keywords:
+- decorator
+- verify
+- email
+- confirmed
+- verification
+- redirect
+- '403'
+use_when: Keep users who have not confirmed their email address away from features like submitting flags
+  when the CTF requires verified emails.
+usage: |-
+  @require_verified_emails
+  def challenges_listing():
+      ...

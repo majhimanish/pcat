@@ -1,0 +1,28 @@
+id: helpers.flash_for
+version: 1
+title: Flash a message for one endpoint
+summary: Flash an info or error message under a category scoped to the endpoint so only that page shows
+  it.
+category: helpers
+variant_of: null
+behavior:
+  framework: flask
+  category: <endpoint>.infos|errors
+entry_point: info_for
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 6be33ecc70490c83082316533945359be35b2e8ce71ecab51e96828b9c53e14b
+requires:
+- flask>=3.0,<4
+keywords:
+- flash
+- message
+- info
+- error
+- endpoint
+- notice
+- template
+use_when: Show a one-time info or error message on a specific page after a redirect.
+usage: info_for("views.settings", "Profile updated")

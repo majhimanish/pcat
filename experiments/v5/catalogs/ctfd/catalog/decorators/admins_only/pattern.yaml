@@ -1,0 +1,37 @@
+id: decorators.admins_only
+version: 1
+title: Require an admin (Flask view decorator)
+summary: Decorator that lets admins through, returns 403 for JSON requests and redirects others to login.
+category: decorators
+variant_of: null
+behavior:
+  framework: flask
+  json_response: 403
+  html_response: redirect auth.login
+entry_point: admins_only
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: b1b30ca89e517d034e12c73a86d6db6e93c142736954df92a5adcc8ebc8b0f62
+requires:
+- flask>=3.0,<4
+keywords:
+- decorator
+- admin
+- admins only
+- authorization
+- '403'
+- redirect
+- view
+- permission
+use_when: Restrict an admin page or admin API endpoint to admin users.
+usage: |-
+  @admins_only
+  def admin_config():
+      ...
+guards:
+- kind: must_call
+  names:
+  - CTFd.utils.user.is_admin
+  reason: the admin check must run before the view

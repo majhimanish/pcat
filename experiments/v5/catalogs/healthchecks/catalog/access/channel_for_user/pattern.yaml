@@ -1,0 +1,48 @@
+id: access.channel_for_user
+version: 1
+title: Look up an object the current user may access, with read-write variant
+summary: Fetch a channel by code if the user is superuser, owner or member; the rw variant raises PermissionDenied
+  for read-only members.
+category: access
+variant_of: null
+behavior:
+  framework: django
+  superuser_access: true
+  owner_access: true
+  member_access: membership.is_rw
+  not_found: '404'
+entry_point: _get_channel_for_user
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 4e5f6e1ca9da733360f38e80217c6d3547219d8cf370889a41409e78f849c4cd
+requires:
+- django>=5.0,<6
+exports:
+- _get_rw_channel_for_user
+keywords:
+- permission
+- access
+- owner
+- member
+- read-write
+- project
+- lookup
+- '404'
+- authorization
+use_when: A view needs an object (check, channel, project) by its code and must enforce that the logged-in
+  user owns it or is a member, returning (object, rw) or raising PermissionDenied for write actions.
+usage: |-
+  channel, rw = _get_channel_for_user(request, code)
+  channel = _get_rw_channel_for_user(request, code)  # write actions
+guards:
+- kind: must_call
+  names:
+  - django.shortcuts.get_object_or_404
+  reason: unknown codes and non-members get a 404 instead of a leak
+- kind: must_raise
+  names:
+  - django.core.exceptions.PermissionDenied
+  function: _get_rw_channel_for_user
+  reason: read-only members must not perform write actions

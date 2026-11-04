@@ -1,0 +1,30 @@
+id: integrations.help_page
+version: 1
+title: Integration help/landing page view
+summary: Feature-flagged view that renders an integration's help page with the channels menu highlighted.
+category: integrations
+variant_of: null
+behavior:
+  framework: django
+  login_required: false
+entry_point: pd_help
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 80641131fb7e366da79c4ad31b41fd57866a4c634e1c9eda6fb92ff1a292d8d4
+requires:
+- django>=5.0,<6
+keywords:
+- integration
+- help
+- page
+- landing
+- template
+- render
+- view
+use_when: Show the public description/help page for an integration before the user signs in or adds it.
+usage: |-
+  @require_setting("FOO_ENABLED")
+  def foo_help(request):
+      return render(request, "add_foo.html", {"page": "channels"})

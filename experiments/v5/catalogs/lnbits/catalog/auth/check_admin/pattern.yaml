@@ -1,0 +1,36 @@
+id: auth.check_admin
+version: 1
+title: FastAPI dependency requiring an admin account
+summary: Dependency on the logged-in account that raises 403 unless it is the super user or an admin,
+  and unless it has credentials configured.
+category: auth
+variant_of: null
+behavior:
+  framework: fastapi
+  status: 403
+  requires_password: true
+entry_point: check_admin
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 45866473f268385572d05398df40d122d628eac11b01545255b49a6949e04932
+requires:
+- fastapi>=0.115,<1
+keywords:
+- admin
+- super user
+- dependency
+- authorization
+- '403'
+- forbidden
+- role
+- fastapi
+use_when: Restrict an endpoint to admins (or, chained, to the super user) based on the account from the
+  session.
+usage: 'async def api_settings(account: Account = Depends(check_admin)): ...'
+guards:
+- kind: must_raise
+  names:
+  - fastapi.exceptions.HTTPException
+  reason: non-admins are refused with 403

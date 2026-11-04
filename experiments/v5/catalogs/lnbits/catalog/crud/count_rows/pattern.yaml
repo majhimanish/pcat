@@ -1,0 +1,26 @@
+id: crud.count_rows
+version: 1
+title: Count rows in a table
+summary: Async COUNT(*) query that returns an int, 0 when no row comes back.
+category: crud
+variant_of: null
+behavior:
+  framework: lnbits db
+  empty: 0
+entry_point: get_accounts_count
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: bd5c8f74c5ba71a0ef2345e1703e37cd2db1953ce6d03cd47955c7d1c3c81b40
+keywords:
+- count
+- rows
+- total
+- query
+- database
+- crud
+- accounts
+- number
+use_when: Get the total number of rows (accounts, installed extensions, wallets) for admin stats or pagination.
+usage: total = await get_accounts_count()

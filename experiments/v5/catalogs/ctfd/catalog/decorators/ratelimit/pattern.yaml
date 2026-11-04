@@ -1,0 +1,45 @@
+id: decorators.ratelimit
+version: 1
+title: Per-IP, per-endpoint request rate limit (cache counter)
+summary: Decorator factory that counts requests per client IP and endpoint in the cache and returns a
+  JSON 429 once the limit is reached within the interval.
+category: decorators
+variant_of: null
+behavior:
+  framework: flask
+  storage: CTFd cache
+  key: prefix:ip:endpoint
+  response: JSON 429
+  default_limit: 50
+  default_interval: 300
+entry_point: ratelimit
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 3a07bca9b2ed22da6ef94e89fb425cc0b7a923e9c3a87df5c73b226507f63b57
+requires:
+- flask>=3.0,<4
+keywords:
+- rate limit
+- throttle
+- '429'
+- too many requests
+- decorator
+- ip
+- cache
+- brute force
+- login
+use_when: Throttle a form or endpoint (login, registration, password reset, team join) per client IP to
+  slow down brute force and abuse.
+usage: |-
+  @ratelimit(method="POST", limit=10, interval=60)
+  def login():
+      ...
+guards:
+- kind: must_call
+  names:
+  - CTFd.utils.user.get_ip
+  - CTFd.cache.cache.get
+  - CTFd.cache.cache.set
+  reason: counts per client IP in the shared cache, so limits hold across workers

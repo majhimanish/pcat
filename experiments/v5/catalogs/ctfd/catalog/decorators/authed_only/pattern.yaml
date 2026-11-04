@@ -1,0 +1,39 @@
+id: decorators.authed_only
+version: 1
+title: Require a logged-in user (Flask view decorator)
+summary: Decorator that lets authenticated users through, returns 403 for JSON/event-stream requests and
+  redirects others to login with next=.
+category: decorators
+variant_of: null
+behavior:
+  framework: flask
+  json_response: 403
+  html_response: redirect auth.login
+entry_point: authed_only
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 14ba874d72d3a472bdca0dbf24b92e6329e11dc4dbb32722869eb1e157655908
+requires:
+- flask>=3.0,<4
+keywords:
+- decorator
+- login required
+- authenticated
+- authed
+- redirect
+- '403'
+- view
+- auth
+use_when: Protect a page or endpoint so only logged-in users reach it, redirecting browsers to the login
+  page (or registration page) and refusing API calls.
+usage: |-
+  @authed_only
+  def settings():
+      ...
+guards:
+- kind: must_call
+  names:
+  - CTFd.utils.user.authed
+  reason: the session check must run before the view

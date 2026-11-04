@@ -1,0 +1,42 @@
+id: accounts.allow_redirect
+version: 1
+title: Safe post-login redirect check
+summary: Allow a redirect only to a relative URL that resolves to one of the allowed post-login routes.
+category: accounts
+variant_of: null
+behavior:
+  framework: django
+  relative_only: true
+  allowlist: POST_LOGIN_ROUTES
+entry_point: _allow_redirect
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 45ebd1fe4311af8efad9283c9efa4f275feafb03911b2eb6ad465e7c7754aab6
+requires:
+- django>=5.0,<6
+keywords:
+- redirect
+- open redirect
+- next
+- login
+- safe
+- url
+- allowlist
+- security
+use_when: Decide whether a ?next= or similar redirect target after login is safe (no open redirects to
+  other hosts).
+usage: |-
+  if _allow_redirect(request.GET.get("next")):
+      return redirect(request.GET["next"])
+guards:
+- kind: must_call
+  names:
+  - urllib.parse.urlparse
+  - django.urls.resolve
+  reason: the target is parsed and must resolve to a known route
+- kind: must_catch
+  names:
+  - django.urls.Resolver404
+  reason: unknown paths are rejected, not errors

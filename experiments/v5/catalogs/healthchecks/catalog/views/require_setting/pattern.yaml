@@ -1,0 +1,30 @@
+id: views.require_setting
+version: 1
+title: Feature-flag view decorator
+summary: Decorator factory that returns 404 unless the named Django setting is truthy.
+category: views
+variant_of: null
+behavior:
+  framework: django
+  disabled_response: 404
+entry_point: require_setting
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 0f9ec60f6402e88db0d059d9047231282ecbb6c8313b131f67b258cdbf316da1
+requires:
+- django>=5.0,<6
+keywords:
+- decorator
+- feature flag
+- setting
+- enabled
+- '404'
+- view
+- toggle
+- integration
+use_when: Hide a view (usually an integration) unless a Django setting such as FOO_ENABLED is set.
+usage: |-
+  @require_setting("SLACK_ENABLED")
+  def slack_help(request): ...

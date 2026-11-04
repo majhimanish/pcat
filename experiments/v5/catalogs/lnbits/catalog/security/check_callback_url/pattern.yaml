@@ -1,0 +1,41 @@
+id: security.check_callback_url
+version: 1
+title: Validate a callback/webhook URL against allowed origins
+summary: Reject non-http(s) URLs, URLs with credentials or bad ports, and origins not matching the admin-configured
+  allowlist regexes; return None when allowed.
+category: security
+variant_of: null
+behavior:
+  framework: none
+  schemes: http, https
+  allowlist: settings.lnbits_callback_url_rules
+entry_point: check_callback_url
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: d65df747bc03527ff158c4f14425fcf3a87645be1b7be764d4cdf06e2e09f981
+requires:
+- loguru>=0.7
+keywords:
+- callback
+- webhook
+- url
+- ssrf
+- allowlist
+- origin
+- validate
+- security
+use_when: Before calling a user-supplied webhook or callback URL, check that its scheme and origin are
+  allowed (SSRF protection).
+usage: 'check_callback_url(data.webhook)  # raises ValueError if not allowed'
+guards:
+- kind: must_call
+  names:
+  - urllib.parse.urlparse
+  - re.fullmatch
+  reason: the origin is parsed and matched as a whole
+- kind: must_raise
+  names:
+  - ValueError
+  reason: disallowed URLs are refused

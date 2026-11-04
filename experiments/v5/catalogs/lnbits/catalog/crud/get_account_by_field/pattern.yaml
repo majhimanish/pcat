@@ -1,0 +1,40 @@
+id: crud.get_account_by_field
+version: 1
+title: Fetch an account by a case-insensitive unique field
+summary: Async query returning the account whose username (or email) matches case-insensitively, optionally
+  including inactive accounts; None for an empty value.
+category: crud
+variant_of: null
+behavior:
+  framework: lnbits db
+  case_insensitive: true
+  empty_value: null
+  parameters: named
+entry_point: get_account_by_username
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: fd3a3c6d2c1443bdb2a0f528cf81fcbe2e3607ac937b184f570b5f52155c15c8
+keywords:
+- account
+- user
+- lookup
+- username
+- email
+- query
+- database
+- crud
+- case insensitive
+- fetch
+use_when: Look up a user account by username, email or another unique field for login, signup checks or
+  admin tools.
+usage: |-
+  account = await get_account_by_username(username)
+  if not account: ...
+guards:
+- kind: must_call
+  names:
+  - .lower
+  - .fetchone
+  reason: comparison is case-insensitive and goes through a parameterized query

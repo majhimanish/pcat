@@ -1,0 +1,64 @@
+id: http.get_with_retry.requests
+version: 1
+title: GET a URL with retries and exponential backoff (requests)
+summary: GET with requests, retrying connection errors, timeouts, 429 and 5xx with capped exponential backoff, full jitter and numeric Retry-After; session, sleep and randomness are injectable.
+category: http
+variant_of: http.get_with_retry
+behavior:
+  library: requests
+  retries_on: connection_errors+timeouts+429+500+502+503+504
+  client_errors: raised_without_retry
+  backoff: capped_exponential_full_jitter
+  retry_after: numeric_seconds_capped_at_max_delay
+  default_attempts: 4
+  timeout_always_set: true
+  on_exhausted: raises_last_error
+entry_point: get_with_retry
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+requires:
+  - requests>=2.31,<3
+fingerprint: c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0
+keywords:
+- http
+- get
+- url
+- request
+- retry
+- backoff
+- download
+- fetch
+- requests
+- retry-after
+- timeout
+- flaky api
+- '429'
+- '503'
+use_when: 'Fetch a URL over HTTP when the server or network can fail transiently: retry connection errors,
+  timeouts, 429 and 5xx with backoff, but fail fast on other 4xx.'
+usage: |-
+  response = get_with_retry("https://api.example.com/items", session=http_session, attempts=4)
+  items = response.json()
+guards:
+- kind: must_catch
+  names: [requests.ConnectionError, requests.Timeout]
+  reason: connection errors and timeouts are transient and must be retried
+- kind: must_call
+  names: [.raise_for_status]
+  reason: final and non-retryable HTTP errors raise instead of passing as success
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects attempts < 1
+- kind: must_not_call
+  names: [requests.post, requests.put, requests.patch, requests.delete, .post, .put, .patch, .delete]
+  reason: only idempotent GET requests are retried
+- kind: max_value
+  target: max_delay
+  value: 30.0
+  reason: caps backoff and a server-controlled Retry-After so they cannot stall the caller
+- kind: must_include
+  target: RETRY_STATUSES
+  values: [429, 500, 502, 503, 504]
+  reason: 429 (rate limited) and these 5xx responses are transient and must still be retried

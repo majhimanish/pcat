@@ -1,0 +1,42 @@
+id: api.authorize_read
+version: 1
+title: API-key authorization decorator for read endpoints
+summary: Decorator that accepts a read-write or read-only API key from X-Api-Key, attaches the project,
+  readonly flag and API version to the request.
+category: api
+variant_of: null
+behavior:
+  framework: django
+  key_source: X-Api-Key header
+  key_length: 32
+  accepts_readonly: true
+  error: JSON 401
+entry_point: authorize_read
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: e3595899f31f306ec2da6f59c3de5cba5c99015ef3e1ff92c9b162f20a7fe368
+requires:
+- django>=5.0,<6
+keywords:
+- api
+- api key
+- authorization
+- decorator
+- read only
+- x-api-key
+- project
+- '401'
+- authenticate
+use_when: Protect a JSON API view with the project API key, so the view receives request.project, request.readonly
+  and request.v and bad keys get a JSON 401.
+usage: |-
+  @authorize_read
+  def get_checks(request):
+      ...  # request.project, request.readonly, request.v
+guards:
+- kind: must_call
+  names:
+  - hc.accounts.models.Project.objects.for_api_key
+  reason: keys are looked up through the project manager, never compared by hand

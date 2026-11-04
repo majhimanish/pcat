@@ -1,0 +1,31 @@
+id: user.cached_lookup
+version: 1
+title: Memoized lookup of a user or team attribute
+summary: Cache-memoized function that loads a row by id and returns one of its computed attributes, or
+  None if missing.
+category: user
+variant_of: null
+behavior:
+  framework: flask
+  cache_timeout: 300
+  missing: null
+entry_point: get_team_place
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: f77cb62c4f9e85d930fc66fa107454c468bfb620734aa9e1011c1a72d37ae468
+requires:
+- flask>=3.0,<4
+keywords:
+- cache
+- memoize
+- score
+- place
+- team
+- user
+- lookup
+- scoreboard
+use_when: Expose an expensive per-user or per-team value (score, place) to templates and APIs with a five-minute
+  cache.
+usage: place = get_team_place(team.id)

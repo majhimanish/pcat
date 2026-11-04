@@ -1,0 +1,30 @@
+id: emails.templated_send
+version: 1
+title: Send a templated transactional email
+summary: 'One-line email sender: render the named email templates and send them on a background thread.'
+category: emails
+variant_of: null
+behavior:
+  framework: django
+  blocking: false
+entry_point: login
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: c9f2bcb838d59aa61ec7ad38b8a2d16d141dfcd16b0459001260e6f1194bec1b
+requires:
+- django>=5.0,<6
+keywords:
+- email
+- send
+- template
+- message
+- transactional
+- notification
+- mail
+use_when: Add a new transactional email (login link, verification, confirmation code) whose subject/body
+  come from emails/<name>-*.html templates.
+usage: |-
+  def verify_email(to, ctx):
+      send(make_message("verify-email", to, ctx))

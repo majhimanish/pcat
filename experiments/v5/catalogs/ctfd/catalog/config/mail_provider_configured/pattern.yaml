@@ -1,0 +1,31 @@
+id: config.mail_provider_configured
+version: 1
+title: Is a mail provider configured (app config or admin settings)
+summary: True when the provider's credentials are set either in the Flask app config or in the CTF's stored
+  configuration.
+category: config
+variant_of: null
+behavior:
+  framework: flask
+  sources: app.config, then get_config
+entry_point: mailgun
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 987697e4636b35fcbcdca05b9edd2ab7da7df3b1eebb748c4a83473e66d4a919
+requires:
+- flask>=3.0,<4
+keywords:
+- config
+- mail
+- email
+- smtp
+- mailgun
+- configured
+- settings
+- provider
+use_when: Check whether a mail backend (SMTP server, Mailgun) is configured before offering email features.
+usage: |-
+  if mailgun() or mailserver():
+      send_email(...)

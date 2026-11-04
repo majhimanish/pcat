@@ -1,0 +1,39 @@
+id: auth.require_api_key
+version: 1
+title: FastAPI dependency requiring a wallet API key of a given type
+summary: Dependency that reads the wallet key from the X-API-KEY header or api-key query parameter and
+  checks it with KeyChecker for the expected key type.
+category: auth
+variant_of: null
+behavior:
+  framework: fastapi
+  sources: header, then query
+  key_type: admin
+entry_point: require_admin_key
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 1e111c735bc2647082953acfc5c38c4d19a24cebadb97d505eea075f0160a9ab
+requires:
+- fastapi>=0.115,<1
+keywords:
+- api key
+- wallet
+- admin key
+- invoice key
+- dependency
+- authentication
+- header
+- fastapi
+- key type
+use_when: Protect a FastAPI endpoint so it needs a wallet's admin (or invoice/read) key and receives the
+  wallet info.
+usage: |-
+  @router.post("/api/v1/payments")
+  async def api_pay(wallet: WalletTypeInfo = Depends(require_admin_key)): ...
+guards:
+- kind: must_call
+  names:
+  - lnbits.decorators.KeyChecker
+  reason: keys are checked by the shared KeyChecker

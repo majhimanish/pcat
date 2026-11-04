@@ -1,0 +1,33 @@
+id: emails.templated_send_blocking
+version: 1
+title: Send a templated email with headers, blocking
+summary: 'Email sender for reports and alerts: render templates with extra headers and send synchronously.'
+category: emails
+variant_of: null
+behavior:
+  framework: django
+  blocking: true
+  headers: true
+entry_point: report
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 5fe5c17bfea63ae002b904a9769bd7a9f21bfdfd81a32dbcce793b56cf1949da
+requires:
+- django>=5.0,<6
+keywords:
+- email
+- report
+- nag
+- headers
+- blocking
+- send
+- template
+- unsubscribe
+use_when: Send a periodic report or reminder email that needs custom headers (List-Unsubscribe) and must
+  be sent before the worker continues.
+usage: |-
+  def nag(to, ctx, headers):
+      m = make_message("nag", to, ctx, headers=headers)
+      send(m, block=True)

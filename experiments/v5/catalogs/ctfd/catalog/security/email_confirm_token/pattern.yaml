@@ -1,0 +1,54 @@
+id: security.email_confirm_token
+version: 1
+title: Single-use email token stored in the cache
+summary: Generate a random 256-bit nonce mapped to an email address in the cache with a timeout, verify
+  it (raising if unknown or expired) and remove it.
+category: security
+variant_of: null
+behavior:
+  framework: flask
+  nonce_bytes: 32
+  storage: CTFd cache
+  default_timeout: 1800
+entry_point: generate_email_confirm_token
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: c4d5c3914e788c617ba184c10ada6cad637a53935a9f6feb3ccfc474b52004c6
+requires:
+- flask>=3.0,<4
+exports:
+- verify_email_confirm_token
+- remove_email_confirm_token
+keywords:
+- token
+- email
+- confirm
+- verification
+- reset
+- nonce
+- expire
+- cache
+- password reset
+- link
+use_when: Email a user a link with a secret token (confirm address, reset password), check it when the
+  link is opened and invalidate it after use.
+usage: |-
+  token = generate_email_confirm_token(user.email)
+  addr = verify_email_confirm_token(token)  # raises if invalid
+  remove_email_confirm_token(token)
+guards:
+- kind: must_call
+  names:
+  - os.urandom
+  reason: tokens must be unguessable
+- kind: max_value
+  target: timeout
+  value: 1800
+  reason: links expire within 30 minutes
+- kind: must_raise
+  names:
+  - CTFd.exceptions.email.UserConfirmTokenInvalidException
+  function: verify_email_confirm_token
+  reason: unknown or expired tokens are rejected

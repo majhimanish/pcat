@@ -1,0 +1,44 @@
+id: integrations.add_url_channel
+version: 1
+title: Add a URL-based notification integration (Django view)
+summary: Login-protected, feature-flagged view that adds a webhook-URL channel to a project the user can
+  write to.
+category: integrations
+variant_of: null
+behavior:
+  framework: django
+  permission: rw project
+  form: AddUrlForm
+  assigns_all_checks: true
+entry_point: add_msteams
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: e8244af944ec0d03dc4c8e9efed3309ef72e6b8ce54ff89f1d35267cb71ea62f
+requires:
+- django>=5.0,<6
+keywords:
+- integration
+- channel
+- webhook
+- notification
+- add
+- url
+- form
+- project
+- view
+- django
+use_when: 'Add a new notification integration whose setup is a single webhook URL (Teams, Mattermost,
+  PagerTree, Spike, VictorOps style): show the form, validate it, create the Channel, assign all checks,
+  redirect.'
+usage: |-
+  @require_setting("FOO_ENABLED")
+  @login_required
+  def add_foo(request, code):  # same body; set kind="foo" and the template name
+guards:
+- kind: must_call
+  names:
+  - hc.front.views._get_rw_project_for_user
+  - .is_valid
+  reason: only users with write access to the project may add channels, and the URL must be validated

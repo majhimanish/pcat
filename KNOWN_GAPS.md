@@ -283,3 +283,15 @@ when you fix it; add one whenever you take a shortcut.
   shows the failing state; the passing path (comment → re-run → green) is covered
   by mocked tests only until the owner confirms the demo.
 
+## Open-source simulation (v5)
+
+- **`pcat add` drops an import a parameter shadows.** In
+  `def f(api_key_header=Security(api_key_header))` the default reads the module-level
+  `api_key_header`, but the extractor treats the name as the parameter (a local) and
+  drops its import; the canonicalizer likewise renames the default's name as the
+  local. Seen in LNbits `require_admin_key`; the import was restored by hand. *Fix:*
+  resolve default and annotation expressions in the enclosing scope (a canonical
+  rules change: needs a `CANONICAL_VERSION` bump).
+- **v5 catalogs are self-reviewed** and their tests stub Django/Flask/FastAPI and the
+  apps, so they test logic against fakes, not the frameworks.
+

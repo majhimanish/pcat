@@ -1,0 +1,35 @@
+id: badges.check_signature
+version: 1
+title: Badge URL signature check
+summary: Verify the short HMAC signature embedded in a status badge URL.
+category: badges
+variant_of: null
+behavior:
+  framework: django
+  algorithm: sha1
+  signature_chars: 8
+entry_point: check_signature
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: e1ea2f16b688acafeb4521177db535f3ff813aa5cf7fd336d5bf091fc8a18012
+requires:
+- django>=5.0,<6
+keywords:
+- badge
+- signature
+- hmac
+- verify
+- url
+- signed
+- secret key
+use_when: Check that a badge URL (badge key + tag) was signed by this server before rendering it.
+usage: |-
+  if not check_signature(badge_key, tag, signature):
+      return HttpResponseNotFound()
+guards:
+- kind: must_call
+  names:
+  - django.core.signing.base64_hmac
+  reason: signed with SECRET_KEY, not a plain hash

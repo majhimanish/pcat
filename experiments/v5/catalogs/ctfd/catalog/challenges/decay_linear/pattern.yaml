@@ -1,0 +1,32 @@
+id: challenges.decay_linear
+version: 1
+title: Dynamic challenge value with linear decay
+summary: 'Compute a challenge''s current value from its visible solve count: initial minus decay per solve
+  after the first, rounded up, never below the minimum.'
+category: challenges
+variant_of: null
+behavior:
+  framework: flask
+  decay: linear
+  first_solve_free: true
+  floor: minimum
+entry_point: linear
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 2b6c2c3b565d9eb6bbefb44922260f7cc0ce159bf0e90ad4aa3614028825b8e8
+requires:
+- flask>=3.0,<4
+keywords:
+- challenge
+- score
+- decay
+- linear
+- dynamic
+- points
+- solves
+- value
+use_when: Recalculate a dynamic challenge's points from its number of solves by non-hidden, non-banned
+  accounts.
+usage: challenge.value = linear(challenge)

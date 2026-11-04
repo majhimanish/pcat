@@ -1,0 +1,35 @@
+id: validators.regex_match
+version: 1
+title: Validate a string against an anchored regex
+summary: Return True only when the whole string matches the house regex for that field (username, label,
+  email).
+category: validators
+variant_of: null
+behavior:
+  framework: none
+  match: re.fullmatch
+entry_point: is_valid_username
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: d67e06e3bbec175a32aec30498be4fcf42738408e0482b11b7364e556a8c2560
+keywords:
+- validate
+- regex
+- username
+- email
+- label
+- format
+- valid
+- input
+use_when: Check that user input such as a username, wallet label or email address has an allowed format
+  before saving it.
+usage: |-
+  if not is_valid_username(data.username):
+      raise ValueError('Invalid username.')
+guards:
+- kind: must_call
+  names:
+  - re.fullmatch
+  reason: the whole value must match, not a prefix

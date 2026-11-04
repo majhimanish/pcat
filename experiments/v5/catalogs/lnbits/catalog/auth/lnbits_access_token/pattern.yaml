@@ -1,0 +1,36 @@
+id: auth.lnbits_access_token
+version: 1
+title: Create the session JWT (house settings)
+summary: Encode a JWT with the non-None claims plus an expiry from settings, signed HS256 with the configured
+  secret.
+category: auth
+variant_of: null
+behavior:
+  framework: pyjwt
+  algorithm: HS256
+  expiry: settings.auth_token_expire_minutes
+entry_point: create_access_token
+owner: '@v5-self-review'
+status: active
+replaced_by: null
+keep_annotations: true
+fingerprint: 503c2a02005ae0cedf610b26bb8d58b0abd9c7b9d5ecfc62704d5e88b441a38e
+requires:
+- pyjwt>=2.8,<3
+keywords:
+- jwt
+- access token
+- token
+- session
+- login
+- expire
+- sign
+- auth
+use_when: Issue the access token LNbits stores in the session cookie after login, using the server's auth
+  settings.
+usage: 'token = create_access_token({"sub": account.username, "usr": account.id})'
+guards:
+- kind: must_call
+  names:
+  - jwt.encode
+  reason: signed with the configured secret
