@@ -378,9 +378,13 @@ def validate(
         selected = list(patterns)
     selected_labels = {p.label for p in selected}
 
+    from pcat import requirements
+
+    settings, setting_errors = requirements.load_settings(root)
+    problems.extend(Problem("12", f"{CATALOG_DIR}/{requirements.SETTINGS_FILE}", e) for e in setting_errors)
     computed: dict[str, str] = {}  # label -> computed fingerprint
     for pattern in selected:
-        problems.extend(_check_pattern(pattern, computed, run_tests))
+        problems.extend(_check_pattern(pattern, computed, run_tests, settings["first_party"]))
 
     cross = _cross_checks(root, patterns, computed)
     if base:
@@ -393,7 +397,8 @@ def validate(
     return problems
 
 
-def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) -> list[Problem]:
+def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool,
+                   first_party: list[str] | None = None) -> list[Problem]:
     label = pattern.label
     out = [Problem("1", label, err) for err in pattern.load_errors]
     if pattern.meta is None:
@@ -472,6 +477,16 @@ def _check_pattern(pattern: Pattern, computed: dict[str, str], run_tests: bool) 
     # 11: every guard holds on the pattern itself
     if source is not None and meta.guards:
         out.extend(_guard_checks(pattern, source))
+
+    # 12 (v5.1): `requires` covers every third-party import, and every entry is imported
+    if source is not None:
+        from pcat import requirements
+
+        try:
+            found = requirements.check(source, meta.requires, meta.import_names, first_party or [])
+        except SyntaxError:
+            found = []  # reported by check 2
+        out.extend(Problem("12", label, msg) for msg in found)
 
     # 8: tests
     if not pattern.test_path.is_file():

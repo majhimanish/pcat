@@ -1041,3 +1041,31 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      (default: the server's working directory); it also gives the module path.
      Otherwise it is ignored with a note in `context_notes`. Full files without
      either argument behave as in v4.1 apart from Part A's resolution.
+210. **`import_names` and the built-in table (Part C).** `requirements.py` maps a
+     distribution to its top-level import name: `import_names` in `pattern.yaml`
+     first (distribution -> module; only the first segment is used), then a small
+     built-in table (pyjwt -> jwt, pyyaml -> yaml, beautifulsoup4 -> bs4, pillow ->
+     PIL, python-dateutil -> dateutil, scikit-learn -> sklearn, ...), else the
+     distribution name with `-` -> `_`. Names are compared after pip's
+     normalization (`PyJWT`, `py_jwt` -> `pyjwt`). `import_names` is metadata only:
+     not in the fingerprint and not in `index.json` (no index changes).
+211. **Check 12 and first-party modules.** Check 12: every absolute import in
+     `impl.py` (module level or inside functions; relative imports and
+     `sys.stdlib_module_names` + `__future__` exempt) is covered by a `requires`
+     entry; every entry is imported; every `import_names` key is in `requires`. An
+     application's own package (`lnbits`, `CTFd`, `hc`) is first-party, not a pip
+     requirement, so a catalog may list it in an optional `catalog/catalog.yaml`
+     (`first_party: [lnbits]`; unknown keys are a check-12 problem). This was the
+     simplest option that does not pretend the app is a distribution.
+212. **Metadata fixes for check 12.** `catalog/`: none needed. v5 catalogs: 22
+     patterns failed, all for the same reason — they import the app's own package
+     (CTFd 8 patterns: `CTFd`; healthchecks 7: `hc`; LNbits 7: `lnbits`). Fixed by
+     adding `catalog/catalog.yaml` with `first_party` to each v5 catalog; no
+     `pattern.yaml`, `impl.py`, fingerprint or index changed. Deliberate test
+     change: `test_requires_is_indexed_sorted_and_does_not_change_fingerprint` adds
+     two requirements the impl never imports, which check 12 now reports.
+213. **PC103 through the mapping.** A library swap (high) is now dropping a
+     `requires` library that the pattern itself uses at run time (annotations do
+     not count, as before for user code); dropping a module that is neither
+     standard library nor required (e.g. first-party) is low with its own message
+     instead of the mislabelled "changes standard-library modules".

@@ -25,7 +25,7 @@ import difflib
 import sys
 from dataclasses import asdict, dataclass, field
 
-from pcat import canonical, codeunit, guards, shape
+from pcat import canonical, codeunit, guards, requirements, shape
 from pcat.codeunit import Unit, name_key
 
 SEVERITY = {
@@ -48,7 +48,6 @@ TITLES = {
     "PC111": "marker removed from derived code",
 }
 SEVERITY_RANK = {"low": 1, "medium": 2, "high": 3}
-DISTRIBUTION_IMPORTS = {"pyjwt": "jwt", "pyyaml": "yaml", "beautifulsoup4": "bs4", "pillow": "PIL"}
 MAX_DIFF_LINES = 80
 LITERAL_REPORT_RATIO = 0.8  # report in-statement literal changes only for closely matching functions
 
@@ -395,14 +394,9 @@ def _runtime_roots(unit: Unit) -> set[str]:
     return roots
 
 
-def _required_roots(requires: list[str]) -> set[str]:
-    import re
-
-    out = set()
-    for req in requires:
-        name = re.match(r"[A-Za-z0-9._-]+", req).group(0).lower()
-        out.add(DISTRIBUTION_IMPORTS.get(name, name.replace("-", "_")))
-    return out
+def _required_roots(meta) -> set[str]:
+    """Import roots of the pattern's `requires` (v5.1: through `import_names`)."""
+    return set(requirements.required_roots(meta.requires, getattr(meta, "import_names", None) or {}))
 
 
 def _parents(func: ast.FunctionDef) -> dict[int, ast.AST]:
@@ -576,9 +570,10 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
 
     # PC103: library swapped ----------------------------------------------
     p_roots, u_roots = _runtime_roots(pu), _runtime_roots(uu)
-    required = _required_roots(meta.requires) if meta is not None else set()
+    # v5.1: a swap is dropping a required library the pattern actually uses at run time
+    required = (_required_roots(meta) & p_roots) if meta is not None else set()
     missing_required = sorted(required - u_roots)
-    dropped = sorted(p_roots - u_roots)
+    dropped = sorted(p_roots - u_roots - required)
     if uu.unresolved and (missing_required or dropped):  # may be among the unknown names
         skipped.append("PC103 " + ", ".join(f"`{r}`" for r in sorted(set(missing_required) | set(dropped)))
                        + " not seen (imports missing)")
@@ -594,11 +589,17 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     elif added_third:  # a new third-party library: medium
         emit("PC103", f"`{uname}` adds the third-party {names(added_third)}"
              + (f" and no longer uses {names(dropped)}" if dropped else ""), uu.func.lineno, severity="medium")
-    elif dropped or added_std:  # only standard-library modules differ: low
-        parts = ([f"no longer uses {names(dropped)}"] if dropped else []) + (
+    elif dropped or added_std:  # only standard-library or not-required modules differ: low
+        std = [r for r in dropped if r in sys.stdlib_module_names]
+        other = [r for r in dropped if r not in std]
+        parts = ([f"no longer uses {names(std)}"] if std else []) + (
             [f"adds {names(added_std)}"] if added_std else [])
-        emit("PC103", f"`{uname}` changes standard-library modules: {'; '.join(parts)}", uu.func.lineno,
-             severity="low")
+        if parts:
+            emit("PC103", f"`{uname}` changes standard-library modules: {'; '.join(parts)}"
+                 + (f"; no longer uses {names(other)}" if other else ""), uu.func.lineno, severity="low")
+        else:
+            emit("PC103", f"`{uname}` no longer uses {names(other)} (not in the pattern's `requires`)",
+                 uu.func.lineno, severity="low")
 
     # PC101 / PC104: exception handling ------------------------------------
     p_handlers, u_handlers = codeunit.handlers(pu), codeunit.handlers(uu)

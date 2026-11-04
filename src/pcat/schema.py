@@ -98,6 +98,8 @@ class PatternMeta(BaseModel):
     # Third-party distributions the pattern imports, as pip requirement strings
     # (e.g. "pyjwt>=2.8,<3"). Metadata only: never part of the fingerprint.
     requires: list[str] = Field(default_factory=list)
+    # v5.1: distribution -> import name where they differ (overrides requirements.KNOWN_IMPORT_NAMES)
+    import_names: dict[str, str] = Field(default_factory=dict)
     # v3 search/serving metadata. Optional; never part of the fingerprint.
     exports: list[str] = Field(default_factory=list)  # public functions besides entry_point
     keywords: list[str] = Field(default_factory=list)  # 5-15 search terms when given
@@ -122,6 +124,16 @@ class PatternMeta(BaseModel):
         names = [re.match(r"[A-Za-z0-9._-]+", item).group(0).lower() for item in value]
         if len(names) != len(set(names)):
             raise ValueError("requires lists a distribution more than once")
+        return value
+
+    @field_validator("import_names")
+    @classmethod
+    def _import_names_are_modules(cls, value: dict[str, str]) -> dict[str, str]:
+        for dist, module in value.items():
+            if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", dist):
+                raise ValueError(f"{dist!r} is not a distribution name")
+            if not all(part.isidentifier() for part in module.split(".")):
+                raise ValueError(f"{module!r} is not a module name")
         return value
 
     @field_validator("exports")

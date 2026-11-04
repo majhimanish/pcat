@@ -32,7 +32,8 @@ def test_requires_is_indexed_sorted_and_does_not_change_fingerprint(root):
     entry = next(e for e in json.loads((root / "catalog" / "index.json").read_text())["patterns"]
                  if e["id"] == ITER)
     assert entry["requires"] == ["Attrs>=23", "sortedcontainers>=2.4,<3"]
-    assert cat.validate(root, run_tests=False) == []
+    # v5.1 (DECISIONS 212): the impl imports neither, so check 12 now reports both
+    assert sorted(p.check for p in cat.validate(root, run_tests=False)) == ["12", "12"]
 
 
 @pytest.mark.parametrize("bad", [["not a requirement!"], ["pkg>=1", "PKG<2"], ["https://x/y.whl"], "pkg"])

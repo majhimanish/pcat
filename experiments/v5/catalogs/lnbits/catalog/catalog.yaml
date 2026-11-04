@@ -1,0 +1,3 @@
+# Catalog-wide settings (v5.1): modules of the application itself, exempt from
+# validation check 12 (they are first-party, not `requires` distributions).
+first_party: [lnbits]
