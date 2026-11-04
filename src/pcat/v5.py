@@ -199,3 +199,41 @@ class RunPaths:
     @property
     def stem(self) -> Path:
         return self.root / self.app / self.task / self.condition / f"sample_{self.sample:02d}"
+
+
+# --------------------------------------------------------------------------- #
+# Retrieval (Part E)
+# --------------------------------------------------------------------------- #
+
+
+def overlap_summary(items: list[dict], house: set[str], threshold: float) -> dict:
+    """Requests where a house and a generic pattern both pass the threshold: which ranks first.
+
+    items: {expected, ranked: [(id, score), ...]}; `house` = ids of the app's own patterns.
+    """
+    rows = []
+    for item in items:
+        above = [(pid, s) for pid, s in item["ranked"] if s >= threshold]
+        kinds = {("house" if pid in house else "generic") for pid, _ in above}
+        if {"house", "generic"} <= kinds:
+            first = above[0][0]
+            rows.append({"request": item["request"], "expected": item["expected"], "first": first,
+                         "first_kind": "house" if first in house else "generic",
+                         "first_is_expected": first == item["expected"],
+                         "above": [[pid, round(s, 3)] for pid, s in above[:4]]})
+    return {
+        "both_above_threshold": len(rows),
+        "house_first": sum(r["first_kind"] == "house" for r in rows),
+        "generic_first": sum(r["first_kind"] == "generic" for r in rows),
+        "first_is_expected": sum(r["first_is_expected"] for r in rows),
+        "rows": rows,
+    }
+
+
+def below_threshold(items: list[dict], threshold: float) -> dict:
+    """Positives whose expected pattern ranks first but scores under the threshold (short queries)."""
+    pos = [i for i in items if i["expected"]]
+    under = [i for i in pos if i["ranked"] and i["ranked"][0][0] == i["expected"] and i["ranked"][0][1] < threshold]
+    return {"positives": len(pos), "ranked_first_but_below_threshold": len(under),
+            "examples": [{"request": i["request"], "score": round(i["ranked"][0][1], 3), "words": len(i["request"].split())}
+                         for i in under]}

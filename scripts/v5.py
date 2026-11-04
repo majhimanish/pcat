@@ -130,6 +130,49 @@ def cmd_requests(args) -> int:
     return 0
 
 
+def cmd_retrieval(args) -> int:
+    from pcat import catalog as cat
+    from pcat import evaluation, search, v5
+
+    requests = json.loads((V5 / "requests.json").read_text())["items"]
+    generic = {p.meta.id for p in cat.load_catalog(ROOT)}
+    out: dict = {"threshold": search.MATCH_THRESHOLD, "apps": {}}
+    for app in apps()["apps"]:
+        root = V5 / "catalogs" / app
+        index = search.SearchIndex.from_root(root)
+        house = {e["id"] for e in index.entries} - generic
+        items = []
+        for r in requests:
+            if r["app"] != app:
+                continue
+            ranked = [(h.id, h.score) for h in index.rank(r["request"])]
+            items.append({"task": r["set"], "id": r["id"], "request": r["request"], "expected": r["expected"],
+                          "ranked": ranked[:5], "words": r["words"]})
+        result = {}
+        for name, subset in (("tasks", [i for i in items if i["task"] == "task"]),
+                             ("extra", [i for i in items if i["task"] == "extra"]), ("all", items)):
+            m = evaluation.retrieval_metrics(subset, search.MATCH_THRESHOLD)
+            result[name] = {k: m[k] for k in ("positives", "negatives", "top1", "top3", "top1_ignoring_threshold",
+                                              "false_match_rate", "false_matches")}
+        result["misses"] = [{"id": i["id"], "request": i["request"], "expected": i["expected"],
+                             "ranked": [[p, round(s, 3)] for p, s in i["ranked"][:3]]}
+                            for i in items if i["expected"] and not (
+                                i["ranked"] and i["ranked"][0][0] == i["expected"]
+                                and i["ranked"][0][1] >= search.MATCH_THRESHOLD)]
+        result["overlap"] = v5.overlap_summary(items, house, search.MATCH_THRESHOLD)
+        result["short_queries"] = v5.below_threshold(items, search.MATCH_THRESHOLD)
+        result["catalog"] = {"house": len(house), "generic": len(index.entries) - len(house)}
+        result["items"] = items
+        out["apps"][app] = result
+        a = result["all"]
+        print(f"{app}: top1 {a['top1']:.2f} top3 {a['top3']:.2f} (ignoring threshold {a['top1_ignoring_threshold']:.2f}) "
+              f"false {a['false_match_rate']:.2f}; overlap {result['overlap']['both_above_threshold']} "
+              f"(house first {result['overlap']['house_first']}, expected first {result['overlap']['first_is_expected']}); "
+              f"below threshold {result['short_queries']['ranked_first_but_below_threshold']}")
+    v5.write_json(V5 / "retrieval.json", out)
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="v5 evaluation")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -138,6 +181,7 @@ def main() -> int:
     m.add_argument("--jobs", type=int, default=6)
     sub.add_parser("mining-summary")
     sub.add_parser("references")
+    sub.add_parser("retrieval")
     rq = sub.add_parser("requests")
     rq.add_argument("--resume", action="store_true")
     rq.add_argument("--jobs", type=int, default=8)
@@ -145,7 +189,7 @@ def main() -> int:
     args = parser.parse_args()
     return {"clone": cmd_clone, "mine": cmd_mine,
             "mining-summary": lambda a: write_mining_summary() or 0, "references": cmd_references,
-            "requests": cmd_requests}[args.command](args)
+            "requests": cmd_requests, "retrieval": cmd_retrieval}[args.command](args)
 
 
 if __name__ == "__main__":

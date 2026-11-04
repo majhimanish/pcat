@@ -937,3 +937,9 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      locations (e.g. `authorize_write`, a VictorOps view "in hc/front/views.py"), as
      real requests do. 20 extra retrieval needs per app (12 with an expected
      pattern, 8 negative) in `retrieval_needs.yaml`, written before generation.
+196. **v5 retrieval** (`scripts/v5.py retrieval` → `experiments/v5/retrieval.json`)
+     ranks each app's 8 task requests and 20 extra requests against that app's
+     catalog index with the unchanged `MATCH_THRESHOLD` (9.08) and v3's metric code.
+     "House vs generic" is data-driven: every request where at least one house and
+     one generic pattern pass the threshold, and which one ranks first. "Short
+     queries" = positives whose expected pattern ranks first but scores below 9.08.

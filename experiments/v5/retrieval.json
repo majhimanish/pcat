@@ -1,0 +1,2782 @@
+{
+  "apps": {
+    "ctfd": {
+      "all": {
+        "false_match_rate": 0.2,
+        "false_matches": [
+          {
+            "got": "challenges.decay_linear",
+            "request": "Add first-blood bonus: award extra points to the first team to solve each challenge.",
+            "score": 14.426
+          },
+          {
+            "got": "challenges.decay_linear",
+            "request": "Add a function that returns each team's solve count grouped by challenge category, for charting.",
+            "score": 11.389
+          }
+        ],
+        "negatives": 10,
+        "positives": 18,
+        "top1": 0.9444,
+        "top1_ignoring_threshold": 1.0,
+        "top3": 0.9444
+      },
+      "catalog": {
+        "generic": 7,
+        "house": 9
+      },
+      "extra": {
+        "false_match_rate": 0.25,
+        "false_matches": [
+          {
+            "got": "challenges.decay_linear",
+            "request": "Add first-blood bonus: award extra points to the first team to solve each challenge.",
+            "score": 14.426
+          },
+          {
+            "got": "challenges.decay_linear",
+            "request": "Add a function that returns each team's solve count grouped by challenge category, for charting.",
+            "score": 11.389
+          }
+        ],
+        "negatives": 8,
+        "positives": 12,
+        "top1": 0.9167,
+        "top1_ignoring_threshold": 1.0,
+        "top3": 0.9167
+      },
+      "items": [
+        {
+          "expected": null,
+          "id": "ctfd_get_ip",
+          "ranked": [
+            [
+              "decorators.ratelimit",
+              7.7511
+            ],
+            [
+              "config.mail_provider_configured",
+              3.817378
+            ],
+            [
+              "decorators.admins_only",
+              3.673201
+            ],
+            [
+              "http.get_with_retry.requests",
+              3.571905
+            ],
+            [
+              "decorators.authed_only",
+              3.420909
+            ]
+          ],
+          "request": "Add a `get_ip()` helper in CTFd utils that returns the real client IP, trusting only the configured proxies.",
+          "task": "task",
+          "words": 18
+        },
+        {
+          "expected": "challenges.decay_linear",
+          "id": "ctfd_linear_decay",
+          "ranked": [
+            [
+              "challenges.decay_linear",
+              23.828837
+            ],
+            [
+              "user.cached_lookup",
+              3.482517
+            ],
+            [
+              "decorators.ratelimit",
+              2.032732
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              1.7901
+            ],
+            [
+              "importers.users_csv.parse",
+              1.482337
+            ]
+          ],
+          "request": "Add a linear decay function to the challenge scoring code: value drops per solve, floored at minimum.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": "config.mail_provider_configured",
+          "id": "ctfd_mailserver",
+          "ranked": [
+            [
+              "config.mail_provider_configured",
+              22.368961
+            ],
+            [
+              "config.env.load_settings",
+              8.394878
+            ],
+            [
+              "decorators.admins_only",
+              4.316881
+            ],
+            [
+              "decorators.require_verified_emails",
+              1.663632
+            ],
+            [
+              "db.pagination.select_page",
+              0.949644
+            ]
+          ],
+          "request": "Add a `mailserver()` helper to CTFd/utils/config/__init__.py that returns True if SMTP is configured in app config or admin settings.",
+          "task": "task",
+          "words": 19
+        },
+        {
+          "expected": null,
+          "id": "ctfd_ordinalize",
+          "ranked": [
+            [
+              "user.cached_lookup",
+              2.688711
+            ]
+          ],
+          "request": "Add an ordinal helper (1st, 2nd, 3rd, 11th) for the scoreboard, handling 11–13 correctly, with tests.",
+          "task": "task",
+          "words": 16
+        },
+        {
+          "expected": "decorators.ratelimit",
+          "id": "ctfd_ratelimit",
+          "ranked": [
+            [
+              "decorators.ratelimit",
+              24.507204
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              11.966113
+            ],
+            [
+              "decorators.authed_only",
+              5.70217
+            ],
+            [
+              "user.cached_lookup",
+              5.378356
+            ],
+            [
+              "decorators.admins_only",
+              5.342989
+            ]
+          ],
+          "request": "Add a rate-limit decorator for POST requests per client IP, and apply it to login, register, and team forms.",
+          "task": "task",
+          "words": 19
+        },
+        {
+          "expected": "decorators.authed_only",
+          "id": "ctfd_registered_only",
+          "ranked": [
+            [
+              "decorators.authed_only",
+              10.672596
+            ],
+            [
+              "decorators.admins_only",
+              9.814365
+            ],
+            [
+              "decorators.require_verified_emails",
+              6.359388
+            ],
+            [
+              "helpers.flash_for",
+              5.327016
+            ],
+            [
+              "auth.jwt.create_access_token",
+              3.240396
+            ]
+          ],
+          "request": "Add a `registered_only` decorator in CTFd utils that redirects anonymous users to the register page.",
+          "task": "task",
+          "words": 15
+        },
+        {
+          "expected": "security.email_confirm_token",
+          "id": "ctfd_reset_token",
+          "ranked": [
+            [
+              "security.email_confirm_token",
+              16.554204
+            ],
+            [
+              "helpers.flash_for",
+              3.940021
+            ],
+            [
+              "decorators.ratelimit",
+              3.426821
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.308674
+            ],
+            [
+              "auth.jwt.create_access_token",
+              3.197624
+            ]
+          ],
+          "request": "Add password reset helpers: generate a token for an email, resolve email from token, and invalidate it.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": "user.cached_lookup",
+          "id": "ctfd_team_score",
+          "ranked": [
+            [
+              "user.cached_lookup",
+              17.030934
+            ],
+            [
+              "http.get_with_retry.requests",
+              3.571905
+            ],
+            [
+              "decorators.authed_only",
+              3.184241
+            ],
+            [
+              "auth.jwt.create_access_token",
+              2.758396
+            ],
+            [
+              "helpers.flash_for",
+              2.303017
+            ]
+          ],
+          "request": "Add a cached `get_team_score(team_id)` helper to CTFd/utils/user/__init__.py so templates can call it.",
+          "task": "task",
+          "words": 12
+        },
+        {
+          "expected": "decorators.authed_only",
+          "id": "ctfd_extra_01",
+          "ranked": [
+            [
+              "decorators.authed_only",
+              8.997529
+            ],
+            [
+              "decorators.admins_only",
+              7.077218
+            ],
+            [
+              "decorators.ratelimit",
+              5.861187
+            ],
+            [
+              "config.env.load_settings",
+              5.70285
+            ],
+            [
+              "decorators.require_verified_emails",
+              4.136443
+            ]
+          ],
+          "request": "Add a login_required decorator and apply it to the team settings view.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "decorators.admins_only",
+          "id": "ctfd_extra_02",
+          "ranked": [
+            [
+              "decorators.admins_only",
+              12.078325
+            ],
+            [
+              "decorators.authed_only",
+              6.01077
+            ],
+            [
+              "helpers.flash_for",
+              3.730174
+            ],
+            [
+              "decorators.require_verified_emails",
+              2.85149
+            ],
+            [
+              "db.pagination.select_page",
+              2.421701
+            ]
+          ],
+          "request": "Restrict the new admin stats page to admins only, same as our other admin routes.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "decorators.ratelimit",
+          "id": "ctfd_extra_03",
+          "ranked": [
+            [
+              "decorators.ratelimit",
+              13.899139
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              8.419264
+            ],
+            [
+              "user.cached_lookup",
+              4.420893
+            ],
+            [
+              "decorators.require_verified_emails",
+              2.555524
+            ],
+            [
+              "helpers.flash_for",
+              2.442736
+            ]
+          ],
+          "request": "Add per-IP rate limiting to the flag submission endpoint, max 5 attempts per minute.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": "security.email_confirm_token",
+          "id": "ctfd_extra_04",
+          "ranked": [
+            [
+              "security.email_confirm_token",
+              17.530763
+            ],
+            [
+              "auth.jwt.create_access_token",
+              6.590702
+            ],
+            [
+              "decorators.require_verified_emails",
+              6.063452
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.759194
+            ],
+            [
+              "importers.users_csv.parse",
+              2.074021
+            ]
+          ],
+          "request": "Add email verification: generate a signed token that expires in 30 minutes and email it as a link.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": "config.mail_provider_configured",
+          "id": "ctfd_extra_05",
+          "ranked": [
+            [
+              "config.mail_provider_configured",
+              11.008978
+            ],
+            [
+              "security.email_confirm_token",
+              10.221412
+            ],
+            [
+              "auth.password.pbkdf2",
+              5.082014
+            ],
+            [
+              "decorators.require_verified_emails",
+              2.777299
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.108427
+            ]
+          ],
+          "request": "Is there a way to check if SMTP/email is configured, so I can hide the forgot-password link otherwise?",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": "user.cached_lookup",
+          "id": "ctfd_extra_06",
+          "ranked": [
+            [
+              "user.cached_lookup",
+              9.086984
+            ],
+            [
+              "http.get_with_retry.requests",
+              3.571905
+            ],
+            [
+              "auth.jwt.create_access_token",
+              3.41243
+            ],
+            [
+              "config.mail_provider_configured",
+              2.028001
+            ],
+            [
+              "importers.users_csv.parse",
+              1.994896
+            ]
+          ],
+          "request": "Add a cached get_user_rank(user_id) helper that returns the user's leaderboard position.",
+          "task": "extra",
+          "words": 11
+        },
+        {
+          "expected": "helpers.flash_for",
+          "id": "ctfd_extra_07",
+          "ranked": [
+            [
+              "helpers.flash_for",
+              16.482877
+            ],
+            [
+              "config.env.load_settings",
+              6.15652
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.083802
+            ],
+            [
+              "config.mail_provider_configured",
+              2.924848
+            ],
+            [
+              "db.pagination.select_page",
+              2.421701
+            ]
+          ],
+          "request": "Add a flash message on the settings page that shows \"Settings saved\" once after a successful save.",
+          "task": "extra",
+          "words": 17
+        },
+        {
+          "expected": "challenges.decay_linear",
+          "id": "ctfd_extra_08",
+          "ranked": [
+            [
+              "challenges.decay_linear",
+              21.825797
+            ],
+            [
+              "importers.users_csv.parse",
+              3.167981
+            ],
+            [
+              "config.env.load_settings",
+              2.996362
+            ],
+            [
+              "config.mail_provider_configured",
+              2.028001
+            ],
+            [
+              "decorators.authed_only",
+              2.001291
+            ]
+          ],
+          "request": "Add a function that recalculates a dynamic challenge's points from its solve count, and call it on each new solve.",
+          "task": "extra",
+          "words": 20
+        },
+        {
+          "expected": "decorators.require_verified_emails",
+          "id": "ctfd_extra_09",
+          "ranked": [
+            [
+              "decorators.require_verified_emails",
+              11.90413
+            ],
+            [
+              "security.email_confirm_token",
+              7.228648
+            ],
+            [
+              "importers.users_csv.parse",
+              3.451442
+            ],
+            [
+              "config.mail_provider_configured",
+              2.028001
+            ],
+            [
+              "user.cached_lookup",
+              1.384665
+            ]
+          ],
+          "request": "Block flag submissions from users whose email isn't confirmed.",
+          "task": "extra",
+          "words": 9
+        },
+        {
+          "expected": "auth.password.pbkdf2",
+          "id": "ctfd_extra_10",
+          "ranked": [
+            [
+              "auth.password.pbkdf2",
+              14.695412
+            ],
+            [
+              "security.email_confirm_token",
+              4.051574
+            ],
+            [
+              "decorators.ratelimit",
+              3.137298
+            ],
+            [
+              "auth.jwt.create_access_token",
+              2.318921
+            ],
+            [
+              "decorators.authed_only",
+              1.92588
+            ]
+          ],
+          "request": "Add secure password hashing for participant signup and verify it at login.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "db.pagination.select_page",
+          "id": "ctfd_extra_11",
+          "ranked": [
+            [
+              "db.pagination.select_page",
+              18.991501
+            ],
+            [
+              "decorators.admins_only",
+              7.188305
+            ],
+            [
+              "decorators.ratelimit",
+              6.383201
+            ],
+            [
+              "decorators.authed_only",
+              4.496465
+            ],
+            [
+              "helpers.flash_for",
+              4.274136
+            ]
+          ],
+          "request": "Add pagination to the admin users list endpoint, with page/limit params and a total count in the response.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": "importers.users_csv.parse",
+          "id": "ctfd_extra_12",
+          "ranked": [
+            [
+              "importers.users_csv.parse",
+              21.430866
+            ],
+            [
+              "decorators.admins_only",
+              6.679686
+            ],
+            [
+              "config.env.load_settings",
+              6.123549
+            ],
+            [
+              "user.cached_lookup",
+              3.902656
+            ],
+            [
+              "decorators.authed_only",
+              3.294239
+            ]
+          ],
+          "request": "Add an admin CSV user import endpoint that validates each row and returns a report of invalid rows.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_13",
+          "ranked": [
+            [
+              "challenges.decay_linear",
+              14.42626
+            ],
+            [
+              "user.cached_lookup",
+              3.646174
+            ],
+            [
+              "importers.users_csv.parse",
+              2.16271
+            ],
+            [
+              "decorators.ratelimit",
+              1.878253
+            ]
+          ],
+          "request": "Add first-blood bonus: award extra points to the first team to solve each challenge.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_14",
+          "ranked": [
+            [
+              "decorators.ratelimit",
+              3.295876
+            ],
+            [
+              "decorators.admins_only",
+              2.871424
+            ],
+            [
+              "user.cached_lookup",
+              2.688711
+            ],
+            [
+              "decorators.authed_only",
+              2.565766
+            ],
+            [
+              "helpers.flash_for",
+              2.442736
+            ]
+          ],
+          "request": "Add an endpoint that exports the scoreboard as CTFtime-compatible JSON.",
+          "task": "extra",
+          "words": 10
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_15",
+          "ranked": [
+            [
+              "importers.users_csv.parse",
+              5.351768
+            ],
+            [
+              "challenges.decay_linear",
+              4.549937
+            ]
+          ],
+          "request": "Change challenge file uploads to go to S3 instead of local disk.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_16",
+          "ranked": [
+            [
+              "http.get_with_retry.requests",
+              4.7988
+            ],
+            [
+              "challenges.decay_linear",
+              4.549937
+            ],
+            [
+              "decorators.admins_only",
+              3.792646
+            ],
+            [
+              "decorators.authed_only",
+              3.388925
+            ],
+            [
+              "user.cached_lookup",
+              2.122976
+            ]
+          ],
+          "request": "Render challenge descriptions from Markdown to sanitized HTML, so script tags and other XSS can't get through.",
+          "task": "extra",
+          "words": 17
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_17",
+          "ranked": [
+            [
+              "helpers.flash_for",
+              3.053827
+            ],
+            [
+              "auth.password.pbkdf2",
+              2.983435
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.973491
+            ],
+            [
+              "user.cached_lookup",
+              2.688711
+            ],
+            [
+              "http.get_with_retry.requests",
+              1.296285
+            ]
+          ],
+          "request": "Freeze the scoreboard at a configurable time, so submissions after it don't change the displayed rankings.",
+          "task": "extra",
+          "words": 16
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_18",
+          "ranked": [
+            [
+              "challenges.decay_linear",
+              4.549937
+            ],
+            [
+              "decorators.authed_only",
+              2.534599
+            ],
+            [
+              "auth.password.pbkdf2",
+              2.108645
+            ],
+            [
+              "helpers.flash_for",
+              1.898774
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              1.448391
+            ]
+          ],
+          "request": "Push a real-time notification to all connected browsers when a new challenge is released.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_19",
+          "ranked": [
+            [
+              "security.email_confirm_token",
+              4.663229
+            ],
+            [
+              "http.get_with_retry.requests",
+              3.86721
+            ],
+            [
+              "user.cached_lookup",
+              3.646174
+            ],
+            [
+              "db.pagination.select_page",
+              3.326129
+            ],
+            [
+              "auth.jwt.create_access_token",
+              2.290752
+            ]
+          ],
+          "request": "Add a function to generate unique, URL-safe team invite codes, with expiry and a DB uniqueness check.",
+          "task": "extra",
+          "words": 17
+        },
+        {
+          "expected": null,
+          "id": "ctfd_extra_20",
+          "ranked": [
+            [
+              "challenges.decay_linear",
+              11.388924
+            ],
+            [
+              "user.cached_lookup",
+              4.413829
+            ],
+            [
+              "decorators.ratelimit",
+              4.146147
+            ],
+            [
+              "importers.users_csv.parse",
+              3.785457
+            ],
+            [
+              "helpers.flash_for",
+              2.916729
+            ]
+          ],
+          "request": "Add a function that returns each team's solve count grouped by challenge category, for charting.",
+          "task": "extra",
+          "words": 15
+        }
+      ],
+      "misses": [
+        {
+          "expected": "decorators.authed_only",
+          "id": "ctfd_extra_01",
+          "ranked": [
+            [
+              "decorators.authed_only",
+              8.998
+            ],
+            [
+              "decorators.admins_only",
+              7.077
+            ],
+            [
+              "decorators.ratelimit",
+              5.861
+            ]
+          ],
+          "request": "Add a login_required decorator and apply it to the team settings view."
+        }
+      ],
+      "overlap": {
+        "both_above_threshold": 1,
+        "first_is_expected": 1,
+        "generic_first": 0,
+        "house_first": 1,
+        "rows": [
+          {
+            "above": [
+              [
+                "decorators.ratelimit",
+                24.507
+              ],
+              [
+                "ratelimit.token_bucket.check",
+                11.966
+              ]
+            ],
+            "expected": "decorators.ratelimit",
+            "first": "decorators.ratelimit",
+            "first_is_expected": true,
+            "first_kind": "house",
+            "request": "Add a rate-limit decorator for POST requests per client IP, and apply it to login, register, and team forms."
+          }
+        ]
+      },
+      "short_queries": {
+        "examples": [
+          {
+            "request": "Add a login_required decorator and apply it to the team settings view.",
+            "score": 8.998,
+            "words": 12
+          }
+        ],
+        "positives": 18,
+        "ranked_first_but_below_threshold": 1
+      },
+      "tasks": {
+        "false_match_rate": 0.0,
+        "false_matches": [],
+        "negatives": 2,
+        "positives": 6,
+        "top1": 1.0,
+        "top1_ignoring_threshold": 1.0,
+        "top3": 1.0
+      }
+    },
+    "healthchecks": {
+      "all": {
+        "false_match_rate": 0.0,
+        "false_matches": [],
+        "negatives": 10,
+        "positives": 18,
+        "top1": 0.8889,
+        "top1_ignoring_threshold": 0.9444,
+        "top3": 0.8889
+      },
+      "catalog": {
+        "generic": 7,
+        "house": 9
+      },
+      "extra": {
+        "false_match_rate": 0.0,
+        "false_matches": [],
+        "negatives": 8,
+        "positives": 12,
+        "top1": 0.8333,
+        "top1_ignoring_threshold": 0.9167,
+        "top3": 0.8333
+      },
+      "items": [
+        {
+          "expected": "integrations.add_url_channel",
+          "id": "hc_add_victorops",
+          "ranked": [
+            [
+              "integrations.add_url_channel",
+              17.168476
+            ],
+            [
+              "access.channel_for_user",
+              7.623056
+            ],
+            [
+              "integrations.help_page",
+              4.99216
+            ],
+            [
+              "api.authorize_read",
+              4.380629
+            ],
+            [
+              "badges.check_signature",
+              2.600171
+            ]
+          ],
+          "request": "Add the add_victorops view in hc/front/views.py so logged-in users can save a VictorOps webhook URL to their project.",
+          "task": "task",
+          "words": 18
+        },
+        {
+          "expected": "accounts.allow_redirect",
+          "id": "hc_allow_redirect",
+          "ranked": [
+            [
+              "accounts.allow_redirect",
+              20.627095
+            ],
+            [
+              "integrations.add_url_channel",
+              9.626281
+            ],
+            [
+              "badges.check_signature",
+              4.480966
+            ],
+            [
+              "integrations.help_page",
+              3.875044
+            ],
+            [
+              "emails.templated_send",
+              3.517061
+            ]
+          ],
+          "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+          "task": "task",
+          "words": 21
+        },
+        {
+          "expected": "api.authorize_read",
+          "id": "hc_api_authorize",
+          "ranked": [
+            [
+              "api.authorize_read",
+              25.092443
+            ],
+            [
+              "integrations.add_url_channel",
+              6.337106
+            ],
+            [
+              "access.channel_for_user",
+              5.774032
+            ],
+            [
+              "emails.templated_send_blocking",
+              4.623308
+            ],
+            [
+              "emails.templated_send",
+              4.49109
+            ]
+          ],
+          "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+          "task": "task",
+          "words": 20
+        },
+        {
+          "expected": "access.channel_for_user",
+          "id": "hc_check_for_user",
+          "ranked": [
+            [
+              "access.channel_for_user",
+              18.716679
+            ],
+            [
+              "integrations.help_page",
+              10.084235
+            ],
+            [
+              "api.authorize_read",
+              8.382001
+            ],
+            [
+              "integrations.add_url_channel",
+              6.916859
+            ],
+            [
+              "config.env.load_settings",
+              4.237661
+            ]
+          ],
+          "request": "Add `_get_check_for_user` and `_get_rw_check_for_user` helpers to hc/front/views.py that load a check by code and reject read-only members.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": null,
+          "id": "hc_format_duration",
+          "ranked": [
+            [
+              "db.pagination.select_page",
+              3.899581
+            ],
+            [
+              "integrations.add_url_channel",
+              3.148363
+            ],
+            [
+              "integrations.help_page",
+              1.83641
+            ],
+            [
+              "emails.templated_send",
+              1.770857
+            ]
+          ],
+          "request": "Add a helper in the date utils that formats a timedelta as \"2 hours 30 minutes\" or \"8 days\".",
+          "task": "task",
+          "words": 19
+        },
+        {
+          "expected": null,
+          "id": "hc_match_keywords",
+          "ranked": [
+            [
+              "importers.users_csv.parse",
+              4.020334
+            ],
+            [
+              "integrations.add_url_channel",
+              3.148363
+            ],
+            [
+              "db.pagination.select_page",
+              3.10547
+            ],
+            [
+              "emails.templated_send_blocking",
+              2.128867
+            ],
+            [
+              "integrations.help_page",
+              1.83641
+            ]
+          ],
+          "request": "Add a helper to the string utils that returns True if any keyword from a comma-separated list appears in a text.",
+          "task": "task",
+          "words": 21
+        },
+        {
+          "expected": "views.require_setting",
+          "id": "hc_require_setting",
+          "ranked": [
+            [
+              "views.require_setting",
+              28.099644
+            ],
+            [
+              "integrations.add_url_channel",
+              10.757454
+            ],
+            [
+              "integrations.help_page",
+              7.189957
+            ],
+            [
+              "api.authorize_read",
+              4.682149
+            ],
+            [
+              "access.channel_for_user",
+              3.928575
+            ]
+          ],
+          "request": "Add a decorator in the integrations views that returns 404 unless a given Django setting is enabled.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": "emails.templated_send",
+          "id": "hc_verify_email",
+          "ranked": [
+            [
+              "emails.templated_send",
+              17.651331
+            ],
+            [
+              "emails.templated_send_blocking",
+              10.244588
+            ],
+            [
+              "integrations.help_page",
+              3.67282
+            ],
+            [
+              "integrations.add_url_channel",
+              3.148363
+            ],
+            [
+              "auth.password.pbkdf2",
+              2.739649
+            ]
+          ],
+          "request": "Add a `send_verify_link(to, ctx)` function to the email module that sends the verify-email message using the existing template.",
+          "task": "task",
+          "words": 18
+        },
+        {
+          "expected": "integrations.add_url_channel",
+          "id": "healthchecks_extra_01",
+          "ranked": [
+            [
+              "integrations.add_url_channel",
+              15.388733
+            ],
+            [
+              "integrations.help_page",
+              6.82857
+            ],
+            [
+              "access.channel_for_user",
+              6.032807
+            ],
+            [
+              "badges.check_signature",
+              2.600171
+            ],
+            [
+              "views.require_setting",
+              2.293051
+            ]
+          ],
+          "request": "Add a view where users paste the webhook URL and save the channel.",
+          "task": "extra",
+          "words": 13
+        },
+        {
+          "expected": "access.channel_for_user",
+          "id": "healthchecks_extra_02",
+          "ranked": [
+            [
+              "access.channel_for_user",
+              16.441318
+            ],
+            [
+              "integrations.add_url_channel",
+              7.456205
+            ],
+            [
+              "views.require_setting",
+              7.261841
+            ],
+            [
+              "api.authorize_read",
+              4.380629
+            ],
+            [
+              "integrations.help_page",
+              3.15575
+            ]
+          ],
+          "request": "In the project detail view, fetch the project by UUID and return 403 unless the user owns it or is a team member.",
+          "task": "extra",
+          "words": 23
+        },
+        {
+          "expected": "api.authorize_read",
+          "id": "healthchecks_extra_03",
+          "ranked": [
+            [
+              "api.authorize_read",
+              23.49851
+            ],
+            [
+              "access.channel_for_user",
+              8.607111
+            ],
+            [
+              "integrations.add_url_channel",
+              5.387045
+            ],
+            [
+              "emails.templated_send_blocking",
+              4.623308
+            ],
+            [
+              "auth.jwt.create_access_token",
+              4.427457
+            ]
+          ],
+          "request": "Add a GET /projects/:id/stats endpoint that authenticates via the X-API-Key header, read-only.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "views.require_setting",
+          "id": "healthchecks_extra_04",
+          "ranked": [
+            [
+              "views.require_setting",
+              6.665773
+            ],
+            [
+              "config.env.load_settings",
+              5.957711
+            ],
+            [
+              "integrations.help_page",
+              5.151322
+            ],
+            [
+              "integrations.add_url_channel",
+              4.919718
+            ],
+            [
+              "access.channel_for_user",
+              2.822141
+            ]
+          ],
+          "request": "Make the new integration's routes return 404 when it's disabled in settings.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "accounts.allow_redirect",
+          "id": "healthchecks_extra_05",
+          "ranked": [
+            [
+              "accounts.allow_redirect",
+              16.370718
+            ],
+            [
+              "integrations.add_url_channel",
+              4.571226
+            ],
+            [
+              "importers.users_csv.parse",
+              2.711572
+            ],
+            [
+              "badges.check_signature",
+              1.871041
+            ],
+            [
+              "integrations.help_page",
+              1.83641
+            ]
+          ],
+          "request": "Fix the open redirect in login: validate `next` is a same-site relative path before redirecting.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "integrations.help_page",
+          "id": "healthchecks_extra_06",
+          "ranked": [
+            [
+              "integrations.help_page",
+              16.959532
+            ],
+            [
+              "integrations.add_url_channel",
+              9.183223
+            ],
+            [
+              "emails.templated_send",
+              8.38516
+            ],
+            [
+              "accounts.allow_redirect",
+              4.251089
+            ],
+            [
+              "db.pagination.select_page",
+              4.106783
+            ]
+          ],
+          "request": "Add a public, no-login help page for the new integration, linked from the pre-install screen.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "badges.check_signature",
+          "id": "healthchecks_extra_07",
+          "ranked": [
+            [
+              "badges.check_signature",
+              13.010859
+            ],
+            [
+              "emails.templated_send",
+              4.49109
+            ],
+            [
+              "integrations.add_url_channel",
+              3.148363
+            ],
+            [
+              "auth.password.pbkdf2",
+              2.543144
+            ],
+            [
+              "config.env.load_settings",
+              2.224042
+            ]
+          ],
+          "request": "Add HMAC signature verification to the badge route; return 403 if the signature is invalid.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "emails.templated_send",
+          "id": "healthchecks_extra_08",
+          "ranked": [
+            [
+              "emails.templated_send_blocking",
+              8.975318
+            ],
+            [
+              "emails.templated_send",
+              8.365448
+            ],
+            [
+              "integrations.add_url_channel",
+              6.49751
+            ],
+            [
+              "integrations.help_page",
+              4.789936
+            ],
+            [
+              "importers.users_csv.parse",
+              4.360574
+            ]
+          ],
+          "request": "Add a team invite email using our existing email templates, sent when a user requests an invite.",
+          "task": "extra",
+          "words": 17
+        },
+        {
+          "expected": "emails.templated_send_blocking",
+          "id": "healthchecks_extra_09",
+          "ranked": [
+            [
+              "emails.templated_send_blocking",
+              20.416915
+            ],
+            [
+              "emails.templated_send",
+              7.269567
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              5.853215
+            ],
+            [
+              "importers.users_csv.parse",
+              2.454858
+            ],
+            [
+              "integrations.help_page",
+              1.83641
+            ]
+          ],
+          "request": "Send the monthly summary email with List-Unsubscribe headers and wait until it's actually sent.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": "http.get_with_retry.requests",
+          "id": "healthchecks_extra_10",
+          "ranked": [
+            [
+              "http.get_with_retry.requests",
+              19.986951
+            ],
+            [
+              "integrations.add_url_channel",
+              6.322169
+            ],
+            [
+              "api.authorize_read",
+              5.636078
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              5.235357
+            ],
+            [
+              "emails.templated_send",
+              3.918722
+            ]
+          ],
+          "request": "Add exponential backoff retries to the notification API client, retry only on 5xx and timeouts.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "ratelimit.token_bucket.check",
+          "id": "healthchecks_extra_11",
+          "ranked": [
+            [
+              "ratelimit.token_bucket.check",
+              22.000189
+            ],
+            [
+              "http.get_with_retry.requests",
+              8.762985
+            ],
+            [
+              "integrations.add_url_channel",
+              6.322169
+            ],
+            [
+              "emails.templated_send_blocking",
+              4.623308
+            ],
+            [
+              "emails.templated_send",
+              3.918722
+            ]
+          ],
+          "request": "Add per-client rate limiting to the SMS notification endpoint, returning 429 with a Retry-After header.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": "config.env.load_settings",
+          "id": "healthchecks_extra_12",
+          "ranked": [
+            [
+              "config.env.load_settings",
+              15.580887
+            ],
+            [
+              "integrations.add_url_channel",
+              5.692703
+            ],
+            [
+              "badges.check_signature",
+              2.600171
+            ],
+            [
+              "http.get_with_retry.requests",
+              2.107963
+            ],
+            [
+              "accounts.allow_redirect",
+              2.031686
+            ]
+          ],
+          "request": "Add a config module that loads DATABASE_URL and DEBUG from env, with sensible defaults.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_13",
+          "ranked": [
+            [
+              "accounts.allow_redirect",
+              5.174148
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              4.716845
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.743242
+            ],
+            [
+              "config.env.load_settings",
+              3.255242
+            ],
+            [
+              "http.get_with_retry.requests",
+              1.78217
+            ]
+          ],
+          "request": "Write a function that parses a monthly cron string and returns the next run time after a given date.",
+          "task": "extra",
+          "words": 19
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_14",
+          "ranked": [
+            [
+              "integrations.help_page",
+              6.180239
+            ],
+            [
+              "integrations.add_url_channel",
+              4.098424
+            ],
+            [
+              "emails.templated_send",
+              3.541713
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.955722
+            ],
+            [
+              "badges.check_signature",
+              1.880796
+            ]
+          ],
+          "request": "Add a function that renders a check's recent ping history as a sparkline SVG.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_15",
+          "ranked": [
+            [
+              "accounts.allow_redirect",
+              4.769347
+            ],
+            [
+              "emails.templated_send",
+              4.49109
+            ],
+            [
+              "integrations.add_url_channel",
+              4.098424
+            ],
+            [
+              "badges.check_signature",
+              1.880796
+            ],
+            [
+              "integrations.help_page",
+              1.83641
+            ]
+          ],
+          "request": "Add a function that posts a Telegram bot message when a check goes down.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_16",
+          "ranked": [
+            [
+              "integrations.add_url_channel",
+              8.736193
+            ],
+            [
+              "api.authorize_read",
+              5.14331
+            ],
+            [
+              "importers.users_csv.parse",
+              4.44412
+            ],
+            [
+              "integrations.help_page",
+              3.67282
+            ],
+            [
+              "access.channel_for_user",
+              3.168767
+            ]
+          ],
+          "request": "Add an endpoint to export all of a project's checks as a CSV download.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_17",
+          "ranked": [
+            [
+              "integrations.help_page",
+              4.789936
+            ],
+            [
+              "db.pagination.select_page",
+              4.550266
+            ],
+            [
+              "access.channel_for_user",
+              1.910144
+            ],
+            [
+              "importers.users_csv.parse",
+              1.905717
+            ],
+            [
+              "badges.check_signature",
+              1.871041
+            ]
+          ],
+          "request": "Convert the UTC timestamp to the user's selected timezone before displaying it.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_18",
+          "ranked": [
+            [
+              "emails.templated_send",
+              4.49109
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              4.222983
+            ],
+            [
+              "access.channel_for_user",
+              4.001977
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.220846
+            ],
+            [
+              "integrations.add_url_channel",
+              3.148363
+            ]
+          ],
+          "request": "Add a nightly job that deletes ping bodies older than 90 days from our object storage bucket.",
+          "task": "extra",
+          "words": 17
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_19",
+          "ranked": [
+            [
+              "integrations.add_url_channel",
+              6.49751
+            ],
+            [
+              "integrations.help_page",
+              4.789936
+            ],
+            [
+              "config.env.load_settings",
+              3.566983
+            ],
+            [
+              "auth.jwt.create_access_token",
+              3.463737
+            ],
+            [
+              "api.authorize_read",
+              2.325863
+            ]
+          ],
+          "request": "Add an endpoint that generates a TOTP QR code for 2FA setup using the user's secret.",
+          "task": "extra",
+          "words": 16
+        },
+        {
+          "expected": null,
+          "id": "healthchecks_extra_20",
+          "ranked": [
+            [
+              "emails.templated_send",
+              6.144385
+            ],
+            [
+              "importers.users_csv.parse",
+              5.432346
+            ],
+            [
+              "config.env.load_settings",
+              4.488011
+            ],
+            [
+              "emails.templated_send_blocking",
+              3.269398
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.955722
+            ]
+          ],
+          "request": "Parse the incoming email body and extract the check's ping code from it.",
+          "task": "extra",
+          "words": 13
+        }
+      ],
+      "misses": [
+        {
+          "expected": "views.require_setting",
+          "id": "healthchecks_extra_04",
+          "ranked": [
+            [
+              "views.require_setting",
+              6.666
+            ],
+            [
+              "config.env.load_settings",
+              5.958
+            ],
+            [
+              "integrations.help_page",
+              5.151
+            ]
+          ],
+          "request": "Make the new integration's routes return 404 when it's disabled in settings."
+        },
+        {
+          "expected": "emails.templated_send",
+          "id": "healthchecks_extra_08",
+          "ranked": [
+            [
+              "emails.templated_send_blocking",
+              8.975
+            ],
+            [
+              "emails.templated_send",
+              8.365
+            ],
+            [
+              "integrations.add_url_channel",
+              6.498
+            ]
+          ],
+          "request": "Add a team invite email using our existing email templates, sent when a user requests an invite."
+        }
+      ],
+      "overlap": {
+        "both_above_threshold": 0,
+        "first_is_expected": 0,
+        "generic_first": 0,
+        "house_first": 0,
+        "rows": []
+      },
+      "short_queries": {
+        "examples": [
+          {
+            "request": "Make the new integration's routes return 404 when it's disabled in settings.",
+            "score": 6.666,
+            "words": 12
+          }
+        ],
+        "positives": 18,
+        "ranked_first_but_below_threshold": 1
+      },
+      "tasks": {
+        "false_match_rate": 0.0,
+        "false_matches": [],
+        "negatives": 2,
+        "positives": 6,
+        "top1": 1.0,
+        "top1_ignoring_threshold": 1.0,
+        "top3": 1.0
+      }
+    },
+    "lnbits": {
+      "all": {
+        "false_match_rate": 0.1,
+        "false_matches": [
+          {
+            "got": "crud.delete_by_ext_id",
+            "request": "Add a function to the extension installer that checks if the current LNbits version is within an extension's optional min/max version range.",
+            "score": 10.856
+          }
+        ],
+        "negatives": 10,
+        "positives": 18,
+        "top1": 0.6667,
+        "top1_ignoring_threshold": 0.8889,
+        "top3": 0.6667
+      },
+      "catalog": {
+        "generic": 7,
+        "house": 8
+      },
+      "extra": {
+        "false_match_rate": 0.0,
+        "false_matches": [],
+        "negatives": 8,
+        "positives": 12,
+        "top1": 0.5833,
+        "top1_ignoring_threshold": 0.9167,
+        "top3": 0.5833
+      },
+      "items": [
+        {
+          "expected": "auth.lnbits_access_token",
+          "id": "lnbits_access_token",
+          "ranked": [
+            [
+              "auth.lnbits_access_token",
+              17.550218
+            ],
+            [
+              "auth.jwt.create_access_token",
+              15.463412
+            ],
+            [
+              "auth.check_admin",
+              3.54456
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.378505
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              2.649238
+            ]
+          ],
+          "request": "Add a function that creates a signed JWT access token with expiry from the configured minutes setting, for the login endpoints.",
+          "task": "task",
+          "words": 21
+        },
+        {
+          "expected": "crud.get_account_by_field",
+          "id": "lnbits_account_by_email",
+          "ranked": [
+            [
+              "crud.get_account_by_field",
+              22.894876
+            ],
+            [
+              "crud.count_rows",
+              9.688357
+            ],
+            [
+              "crud.delete_by_ext_id",
+              4.581398
+            ],
+            [
+              "auth.check_admin",
+              4.063166
+            ],
+            [
+              "importers.users_csv.parse",
+              3.871004
+            ]
+          ],
+          "request": "Add an async `get_account_by_email_ci` to the users CRUD that looks up an account by email, case-insensitive.",
+          "task": "task",
+          "words": 16
+        },
+        {
+          "expected": null,
+          "id": "lnbits_camel_to_snake",
+          "ranked": [],
+          "request": "Add a camel_to_snake helper to the code generator and use it wherever names are converted.",
+          "task": "task",
+          "words": 15
+        },
+        {
+          "expected": "crud.count_rows",
+          "id": "lnbits_extensions_count",
+          "ranked": [
+            [
+              "crud.count_rows",
+              13.411805
+            ],
+            [
+              "crud.delete_by_ext_id",
+              10.421799
+            ],
+            [
+              "db.pagination.select_page",
+              7.983342
+            ],
+            [
+              "crud.get_account_by_field",
+              5.827309
+            ],
+            [
+              "auth.check_admin",
+              2.223449
+            ]
+          ],
+          "request": "Add an async function to the extensions crud module that returns the count of installed extensions, for the admin page.",
+          "task": "task",
+          "words": 20
+        },
+        {
+          "expected": "auth.require_api_key",
+          "id": "lnbits_invoice_key",
+          "ranked": [
+            [
+              "auth.require_api_key",
+              25.265947
+            ],
+            [
+              "auth.check_admin",
+              10.03823
+            ],
+            [
+              "crud.count_rows",
+              3.469398
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              3.45921
+            ],
+            [
+              "config.env.load_settings",
+              3.026884
+            ]
+          ],
+          "request": "Add a FastAPI dependency requiring a wallet's invoice key from header or query param, for invoice-creating endpoints.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": "auth.check_admin",
+          "id": "lnbits_super_user",
+          "ranked": [
+            [
+              "auth.check_admin",
+              23.67407
+            ],
+            [
+              "auth.require_api_key",
+              10.471464
+            ],
+            [
+              "security.check_callback_url",
+              5.014876
+            ],
+            [
+              "crud.get_account_by_field",
+              2.949568
+            ],
+            [
+              "auth.lnbits_access_token",
+              2.050562
+            ]
+          ],
+          "request": "Add a FastAPI dependency `check_super_user` that raises 403 for non-super-users, and use it on the admin endpoints.",
+          "task": "task",
+          "words": 17
+        },
+        {
+          "expected": "validators.regex_match",
+          "id": "lnbits_valid_email",
+          "ranked": [
+            [
+              "crud.get_account_by_field",
+              5.699111
+            ],
+            [
+              "validators.regex_match",
+              5.083939
+            ],
+            [
+              "importers.users_csv.parse",
+              4.548092
+            ],
+            [
+              "auth.lnbits_access_token",
+              3.627044
+            ],
+            [
+              "crud.count_rows",
+              2.750161
+            ]
+          ],
+          "request": "Add an `is_valid_email` helper to lnbits/helpers.py and use it in the account update validation.",
+          "task": "task",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "lnbits_version_ok",
+          "ranked": [
+            [
+              "crud.delete_by_ext_id",
+              10.855715
+            ],
+            [
+              "auth.lnbits_access_token",
+              4.806636
+            ],
+            [
+              "crud.count_rows",
+              4.327566
+            ],
+            [
+              "importers.users_csv.parse",
+              2.43239
+            ],
+            [
+              "security.check_callback_url",
+              2.358957
+            ]
+          ],
+          "request": "Add a function to the extension installer that checks if the current LNbits version is within an extension's optional min/max version range.",
+          "task": "task",
+          "words": 22
+        },
+        {
+          "expected": "validators.regex_match",
+          "id": "lnbits_extra_01",
+          "ranked": [
+            [
+              "validators.regex_match",
+              7.818488
+            ],
+            [
+              "crud.count_rows",
+              4.723012
+            ],
+            [
+              "security.check_callback_url",
+              4.388289
+            ],
+            [
+              "importers.users_csv.parse",
+              3.829266
+            ],
+            [
+              "auth.require_api_key",
+              2.9051
+            ]
+          ],
+          "request": "Add validation so wallet names only allow letters, numbers, hyphens, and underscores.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "crud.get_account_by_field",
+          "id": "lnbits_extra_02",
+          "ranked": [
+            [
+              "crud.get_account_by_field",
+              14.416007
+            ],
+            [
+              "validators.regex_match",
+              5.855731
+            ],
+            [
+              "crud.count_rows",
+              3.469398
+            ],
+            [
+              "crud.delete_by_ext_id",
+              3.072854
+            ],
+            [
+              "security.check_callback_url",
+              1.544208
+            ]
+          ],
+          "request": "Add an async `findByUsername` query that matches the username case-insensitively.",
+          "task": "extra",
+          "words": 10
+        },
+        {
+          "expected": "crud.count_rows",
+          "id": "lnbits_extra_03",
+          "ranked": [
+            [
+              "crud.count_rows",
+              8.548218
+            ],
+            [
+              "db.pagination.select_page",
+              5.031473
+            ],
+            [
+              "auth.require_api_key",
+              4.669358
+            ],
+            [
+              "auth.check_admin",
+              2.223449
+            ],
+            [
+              "validators.regex_match",
+              1.678877
+            ]
+          ],
+          "request": "Add a total wallets count card to the admin dashboard.",
+          "task": "extra",
+          "words": 10
+        },
+        {
+          "expected": "crud.delete_by_ext_id",
+          "id": "lnbits_extra_04",
+          "ranked": [
+            [
+              "crud.delete_by_ext_id",
+              7.447518
+            ],
+            [
+              "auth.lnbits_access_token",
+              6.495863
+            ],
+            [
+              "config.env.load_settings",
+              4.43694
+            ],
+            [
+              "crud.count_rows",
+              2.163783
+            ],
+            [
+              "auth.password.pbkdf2",
+              1.683516
+            ]
+          ],
+          "request": "Clear the extension's stored settings when it's uninstalled.",
+          "task": "extra",
+          "words": 8
+        },
+        {
+          "expected": "auth.require_api_key",
+          "id": "lnbits_extra_05",
+          "ranked": [
+            [
+              "auth.require_api_key",
+              22.635072
+            ],
+            [
+              "auth.check_admin",
+              12.261679
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              3.45921
+            ],
+            [
+              "config.env.load_settings",
+              3.026884
+            ],
+            [
+              "crud.count_rows",
+              3.016298
+            ]
+          ],
+          "request": "Add a FastAPI dependency that requires the wallet's admin key header, and apply it to the payment endpoints.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": "auth.check_admin",
+          "id": "lnbits_extra_06",
+          "ranked": [
+            [
+              "auth.require_api_key",
+              12.639966
+            ],
+            [
+              "auth.check_admin",
+              8.823231
+            ],
+            [
+              "auth.lnbits_access_token",
+              3.627044
+            ],
+            [
+              "validators.regex_match",
+              2.88754
+            ],
+            [
+              "security.check_callback_url",
+              2.358957
+            ]
+          ],
+          "request": "Add an admin-only API endpoint to LNbits; protect it with the existing check_admin dependency.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": "security.check_callback_url",
+          "id": "lnbits_extra_07",
+          "ranked": [
+            [
+              "security.check_callback_url",
+              26.77628
+            ],
+            [
+              "validators.regex_match",
+              8.190172
+            ],
+            [
+              "config.env.load_settings",
+              3.857644
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              3.381822
+            ],
+            [
+              "http.get_with_retry.requests",
+              2.951436
+            ]
+          ],
+          "request": "Validate the webhook URL against the admin's allowed origins before we call it. Reject anything else.",
+          "task": "extra",
+          "words": 16
+        },
+        {
+          "expected": "auth.lnbits_access_token",
+          "id": "lnbits_extra_08",
+          "ranked": [
+            [
+              "auth.lnbits_access_token",
+              9.051982
+            ],
+            [
+              "auth.password.pbkdf2",
+              8.101997
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              4.657714
+            ],
+            [
+              "auth.jwt.create_access_token",
+              4.265142
+            ],
+            [
+              "http.get_with_retry.requests",
+              3.104703
+            ]
+          ],
+          "request": "Add session token issuance to the login handler after password verification succeeds.",
+          "task": "extra",
+          "words": 12
+        },
+        {
+          "expected": "auth.password.pbkdf2",
+          "id": "lnbits_extra_09",
+          "ranked": [
+            [
+              "auth.password.pbkdf2",
+              13.586487
+            ],
+            [
+              "crud.get_account_by_field",
+              3.17494
+            ],
+            [
+              "auth.lnbits_access_token",
+              1.943687
+            ],
+            [
+              "auth.jwt.create_access_token",
+              1.193154
+            ]
+          ],
+          "request": "Add password hashing on signup and verification at login using bcrypt.",
+          "task": "extra",
+          "words": 11
+        },
+        {
+          "expected": "http.get_with_retry.requests",
+          "id": "lnbits_extra_10",
+          "ranked": [
+            [
+              "http.get_with_retry.requests",
+              16.307214
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              9.493539
+            ],
+            [
+              "auth.require_api_key",
+              2.9051
+            ],
+            [
+              "db.pagination.select_page",
+              1.429539
+            ]
+          ],
+          "request": "Add retry with exponential backoff to the exchange rate API client for timeouts.",
+          "task": "extra",
+          "words": 13
+        },
+        {
+          "expected": "ratelimit.token_bucket.check",
+          "id": "lnbits_extra_11",
+          "ranked": [
+            [
+              "ratelimit.token_bucket.check",
+              21.423165
+            ],
+            [
+              "auth.require_api_key",
+              12.189515
+            ],
+            [
+              "http.get_with_retry.requests",
+              9.87682
+            ],
+            [
+              "db.pagination.select_page",
+              4.040161
+            ],
+            [
+              "importers.users_csv.parse",
+              2.993976
+            ]
+          ],
+          "request": "Add per-API-key rate limiting to the create-invoice endpoint, returning 429 with Retry-After when exceeded.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": "config.env.load_settings",
+          "id": "lnbits_extra_12",
+          "ranked": [
+            [
+              "config.env.load_settings",
+              20.325321
+            ],
+            [
+              "security.check_callback_url",
+              2.405099
+            ],
+            [
+              "auth.lnbits_access_token",
+              2.050562
+            ],
+            [
+              "http.get_with_retry.requests",
+              1.707974
+            ]
+          ],
+          "request": "Load PORT and DATA_DIR from environment variables into the server config, with defaults.",
+          "task": "extra",
+          "words": 13
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_13",
+          "ranked": [
+            [
+              "validators.regex_match",
+              4.325761
+            ],
+            [
+              "auth.require_api_key",
+              3.343892
+            ],
+            [
+              "db.pagination.select_page",
+              0.864599
+            ],
+            [
+              "crud.count_rows",
+              0.737296
+            ],
+            [
+              "crud.get_account_by_field",
+              0.64267
+            ]
+          ],
+          "request": "Write a function that decodes a BOLT11 invoice string and returns its amount in satoshis.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_14",
+          "ranked": [
+            [
+              "ratelimit.token_bucket.check",
+              4.392124
+            ]
+          ],
+          "request": "Add a function to convert between satoshis and fiat using the live BTC exchange rate.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_15",
+          "ranked": [
+            [
+              "auth.require_api_key",
+              5.783785
+            ],
+            [
+              "validators.regex_match",
+              4.293723
+            ],
+            [
+              "auth.check_admin",
+              2.105651
+            ],
+            [
+              "crud.count_rows",
+              1.771576
+            ],
+            [
+              "auth.lnbits_access_token",
+              1.179591
+            ]
+          ],
+          "request": "Generate an LNURL-pay link for our wallet's lightning address endpoint.",
+          "task": "extra",
+          "words": 10
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_16",
+          "ranked": [
+            [
+              "auth.password.pbkdf2",
+              2.470729
+            ],
+            [
+              "auth.check_admin",
+              2.105651
+            ],
+            [
+              "auth.require_api_key",
+              1.827444
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              1.695657
+            ]
+          ],
+          "request": "Add a WebSocket endpoint that pushes payment status updates to the browser in real time.",
+          "task": "extra",
+          "words": 15
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_17",
+          "ranked": [
+            [
+              "crud.count_rows",
+              4.5308
+            ],
+            [
+              "crud.delete_by_ext_id",
+              2.447177
+            ],
+            [
+              "crud.get_account_by_field",
+              1.544208
+            ]
+          ],
+          "request": "Add a nightly job that backs up the SQLite database to a timestamped file in a backups folder.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_18",
+          "ranked": [
+            [
+              "db.pagination.select_page",
+              5.076224
+            ],
+            [
+              "security.check_callback_url",
+              3.839621
+            ],
+            [
+              "auth.require_api_key",
+              3.343892
+            ],
+            [
+              "http.get_with_retry.requests",
+              2.951436
+            ]
+          ],
+          "request": "Add a QR code to the invoice page that links to its payment URL.",
+          "task": "extra",
+          "words": 14
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_19",
+          "ranked": [
+            [
+              "auth.jwt.create_access_token",
+              3.492046
+            ],
+            [
+              "auth.password.pbkdf2",
+              3.224655
+            ],
+            [
+              "crud.delete_by_ext_id",
+              2.988954
+            ],
+            [
+              "auth.lnbits_access_token",
+              1.179591
+            ],
+            [
+              "security.check_callback_url",
+              1.084972
+            ]
+          ],
+          "request": "Add a function that verifies a Nostr event's signature and id, using the existing crypto deps if possible.",
+          "task": "extra",
+          "words": 18
+        },
+        {
+          "expected": null,
+          "id": "lnbits_extra_20",
+          "ranked": [
+            [
+              "crud.delete_by_ext_id",
+              5.840401
+            ],
+            [
+              "crud.count_rows",
+              5.572288
+            ],
+            [
+              "importers.users_csv.parse",
+              3.101748
+            ],
+            [
+              "auth.require_api_key",
+              2.815501
+            ],
+            [
+              "auth.check_admin",
+              2.223449
+            ]
+          ],
+          "request": "Install the extension from the admin's uploaded zip file.",
+          "task": "extra",
+          "words": 9
+        }
+      ],
+      "misses": [
+        {
+          "expected": "validators.regex_match",
+          "id": "lnbits_valid_email",
+          "ranked": [
+            [
+              "crud.get_account_by_field",
+              5.699
+            ],
+            [
+              "validators.regex_match",
+              5.084
+            ],
+            [
+              "importers.users_csv.parse",
+              4.548
+            ]
+          ],
+          "request": "Add an `is_valid_email` helper to lnbits/helpers.py and use it in the account update validation."
+        },
+        {
+          "expected": "validators.regex_match",
+          "id": "lnbits_extra_01",
+          "ranked": [
+            [
+              "validators.regex_match",
+              7.818
+            ],
+            [
+              "crud.count_rows",
+              4.723
+            ],
+            [
+              "security.check_callback_url",
+              4.388
+            ]
+          ],
+          "request": "Add validation so wallet names only allow letters, numbers, hyphens, and underscores."
+        },
+        {
+          "expected": "crud.count_rows",
+          "id": "lnbits_extra_03",
+          "ranked": [
+            [
+              "crud.count_rows",
+              8.548
+            ],
+            [
+              "db.pagination.select_page",
+              5.031
+            ],
+            [
+              "auth.require_api_key",
+              4.669
+            ]
+          ],
+          "request": "Add a total wallets count card to the admin dashboard."
+        },
+        {
+          "expected": "crud.delete_by_ext_id",
+          "id": "lnbits_extra_04",
+          "ranked": [
+            [
+              "crud.delete_by_ext_id",
+              7.448
+            ],
+            [
+              "auth.lnbits_access_token",
+              6.496
+            ],
+            [
+              "config.env.load_settings",
+              4.437
+            ]
+          ],
+          "request": "Clear the extension's stored settings when it's uninstalled."
+        },
+        {
+          "expected": "auth.check_admin",
+          "id": "lnbits_extra_06",
+          "ranked": [
+            [
+              "auth.require_api_key",
+              12.64
+            ],
+            [
+              "auth.check_admin",
+              8.823
+            ],
+            [
+              "auth.lnbits_access_token",
+              3.627
+            ]
+          ],
+          "request": "Add an admin-only API endpoint to LNbits; protect it with the existing check_admin dependency."
+        },
+        {
+          "expected": "auth.lnbits_access_token",
+          "id": "lnbits_extra_08",
+          "ranked": [
+            [
+              "auth.lnbits_access_token",
+              9.052
+            ],
+            [
+              "auth.password.pbkdf2",
+              8.102
+            ],
+            [
+              "ratelimit.token_bucket.check",
+              4.658
+            ]
+          ],
+          "request": "Add session token issuance to the login handler after password verification succeeds."
+        }
+      ],
+      "overlap": {
+        "both_above_threshold": 2,
+        "first_is_expected": 2,
+        "generic_first": 1,
+        "house_first": 1,
+        "rows": [
+          {
+            "above": [
+              [
+                "auth.lnbits_access_token",
+                17.55
+              ],
+              [
+                "auth.jwt.create_access_token",
+                15.463
+              ]
+            ],
+            "expected": "auth.lnbits_access_token",
+            "first": "auth.lnbits_access_token",
+            "first_is_expected": true,
+            "first_kind": "house",
+            "request": "Add a function that creates a signed JWT access token with expiry from the configured minutes setting, for the login endpoints."
+          },
+          {
+            "above": [
+              [
+                "ratelimit.token_bucket.check",
+                21.423
+              ],
+              [
+                "auth.require_api_key",
+                12.19
+              ],
+              [
+                "http.get_with_retry.requests",
+                9.877
+              ]
+            ],
+            "expected": "ratelimit.token_bucket.check",
+            "first": "ratelimit.token_bucket.check",
+            "first_is_expected": true,
+            "first_kind": "generic",
+            "request": "Add per-API-key rate limiting to the create-invoice endpoint, returning 429 with Retry-After when exceeded."
+          }
+        ]
+      },
+      "short_queries": {
+        "examples": [
+          {
+            "request": "Add validation so wallet names only allow letters, numbers, hyphens, and underscores.",
+            "score": 7.818,
+            "words": 12
+          },
+          {
+            "request": "Add a total wallets count card to the admin dashboard.",
+            "score": 8.548,
+            "words": 10
+          },
+          {
+            "request": "Clear the extension's stored settings when it's uninstalled.",
+            "score": 7.448,
+            "words": 8
+          },
+          {
+            "request": "Add session token issuance to the login handler after password verification succeeds.",
+            "score": 9.052,
+            "words": 12
+          }
+        ],
+        "positives": 18,
+        "ranked_first_but_below_threshold": 4
+      },
+      "tasks": {
+        "false_match_rate": 0.5,
+        "false_matches": [
+          {
+            "got": "crud.delete_by_ext_id",
+            "request": "Add a function to the extension installer that checks if the current LNbits version is within an extension's optional min/max version range.",
+            "score": 10.856
+          }
+        ],
+        "negatives": 2,
+        "positives": 6,
+        "top1": 0.8333,
+        "top1_ignoring_threshold": 0.8333,
+        "top3": 0.8333
+      }
+    }
+  },
+  "threshold": 9.08
+}

@@ -115,3 +115,16 @@ def test_request_jobs_and_prompt():
     assert [j["kind"] for j in jobs] == ["pattern", "negative", "pattern"]
     assert jobs[1]["need"] == "a b" and "under 15 words" in jobs[0]["prompt"] and "need" in jobs[0]["prompt"]
     assert v5.word_count(" add a  helper ") == 3
+
+
+def test_overlap_summary_and_below_threshold():
+    items = [
+        {"request": "a", "expected": "h.x", "ranked": [("h.x", 20.0), ("g.y", 12.0)]},
+        {"request": "b", "expected": "g.y", "ranked": [("h.x", 15.0), ("g.y", 14.0)]},
+        {"request": "c", "expected": "h.x", "ranked": [("h.x", 8.0)]},
+        {"request": "d", "expected": None, "ranked": [("g.y", 3.0)]},
+    ]
+    o = v5.overlap_summary(items, {"h.x"}, 9.08)
+    assert (o["both_above_threshold"], o["house_first"], o["generic_first"], o["first_is_expected"]) == (2, 2, 0, 1)
+    b = v5.below_threshold(items, 9.08)
+    assert b["positives"] == 3 and b["ranked_first_but_below_threshold"] == 1 and b["examples"][0]["request"] == "c"
