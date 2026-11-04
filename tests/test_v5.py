@@ -128,3 +128,79 @@ def test_overlap_summary_and_below_threshold():
     assert (o["both_above_threshold"], o["house_first"], o["generic_first"], o["first_is_expected"]) == (2, 2, 0, 1)
     b = v5.below_threshold(items, 9.08)
     assert b["positives"] == 3 and b["ranked_first_but_below_threshold"] == 1 and b["examples"][0]["request"] == "c"
+
+
+def test_parse_stream_tool_order_and_leaks(tmp_path):
+    import json as _json
+
+    lines = [
+        _json.dumps({"type": "system"}),
+        _json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "tool_use", "name": "Grep", "input": {"pattern": "def x"}},
+            {"type": "text", "text": "hm"}]}}),
+        _json.dumps({"type": "assistant", "message": {"content": [
+            {"type": "tool_use", "name": "mcp__pcat__search_patterns", "input": {"request": "x"}},
+            {"type": "tool_use", "name": "mcp__pcat__get_pattern", "input": {"id": "a.b"}},
+            {"type": "tool_use", "name": "Read", "input": {"file_path": "/home/user/pcat/.bench/apps/x.py"}}]}}),
+        "not json",
+        _json.dumps({"type": "result", "result": "done", "total_cost_usd": 0.1, "num_turns": 3, "duration_ms": 9}),
+    ]
+    s = v5.parse_stream(lines)
+    assert s["finished"] and not s["is_error"] and s["cost_usd"] == 0.1 and len(s["tool_calls"]) == 4
+    o = v5.tool_order(s["tool_calls"])
+    assert o["searched"] and o["read_repo"] and o["read_before_search"] and o["fetched"] == ["a.b"]
+    assert v5.leaks(s["tool_calls"], tmp_path, (".bench/apps",)) == [
+        'Read: {"file_path": "/home/user/pcat/.bench/apps/x.py"}']
+    assert v5.parse_stream([])["finished"] is False
+
+
+def test_run_command_restricts_the_shell():
+    cmd = v5.run_command("add x", "m", None)
+    assert cmd[:3] == ["claude", "-p", "add x"] and "--mcp-config" not in cmd
+    allowed = cmd[cmd.index("--allowedTools") + 1:cmd.index("--disallowedTools")]
+    assert "Bash" not in allowed and "Edit" in allowed and any(a.startswith("Bash(git diff") for a in allowed)
+    assert "WebFetch" in cmd and "--setting-sources" in cmd
+    with_mcp = v5.run_command("add x", "m", tmp := __import__("pathlib").Path("/x/mcp.json"))
+    assert with_mcp[3:5] == ["--mcp-config", str(tmp)] and "mcp__pcat__search_patterns" in with_mcp
+
+
+def test_find_new_function_only_considers_changed_code(tmp_path):
+    app = make_app(tmp_path)
+    dest = tmp_path / "run"
+    v5.prepare_workdir(app, dest, TASK, "baseline")
+    ref = v5.reference_source(SOURCE, ("helper", "target"))
+    path = dest / "pkg" / "mod.py"
+    assert v5.find_new_function(dest, TASK, [], ref) is None  # nothing written yet
+    path.write_text(path.read_text() + "\n\ndef renamed(y):\n    return helper(y)\n")
+    _, files = v5.final_diff(dest)
+    found = v5.find_new_function(dest, TASK, files, ref)
+    assert (found["function"], found["how"]) == ("renamed", "most similar")
+    path.write_text(path.read_text() + "\n\n@decorator\n@other(1)\ndef target(y):\n    return helper(y)\n")
+    _, files = v5.final_diff(dest)
+    found = v5.find_new_function(dest, TASK, files, ref)
+    assert (found["function"], found["how"]) == ("target", "same name")
+    assert v5.similarity_to_reference(found["node"], ref, "target") == 1.0
+
+
+def test_summarize_runs():
+    def rec(kind, status="ok", fetched=(), nf=None, high=0, failed=False, cost=0.1, pattern="p.q"):
+        return {"kind": kind, "status": status, "pattern": pattern if kind == "pattern" else None,
+                "tool_order": {"searched": bool(fetched), "read_before_search": True, "fetched": list(fetched)},
+                "score": {"new_function": nf, "lint": {"failed": failed, "deviations": {"high": high, "medium": 0, "low": 1}}},
+                "summary": {"cost_usd": cost}, "wall_seconds": 10, "files_changed": ["a.py"], "leaks": []}
+
+    covered = {"status": "covered", "matches_pattern": "p.q", "marker": "p.q@v1", "similarity_to_original": 0.9,
+               "inferred": {"pattern": "p.q", "derived": True}}
+    other = {"status": "none", "matches_pattern": None, "marker": None, "similarity_to_original": 0.5,
+             "inferred": {"pattern": "z.z", "derived": False}}
+    s = v5.summarize_runs([
+        rec("pattern", fetched=["p.q@v1"], nf=covered),
+        rec("pattern", nf=other, high=1, failed=True),
+        rec("negative", fetched=["p.q"], nf={**other, "marker": "p.q@v1"}, pattern=None),
+        rec("pattern", status="timeout"),
+    ])
+    assert (s["runs"], s["ok"], s["timeouts"], s["pattern_runs"]) == (4, 3, 1, 2)
+    assert (s["fetched_right_rate"], s["matches_rate"], s["derives_rate"]) == (0.5, 0.5, 0.5)
+    assert s["median_similarity_pattern_tasks"] == 0.7 and s["lint_fail_rate"] == 0.333
+    assert (s["negatives_fetched_a_pattern"], s["negatives_used_a_pattern"]) == (1, 1)
+    assert s["deviations"]["high"] == 1 and s["total_cost_usd"] == 0.3

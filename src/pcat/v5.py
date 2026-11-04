@@ -389,3 +389,88 @@ def similarity_to_reference(node: ast.AST, reference: str, entry: str) -> float 
                     and n.name == entry)
     a, b = provenance.shape_text(node), provenance.shape_text(ref_node)
     return None if a is None or b is None else round(variance.similarity(a, b), 4)
+
+
+# --------------------------------------------------------------------------- #
+# Summaries (Part F analysis)
+# --------------------------------------------------------------------------- #
+
+
+def _rate(n: int, d: int) -> float | None:
+    return round(n / d, 3) if d else None
+
+
+def _median(values: list[float]) -> float | None:
+    values = sorted(v for v in values if v is not None)
+    if not values:
+        return None
+    mid = len(values) // 2
+    return round(values[mid] if len(values) % 2 else (values[mid - 1] + values[mid]) / 2, 4)
+
+
+def run_flags(r: dict) -> dict:
+    """Per-run booleans used by the summaries."""
+    nf = (r.get("score") or {}).get("new_function") or {}
+    inferred = nf.get("inferred") or {}
+    pattern = r.get("pattern")
+    used = {p for p in (
+        (nf.get("marker") or "").split("@")[0] or None,
+        inferred.get("pattern") if inferred.get("derived") else None,
+        nf.get("matches_pattern") if nf.get("status") in ("covered", "near") else None,
+    ) if p}
+    fetched = [f.split("@")[0] for f in (r.get("tool_order") or {}).get("fetched") or [] if f]
+    lint = (r.get("score") or {}).get("lint") or {}
+    return {
+        "searched": bool((r.get("tool_order") or {}).get("searched")),
+        "read_before_search": bool((r.get("tool_order") or {}).get("read_before_search")),
+        "fetched_right": bool(pattern) and pattern in fetched,
+        "fetched_any": bool(fetched),
+        "matches": bool(pattern) and nf.get("status") in ("covered", "near") and nf.get("matches_pattern") == pattern,
+        "derives": bool(pattern) and pattern in used,
+        "marked": bool(nf.get("marker")),
+        "used_some_pattern": bool(used),
+        "found_function": bool(nf),
+        "similarity": nf.get("similarity_to_original"),
+        "lint_failed": bool(lint.get("failed")),
+        "high": (lint.get("deviations") or {}).get("high", 0),
+        "medium": (lint.get("deviations") or {}).get("medium", 0),
+        "low": (lint.get("deviations") or {}).get("low", 0),
+        "cost": (r.get("summary") or {}).get("cost_usd"),
+        "seconds": r.get("wall_seconds"),
+        "files": len(r.get("files_changed") or []),
+        "leaked": bool(r.get("leaks")),
+    }
+
+
+def summarize_runs(records: list[dict]) -> dict:
+    """Metrics for one group of runs (e.g. one app and condition)."""
+    ok = [r for r in records if r.get("status") == "ok"]
+    flags = [run_flags(r) for r in ok]
+    pos = [f for f, r in zip(flags, ok) if r.get("kind") == "pattern"]
+    neg = [f for f, r in zip(flags, ok) if r.get("kind") == "negative"]
+    return {
+        "runs": len(records), "ok": len(ok),
+        "timeouts": sum(r.get("status") == "timeout" for r in records),
+        "errors": sum(r.get("status") == "error" for r in records),
+        "search_rate": _rate(sum(f["searched"] for f in flags), len(flags)),
+        "read_before_search_rate": _rate(sum(f["read_before_search"] for f in flags if f["searched"]),
+                                         sum(f["searched"] for f in flags)),
+        "pattern_runs": len(pos),
+        "fetched_right_rate": _rate(sum(f["fetched_right"] for f in pos), len(pos)),
+        "matches_rate": _rate(sum(f["matches"] for f in pos), len(pos)),
+        "derives_rate": _rate(sum(f["derives"] for f in pos), len(pos)),
+        "marked_rate": _rate(sum(f["marked"] for f in pos), len(pos)),
+        "found_function_rate": _rate(sum(f["found_function"] for f in flags), len(flags)),
+        "median_similarity_pattern_tasks": _median([f["similarity"] for f in pos]),
+        "median_similarity_negative_tasks": _median([f["similarity"] for f in neg]),
+        "lint_fail_rate": _rate(sum(f["lint_failed"] for f in flags), len(flags)),
+        "deviations": {k: sum(f[k] for f in flags) for k in ("high", "medium", "low")},
+        "negative_runs": len(neg),
+        "negatives_fetched_a_pattern": sum(f["fetched_any"] for f in neg),
+        "negatives_used_a_pattern": sum(f["used_some_pattern"] for f in neg),
+        "median_cost_usd": _median([f["cost"] for f in flags]),
+        "total_cost_usd": round(sum(f["cost"] or 0 for f in flags), 2),
+        "median_seconds": _median([f["seconds"] for f in flags]),
+        "median_files_touched": _median([f["files"] for f in flags]),
+        "runs_with_leaks": sum(f["leaked"] for f in flags),
+    }

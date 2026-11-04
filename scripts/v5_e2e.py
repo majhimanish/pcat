@@ -181,6 +181,51 @@ def cmd_run(args) -> int:
     return 0
 
 
+def load_records() -> list[dict]:
+    return [json.loads(p.read_text()) for p in sorted(E2E.glob("*/*/*/sample_*.json"))]
+
+
+def cmd_analyze(args) -> int:
+    from pcat import v5
+
+    records = load_records()
+    out: dict = {"note": "v5 end-to-end; cost is the CLI's estimate and may reflect plan usage",
+                 "apps": {}, "by_relation": {}, "per_task": {}}
+    for app in sorted({r["app"] for r in records}):
+        out["apps"][app] = {c: v5.summarize_runs([r for r in records if r["app"] == app and r["condition"] == c])
+                            for c in ("baseline", "pcat")}
+    out["all"] = {c: v5.summarize_runs([r for r in records if r["condition"] == c]) for c in ("baseline", "pcat")}
+    for rel in ("sibling", "same"):
+        out["by_relation"][rel] = {c: v5.summarize_runs([r for r in records if r.get("relation") == rel
+                                                         and r["condition"] == c]) for c in ("baseline", "pcat")}
+    for task in sorted({(r["app"], r["task"]) for r in records}):
+        rows = [r for r in records if (r["app"], r["task"]) == task]
+        out["per_task"]["/".join(task)] = {
+            c: {k: v for k, v in v5.summarize_runs([r for r in rows if r["condition"] == c]).items()
+                if k in ("ok", "search_rate", "fetched_right_rate", "matches_rate", "derives_rate",
+                         "median_similarity_pattern_tasks", "median_similarity_negative_tasks", "lint_fail_rate",
+                         "negatives_used_a_pattern", "median_cost_usd")}
+            for c in ("baseline", "pcat")}
+    out["runs"] = [{"app": r["app"], "task": r["task"], "condition": r["condition"], "sample": r["sample"],
+                    "status": r["status"], **v5.run_flags(r),
+                    "new_function": (r["score"]["new_function"] or {}).get("function"),
+                    "fetched": r["tool_order"]["fetched"], "lint_high": r["score"]["lint"]["findings"] and
+                    sorted({c for f in r["score"]["lint"]["findings"] for c in f["high"]})}
+                   for r in records]
+    v5.write_json(V5 / "e2e_results.json", out)
+    keys = [("search_rate", "search"), ("fetched_right_rate", "fetched right"), ("matches_rate", "matches"),
+            ("derives_rate", "derives"), ("median_similarity_pattern_tasks", "sim (pattern)"),
+            ("lint_fail_rate", "fails CI"), ("median_cost_usd", "median $")]
+    print("| App | Condition | runs | " + " | ".join(k[1] for k in keys) + " | negatives used a pattern |")
+    print("|---|---|---|" + "---|" * (len(keys) + 1))
+    for app, conds in [*out["apps"].items(), ("all", out["all"])]:
+        for c, s in conds.items():
+            print(f"| {app} | {c} | {s['ok']}/{s['runs']} | " + " | ".join(str(s[k[0]]) for k in keys)
+                  + f" | {s['negatives_used_a_pattern']}/{s['negative_runs']} |")
+    print(f"total cost estimate ${out['all']['baseline']['total_cost_usd'] + out['all']['pcat']['total_cost_usd']:.2f}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="v5 end-to-end runs")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -191,8 +236,9 @@ def main() -> int:
     r.add_argument("--tasks", default="")
     r.add_argument("--jobs", type=int, default=4)
     r.add_argument("--model", default="claude-sonnet-5-5")
+    sub.add_parser("analyze")
     args = parser.parse_args()
-    return {"run": cmd_run}[args.command](args)
+    return {"run": cmd_run, "analyze": cmd_analyze}[args.command](args)
 
 
 if __name__ == "__main__":
