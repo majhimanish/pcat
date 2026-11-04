@@ -13,8 +13,6 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: c9f2bcb838d59aa61ec7ad38b8a2d16d141dfcd16b0459001260e6f1194bec1b
-requires:
-- django>=5.0,<6
 keywords:
 - email
 - send

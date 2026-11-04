@@ -237,3 +237,155 @@ def below_threshold(items: list[dict], threshold: float) -> dict:
     return {"positives": len(pos), "ranked_first_but_below_threshold": len(under),
             "examples": [{"request": i["request"], "score": round(i["ranked"][0][1], 3), "words": len(i["request"].split())}
                          for i in under]}
+
+
+# --------------------------------------------------------------------------- #
+# End-to-end runs (Part F)
+# --------------------------------------------------------------------------- #
+
+# File tools in full; the shell only through an allowlist of read-only commands. Unrestricted
+# Bash for unattended agents was refused as unsafe in this environment (DECISIONS.md).
+ALLOWED_TOOLS = (
+    "Read", "Edit", "MultiEdit", "Write", "Glob", "Grep", "LS", "TodoWrite",
+    "Bash(git status:*)", "Bash(git diff:*)", "Bash(git log:*)", "Bash(git grep:*)", "Bash(git show:*)",
+    "Bash(ls:*)", "Bash(head:*)", "Bash(wc:*)", "Bash(python -m py_compile:*)",
+)
+DISALLOWED_TOOLS = ("WebFetch", "WebSearch", "Agent", "Task", "NotebookEdit")
+PCAT_TOOLS = ("mcp__pcat__search_patterns", "mcp__pcat__get_pattern", "mcp__pcat__check_code")
+STRIPPED_ENV = ("CLAUDE_ADDITIONAL_DIRECTORIES", "CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD")
+
+
+def run_command(request: str, model: str, mcp_config: Path | None) -> list[str]:
+    """`claude -p` with full file and shell tools, no web or subagents, project settings only."""
+    tools = [*ALLOWED_TOOLS, *(PCAT_TOOLS if mcp_config else ())]
+    cmd = ["claude", "-p", request, "--output-format", "stream-json", "--verbose",
+           "--no-session-persistence", "--strict-mcp-config", "--model", model,
+           "--setting-sources", "project,local", "--disable-slash-commands",
+           "--allowedTools", *tools,
+           "--disallowedTools", *DISALLOWED_TOOLS]
+    if mcp_config:
+        cmd[3:3] = ["--mcp-config", str(mcp_config)]
+    return cmd
+
+
+def parse_stream(lines: list[str]) -> dict:
+    """Summary of a stream-json transcript: tool calls in order, result, cost, turns."""
+    calls, result = [], {}
+    for raw in lines:
+        try:
+            event = json.loads(raw)
+        except ValueError:
+            continue
+        if event.get("type") == "assistant":
+            for block in (event.get("message") or {}).get("content") or []:
+                if isinstance(block, dict) and block.get("type") == "tool_use":
+                    calls.append({"tool": block.get("name"), "input": block.get("input") or {}})
+        elif event.get("type") == "result":
+            result = event
+    return {
+        "tool_calls": calls,
+        "result_text": result.get("result"),
+        "is_error": bool(result.get("is_error")) if result else True,
+        "cost_usd": result.get("total_cost_usd"),
+        "duration_ms": result.get("duration_ms"),
+        "num_turns": result.get("num_turns"),
+        "finished": bool(result),
+    }
+
+
+def tool_order(calls: list[dict]) -> dict:
+    """Did the agent search the catalog, and did it read repo code before (or instead of) searching?"""
+    names = [c["tool"] for c in calls]
+    reading = {"Read", "Grep", "Glob", "LS"}
+    first_search = next((i for i, n in enumerate(names) if n == "mcp__pcat__search_patterns"), None)
+    first_read = next((i for i, n in enumerate(names) if n in reading or n == "Bash"), None)
+    return {
+        "searched": first_search is not None,
+        "read_repo": first_read is not None,
+        "read_before_search": first_read is not None and (first_search is None or first_read < first_search),
+        "fetched": [c["input"].get("id") for c in calls if c["tool"] == "mcp__pcat__get_pattern"],
+        "checked": sum(1 for n in names if n == "mcp__pcat__check_code"),
+        "tools": dict(sorted(__import__("collections").Counter(names).items())),
+    }
+
+
+def leaks(calls: list[dict], workdir: Path, forbidden: tuple[str, ...]) -> list[str]:
+    """Tool inputs that mention a forbidden path (the original apps, the pcat repo)."""
+    out = []
+    for c in calls:
+        text = json.dumps(c["input"])
+        for f in forbidden:
+            if f in text:
+                out.append(f"{c['tool']}: {text[:160]}")
+                break
+    return out
+
+
+# --------------------------------------------------------------------------- #
+# Scoring one run
+# --------------------------------------------------------------------------- #
+
+
+def _functions_in(path: Path) -> list[tuple[str, ast.AST]]:
+    try:
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+    except (OSError, SyntaxError, ValueError, UnicodeDecodeError):
+        return []
+    return [(info.qualname, info.node) for info in provenance.functions(source, tree)]
+
+
+def find_new_function(dest: Path, task: Task, changed: list[str], reference: str) -> dict | None:
+    """The function the run wrote for the task: same name in the task's file, else the most
+    similar function (to the removed original) in the changed Python files."""
+    from pcat import variance
+
+    ref_tree = ast.parse(reference)
+    ref_node = next(n for n in ref_tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    and n.name == task.entry)
+    ref_text = provenance.shape_text(ref_node) or ""
+    added = added_lines(dest)
+    target = dest / task.file
+    for qualname, node in _functions_in(target):
+        if qualname == task.entry and _touched(node, added.get(task.file, set())):
+            return {"path": task.file, "function": qualname, "how": "same name", "node": node}
+    best = None
+    for rel in changed:
+        if not rel.endswith(".py"):
+            continue
+        for qualname, node in _functions_in(dest / rel):
+            if not _touched(node, added.get(rel, set())):
+                continue  # only functions the run added or changed
+            text = provenance.shape_text(node)
+            if text is None:
+                continue
+            sim = variance.similarity(text, ref_text)
+            if best is None or sim > best[0]:
+                best = (sim, {"path": rel, "function": qualname, "how": "most similar", "node": node})
+    return best[1] if best else None
+
+
+def added_lines(dest: Path) -> dict[str, set[int]]:
+    """path -> new-side line numbers added or changed since the baseline commit (staged)."""
+    from pcat import lint
+
+    _git(dest, "add", "-A")
+    out: dict[str, set[int]] = {}
+    for rel in _git(dest, "diff", "--cached", "--name-only").split():
+        out[rel] = lint.parse_diff_lines(_git(dest, "diff", "--cached", "--unified=0", "--no-color", "--", rel))
+    return out
+
+
+def _touched(node: ast.AST, lines: set[int]) -> bool:
+    start = min([node.lineno, *(d.lineno for d in getattr(node, "decorator_list", []))])
+    return any(start <= n <= node.end_lineno for n in lines)
+
+
+def similarity_to_reference(node: ast.AST, reference: str, entry: str) -> float | None:
+    from pcat import variance
+
+    ref_tree = ast.parse(reference)
+    ref_node = next(n for n in ref_tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
+                    and n.name == entry)
+    a, b = provenance.shape_text(node), provenance.shape_text(ref_node)
+    return None if a is None or b is None else round(variance.similarity(a, b), 4)

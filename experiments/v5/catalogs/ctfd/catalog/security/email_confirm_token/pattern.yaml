@@ -16,8 +16,6 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: c4d5c3914e788c617ba184c10ada6cad637a53935a9f6feb3ccfc474b52004c6
-requires:
-- flask>=3.0,<4
 exports:
 - verify_email_confirm_token
 - remove_email_confirm_token

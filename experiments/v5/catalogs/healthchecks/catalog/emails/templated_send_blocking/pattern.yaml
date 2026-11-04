@@ -14,8 +14,6 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 5fe5c17bfea63ae002b904a9769bd7a9f21bfdfd81a32dbcce793b56cf1949da
-requires:
-- django>=5.0,<6
 keywords:
 - email
 - report

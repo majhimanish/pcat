@@ -16,8 +16,6 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: 2b6c2c3b565d9eb6bbefb44922260f7cc0ce159bf0e90ad4aa3614028825b8e8
-requires:
-- flask>=3.0,<4
 keywords:
 - challenge
 - score

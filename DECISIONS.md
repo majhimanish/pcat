@@ -943,3 +943,34 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      "House vs generic" is data-driven: every request where at least one house and
      one generic pattern pass the threshold, and which one ranks first. "Short
      queries" = positives whose expected pattern ranks first but scores below 9.08.
+197. **Run harness, and the shell restriction.** `scripts/v5_e2e.py` runs `claude -p`
+     (claude-sonnet-5-5) in a fresh copy outside this repo under an opaque path,
+     `--setting-sources project,local` (no user settings or memory), extra CLAUDE.md
+     directories removed from the environment, `--strict-mcp-config`, slash commands
+     off, 10-minute limit, stream-json transcript. **Deviation from the spec:**
+     unrestricted shell access for unattended agents was refused by this
+     environment's permission classifier ("create unsafe agents"), so runs get the
+     file tools in full (Read, Edit, MultiEdit, Write, Glob, Grep, LS, TodoWrite) but
+     the shell only via an allowlist of read-only commands (`git status/diff/log/
+     grep/show`, `ls`, `head`, `wc`, `python -m py_compile`); no web, no subagents.
+     Agents therefore cannot run the apps' test suites (the optional test metric is
+     skipped) or install anything. Every transcript is scanned for paths outside the
+     copy (this repo, `.bench/apps`, the references): the originals still exist on
+     disk and there is no filesystem sandbox.
+198. **Scoring a run.** The new function is the task's entry name among functions
+     the diff added or changed, else the most similar (shape text vs the removed
+     original) of the changed functions; similarity = v2.1 measure against the
+     original. Pattern match = `check_code` status of that function; derivation =
+     its marker or inference. `pcat lint --changed-since <baseline> --include-
+     inferred` on the changed Python files with the app's catalog gives deviations
+     and "would fail CI" (marked code only, or PC111). Search/read order comes from
+     the transcript's tool calls.
+199. **Pre-run metadata fix.** The smoke test showed every function derived from
+     three CTFd patterns and two healthchecks email patterns flagged PC103 high
+     ("no longer uses flask/django, which the pattern requires") because I had
+     listed the framework in `requires` for patterns that never import it. Fixed
+     before the full run (`requires` now lists only libraries the impl imports);
+     the five smoke runs were discarded and rerun. The underlying gap (`requires`
+     not checked against imports) is in KNOWN_GAPS.
+200. **No scaling.** Smoke runs cost $0.08–0.16 (mean about $0.12), so 144 runs are
+     estimated at about $18, under the $60 cap: 3 samples per task per condition.

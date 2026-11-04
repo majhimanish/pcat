@@ -15,8 +15,6 @@ status: active
 replaced_by: null
 keep_annotations: true
 fingerprint: f77cb62c4f9e85d930fc66fa107454c468bfb620734aa9e1011c1a72d37ae468
-requires:
-- flask>=3.0,<4
 keywords:
 - cache
 - memoize

@@ -108,9 +108,7 @@
         "value"
       ],
       "path": "catalog/challenges/decay_linear",
-      "requires": [
-        "flask>=3.0,<4"
-      ],
+      "requires": [],
       "status": "active",
       "summary": "Compute a challenge's current value from its visible solve count: initial minus decay per solve after the first, rounded up, never below the minimum.",
       "title": "Dynamic challenge value with linear decay",
@@ -545,9 +543,7 @@
         "link"
       ],
       "path": "catalog/security/email_confirm_token",
-      "requires": [
-        "flask>=3.0,<4"
-      ],
+      "requires": [],
       "status": "active",
       "summary": "Generate a random 256-bit nonce mapped to an email address in the cache with a timeout, verify it (raising if unknown or expired) and remove it.",
       "title": "Single-use email token stored in the cache",
@@ -578,9 +574,7 @@
         "scoreboard"
       ],
       "path": "catalog/user/cached_lookup",
-      "requires": [
-        "flask>=3.0,<4"
-      ],
+      "requires": [],
       "status": "active",
       "summary": "Cache-memoized function that loads a row by id and returns one of its computed attributes, or None if missing.",
       "title": "Memoized lookup of a user or team attribute",

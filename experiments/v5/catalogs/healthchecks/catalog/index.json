@@ -325,9 +325,7 @@
         "mail"
       ],
       "path": "catalog/emails/templated_send",
-      "requires": [
-        "django>=5.0,<6"
-      ],
+      "requires": [],
       "status": "active",
       "summary": "One-line email sender: render the named email templates and send them on a background thread.",
       "title": "Send a templated transactional email",
@@ -358,9 +356,7 @@
         "unsubscribe"
       ],
       "path": "catalog/emails/templated_send_blocking",
-      "requires": [
-        "django>=5.0,<6"
-      ],
+      "requires": [],
       "status": "active",
       "summary": "Email sender for reports and alerts: render templates with extra headers and send synchronously.",
       "title": "Send a templated email with headers, blocking",
