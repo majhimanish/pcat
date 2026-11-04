@@ -201,6 +201,12 @@ A rule change can alter fingerprints of untouched patterns, so it is explicit:
 9. idempotence: `canonicalize(render(canonical, name_map)) == canonical`
 10. `catalog/index.json` is up to date
 11. every `guards` entry holds on the pattern's own code (see [Deviation linter](#deviation-linter-pcat-lint))
+12. `requires` matches the imports (v5.1): every third-party module `impl.py` imports is covered
+    by a `requires` entry and every entry is imported (standard library exempt). Where a
+    distribution's import name differs, a built-in table covers common cases (`pyjwt` → `jwt`,
+    `pyyaml` → `yaml`, …) and `import_names: {dist: module}` in `pattern.yaml` overrides it. An
+    application's own package is not a requirement: list it in `catalog/catalog.yaml` as
+    `first_party: [myapp]`
 
 Plus `immutable` problems when `--base` is given.
 
@@ -283,7 +289,7 @@ with three tools:
 |---|---|
 | `search_patterns(request, limit=5)` | BM25 search over pattern metadata; returns matches above a calibrated threshold, or an empty list ("no reviewed pattern fits") |
 | `get_pattern(id, names=None)` | the pattern's code rendered with your names, with a `# pcat: <id>@v<N>` marker above each public function, plus `requires`, `exports`, `usage`, version and status (deprecated patterns carry a warning) |
-| `check_code(code, pattern_id=None)` | per function: `covered` (matches a pattern), `near` (same structure, other literals) or `none`, plus advisory inferred provenance; with `pattern_id` or a `# pcat:` marker, the deviations from that pattern (codes as in `pcat lint`) and a diff |
+| `check_code(code, pattern_id=None, context=None, file_path=None)` | per function: `covered` (matches a pattern), `near` (same structure, other literals) or `none`, plus advisory inferred provenance; with `pattern_id` or a `# pcat:` marker, the deviations from that pattern (codes as in `pcat lint`) and a diff. For a snippet, pass the file's import lines (or the whole file) as `context`, or its repository-relative `file_path` (read only inside the repository given by `pcat serve --repo`, default the working directory); otherwise unresolved names are listed, rules depending on them are skipped (`skipped_rules`) and `resolution` is `partial` |
 
 The server also sends instructions telling the agent to search before writing
 common application code, use a fitting pattern and keep its marker, then call
@@ -357,7 +363,7 @@ client.py:27: PC100 high: `get_with_retry` no longer handles `requests.Connectio
 |---|---|---|
 | `PC100` | a reviewed guard is violated (see below) | high |
 | `PC101` | exception type removed from or narrowed in an `except` | high |
-| `PC102` | `raise` or validation branch (`if …: raise`) removed | high |
+| `PC102` | `raise` or validation branch (`if …: raise`) removed (high); the same check raising a different exception (medium) | high/medium |
 | `PC103` | library swapped: a required library dropped or replaced (high), a new third-party library (medium), only standard-library modules changed (low) | high/medium/low |
 | `PC104` | broad `except` (`Exception`, bare) added | medium |
 | `PC105` | call removed | medium |
@@ -441,7 +447,13 @@ in `docs/benchmarks/summary.md`.
 pattern itself). Kinds: `must_catch`, `must_call`, `must_not_call`,
 `must_not_import`, `must_raise` (with `names`), `min_value`/`max_value` (with
 `target`, a constant or parameter default, and `value`) and `must_include` (with
-`target` and `values`: a collection that must still contain them):
+`target` and `values`: a collection that must still contain them). Names resolve
+through the file's imports (any alias) and its own top-level definitions, which count
+as `<module>.<name>`: a guard on `lnbits.decorators.KeyChecker` holds both for code
+importing the class and for code inside `lnbits/decorators.py`; an unqualified name
+(`KeyChecker`) matches either, and `.method` matches any call of that method. With
+`match: any`, a `must_catch`/`must_call`/`must_raise` guard holds when one of its
+names is present (e.g. sibling flows that each raise their own house exception):
 
 ```yaml
 guards:
@@ -454,6 +466,9 @@ guards:
 - kind: must_include
   target: RETRY_STATUSES
   values: [429, 500, 502, 503, 504]
+- kind: must_raise
+  names: [app.errors.ConfirmTokenInvalid, app.errors.ResetTokenInvalid]
+  match: any
 ```
 
 **Measured (v4, `docs/benchmarks/v4-linter.md`):** replayed on the 140 v3 agent
@@ -467,6 +482,12 @@ than fixed, so reviewers should read `# pcat-allow` reasons critically.
 Actions workflow that installs pcat from the catalog repository and runs
 `pcat lint --format github --changed-since origin/<base>` on pull requests, so
 deviations appear as annotations on the diff.
+
+**Required check or not (v5.1, `docs/benchmarks/v5.1-linter.md`):** on v5's 144 in-repo
+runs the v5.1 linter fails no correct code (v5: 5 false or over-strict failures, all
+fixed). Make `pcat lint --changed-since <base> --fail-on high` (marked code only) a
+required check; keep `--include-inferred` advisory: on untouched app code 75 of 90
+sampled medium/high inferred findings were false positives.
 
 ## Tools outside this package
 

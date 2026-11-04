@@ -294,18 +294,18 @@ when you fix it; add one whenever you take a shortcut.
   rules change: needs a `CANONICAL_VERSION` bump).
 - **v5 catalogs are self-reviewed** and their tests stub Django/Flask/FastAPI and the
   apps, so they test logic against fakes, not the frameworks.
-- **Guards do not resolve same-module names.** `must_call lnbits.decorators.KeyChecker`
+- **[Fixed in v5.1, Part A]** **Guards do not resolve same-module names.** `must_call lnbits.decorators.KeyChecker`
   fails on code inside `lnbits/decorators.py`, where `KeyChecker` is defined (a class,
   not an import), so 3 correct v5 runs would fail CI. *Fix:* resolve top-level names of
   the linted file to `<module path>.<name>` (from the file's path in the repo).
-- **`check_code` on a fragment misreports.** Without the module's imports, PC103 says the
+- **[Fixed in v5.1, Part B: `context`, `file_path`, `resolution`]** **`check_code` on a fragment misreports.** Without the module's imports, PC103 says the
   required library was dropped (seen in v5). *Fix:* `check_code` warns when a function
   uses names the snippet does not define or import, or accepts a file path.
-- **`requires` is not checked against imports** (also above): five v5 house patterns
+- **[Fixed in v5.1, Part C: check 12]** **`requires` is not checked against imports** (also above): five v5 house patterns
   wrongly listed the framework and turned every derived function into a PC103 high
   until fixed (DECISIONS 199). *Fix:* validation check comparing `requires` with the
   impl's import roots.
-- **Over-specific guards hurt sibling uses.** A `must_raise` naming the confirm-token
+- **[Fixed for the CTFd case in v5.1, Part D: `match: any`]** **Over-specific guards hurt sibling uses.** A `must_raise` naming the confirm-token
   exception failed a correct reset-token implementation. Guards on shared patterns
   should name the property (an exception is raised), or allow alternatives.
 - **v5 ran with a restricted shell** (read-only commands; DECISIONS 197): agents could not
@@ -316,4 +316,29 @@ when you fix it; add one whenever you take a shortcut.
 - **Brief-request generation overshoots** ("usually under 15 words": median 15, 38/84
   over), and brief requests on thin metadata fall below the search threshold (LNbits
   0.67 top-1). *Fix:* house vocabulary in `keywords`, a weak-match band in search.
+
+## Linter on real code (v5.1)
+
+- **Inference is noisy on app code.** On untouched CTFd / healthchecks / LNbits code, 75 of
+  90 sampled medium/high inferred findings were false positives and none were true
+  deviations: short house-style functions (REST methods, CRUD helpers, views) score
+  0.56–0.65 against short patterns. Inferred findings are advisory and do not fail CI.
+  *Fix:* recalibrate `INFERENCE_THRESHOLD` on labeled app code (needs labels), or require
+  a higher similarity for short functions; until then keep `--include-inferred` out of
+  required checks.
+- **A marker between decorators and `def` is ignored**, so the function is only inferred
+  (one v5 run, `add_victorops`). *Fix:* also read comment lines inside the decorator
+  block, or warn about them.
+- **PC110 is not skipped for partial code.** A snippet whose names are unresolved can still
+  show low-severity structure differences (e.g. `rq.get` vs `requests.get`).
+- **Module paths come from `__init__.py` folders.** Namespace packages (no `__init__.py`)
+  and code run from a `src/` layout give a shorter module path, so a same-file class may
+  not match a qualified guard target there; unqualified targets still match.
+- **`.method` guard targets match any attribute call of that name** (v5.1), including
+  module functions (`re.match` for `.match`). Fine for the current catalogs; a guard
+  needing "method on a value only" cannot say so.
+- **Approvals for deviations that no longer fire** (the CTFd reset-token proposals) are not
+  reported as unnecessary; they simply match nothing.
+- **Old linters reject new metadata.** A v5 linter loading a catalog with `match: any` or
+  `import_names` treats that pattern as invalid and silently skips it in inference.
 

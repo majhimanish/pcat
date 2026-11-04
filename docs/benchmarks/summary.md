@@ -1,9 +1,9 @@
-# pcat benchmark summary (v2 – v5)
+# pcat benchmark summary (v2 – v5.1)
 
 Every headline number, the rule set it was measured under, and whether it is safe to
 use in a pitch. "Rule set" = canonicalization v2 / shape v1 throughout; linter rules
 v4 (PC100–PC110) or v4.1 (hashed approvals, proposals need a human, PC111,
-`must_include` 429, graded PC103). Models: claude-sonnet-5-5 via `claude -p`. Costs
+`must_include` 429, graded PC103) or v5.1 (one symbol table per unit, partial code, check 12, `match: any`, graded PC102). Models: claude-sonnet-5-5 via `claude -p`. Costs
 are the CLI's estimates and may reflect plan usage rather than billing.
 
 | Phase | Headline | Measured under | Pitch? |
@@ -16,10 +16,12 @@ are the CLI's estimates and may reflect plan usage rather than billing.
 | v3 end to end | Searched 160/160, right pattern fetched **140/140**, pattern in the code **122/140 (87%)** vs 0/135 without | v3 metrics, tool-less agent | Indicative only (not controlled; long prompts; MCP tools only) |
 | v4 replay | Exact matches flagged above low **0/122**; misses flagged **18/18** | linter v4 | Superseded by v4.1; do not quote alone |
 | v4 feedback | Unapproved high deviations shipped 12/60 → **0/60** | linter v4 | **No**: under v4.1 rules the same samples are 21/60 (approvals had no hash) |
-| v4.1 replay | 20/20 HTTP samples flagged for dropping 429; 25/140 would fail CI | linter v4.1 | Yes, with "all 5 HTTP requests asked for no 4xx retries" |
-| v5 Part A | v4 feedback rerun: high unapproved v3 / v4 / v4.1 = **25 / 21 / 20 of 60**; in v4.1 all 20 covered by correctly hashed proposals (22 lines), 0 uncovered | linter v4.1 | Yes: "nothing high ships without a human decision" |
+| v4.1 replay | 20/20 HTTP samples flagged for dropping 429; 25/140 would fail CI [v5.1 re-score: unchanged, 25/140] | linter v4.1 | Yes, with "all 5 HTTP requests asked for no 4xx retries" |
+| v5 Part A | v4 feedback rerun: high unapproved v3 / v4 / v4.1 = **25 / 21 / 20 of 60**; in v4.1 all 20 covered by correctly hashed proposals (22 lines), 0 uncovered [v5.1 re-score: unchanged, 25 / 21 / 20] | linter v4.1 | Yes: "nothing high ships without a human decision" |
 | v5 retrieval | Brief requests, 15–16-pattern catalogs: top-1 **0.94 / 0.89 / 0.67**; 6/54 right-but-below-threshold; expected pattern first in 3/3 house-vs-generic overlaps | BM25, threshold 9.08 | Yes, with the LNbits drop |
-| v5 end to end | Inside real repos: search 71/72, right pattern 54/54, matches pattern **0.72 vs 0.46** baseline; similarity to the house original **1.00 in both**; same-function tasks **12/12 vs 2/12**; negatives forced 0/36; $14.59 for 144 runs | linter v4.1, restricted shell | Yes, framed correctly (below) |
+| v5 end to end | Inside real repos: search 71/72, right pattern 54/54, matches pattern **0.72 vs 0.46** baseline; similarity to the house original **1.00 in both**; same-function tasks **12/12 vs 2/12**; negatives forced 0/36; $14.59 for 144 runs; pcat runs that would fail CI 5/72 **[v5.1 re-score: 0/72]** | linter v4.1, restricted shell | Yes, framed correctly (below) |
+| v5.1 re-score | v5 runs that would fail CI 5/72 → **0/72** (3 exact LNbits reproductions, 2 safe CTFd siblings); high deviations pcat 16 → 7, baseline 16 → 9, all left advisory; lab data unchanged | linter v5.1 | Yes: "no correct code failed CI in 144 in-repo runs" |
+| v5.1 survey | Untouched app code, inferred findings: 0 true deviations, 15 debatable, 75 false positives in 90 sampled medium/high findings | linter v5.1 | Yes, as a caveat: inferred findings are advisory noise |
 
 ## Safe claims, with caveats
 
@@ -46,5 +48,20 @@ are the CLI's estimates and may reflect plan usage rather than billing.
 ## Open issues that affect the numbers
 
 - `pcat lint` does not resolve same-module classes in guards (3 false CI failures in v5).
+  **Fixed in v5.1** (re-scored: 0 false failures).
 - Brief requests on thin metadata fall below the search threshold (LNbits).
 - 3 samples per task in v5; 4 same-function tasks carry the main effect.
+
+## v5.1 — the linter on real code
+
+Details: `docs/benchmarks/v5.1-linter.md`. Nothing new was generated; v5's runs, the
+v4 / v4.1 feedback runs and the v3 samples were re-scored, and untouched app code linted.
+
+- **Safe:** "with markers, the linter failed no correct code in 144 in-repo runs" (0/72
+  pcat runs fail CI; v5 had 5 false or over-strict failures, each explained). Lab
+  headlines (v4.1 replay 25/140, v5 Part A 25 / 21 / 20 of 60) are unchanged.
+- **Safe, as a limit:** inferred findings on code nobody marked are mostly wrong (75 of
+  90 sampled medium/high findings were false positives, 0 true): keep `--include-inferred`
+  out of required checks.
+- **Do not claim** a general false-positive rate for marked code: 144 runs, 3 apps,
+  self-reviewed catalogs, one model.
