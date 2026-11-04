@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "dynamic challenge value with linear decay"}, "result": {"ids": ["challenges.decay_linear"], "scores": [20.583]}, "timestamp": "2026-11-04T02:11:13.087+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "challenges.decay_linear", "names": null}, "result": {"id": "challenges.decay_linear@v1", "status": "active"}, "timestamp": "2026-11-04T02:11:15.696+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 524, "pattern_id": "challenges.decay_linear"}, "result": {"deviations": [["linear", "challenges.decay_linear@v1", [["PC103", false]]]], "statuses": [["linear", "covered", "challenges.decay_linear"]]}, "timestamp": "2026-11-04T02:11:26.131+00:00", "tool": "check_code"}

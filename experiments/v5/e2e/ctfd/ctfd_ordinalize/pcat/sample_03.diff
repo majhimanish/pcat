@@ -1,0 +1,40 @@
+diff --git a/CTFd/utils/humanize/numbers.py b/CTFd/utils/humanize/numbers.py
+index 8b13789..cb2645b 100644
+--- a/CTFd/utils/humanize/numbers.py
++++ b/CTFd/utils/humanize/numbers.py
+@@ -1 +1,11 @@
+-
++def ordinalize(n):
++    """
++    Return an integer with its English ordinal suffix: 1st, 2nd, 3rd, 4th, 11th.
++    11, 12 and 13 (and 111-113, etc.) always take "th".
++    """
++    n = int(n)
++    if 10 <= abs(n) % 100 <= 20:
++        suffix = "th"
++    else:
++        suffix = {1: "st", 2: "nd", 3: "rd"}.get(abs(n) % 10, "th")
++    return "{}{}".format(n, suffix)
+diff --git a/tests/utils/test_humanize.py b/tests/utils/test_humanize.py
+index 2119488..8347313 100644
+--- a/tests/utils/test_humanize.py
++++ b/tests/utils/test_humanize.py
+@@ -14,6 +14,18 @@ def test_ordinalize():
+         102: "102nd",
+         103: "103rd",
+         111: "111th",
++        0: "0th",
++        10: "10th",
++        14: "14th",
++        20: "20th",
++        21: "21st",
++        22: "22nd",
++        23: "23rd",
++        112: "112th",
++        113: "113th",
++        121: "121st",
++        1011: "1011th",
++        "5": "5th",
+     }
+     for t, v in tests.items():
+         assert ordinalize(t) == v

@@ -1,0 +1,79 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/crud/extensions.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.count_rows",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an async function to the extensions crud module that returns the count of installed extensions, for the admin page.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "get_installed_extensions_count",
+          "high": [],
+          "pattern": "crud.count_rows@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_installed_extensions_count",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "get_accounts_count",
+        "pattern": "crud.count_rows",
+        "similarity": 0.9821
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/core/crud/extensions.py",
+      "similarity_to_original": 0.9821,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0839402,
+    "duration_ms": 28563,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added `get_installed_extensions_count` to `lnbits/core/crud/extensions.py`, right after `get_installed_extensions`. I haven't run it or any `make` targets. The import check was blocked on approval, and I never ran `make check` or `make test-unit`.\n\n```python\nasync def get_installed_extensions_count(conn: Connection | None = None) -> int:\n    row: dict | None = await (conn or db).fetchone(\n        \"SELECT COUNT(*) AS count FROM installed_extensions\"\n    )\n    return int(row[\"count\"] or 0) if row else 0\n```\n\nIt runs a single `COUNT(*)` query rather than loading every extension model. It follows the existing `conn or db` pattern.\n\nThe name was already imported and listed in `__all__` in `lnbits/core/crud/__init__.py`. It is also already called in `check_extensions_limit` in `lnbits/core/services/extensions.py:246`. Before this change, importing `lnbits.core.crud` would have failed with an `ImportError`. I didn't add any admin page or route code. The function is ready to call from there.\n\nOnly `lnbits/core/crud/extensions.py` changed."
+  },
+  "task": "lnbits_extensions_count",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 29.4
+}

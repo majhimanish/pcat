@@ -1,0 +1,89 @@
+{
+  "app": "ctfd",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.authed_only",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a `registered_only` decorator in CTFd utils that redirects anonymous users to the register page.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "registered_only",
+          "high": [],
+          "pattern": "decorators.authed_only@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "registered_only.<locals>.registered_only_wrapper",
+          "high": [],
+          "pattern": "decorators.authed_only@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "registered_only",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "authed_only",
+        "pattern": "decorators.authed_only",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "decorators.authed_only",
+      "path": "CTFd/utils/decorators/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.041913000000000006,
+    "duration_ms": 12395,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I added `registered_only` to `CTFd/utils/decorators/__init__.py`, right before `admins_only`. I haven't run it or added tests.\n\nAuthenticated users pass through to the view. Anonymous users are redirected to `auth.register`, with `next=request.full_path` so they return to the page afterwards.\n\nI copied `authed_only`'s handling of API requests. JSON and event-stream requests get a 403 instead of a redirect, since a redirect to an HTML page isn't useful to those clients. If you'd rather they always be redirected, it's a small change."
+  },
+  "task": "ctfd_registered_only",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 13.5
+}

@@ -1,0 +1,1 @@
+{"arguments": {"limit": 5, "request": "check if current version is within min/max version range"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:07:06.717+00:00", "tool": "search_patterns"}

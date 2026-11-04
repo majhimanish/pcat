@@ -1,0 +1,139 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/plugins/challenges/decay.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "challenges.decay_linear",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "dynamic challenge value with linear decay"
+      },
+      "result": {
+        "ids": [
+          "challenges.decay_linear"
+        ],
+        "scores": [
+          20.583
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:13.087+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "challenges.decay_linear",
+        "names": null
+      },
+      "result": {
+        "id": "challenges.decay_linear@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:11:15.696+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 524,
+        "pattern_id": "challenges.decay_linear"
+      },
+      "result": {
+        "deviations": [
+          [
+            "linear",
+            "challenges.decay_linear@v1",
+            [
+              [
+                "PC103",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "linear",
+            "covered",
+            "challenges.decay_linear"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:26.131+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a linear decay function to the challenge scoring code: value drops per solve, floored at minimum.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "linear",
+          "high": [],
+          "pattern": "challenges.decay_linear@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "linear",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "linear",
+        "pattern": "challenges.decay_linear",
+        "similarity": 1.0
+      },
+      "marker": "challenges.decay_linear@v1",
+      "matches_pattern": "challenges.decay_linear",
+      "path": "CTFd/plugins/challenges/decay.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.08406590000000001,
+    "duration_ms": 22690,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added `linear(challenge)` to `CTFd/plugins/challenges/decay.py`. I didn't run the tests. The `check_code` tool matched the reviewed pattern `challenges.decay_linear@v1` and found no high-severity deviations.\n\n- **Behavior:** The value is `initial - decay * (solves - 1)`, so the first solver gets the full value. It is rounded up and never goes below `minimum`. Only solves by non-hidden, non-banned accounts count.\n- **Why it was missing:** `DECAY_FUNCTIONS` in that file already listed `\"linear\": linear`, but `linear` was never defined. Importing the module would have raised a `NameError`. `CTFd/plugins/dynamic_challenges/decay.py` already had an identical `linear`, so I left it alone.\n- **Marker:** I kept the `# pcat: challenges.decay_linear@v1` comment above the function.\n- **Low-severity warning:** `check_code` raised PC103 (\"no longer uses `math`\"). It only saw the function on its own, without the file's `import math`, and `math.ceil` is used, so I ignored it."
+  },
+  "task": "ctfd_linear_decay",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "challenges.decay_linear"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 3,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 24.1
+}

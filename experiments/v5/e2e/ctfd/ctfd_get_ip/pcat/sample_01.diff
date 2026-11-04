@@ -1,0 +1,39 @@
+diff --git a/CTFd/utils/user/__init__.py b/CTFd/utils/user/__init__.py
+index 0f5a618..b3a9bf5 100644
+--- a/CTFd/utils/user/__init__.py
++++ b/CTFd/utils/user/__init__.py
+@@ -287,3 +287,34 @@ def get_wrong_submissions_per_delta(account_id, challenge_id=None, delta=None):
+     if challenge_id:
+         fails = fails.filter(Fails.challenge_id == challenge_id)
+     return fails.order_by(Fails.id.asc()).all()
++
++
++def get_ip(req=None):
++    """Return the real client IP, trusting only proxies in TRUSTED_PROXIES.
++
++    Starts from the socket peer (remote_addr). If that peer is not a trusted
++    proxy it is returned as-is and X-Forwarded-For is ignored, since the header
++    would be client-controlled. Otherwise X-Forwarded-For is walked right to
++    left, skipping trusted proxies, and the first untrusted address is the client.
++    """
++    if req is None:
++        req = request
++
++    trusted = [re.compile(p) for p in (app.config.get("TRUSTED_PROXIES") or [])]
++
++    def is_trusted(addr):
++        return any(p.match(addr) for p in trusted)
++
++    remote = req.remote_addr
++    if not remote or not is_trusted(remote):
++        return remote
++
++    forwarded = req.headers.get("X-Forwarded-For", "")
++    hops = [h.strip() for h in forwarded.split(",") if h.strip()]
++    for hop in reversed(hops):
++        if not is_trusted(hop):
++            return hop
++
++    # Every hop was a trusted proxy (or no header): fall back to the leftmost
++    # address, else the peer itself.
++    return hops[0] if hops else remote

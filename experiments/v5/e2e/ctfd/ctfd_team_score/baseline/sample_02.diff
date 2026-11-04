@@ -1,0 +1,39 @@
+diff --git a/CTFd/utils/initialization/__init__.py b/CTFd/utils/initialization/__init__.py
+index a91620f..7d20922 100644
+--- a/CTFd/utils/initialization/__init__.py
++++ b/CTFd/utils/initialization/__init__.py
+@@ -46,6 +46,7 @@ from CTFd.utils.user import (
+     get_current_user_recent_ips,
+     get_ip,
+     get_locale,
++    get_team_score,
+     is_admin,
+ )
+ 
+@@ -119,6 +120,7 @@ def init_template_globals(app):
+     app.jinja_env.globals.update(get_current_team_attrs=get_current_team_attrs)
+     app.jinja_env.globals.update(get_ip=get_ip)
+     app.jinja_env.globals.update(get_locale=get_locale)
++    app.jinja_env.globals.update(get_team_score=get_team_score)
+     app.jinja_env.globals.update(Assets=Assets)
+     app.jinja_env.globals.update(Configs=Configs)
+     app.jinja_env.globals.update(Plugins=Plugins)
+diff --git a/CTFd/utils/user/__init__.py b/CTFd/utils/user/__init__.py
+index 92fd9bf..37ef504 100644
+--- a/CTFd/utils/user/__init__.py
++++ b/CTFd/utils/user/__init__.py
+@@ -81,6 +81,14 @@ def get_team_place(team_id):
+     return None
+ 
+ 
++@cache.memoize(timeout=300)
++def get_team_score(team_id):
++    team = Teams.query.filter_by(id=team_id).first()
++    if team:
++        return team.score
++    return None
++
++
+ @cache.memoize(timeout=300)
+ def get_user_schema(user_id, user_type):
+     from CTFd.schemas.users import UserSchema

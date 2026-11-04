@@ -1,0 +1,145 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/integrations/victorops/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "integrations.add_url_channel",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Add a URL-based notification integration (Django view)"
+      },
+      "result": {
+        "ids": [
+          "integrations.add_url_channel"
+        ],
+        "scores": [
+          18.37
+        ]
+      },
+      "timestamp": "2026-11-04T02:14:59.343+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "integrations.add_url_channel",
+        "names": null
+      },
+      "result": {
+        "id": "integrations.add_url_channel@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:15:02.565+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1116,
+        "pattern_id": "integrations.add_url_channel"
+      },
+      "result": {
+        "deviations": [
+          [
+            "add",
+            "integrations.add_url_channel@v1",
+            [
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "add",
+            "near",
+            "integrations.add_url_channel"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:15:15.462+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add the add_victorops view in hc/front/views.py so logged-in users can save a VictorOps webhook URL to their project.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "add",
+          "high": [],
+          "pattern": "integrations.add_url_channel@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "add",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "add_msteams",
+        "pattern": "integrations.add_url_channel",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "integrations.add_url_channel",
+      "path": "hc/integrations/victorops/views.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.10741,
+    "duration_ms": 24850,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added the `add` view in `hc/integrations/victorops/views.py`, not in `hc/front/views.py`. I haven't run the tests, including the existing `test_add.py` for this view.\n\nI put it there for two reasons:\n- **Routing:** `hc/integrations/victorops/urls.py` already routes `add_victorops/` to `views.add`.\n- **Circular import:** The VictorOps views module already imports `_get_rw_project_for_user` from `hc.front.views`. A view defined in `hc/front/views.py` would have to import itself.\n\nThe view is built from the org's `integrations.add_url_channel@v1` pattern and works like this:\n- **Access:** It requires login and `VICTOROPS_ENABLED`, and it only lets users with write access to the project use it.\n- **Saving:** On POST it checks the URL with `AddUrlForm` and creates a `victorops` channel with that value. It then assigns all the project's checks and redirects to the channels page.\n- **Display:** On GET, or if the form is invalid, it renders `add_victorops.html`.\n\n`check_code` found only two low-severity differences from the pattern: the `victorops` kind and the template name. Both are the intended changes, so nothing needs approval."
+  },
+  "task": "hc_add_victorops",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "integrations.add_url_channel"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 3,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 26.3
+}

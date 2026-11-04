@@ -1,0 +1,134 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "safe post-login redirect check"
+      },
+      "result": {
+        "ids": [
+          "accounts.allow_redirect"
+        ],
+        "scores": [
+          15.309
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:48.095+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "accounts.allow_redirect",
+        "names": null
+      },
+      "result": {
+        "id": "accounts.allow_redirect@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:57:50.095+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 620,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:09.418+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "_allow_redirect",
+          "high": [],
+          "pattern": "accounts.allow_redirect@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_allow_redirect",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_allow_redirect",
+        "pattern": "accounts.allow_redirect",
+        "similarity": 1.0
+      },
+      "marker": "accounts.allow_redirect@v1",
+      "matches_pattern": "accounts.allow_redirect",
+      "path": "hc/accounts/views.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1004922,
+    "duration_ms": 36260,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `_allow_redirect` to `hc/accounts/views.py`, above `_make_user`. I haven't run the tests or the app, but the pcat `check_code` found no deviations from the reviewed pattern.\n\nThe file already called `_allow_redirect` in four places but never defined it. Those calls are in the login view's magic-link branch, `_redirect_after_login`, `_check_2fa` and `login_webauthn`. Any of them would have raised `NameError` at runtime. The login view uses the helper through those calls, so I didn't change any of them.\n\nThe helper comes from the catalog pattern `accounts.allow_redirect@v1`, and I kept its `# pcat:` marker above it. It allows a `next` URL only if:\n- it is non-empty,\n- it has no host (so no redirects to other sites), and\n- its path resolves to one of the routes in `POST_LOGIN_ROUTES` (`hc-checks`, `hc-details`, `hc-log` and so on).\n\n`POST_LOGIN_ROUTES` and the imports it needs (`urlparse`, `resolve`, `Resolver404`) were already in the file."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "accounts.allow_redirect"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 37.8
+}

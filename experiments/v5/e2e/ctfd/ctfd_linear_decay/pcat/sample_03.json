@@ -1,0 +1,139 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/plugins/challenges/decay.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "challenges.decay_linear",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Dynamic challenge value with linear decay"
+      },
+      "result": {
+        "ids": [
+          "challenges.decay_linear"
+        ],
+        "scores": [
+          20.583
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:22.242+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "challenges.decay_linear",
+        "names": null
+      },
+      "result": {
+        "id": "challenges.decay_linear@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:11:24.416+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 749,
+        "pattern_id": "challenges.decay_linear"
+      },
+      "result": {
+        "deviations": [
+          [
+            "linear",
+            "challenges.decay_linear@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "get_solve_count",
+            "none",
+            null
+          ],
+          [
+            "linear",
+            "covered",
+            "challenges.decay_linear"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:31.534+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a linear decay function to the challenge scoring code: value drops per solve, floored at minimum.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "linear",
+          "high": [],
+          "pattern": "challenges.decay_linear@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "linear",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "linear",
+        "pattern": "challenges.decay_linear",
+        "similarity": 1.0
+      },
+      "marker": "challenges.decay_linear@v1",
+      "matches_pattern": "challenges.decay_linear",
+      "path": "CTFd/plugins/challenges/decay.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09189580000000001,
+    "duration_ms": 21462,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added `linear(challenge)` to `CTFd/plugins/challenges/decay.py`, using the org's `challenges.decay_linear@v1` pattern. The `# pcat:` marker is kept above it. I didn't run the test suite. `check_code` reports no deviations from the pattern.\n\n- **Formula:** value is `initial - decay * (solves - 1)`, rounded up and never below `minimum`. The first solver gets the full initial value.\n- **Solve count:** it reuses the existing `get_solve_count`, which ignores hidden and banned accounts.\n- **Broken registry:** `DECAY_FUNCTIONS` already listed `\"linear\": linear` before this change. That name wasn't defined anywhere, so the module would have raised a `NameError` on import until now."
+  },
+  "task": "ctfd_linear_decay",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "challenges.decay_linear"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 2,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 22.9
+}

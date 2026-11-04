@@ -1,0 +1,82 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "tools/codegen/extension_sdk_typescript.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [],
+  "relation": null,
+  "request": "Add a camel_to_snake helper to the code generator and use it wherever names are converted.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 1,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC108"
+          ],
+          "function": "camel_to_snake",
+          "high": [
+            "PC100"
+          ],
+          "pattern": "validators.regex_match@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "camel_to_snake",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "is_valid_username",
+        "pattern": "validators.regex_match",
+        "similarity": 0.655
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "tools/codegen/extension_sdk_typescript.py",
+      "similarity_to_original": 0.875,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0642431,
+    "duration_ms": 25304,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added `camel_to_snake` to `tools/codegen/extension_sdk_typescript.py`, but nothing calls it yet. I didn't run it, because the check I tried needed approval.\n\nThe generator only converts snake_case to camelCase. That happens through the existing `_camel`, used for field names and for the `host_name` values in the method metadata and host/SDK types. Nothing converts camelCase to snake_case, so I left every `_camel` call as it is. Swapping any of them would reverse the generated output.\n\nThe helper sits just above `_ts_property`. It turns `getWalletId` into `get_wallet_id` and `HTTPServer` into `http_server`. Names already in snake_case pass through unchanged.\n\nIf you meant something else by \"wherever names are converted\", tell me which conversion you want it used for and I'll wire it in. I haven't run `make check` or any other Makefile target."
+  },
+  "task": "lnbits_camel_to_snake",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 1
+    }
+  },
+  "wall_seconds": 26.1
+}

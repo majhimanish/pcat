@@ -1,0 +1,80 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/crud/__init__.py",
+    "lnbits/core/crud/extensions.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.count_rows",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an async function to the extensions crud module that returns the count of installed extensions, for the admin page.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "get_installed_extensions_count",
+          "high": [],
+          "pattern": "crud.count_rows@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_installed_extensions_count",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "get_accounts_count",
+        "pattern": "crud.count_rows",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "crud.count_rows",
+      "path": "lnbits/core/crud/extensions.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.10629040000000002,
+    "duration_ms": 53664,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `get_installed_extensions_count()` but haven't run any checks on it. The `make checkruff` call needed approval and wasn't run. I didn't try `make mypy` or `make checkblack`, and I didn't write or run any tests.\n\nThe function counts the rows in `installed_extensions` and returns an `int`, or 0 if there's no row:\n\n```python\nasync def get_installed_extensions_count(conn: Connection | None = None) -> int:\n    row: dict | None = await (conn or db).fetchone(\n        \"SELECT COUNT(*) as count FROM installed_extensions\"\n    )\n    return int(row[\"count\"]) if row else 0\n```\n\nIt follows the same pattern as the account count in `users.py`. It counts every installed extension, active or not. If the admin page should only count active ones, it needs an `active` filter like `get_installed_extensions` has.\n\n**Files touched:**\n- `lnbits/core/crud/extensions.py`: the new function, placed right after `get_installed_extensions`.\n- `lnbits/core/crud/__init__.py`: added it to the import list and `__all__`, as the other CRUD functions are.\n\nI haven't wired it into the admin page."
+  },
+  "task": "lnbits_extensions_count",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 3,
+      "Grep": 5,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 54.4
+}

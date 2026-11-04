@@ -1,0 +1,20 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 5d613b3..96a413b 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -181,6 +181,15 @@ def is_valid_external_id(external_id: str) -> bool:
+     return True
+ 
+ 
++# pcat: auth.lnbits_access_token@v1
++def create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:
++    minutes = token_expire_minutes or settings.auth_token_expire_minutes
++    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
++    to_encode = {k: v for k, v in data.items() if v is not None}
++    to_encode.update({"exp": expire})
++    return jwt.encode(to_encode, settings.auth_secret_key, "HS256")
++
++
+ def is_valid_pubkey(pubkey: str) -> bool:
+     if len(pubkey) != 64:
+         return False

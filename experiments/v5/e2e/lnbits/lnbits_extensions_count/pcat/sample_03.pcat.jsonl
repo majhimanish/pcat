@@ -1,0 +1,4 @@
+{"arguments": {"limit": 5, "request": "Count rows in a table"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:04:14.878+00:00", "tool": "search_patterns"}
+{"arguments": {"limit": 5, "request": "count rows crud"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:04:16.839+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "crud.count_rows", "names": null}, "result": {"id": "crud.count_rows@v1", "status": "active"}, "timestamp": "2026-11-04T14:04:20.213+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 270, "pattern_id": "crud.count_rows"}, "result": {"deviations": [["get_installed_extensions_count", "crud.count_rows@v1", [["PC103", false], ["PC110", false]]]], "statuses": [["get_installed_extensions_count", "near", "crud.count_rows"]]}, "timestamp": "2026-11-04T14:04:24.163+00:00", "tool": "check_code"}

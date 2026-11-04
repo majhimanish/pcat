@@ -1,0 +1,226 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "views.require_setting",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "view decorator returning 404 unless a Django setting is enabled (feature flag)"
+      },
+      "result": {
+        "ids": [
+          "views.require_setting"
+        ],
+        "scores": [
+          31.141
+        ]
+      },
+      "timestamp": "2026-11-04T14:00:50.872+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "views.require_setting",
+        "names": null
+      },
+      "result": {
+        "id": "views.require_setting@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:00:56.984+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 426,
+        "pattern_id": "views.require_setting"
+      },
+      "result": {
+        "deviations": [
+          [
+            "require_setting",
+            "views.require_setting@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "require_setting",
+            "covered",
+            "views.require_setting"
+          ],
+          [
+            "require_setting.<locals>.decorator",
+            "none",
+            null
+          ],
+          [
+            "require_setting.<locals>.decorator.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:19.112+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 675,
+        "pattern_id": "views.require_setting"
+      },
+      "result": {
+        "deviations": [
+          [
+            "require_setting",
+            "views.require_setting@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "require_setting",
+            "covered",
+            "views.require_setting"
+          ],
+          [
+            "require_setting.<locals>.decorator",
+            "none",
+            null
+          ],
+          [
+            "require_setting.<locals>.decorator.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:23.184+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a decorator in the integrations views that returns 404 unless a given Django setting is enabled.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 3,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "require_setting",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator.<locals>.wrapper",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "require_setting",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "require_setting",
+        "pattern": "views.require_setting",
+        "similarity": 1.0
+      },
+      "marker": "views.require_setting@v1",
+      "matches_pattern": "views.require_setting",
+      "path": "hc/front/decorators.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0950598,
+    "duration_ms": 47441,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `require_setting(key)` to `hc/front/decorators.py`. It returns a 404 `HttpResponse` unless `settings.<key>` is truthy, and otherwise calls the view normally. I haven't run the Django tests or exercised a view with the setting on and off.\n\nThe file already had the decorator's imports but no function. Integration views such as Slack, GitHub, Apprise and VictorOps already import `require_setting` from `hc.front.decorators`, so I didn't touch any of them. You use it like this:\n\n```python\n@require_setting(\"SLACK_ENABLED\")\ndef slack_help(request): ...\n```\n\nIt's the catalog's `views.require_setting@v1` pattern, with the `# pcat:` marker kept above the function. `check_code` on the full file reports no deviations from the pattern. My first check, on a snippet without imports, showed a high-severity \"library swapped\" hit. That came from the missing imports and cleared once I checked the whole file.\n\nThe key must exist in Django settings. A missing one raises `AttributeError` (a 500) instead of a 404, because `getattr` has no default. That is how the pattern is written, so I left it."
+  },
+  "task": "hc_require_setting",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "views.require_setting"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 49.1
+}

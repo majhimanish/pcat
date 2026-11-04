@@ -204,7 +204,7 @@ def cmd_analyze(args) -> int:
             c: {k: v for k, v in v5.summarize_runs([r for r in rows if r["condition"] == c]).items()
                 if k in ("ok", "search_rate", "fetched_right_rate", "matches_rate", "derives_rate",
                          "median_similarity_pattern_tasks", "median_similarity_negative_tasks", "lint_fail_rate",
-                         "negatives_used_a_pattern", "median_cost_usd")}
+                         "negatives_forced_a_pattern", "negatives_inferred_similar_only", "median_cost_usd")}
             for c in ("baseline", "pcat")}
     out["runs"] = [{"app": r["app"], "task": r["task"], "condition": r["condition"], "sample": r["sample"],
                     "status": r["status"], **v5.run_flags(r),
@@ -216,12 +216,12 @@ def cmd_analyze(args) -> int:
     keys = [("search_rate", "search"), ("fetched_right_rate", "fetched right"), ("matches_rate", "matches"),
             ("derives_rate", "derives"), ("median_similarity_pattern_tasks", "sim (pattern)"),
             ("lint_fail_rate", "fails CI"), ("median_cost_usd", "median $")]
-    print("| App | Condition | runs | " + " | ".join(k[1] for k in keys) + " | negatives used a pattern |")
+    print("| App | Condition | runs | " + " | ".join(k[1] for k in keys) + " | negatives forced / inferred-similar |")
     print("|---|---|---|" + "---|" * (len(keys) + 1))
     for app, conds in [*out["apps"].items(), ("all", out["all"])]:
         for c, s in conds.items():
             print(f"| {app} | {c} | {s['ok']}/{s['runs']} | " + " | ".join(str(s[k[0]]) for k in keys)
-                  + f" | {s['negatives_used_a_pattern']}/{s['negative_runs']} |")
+                  + f" | {s['negatives_forced_a_pattern']} / {s['negatives_inferred_similar_only']} of {s['negative_runs']} |")
     print(f"total cost estimate ${out['all']['baseline']['total_cost_usd'] + out['all']['pcat']['total_cost_usd']:.2f}")
     return 0
 

@@ -1,0 +1,279 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "API-key authorization decorator for write endpoints, read-write project key from X-Api-Key header or JSON body"
+      },
+      "result": {
+        "ids": [
+          "api.authorize_read"
+        ],
+        "scores": [
+          26.711
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:54.385+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "api.authorize_read",
+        "names": null
+      },
+      "result": {
+        "id": "api.authorize_read@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:57:56.544+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1256,
+        "pattern_id": "api.authorize_read"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authorize_write",
+            "api.authorize_read@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC106",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "authorize_write",
+            "none",
+            null
+          ],
+          [
+            "authorize_write.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:12.409+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 1664,
+        "pattern_id": "api.authorize_read"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authorize_write",
+            "api.authorize_read@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "authorize_write",
+            "none",
+            null
+          ],
+          [
+            "authorize_write.<locals>.wrapper",
+            "none",
+            null
+          ],
+          [
+            "error",
+            "none",
+            null
+          ],
+          [
+            "_get_api_version",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:17.872+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "authorize_read",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_read.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "authorize_write",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "authorize_read",
+        "pattern": "api.authorize_read",
+        "similarity": 0.7318
+      },
+      "marker": "api.authorize_read@v1",
+      "matches_pattern": null,
+      "path": "hc/api/decorators.py",
+      "similarity_to_original": 0.8487,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1430305,
+    "duration_ms": 33980,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `authorize_write` to `hc/api/decorators.py`, next to `authorize_read`. I haven't run the Django test suite or any tests for it.\n\n- **Key source:** it reads the key from the `X-Api-Key` header. If there's no header, it reads `api_key` from the JSON body. The header wins if both are present.\n- **Read-write only:** read-only `hcr_` keys are rejected, because the lookup uses `accept_rw=True, accept_ro=False`. A missing or wrong-length key gets a 401 \"missing api key\", and an unknown key gets a 401 \"wrong api key\".\n- **What the view gets:** `request.project`, `request.readonly = False`, `request.v`, and `request.json` (the parsed body, or `{}` if there is none).\n- **Bad bodies:** a body that isn't valid JSON, or whose top level isn't an object, gets a 400 error.\n\nI based it on the catalog pattern `api.authorize_read@v1`, which is the closest one, and kept its `# pcat:` marker. The final `check_code` run found no high-severity deviations, only low-severity ones from the JSON-body handling and the read-write-only change. The first run flagged a high one, but that was only because my test snippet had left out the type annotations.\n\n`hc/api/views.py` imports and uses `authorize` (lines 39, 438 and others), but `hc/api/decorators.py` doesn't define it. Those views would fail on import as the repo stands. I didn't change `views.py`. If `authorize` was meant to be this decorator, switching those views to `authorize_write` is a small follow-up, and I can do it if you want."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "api.authorize_read"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 4,
+      "Edit": 1,
+      "Glob": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 35.7
+}

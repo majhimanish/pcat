@@ -1,0 +1,223 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "API-key authorization decorator for write endpoints (read-write project key)"
+      },
+      "result": {
+        "ids": [
+          "api.authorize_read"
+        ],
+        "scores": [
+          20.692
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:25.553+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "api.authorize_read",
+        "names": null
+      },
+      "result": {
+        "id": "api.authorize_read@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:58:28.629+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1070,
+        "pattern_id": "api.authorize_read"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authorize_write",
+            "api.authorize_read@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC106",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "authorize_write",
+            "none",
+            null
+          ],
+          [
+            "authorize_write.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:43.888+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 15,
+        "medium": 4
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "authorize_read",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_read.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "authorize_write",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "authorize_read",
+        "pattern": "api.authorize_read",
+        "similarity": 0.7271
+      },
+      "marker": "api.authorize_read@v1",
+      "matches_pattern": null,
+      "path": "hc/api/decorators.py",
+      "similarity_to_original": 0.896,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1340693,
+    "duration_ms": 42529,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `authorize_write` to `hc/api/decorators.py` (the file is `hc/api/decorators.py`, not `api/decorators.py`). I haven't run any tests or called the decorator.\n\n**What it does**\n- It reads the key from the `X-Api-Key` header. If the header is absent, it falls back to the `api_key` field of the JSON body.\n- It accepts only the read-write key, via `Project.objects.for_api_key(key, accept_rw=True, accept_ro=False)`. A read-only key gets 401 \"wrong api key\".\n- It returns 401 \"missing api key\" if the key is missing, not a string, or not 32 characters.\n- It returns 400 if the body isn't valid JSON or isn't a JSON object.\n- On success it sets `request.json`, `request.project`, `request.readonly = False` and `request.v`, then calls the view.\n\n**pcat check**\n- I based it on `api.authorize_read@v1` and kept the `# pcat:` marker above it.\n- `check_code` reported two high-severity deviations, PC100 and PC103. Both are false positives: they said `for_api_key` and `django` were no longer used, but the code calls `for_api_key` and imports `django`. I had sent it only the function, without the file's imports.\n- I couldn't re-run `check_code` on the whole file. A shell command I tried to read the file was blocked, so I never sent it the full file.\n- The remaining findings are the intended differences: JSON-body parsing, rw-only lookup and `readonly = False`. I added no `pcat-allow` lines, so nothing needs a human to confirm.\n\n**A pre-existing problem**\n`hc/api/views.py` imports `authorize` from the decorators module, and many views use `@authorize`. That name doesn't exist in `decorators.py`, so the module currently fails to import. I didn't change the views because you didn't ask. Say if you want them switched to `@authorize_write`."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "api.authorize_read"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1,
+      "Glob": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 44.3
+}

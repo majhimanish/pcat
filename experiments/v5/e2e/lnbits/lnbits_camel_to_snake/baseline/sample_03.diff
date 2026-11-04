@@ -1,0 +1,15 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index fae13ac..ebf9a29 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -359,6 +359,10 @@ def camel_to_words(name: str) -> str:
+     return words.strip()
+ 
+ 
++def camel_to_snake(name: str) -> str:
++    return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
++
++
+ def snake_to_camel(name: str, capitalize_first: bool | None = False) -> str:
+     components = name.split("_")
+     camel = components[0] + "".join(x.capitalize() for x in components[1:])

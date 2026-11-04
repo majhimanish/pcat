@@ -1,0 +1,1 @@
+{"arguments": {"limit": 5, "request": "get real client IP trusting only configured proxies"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T02:10:25.523+00:00", "tool": "search_patterns"}

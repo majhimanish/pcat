@@ -1,0 +1,188 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "safe post-login redirect next URL check"
+      },
+      "result": {
+        "ids": [
+          "accounts.allow_redirect"
+        ],
+        "scores": [
+          21.051
+        ]
+      },
+      "timestamp": "2026-11-04T13:56:55.509+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "accounts.allow_redirect",
+        "names": null
+      },
+      "result": {
+        "id": "accounts.allow_redirect@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:56:58.420+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 353,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:24.622+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 638,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:32.680+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "_allow_redirect",
+          "high": [],
+          "pattern": "accounts.allow_redirect@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_allow_redirect",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_allow_redirect",
+        "pattern": "accounts.allow_redirect",
+        "similarity": 1.0
+      },
+      "marker": "accounts.allow_redirect@v1",
+      "matches_pattern": "accounts.allow_redirect",
+      "path": "hc/accounts/views.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1344709,
+    "duration_ms": 52864,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `_allow_redirect` to `hc/accounts/views.py`, just after `POST_LOGIN_ROUTES`. I haven't run the test suite.\n\n`views.py` already called `_allow_redirect` in four places, but nothing defined it, so those calls would have raised `NameError`. The four places are `login`, `_redirect_after_login`, `_check_2fa` and `login_webauthn`. Defining the function fixes all of them without any edit to the login view. The email-link branch of `login` already passes `?next=` through it.\n\nThe function comes from the catalog pattern `accounts.allow_redirect@v1`. It rejects empty values and any URL with a host. It then resolves the path and allows it only if the route name is in `POST_LOGIN_ROUTES`. The pattern's `# pcat:` marker comment is kept above it.\n\n`check_code` reports no deviations from the pattern. An earlier run flagged four high-severity issues, but that was because I had pasted the function without its imports. With the imports and constant included, the report was clean."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "accounts.allow_redirect"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 3,
+      "Read": 2,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 55.6
+}

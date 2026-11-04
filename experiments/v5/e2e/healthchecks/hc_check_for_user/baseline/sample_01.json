@@ -1,0 +1,91 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add `_get_check_for_user` and `_get_rw_check_for_user` helpers to hc/front/views.py that load a check by code and reject read-only members.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 4,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "_get_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC108",
+            "PC110"
+          ],
+          "function": "_get_rw_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_get_rw_check_for_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_get_rw_channel_for_user",
+        "pattern": "access.channel_for_user",
+        "similarity": 0.9592
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/front/views.py",
+      "similarity_to_original": 1.0,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.08030520000000001,
+    "duration_ms": 23506,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added both helpers to `hc/front/views.py`, just above `_get_channel_for_user`. I haven't run anything yet: the `manage.py check` and test run needed approval, so the code is untested.\n\n- **`_get_check_for_user(request, code, preload_owner_profile=False)`** returns `(check, rw)`.\n  - It loads the check by `code` with its project, or returns a 404.\n  - Superusers and the project owner get `rw=True`.\n  - Anyone else must be a project `Member`, otherwise 404, and `rw` is `membership.is_rw`.\n  - I included the `preload_owner_profile` keyword because existing call sites already pass it. When it's set, the query also loads `project__owner__profile`.\n- **`_get_rw_check_for_user(request, code)`** returns just the check, and raises `PermissionDenied` when `rw` is false.\n\nBoth follow the existing `_get_channel_for_user` and `_get_rw_channel_for_user` pattern.\n\n`Project.owner_profile` does its own `Profile.objects.for_user(...)` lookup. The preload therefore may not save a query unless that property uses the loaded relation.\n\nIf you approve it, I can run `python manage.py test hc.front`."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 24.4
+}

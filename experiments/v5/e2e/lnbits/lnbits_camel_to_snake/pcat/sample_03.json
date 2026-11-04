@@ -1,0 +1,97 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "tools/codegen/extension_sdk_typescript.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "convert camelCase name to snake_case"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:03:36.973+00:00",
+      "tool": "search_patterns"
+    }
+  ],
+  "relation": null,
+  "request": "Add a camel_to_snake helper to the code generator and use it wherever names are converted.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 1,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC108"
+          ],
+          "function": "camel_to_snake",
+          "high": [
+            "PC100"
+          ],
+          "pattern": "validators.regex_match@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "camel_to_snake",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "is_valid_username",
+        "pattern": "validators.regex_match",
+        "similarity": 0.655
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "tools/codegen/extension_sdk_typescript.py",
+      "similarity_to_original": 0.875,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11104539999999997,
+    "duration_ms": 25754,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 15,
+    "result_text": "I added `camel_to_snake` to `tools/codegen/extension_sdk_typescript.py`, next to `_camel`, but nothing calls it yet. I didn't run it or any tests, because my check command needed approval and I didn't retry.\n\n- **What it does:** it turns camelCase and PascalCase into snake_case. For example, `hostJsName` becomes `host_js_name`, and `HTTPServer` becomes `http_server`.\n- **Why nothing uses it:** the generator's only name conversion is `_camel`, which goes snake_case to camelCase for the TypeScript output (lines 108, 191, 211, 215 and 270). `camel_to_snake` goes the other way, so swapping it in there would be wrong. I left those calls alone.\n- **Pattern catalog:** it has nothing for case conversion, so I wrote the helper myself and `check_code` doesn't apply.\n- **Possible mismatch:** `tests/unit/test_helpers.py` imports `camel_to_snake` from `lnbits.helpers`, where it doesn't exist. If that's the helper you meant, say so and I'll add it there instead (or in addition). The generator could then import it from `lnbits.helpers`.\n\nIf you have a specific place in mind that converts names the other way, point me to it and I'll wire the helper in."
+  },
+  "task": "lnbits_camel_to_snake",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 2,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 27.5
+}

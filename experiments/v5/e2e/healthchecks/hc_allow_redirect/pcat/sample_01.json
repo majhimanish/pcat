@@ -1,0 +1,184 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "safe post-login redirect check for next URL"
+      },
+      "result": {
+        "ids": [
+          "accounts.allow_redirect"
+        ],
+        "scores": [
+          21.051
+        ]
+      },
+      "timestamp": "2026-11-04T13:55:53.337+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "accounts.allow_redirect",
+        "names": null
+      },
+      "result": {
+        "id": "accounts.allow_redirect@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:55:55.521+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 558,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:56:08.636+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 638,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:56:12.164+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "_allow_redirect",
+          "high": [],
+          "pattern": "accounts.allow_redirect@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_allow_redirect",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_allow_redirect",
+        "pattern": "accounts.allow_redirect",
+        "similarity": 1.0
+      },
+      "marker": "accounts.allow_redirect@v1",
+      "matches_pattern": "accounts.allow_redirect",
+      "path": "hc/accounts/views.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.26144920000000005,
+    "duration_ms": 36795,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `_allow_redirect` to `hc/accounts/views.py` (the file is under `hc/`, not `accounts/` at the repo root). It's the reviewed `accounts.allow_redirect@v1` pattern, with its `# pcat:` marker kept. I haven't run the test suite or the app.\n\n`views.py` already called `_allow_redirect` in four places but never defined it, so those calls would have raised `NameError`. The four places are:\n- the `login` view's magic-link branch\n- `_redirect_after_login`\n- `_check_2fa`\n- `login_webauthn`\n\nAdding the function fixes all four, so I didn't change the `login` view itself.\n\nThe helper allows a `next` URL only if three things hold:\n- It's non-empty.\n- It has no host part, so it can't redirect to another site.\n- Its path resolves to one of the `POST_LOGIN_ROUTES` already defined in the file (checks, details, log, channels and so on).\n\n`check_code` reports no deviations from the pattern. My first check showed four high-severity flags, but that was only because I'd left the import lines out of the snippet I submitted. The imports are already in the file. Re-checking with them included came back clean, so there are no `pcat-allow` lines and nothing for a human to confirm."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "accounts.allow_redirect"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 2,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 42.4
+}

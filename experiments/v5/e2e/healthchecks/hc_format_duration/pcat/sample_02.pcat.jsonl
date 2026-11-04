@@ -1,0 +1,1 @@
+{"arguments": {"limit": 5, "request": "format a timedelta as human readable string like \"2 hours 30 minutes\""}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:00:03.118+00:00", "tool": "search_patterns"}

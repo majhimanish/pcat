@@ -1,0 +1,20 @@
+diff --git a/CTFd/utils/config/__init__.py b/CTFd/utils/config/__init__.py
+index aa82b46..410f89e 100644
+--- a/CTFd/utils/config/__init__.py
++++ b/CTFd/utils/config/__init__.py
+@@ -73,6 +73,15 @@ def get_mail_provider():
+         return "mailgun"
+ 
+ 
++# pcat: config.mail_provider_configured@v1
++def mailserver():
++    if app.config.get("MAIL_SERVER") and app.config.get("MAIL_PORT"):
++        return True
++    if get_config("mail_server") and get_config("mail_port"):
++        return True
++    return False
++
++
+ def mailgun():
+     if app.config.get("MAILGUN_API_KEY") and app.config.get("MAILGUN_BASE_URL"):
+         return True

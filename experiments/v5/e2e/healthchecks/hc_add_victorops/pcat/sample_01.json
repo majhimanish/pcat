@@ -1,0 +1,204 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "integrations.add_url_channel",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Add a URL-based notification integration Django view (save VictorOps webhook URL to project)"
+      },
+      "result": {
+        "ids": [
+          "integrations.add_url_channel"
+        ],
+        "scores": [
+          27.027
+        ]
+      },
+      "timestamp": "2026-11-04T13:56:54.887+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "integrations.add_url_channel",
+        "names": null
+      },
+      "result": {
+        "id": "integrations.add_url_channel@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:56:57.369+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 747,
+        "pattern_id": "integrations.add_url_channel"
+      },
+      "result": {
+        "deviations": [
+          [
+            "add_victorops",
+            "integrations.add_url_channel@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC106",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "add_victorops",
+            "near",
+            "integrations.add_url_channel"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:15.191+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add the add_victorops view in hc/front/views.py so logged-in users can save a VictorOps webhook URL to their project.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 1,
+        "low": 6,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC108",
+            "PC109",
+            "PC110"
+          ],
+          "function": "add_victorops",
+          "high": [
+            "PC100"
+          ],
+          "pattern": "integrations.add_url_channel@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "add_victorops",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "add_msteams",
+        "pattern": "integrations.add_url_channel",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "integrations.add_url_channel",
+      "path": "hc/front/views.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1702884,
+    "duration_ms": 47497,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 17,
+    "result_text": "I added `add_victorops` to `hc/front/views.py`, but nothing routes to it yet, and I haven't run it or any tests. I only confirmed that `Channel` was already imported and that `require_setting` is now imported at line 55.\n\nThe view follows the org's reviewed `integrations.add_url_channel@v1` pattern, with the `# pcat:` marker kept above it:\n- It requires `VICTOROPS_ENABLED` and a logged-in user.\n- It gets the project through `_get_rw_project_for_user`, so only users with write access can add a channel.\n- On a valid POST it validates the URL with `AddUrlForm` and saves a `Channel` of kind `victorops`. It then assigns all checks and redirects to `hc-channels`.\n- On a GET, or an invalid POST, it renders `add_victorops.html` with the form.\n\n- **Routing:** `hc/integrations/victorops/urls.py` routes `hc-add-victorops` to `views.add` in `hc/integrations/victorops/views.py`. That file has only imports and no `add` function, so the new view isn't reachable. Either point the URL at `front.views.add_victorops`, or move the view into that module and drop it from `front/views.py`. Say which you'd prefer and I'll make the change.\n- **`check_code`:** I ran it before editing, on the snippet alone. It flagged two high-severity deviations (PC100, PC103), saying the function no longer calls `_get_rw_project_for_user` or uses `django`. Both look like artifacts of checking the snippet without its imports, since the body matches the pattern apart from the setting name, channel kind and template name. I didn't re-run it on the final file, and I didn't add any `pcat-allow` lines."
+  },
+  "task": "hc_add_victorops",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "integrations.add_url_channel"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 6,
+      "Edit": 2,
+      "Grep": 3,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 50.4
+}

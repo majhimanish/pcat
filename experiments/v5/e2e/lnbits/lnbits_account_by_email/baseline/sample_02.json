@@ -1,0 +1,88 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/crud/users.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.get_account_by_field",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an async `get_account_by_email_ci` to the users CRUD that looks up an account by email, case-insensitive.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC105",
+            "PC110"
+          ],
+          "function": "get_account_by_pubkey",
+          "high": [],
+          "pattern": "crud.get_account_by_field@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "get_account_by_email_ci",
+          "high": [],
+          "pattern": "crud.get_account_by_field@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_account_by_email_ci",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "get_account_by_username",
+        "pattern": "crud.get_account_by_field",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "crud.get_account_by_field",
+      "path": "lnbits/core/crud/users.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.08943580000000001,
+    "duration_ms": 22883,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added `get_account_by_email_ci` to `lnbits/core/crud/users.py`, but I haven't run any checks on it. The lint command (`ruff check`) needed approval and didn't run, and I ran no Makefile targets or tests.\n\n**What it does:** `get_account_by_email_ci(email, active_only=True, conn=None)` lowercases the input and matches it against `LOWER(email)`. It returns `Account | None` and applies the same `activated` filter as the neighbouring lookups. An empty string returns `None` without querying. I modelled it on `get_account_by_username`.\n\n**Not exported:** I did not add it to `lnbits/core/crud/__init__.py`. Say if you want it exported there.\n\n**Existing problem:** `lnbits/core/crud/__init__.py` imports `get_account_by_email` from `.users`, and `decorators.py` and the auth/user services call it. But `users.py` has no definition of it, so importing `lnbits.core.crud` will likely fail with an `ImportError`. I didn't touch that, since it's outside this task. It may mean the repo is in a half-finished state, or that the function lives somewhere I didn't find. I can add or fix it if you want.\n\nFiles touched: `lnbits/core/crud/users.py`"
+  },
+  "task": "lnbits_account_by_email",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Grep": 5
+    }
+  },
+  "wall_seconds": 23.9
+}

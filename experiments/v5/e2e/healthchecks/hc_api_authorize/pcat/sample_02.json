@@ -1,0 +1,143 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "API-key authorization decorator for read-write endpoints"
+      },
+      "result": {
+        "ids": [
+          "api.authorize_read"
+        ],
+        "scores": [
+          17.875
+        ]
+      },
+      "timestamp": "2026-11-04T13:57:58.216+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "api.authorize_read",
+        "names": null
+      },
+      "result": {
+        "id": "api.authorize_read@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:58:00.147+00:00",
+      "tool": "get_pattern"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "authorize_read",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_read.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "authorize_write",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "authorize_read",
+        "pattern": "api.authorize_read",
+        "similarity": 0.7468
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/api/decorators.py",
+      "similarity_to_original": 0.9547,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09851990000000001,
+    "duration_ms": 32132,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `authorize_write` to `hc/api/decorators.py`. I haven't run it or its tests. My syntax check was blocked by a permission prompt, so the file is unchecked.\n\n- **Where the key comes from:** the `X-Api-Key` header if it's present, otherwise the `api_key` field in the JSON body.\n- **Which keys it accepts:** only read-write keys, so a read-only `hcr_` key gets a 401.\n- **Errors:** a malformed or non-object body gets a 400. A missing key or a key that isn't 32 characters gets a 401 \"missing api key\", and an unknown key gets a 401 \"wrong api key\".\n- **What the view gets:** `request.project`, `request.readonly = False`, `request.v` and the parsed body as `request.json`. The body is parsed even when the key comes from the header, and an empty body gives `{}`.\n\n- **Catalog:** the catalog only has `api.authorize_read`, so I wrote this one following its structure. I didn't run `check_code`, since there's no write pattern to compare against.\n- **Name mismatch in `views.py`:** `hc/api/views.py` imports and uses `authorize`, which isn't defined in `decorators.py`. I left it alone since you didn't ask for that. If `authorize_write` is meant to replace it, the imports and decorators in `views.py` need renaming."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [
+      "api.authorize_read"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 4,
+      "Edit": 2,
+      "Glob": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 33.9
+}

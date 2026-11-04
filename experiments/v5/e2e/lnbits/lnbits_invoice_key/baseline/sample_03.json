@@ -1,0 +1,51 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency requiring a wallet's invoice key from header or query param, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": null
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.059259000000000006,
+    "duration_ms": 14399,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I didn't change anything, because `require_base_invoice_key` in `lnbits/decorators.py:204` already does this.\n\n- **Where the key comes from:** the `X-API-KEY` header (`api_key_header`) or the `api-key` query param (`api_key_query`).\n- **What it returns:** a `BaseWalletTypeInfo`, with the wallet looked up through `LightKeyChecker` and cached according to `auth_authentication_cache_minutes`.\n- **Errors:** 401 if no key is given, 404 if no wallet matches the key, and the usual user-access checks apply.\n- **Admin keys:** an admin key also passes, since only the admin dependencies reject the wrong key type. That is how invoice-creating endpoints normally work.\n- **Where it's used:** the payment endpoints in `lnbits/core/views/payment_api.py` use it, for example `key_info: BaseWalletTypeInfo = Depends(require_base_invoice_key)`.\n\nIf you want something different, there are two options:\n\n1. A `require_invoice_key` that returns the full `WalletTypeInfo` (including the wallet's other details), like `require_admin_key` does. It would be a short addition mirroring the existing functions.\n2. A dependency that accepts only the invoice key and rejects the admin key. This needs a change to `_extract_key_type`, so I'd want your go-ahead first.\n\nI ran no Makefile targets, since there was no code change."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 15.3
+}

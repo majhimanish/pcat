@@ -1,0 +1,59 @@
+diff --git a/hc/lib/string.py b/hc/lib/string.py
+index 1d97527..d89a3c9 100644
+--- a/hc/lib/string.py
++++ b/hc/lib/string.py
+@@ -51,3 +51,24 @@ def is_valid_uuid_string(value: str) -> bool:
+     return bool(uuid_match_regex.match(value))
+ 
+ 
++def contains_any_keyword(text: str, keywords: str) -> bool:
++    """Return True if any keyword from a comma-separated list appears in text.
++
++    Matching is case-insensitive. Whitespace around keywords is stripped
++    and empty keywords are ignored.
++
++    >>> contains_any_keyword("Disk is FULL", "cpu, full")
++    True
++    >>> contains_any_keyword("All good", "cpu, full")
++    False
++
++    """
++
++    text = text.lower()
++    for keyword in keywords.split(","):
++        keyword = keyword.strip().lower()
++        if keyword and keyword in text:
++            return True
++
++    return False
++
+diff --git a/hc/lib/tests/test_string.py b/hc/lib/tests/test_string.py
+index 973d1e8..d7787b9 100644
+--- a/hc/lib/tests/test_string.py
++++ b/hc/lib/tests/test_string.py
+@@ -2,7 +2,7 @@ from __future__ import annotations
+ 
+ from unittest import TestCase
+ 
+-from hc.lib.string import replace
++from hc.lib.string import contains_any_keyword, replace
+ 
+ 
+ class StringTestCase(TestCase):
+@@ -21,3 +21,16 @@ class StringTestCase(TestCase):
+     def test_it_preserves_non_placeholder_dollar_signs(self) -> None:
+         result = replace("$3.50", {"$A": "text"})
+         self.assertEqual(result, "$3.50")
++
++    def test_contains_any_keyword_matches(self) -> None:
++        self.assertTrue(contains_any_keyword("Disk is full", "cpu,full"))
++
++    def test_contains_any_keyword_ignores_case_and_whitespace(self) -> None:
++        self.assertTrue(contains_any_keyword("Disk is FULL", "cpu,  full "))
++
++    def test_contains_any_keyword_returns_false_if_no_match(self) -> None:
++        self.assertFalse(contains_any_keyword("All good", "cpu,full"))
++
++    def test_contains_any_keyword_ignores_empty_keywords(self) -> None:
++        self.assertFalse(contains_any_keyword("All good", ""))
++        self.assertFalse(contains_any_keyword("All good", ",, ,"))

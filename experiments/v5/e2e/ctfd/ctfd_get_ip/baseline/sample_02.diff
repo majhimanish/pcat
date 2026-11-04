@@ -1,0 +1,38 @@
+diff --git a/CTFd/utils/user/__init__.py b/CTFd/utils/user/__init__.py
+index 0f5a618..4b98da3 100644
+--- a/CTFd/utils/user/__init__.py
++++ b/CTFd/utils/user/__init__.py
+@@ -15,6 +15,33 @@ from CTFd.utils.security.auth import logout_user
+ from CTFd.utils.security.signing import hmac
+ 
+ 
++def get_ip(req=None):
++    """Return the real client IP address.
++
++    Walks the forwarding chain (X-Forwarded-For entries followed by the direct
++    peer) from the nearest hop outwards, skipping addresses that match
++    ``TRUSTED_PROXIES``, and returns the first untrusted address. Only proxies
++    the operator has configured are trusted, so a client cannot spoof its IP by
++    sending its own X-Forwarded-For header.
++    """
++    if req is None:
++        req = request
++    trusted_proxies = app.config.get("TRUSTED_PROXIES") or []
++    patterns = [re.compile(p) for p in trusted_proxies]
++
++    route = list(req.access_route)
++    if req.remote_addr:
++        route.append(req.remote_addr)
++
++    for addr in reversed(route):
++        addr = addr.strip()
++        if addr and not any(p.match(addr) for p in patterns):
++            return addr
++
++    # Every hop is trusted (e.g. local traffic): fall back to the outermost one
++    return route[0].strip() if route else None
++
++
+ def get_current_user():
+     if authed():
+         user = Users.query.filter_by(id=session["id"]).first()

@@ -429,6 +429,10 @@ def run_flags(r: dict) -> dict:
         "derives": bool(pattern) and pattern in used,
         "marked": bool(nf.get("marker")),
         "used_some_pattern": bool(used),
+        # forced = the agent fetched a pattern and its code carries a marker or matches one;
+        # inferred-only similarity (advisory) is reported separately
+        "forced_pattern": bool(fetched) and (bool(nf.get("marker")) or nf.get("status") in ("covered", "near")),
+        "inferred_only": bool(inferred.get("derived")) and not fetched and not nf.get("marker"),
         "found_function": bool(nf),
         "similarity": nf.get("similarity_to_original"),
         "lint_failed": bool(lint.get("failed")),
@@ -468,6 +472,8 @@ def summarize_runs(records: list[dict]) -> dict:
         "negative_runs": len(neg),
         "negatives_fetched_a_pattern": sum(f["fetched_any"] for f in neg),
         "negatives_used_a_pattern": sum(f["used_some_pattern"] for f in neg),
+        "negatives_forced_a_pattern": sum(f["forced_pattern"] for f in neg),
+        "negatives_inferred_similar_only": sum(f["inferred_only"] for f in neg),
         "median_cost_usd": _median([f["cost"] for f in flags]),
         "total_cost_usd": round(sum(f["cost"] or 0 for f in flags), 2),
         "median_seconds": _median([f["seconds"] for f in flags]),

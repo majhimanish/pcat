@@ -1,0 +1,16 @@
+diff --git a/hc/lib/emails.py b/hc/lib/emails.py
+index 37ec0ed..52ec95c 100644
+--- a/hc/lib/emails.py
++++ b/hc/lib/emails.py
+@@ -89,6 +89,11 @@ def login(to: str, ctx: dict[str, Any]) -> None:
+     send(make_message("login", to, ctx))
+ 
+ 
++# pcat: emails.templated_send@v1
++def send_verify_link(to: str, ctx: dict[str, Any]) -> None:
++    send(make_message("verify-email", to, ctx))
++
++
+ def transfer_request(to: str, ctx: dict[str, Any]) -> None:
+     send(make_message("transfer-request", to, ctx))
+ 

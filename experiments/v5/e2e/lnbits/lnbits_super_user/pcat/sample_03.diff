@@ -1,0 +1,26 @@
+diff --git a/lnbits/decorators.py b/lnbits/decorators.py
+index 5ac5523..7ba6c6c 100644
+--- a/lnbits/decorators.py
++++ b/lnbits/decorators.py
+@@ -405,6 +405,21 @@ async def check_admin(
+     return account
+ 
+ 
++# pcat: auth.check_admin@v1
++async def check_super_user(
++    account: Annotated[Account, Depends(check_account_exists)],
++) -> Account:
++    if account.id != settings.super_user:
++        raise HTTPException(
++            HTTPStatus.FORBIDDEN, "User not authorized. No super user privileges."
++        )
++    if not account.has_password:
++        raise HTTPException(
++            HTTPStatus.FORBIDDEN, "Super user must have credentials configured."
++        )
++    return account
++
++
+ def parse_filters(model: type[TFilterModel]):
+     """
+     Parses the query params as filters.

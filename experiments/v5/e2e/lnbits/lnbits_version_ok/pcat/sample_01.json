@@ -1,0 +1,103 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "check if current version is within min/max version range"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:06:56.933+00:00",
+      "tool": "search_patterns"
+    }
+  ],
+  "relation": null,
+  "request": "Add a function to the extension installer that checks if the current LNbits version is within an extension's optional min/max version range.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 2,
+        "low": 4,
+        "medium": 5
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC102",
+            "PC103",
+            "PC104",
+            "PC105",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "is_lnbits_version_ok",
+          "high": [
+            "PC100",
+            "PC102"
+          ],
+          "pattern": "config.env.load_settings@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "is_lnbits_version_ok",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "parse_bool",
+        "pattern": "config.env.load_settings",
+        "similarity": 0.5825
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/helpers.py",
+      "similarity_to_original": 0.7828,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1014112,
+    "duration_ms": 32315,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `is_lnbits_version_ok(min_lnbits_version, max_lnbits_version)` to `lnbits/helpers.py`. I couldn't run the tests because the pytest command needed approval and wasn't run.\n\nIt was missing even though other code already used it. `lnbits/core/models/extensions.py` imports it and calls it from `is_version_compatible()`, and `tests/unit/test_helpers.py` tests it. So the import would have failed before this change.\n\n- **Range:** it returns `min <= current < max`, comparing against `settings.version`. The max is exclusive because the existing test expects `is_lnbits_version_ok(None, \"1.2.3\")` to be `False` when the current version is `1.2.3`.\n- **Missing bounds:** a bound that is `None` or empty is not checked.\n- **Parsing:** it uses the existing `version_parse`, which drops release-candidate suffixes and treats unparseable versions as `0.0.0`.\n\nThe pattern catalog had nothing matching a version-range check, so I wrote it directly.\n\nTo check it, run `pytest tests/unit/test_helpers.py -k version`."
+  },
+  "task": "lnbits_version_ok",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Grep": 4,
+      "ToolSearch": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 34.0
+}

@@ -1,0 +1,93 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "views.require_setting",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a decorator in the integrations views that returns 404 unless a given Django setting is enabled.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC105",
+            "PC108",
+            "PC110"
+          ],
+          "function": "require_setting",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC105",
+            "PC108",
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "require_setting",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "require_setting",
+        "pattern": "views.require_setting",
+        "similarity": 0.9706
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/front/decorators.py",
+      "similarity_to_original": 0.9706,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11135809999999999,
+    "duration_ms": 42264,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `require_setting(key)` to `hc/front/decorators.py`. I haven't run it or any tests.\n\nViews under `hc/integrations/` already import it from there and use it, for example `@require_setting(\"WEBHOOKS_ENABLED\")` and `@require_setting(\"SIGNAL_CLI_SOCKET\")`. The file had the imports but no definition, so I wrote the missing function instead of a new decorator.\n\nIt returns a 404 (`HttpResponseNotFound`) when `getattr(settings, key, None)` is falsy. Otherwise it calls the view as normal. Because it checks truthiness, it works for boolean flags like `WEBHOOKS_ENABLED` and for settings that hold a value, like `PUSHOVER_API_TOKEN`.\n\nI also added `HttpResponseNotFound` to the `django.http` import."
+  },
+  "task": "hc_require_setting",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 2,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 43.2
+}

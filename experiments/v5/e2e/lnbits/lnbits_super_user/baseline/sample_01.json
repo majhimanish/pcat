@@ -1,0 +1,81 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.check_admin",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency `check_super_user` that raises 403 for non-super-users, and use it on the admin endpoints.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "check_super_user",
+          "high": [],
+          "pattern": "auth.check_admin@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "check_super_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "check_admin",
+        "pattern": "auth.check_admin",
+        "similarity": 0.709
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/decorators.py",
+      "similarity_to_original": 0.8111,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1017438,
+    "duration_ms": 27286,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `check_super_user` to `lnbits/decorators.py`, but I couldn't verify it. The import check and the Makefile test targets all need approval, and I didn't run them.\n\n**What I found**\n\n`check_super_user` was already imported and used in `lnbits/__init__.py`, `admin_api.py`, `user_api.py` and `node_api.py`. It was never defined in `lnbits/decorators.py`, so any import of those modules would fail with an `ImportError`.\n\n**What I changed**\n\n`check_super_user` now sits right after `check_admin`. It depends on `check_admin`, so the existing checks still apply. It then raises 403 \"User not authorized. No super user privileges.\" unless `account.id == settings.super_user`.\n\n**Where it's used**\n\nThese routes already depend on it:\n- `DELETE /api/v1/settings`\n- `GET /api/v1/restart`\n- `GET /api/v1/backup`\n- three routes in `user_api.py`\n- one route in `node_api.py`\n\n**What I left alone**\n\nI didn't switch the other admin endpoints from `check_admin` to `check_super_user`. Those include settings read and update, extensions, audit and fiat. `check_admin` lets anyone in `lnbits_admin_users` through, and moving routes to the stricter check would lock those admins out. If you want specific routes tightened, tell me which ones.\n\n**Not verified**\n\nPlease run `make test-api`, or at least an import of `lnbits.core.views.admin_api`, to confirm the app starts.\n\n**Files touched:** `lnbits/decorators.py`"
+  },
+  "task": "lnbits_super_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 28.1
+}

@@ -1,0 +1,19 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 5d613b3..e89c94d 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -393,3 +393,14 @@ def daystart_timestamp(dt: datetime | None = None) -> int:
+     dt = dt or datetime.now(timezone.utc)
+     day_start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+     return int(day_start.timestamp())
++
++
++def create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:
++    """
++    Create a signed JWT (HS256) with an `exp` claim.
++    Expiry defaults to `settings.auth_token_expire_minutes`.
++    """
++    minutes = token_expire_minutes or settings.auth_token_expire_minutes
++    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
++    to_encode = {**data, "exp": expire}
++    return jwt.encode(to_encode, settings.auth_secret_key, "HS256")

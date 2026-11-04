@@ -1,0 +1,81 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 5,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC108",
+            "PC110"
+          ],
+          "function": "_allow_redirect",
+          "high": [],
+          "pattern": "accounts.allow_redirect@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_allow_redirect",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_allow_redirect",
+        "pattern": "accounts.allow_redirect",
+        "similarity": 0.7109
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/accounts/views.py",
+      "similarity_to_original": 0.7109,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1015008,
+    "duration_ms": 36757,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `_allow_redirect(redirect_url)` to `hc/accounts/views.py`, right after `POST_LOGIN_ROUTES`. I haven't run the code or any tests. My syntax check was blocked by a permission prompt.\n\nThe file is `hc/accounts/views.py`, not `accounts/views.py`. The login view and three other places already called `_allow_redirect`, but nothing defined it, so those calls would have raised `NameError`. The login view didn't need any edits.\n\nThe helper returns `True` only when all of these hold:\n- **Present:** the value is a non-empty string.\n- **Relative:** it has no scheme or host, so `https://evil.com` is rejected.\n- **Local path:** it starts with `/` but not `//`, so scheme-relative `//evil.com` is rejected.\n- **No tricks:** it contains no backslashes or control characters, since browsers can turn `/\\evil.com` into `//evil.com`.\n- **Allowed route:** the path resolves to a route listed in `POST_LOGIN_ROUTES`.\n\nThe existing callers are `_redirect_after_login`, `_check_2fa`, the magic-link branch of `login`, and `login_webauthn`.\n\nI'd run the accounts tests (`./manage.py test hc.accounts`) to confirm."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 5,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 38.5
+}

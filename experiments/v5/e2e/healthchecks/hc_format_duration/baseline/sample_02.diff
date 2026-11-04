@@ -1,0 +1,71 @@
+diff --git a/hc/lib/date.py b/hc/lib/date.py
+index 9d3e749..d5ba75b 100644
+--- a/hc/lib/date.py
++++ b/hc/lib/date.py
+@@ -81,6 +81,28 @@ def format_duration_for_sentence(duration: timedelta) -> str:
+     return f"{secs} second{pluralize(secs)}"
+ 
+ 
++def format_duration_words(duration: timedelta) -> str:
++    """Format a timedelta using its two most significant units.
++
++    Zero-valued units are omitted: "2 hours 30 minutes", "8 days".
++    """
++    total_seconds = int(duration.total_seconds())
++
++    mins, secs = divmod(total_seconds, 60)
++    hours, mins = divmod(mins, 60)
++    days, hours = divmod(hours, 24)
++
++    units = [(days, "day"), (hours, "hour"), (mins, "minute"), (secs, "second")]
++    for i, (value, _) in enumerate(units):
++        if value:
++            parts = [
++                f"{v} {name}{pluralize(v)}" for v, name in units[i : i + 2] if v
++            ]
++            return " ".join(parts)
++
++    return "0 seconds"
++
++
+ def month_boundaries(months: int, tzstr: str) -> list[datetime]:
+     """Return month start times in descending order starting from the current month."""
+     tz = ZoneInfo(tzstr)
+diff --git a/hc/lib/tests/test_date.py b/hc/lib/tests/test_date.py
+index 77b9e92..402f6a9 100644
+--- a/hc/lib/tests/test_date.py
++++ b/hc/lib/tests/test_date.py
+@@ -10,6 +10,7 @@ from hc.lib.date import (
+     day_boundaries,
+     format_approx_duration,
+     format_duration_for_sentence,
++    format_duration_words,
+     format_hms,
+     month_boundaries,
+     seconds_in_month,
+@@ -84,6 +85,25 @@ class ForSentenceFormattingTestCase(TestCase):
+             self.assertEqual(format_duration_for_sentence(duration), expected)
+ 
+ 
++class DurationWordsTestCase(TestCase):
++    def test_it_works(self) -> None:
++        samples = [
++            (td(days=8), "8 days"),
++            (td(days=8, minutes=30), "8 days"),
++            (td(days=1, hours=1), "1 day 1 hour"),
++            (td(days=3, hours=6, minutes=12), "3 days 6 hours"),
++            (td(hours=2, minutes=30), "2 hours 30 minutes"),
++            (td(hours=1, minutes=1, seconds=5), "1 hour 1 minute"),
++            (td(hours=2), "2 hours"),
++            (td(minutes=5, seconds=10), "5 minutes 10 seconds"),
++            (td(seconds=1), "1 second"),
++            (td(0), "0 seconds"),
++        ]
++
++        for duration, expected in samples:
++            self.assertEqual(format_duration_words(duration), expected)
++
++
+ @time_machine.travel(CURRENT_TIME)
+ class MonthBoundaryTestCase(TestCase):
+     def test_utc_works(self) -> None:

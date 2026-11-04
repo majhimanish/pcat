@@ -1,0 +1,165 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "views.require_setting",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "decorator returning 404 unless a Django setting is enabled (feature flag view decorator)"
+      },
+      "result": {
+        "ids": [
+          "views.require_setting"
+        ],
+        "scores": [
+          31.141
+        ]
+      },
+      "timestamp": "2026-11-04T14:00:53.317+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "views.require_setting",
+        "names": null
+      },
+      "result": {
+        "id": "views.require_setting@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:00:56.396+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 675,
+        "pattern_id": "views.require_setting"
+      },
+      "result": {
+        "deviations": [
+          [
+            "require_setting",
+            "views.require_setting@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "require_setting",
+            "covered",
+            "views.require_setting"
+          ],
+          [
+            "require_setting.<locals>.decorator",
+            "none",
+            null
+          ],
+          [
+            "require_setting.<locals>.decorator.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:15.130+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a decorator in the integrations views that returns 404 unless a given Django setting is enabled.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 3,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "require_setting",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator.<locals>.wrapper",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "require_setting",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "require_setting",
+        "pattern": "views.require_setting",
+        "similarity": 1.0
+      },
+      "marker": "views.require_setting@v1",
+      "matches_pattern": "views.require_setting",
+      "path": "hc/front/decorators.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.095746,
+    "duration_ms": 46050,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `require_setting(key)` to `hc/front/decorators.py`. I haven't run the Django tests or imported the module. It returns a 404 unless the named Django setting is truthy.\n\nThat file had the imports but no function. The integrations views (for example `hc/integrations/apprise/views.py`) already import and use it as `@require_setting(\"APPRISE_ENABLED\")`, so nothing else needed changing.\n\nI took the code from the catalog's reviewed pattern `views.require_setting@v1` and kept its `# pcat:` marker. `check_code` found no deviations from the pattern.\n\nA setting that doesn't exist raises `AttributeError` rather than returning 404, because the pattern uses `getattr(settings, key)` without a default."
+  },
+  "task": "hc_require_setting",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "views.require_setting"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 4,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 47.7
+}

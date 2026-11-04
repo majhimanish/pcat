@@ -1,0 +1,14 @@
+diff --git a/hc/lib/emails.py b/hc/lib/emails.py
+index 37ec0ed..386ea6d 100644
+--- a/hc/lib/emails.py
++++ b/hc/lib/emails.py
+@@ -142,5 +142,9 @@ def sudo_code(to: str, ctx: dict[str, Any]) -> None:
+     send(make_message("sudo-code", to, ctx))
+ 
+ 
++def send_verify_link(to: str, ctx: dict[str, Any]) -> None:
++    send(make_message("verify-email", to, ctx))
++
++
+ def signal_rate_limited(to: str, ctx: dict[str, Any]) -> None:
+     send(make_message("signal-rate-limited", to, ctx))

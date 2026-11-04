@@ -1,0 +1,71 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/lib/date.py",
+    "hc/lib/tests/test_date.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [],
+  "relation": null,
+  "request": "Add a helper in the date utils that formats a timedelta as \"2 hours 30 minutes\" or \"8 days\".",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": {
+      "function": "format_timedelta",
+      "how": "most similar",
+      "inferred": {
+        "derived": false,
+        "function": "load_settings",
+        "pattern": "config.env.load_settings",
+        "similarity": 0.3711
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/lib/date.py",
+      "similarity_to_original": 0.4457,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.08248549999999999,
+    "duration_ms": 28964,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added `format_timedelta` to `hc/lib/date.py`, with a test case in `hc/lib/tests/test_date.py`. I haven't run the tests, because the test command needed approval and I didn't get it.\n\nIt shows the largest non-zero unit plus the next smaller unit, if that one is non-zero. It uses the existing `Unit` constants and `pluralize`.\n\n| Input | Output |\n|---|---|\n| 8 days | `8 days` |\n| 2 hours 30 minutes | `2 hours 30 minutes` |\n| 1 day 1 hour 30 minutes | `1 day 1 hour` |\n| 1 day 5 minutes | `1 day` |\n| 45 seconds | `45 seconds` |\n| zero | `0 seconds` |\n\nBecause it never skips over a zero unit, 1 day 5 minutes comes out as `1 day` rather than `1 day 5 minutes`. Say so if you'd rather show more precision.\n\nTo run the tests: `python manage.py test hc.lib.tests.test_date`"
+  },
+  "task": "hc_format_duration",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Edit": 3,
+      "Glob": 1,
+      "Grep": 1,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 30.0
+}

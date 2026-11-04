@@ -1,0 +1,81 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.check_admin",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency `check_super_user` that raises 403 for non-super-users, and use it on the admin endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "check_super_user",
+          "high": [],
+          "pattern": "auth.check_admin@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "check_super_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "check_admin",
+        "pattern": "auth.check_admin",
+        "similarity": 0.709
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/decorators.py",
+      "similarity_to_original": 0.8111,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11027210000000001,
+    "duration_ms": 24217,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I couldn't run the checks because the commands need your approval. The code change itself is in place.\n\n**What I found:** `check_super_user` was imported in `lnbits/__init__.py`, `admin_api.py`, `node_api.py` and `user_api.py`, but it was never defined in `lnbits/decorators.py`. So none of those modules would import.\n\n**Change** (`lnbits/decorators.py`): I added `check_super_user`, built on `check_admin`. It raises 403 with \"User not authorized. No super user privileges.\" unless the account is `settings.super_user`. Because it builds on `check_admin`, it also requires an account that has a password set.\n\n**Admin endpoints:** These already use it:\n- `DELETE /admin/api/v1/settings`\n- `GET /admin/api/v1/restart`\n- `GET /admin/api/v1/backup`\n- three routes in `user_api.py`\n- one in `node_api.py`\n\nI left the rest on `check_admin`. These are audit, monitor, testemail and settings get/update/patch/default. I'm assuming regular admins should keep access to them. If you want any of them restricted to the super user, tell me which.\n\n**Not verified:** I haven't run `make checkruff`, `make mypy` or `make test-api`. Please approve them or run them yourself.\n\n**Files touched:** `lnbits/decorators.py`"
+  },
+  "task": "lnbits_super_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 4,
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 25.2
+}

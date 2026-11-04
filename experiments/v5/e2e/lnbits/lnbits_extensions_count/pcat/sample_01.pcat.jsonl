@@ -1,0 +1,4 @@
+{"arguments": {"limit": 5, "request": "count rows in a table"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:04:08.781+00:00", "tool": "search_patterns"}
+{"arguments": {"limit": 5, "request": "crud count installed extensions rows"}, "result": {"ids": ["crud.count_rows", "crud.delete_by_ext_id"], "scores": [12.239, 10.66]}, "timestamp": "2026-11-04T14:04:16.752+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "crud.count_rows", "names": null}, "result": {"id": "crud.count_rows@v1", "status": "active"}, "timestamp": "2026-11-04T14:04:49.538+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 270, "pattern_id": "crud.count_rows"}, "result": {"deviations": [["get_installed_extensions_count", "crud.count_rows@v1", [["PC103", false], ["PC110", false]]]], "statuses": [["get_installed_extensions_count", "near", "crud.count_rows"]]}, "timestamp": "2026-11-04T14:04:56.436+00:00", "tool": "check_code"}

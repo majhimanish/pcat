@@ -1,0 +1,19 @@
+diff --git a/lnbits/core/crud/extensions.py b/lnbits/core/crud/extensions.py
+index 83ba286..45fc1ce 100644
+--- a/lnbits/core/crud/extensions.py
++++ b/lnbits/core/crud/extensions.py
+@@ -132,6 +132,14 @@ async def get_installed_extensions(
+     return all_extensions
+ 
+ 
++# pcat: crud.count_rows@v1
++async def get_installed_extensions_count(conn: Connection | None = None) -> int:
++    row: dict | None = await (conn or db).fetchone(
++        "SELECT COUNT(*) as count FROM installed_extensions"
++    )
++    return int(row["count"]) if row else 0
++
++
+ async def get_user_extension(
+     user_id: str, extension: str, conn: Connection | None = None
+ ) -> UserExtension | None:

@@ -1,0 +1,42 @@
+diff --git a/CTFd/utils/user/__init__.py b/CTFd/utils/user/__init__.py
+index 0f5a618..b7fe429 100644
+--- a/CTFd/utils/user/__init__.py
++++ b/CTFd/utils/user/__init__.py
+@@ -240,6 +240,37 @@ def get_locale():
+     return request.accept_languages.best_match(languages)
+ 
+ 
++def _is_trusted_proxy(addr):
++    patterns = app.config.get("TRUSTED_PROXIES") or []
++    return any(re.match(p, addr) for p in patterns)
++
++
++def get_ip(req=None):
++    """
++    Return the real client IP address.
++
++    X-Forwarded-For is only honored when the directly connecting peer
++    (remote_addr) is a trusted proxy. The header is then walked right to left,
++    skipping trusted proxies, and the first untrusted address is returned.
++    Anything further left is client-supplied and therefore spoofable.
++    """
++    req = req or request
++    remote = req.remote_addr or ""
++
++    if not remote or not _is_trusted_proxy(remote):
++        return remote
++
++    forwarded = req.headers.get("X-Forwarded-For", "")
++    hops = [h.strip() for h in forwarded.split(",") if h.strip()]
++    for hop in reversed(hops):
++        if not _is_trusted_proxy(hop):
++            return hop
++
++    # Every hop was a trusted proxy (or no header): fall back to the
++    # left-most hop if present, else the peer itself.
++    return hops[0] if hops else remote
++
++
+ def get_current_user_recent_ips():
+     if authed():
+         return get_user_recent_ips(user_id=session["id"])

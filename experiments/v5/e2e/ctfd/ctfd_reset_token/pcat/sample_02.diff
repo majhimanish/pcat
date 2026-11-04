@@ -1,0 +1,30 @@
+diff --git a/CTFd/utils/security/email.py b/CTFd/utils/security/email.py
+index e839d7e..b36defa 100644
+--- a/CTFd/utils/security/email.py
++++ b/CTFd/utils/security/email.py
+@@ -25,3 +25,25 @@ def remove_email_confirm_token(nonce):
+     cache.delete(f"confirm_email_{nonce}")
+ 
+ 
++# pcat: security.email_confirm_token@v1
++def generate_reset_password_token(addr, timeout=1800):
++    nonce = hexencode(os.urandom(32))
++    cache.set(f"reset_password_{nonce}", addr, timeout=timeout)
++    return nonce
++
++
++# pcat-allow: PC100 #514686d7 -- reset flow must raise UserResetPasswordTokenInvalidException; CTFd/auth.py catches that type
++# pcat-allow: PC102 #514686d7 -- same check kept, only the exception type differs for the reset flow
++# pcat: security.email_confirm_token@v1
++def verify_reset_password_token(nonce):
++    addr = cache.get(f"reset_password_{nonce}")
++    if addr is None:
++        raise UserResetPasswordTokenInvalidException
++    return addr
++
++
++# pcat: security.email_confirm_token@v1
++def remove_reset_password_token(nonce):
++    cache.delete(f"reset_password_{nonce}")
++
++

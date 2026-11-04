@@ -1,0 +1,66 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "check if current version is within min/max version range"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:07:08.053+00:00",
+      "tool": "search_patterns"
+    }
+  ],
+  "relation": null,
+  "request": "Add a function to the extension installer that checks if the current LNbits version is within an extension's optional min/max version range.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": null
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.07117639999999999,
+    "duration_ms": 32894,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "No new function is needed. LNbits already has one, `is_lnbits_version_ok(min_lnbits_version, max_lnbits_version)`, in `lnbits/helpers.py`. It is imported in `lnbits/core/models/extensions.py` and used there by `is_version_compatible()` on extension configs and releases.\n\nThe extension install paths already call it:\n- `lnbits/core/views/extension_api.py:109`\n- `lnbits/core/models/extensions.py:776` and `:791`\n- `lnbits/commands.py:686`\n- `lnbits/app.py:366`\n\n`tests/unit/test_helpers.py` covers it with `min`/`max` set and with either one `None`.\n\nI searched the pattern catalog first and it has nothing for version ranges. I haven't changed any files.\n\nIf you meant something different, tell me which. For example, a wrapper in `lnbits/core/services/extensions.py` that raises on an incompatible release, or a check with different semantics such as exclusive bounds."
+  },
+  "task": "lnbits_version_ok",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Grep": 4,
+      "ToolSearch": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 34.5
+}

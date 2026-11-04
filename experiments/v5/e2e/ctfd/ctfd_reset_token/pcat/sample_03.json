@@ -1,0 +1,203 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/security/email.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.email_confirm_token",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "single-use email token for password reset"
+      },
+      "result": {
+        "ids": [
+          "security.email_confirm_token"
+        ],
+        "scores": [
+          13.667
+        ]
+      },
+      "timestamp": "2026-11-04T02:14:00.534+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "security.email_confirm_token",
+        "names": null
+      },
+      "result": {
+        "id": "security.email_confirm_token@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:14:01.958+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 717,
+        "pattern_id": "security.email_confirm_token"
+      },
+      "result": {
+        "deviations": [
+          [
+            "generate_reset_password_token",
+            "security.email_confirm_token@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ],
+          [
+            "verify_reset_password_token",
+            "security.email_confirm_token@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC102",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ],
+          [
+            "remove_reset_password_token",
+            "security.email_confirm_token@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "generate_reset_password_token",
+            "near",
+            "security.email_confirm_token"
+          ],
+          [
+            "verify_reset_password_token",
+            "none",
+            null
+          ],
+          [
+            "remove_reset_password_token",
+            "near",
+            "security.email_confirm_token"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:14:16.078+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add password reset helpers: generate a token for an email, resolve email from token, and invalidate it.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "failed": true,
+      "failing": 2,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "generate_reset_password_token",
+          "high": [],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC100",
+            "PC102",
+            "PC110"
+          ],
+          "function": "verify_reset_password_token",
+          "high": [
+            "PC100",
+            "PC102"
+          ],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "remove_reset_password_token",
+          "high": [],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "remove_reset_password_token",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "remove_email_confirm_token",
+        "pattern": "security.email_confirm_token",
+        "similarity": 1.0
+      },
+      "marker": "security.email_confirm_token@v1",
+      "matches_pattern": "security.email_confirm_token",
+      "path": "CTFd/utils/security/email.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11757409999999999,
+    "duration_ms": 32563,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added the three password reset helpers to `CTFd/utils/security/email.py`. I haven't run any tests or the app.\n\n- **`generate_reset_password_token(addr, timeout=1800)`** makes a random 256-bit token, stores the email in the cache for 30 minutes, and returns the token.\n- **`verify_reset_password_token(nonce)`** returns the email for the token. It raises `UserResetPasswordTokenInvalidException` if the token is unknown or expired.\n- **`remove_reset_password_token(nonce)`** deletes the token, so it can't be used again.\n\nThey follow the catalog pattern `security.email_confirm_token@v1`, with `# pcat:` markers kept above each function. The cache key prefix is `reset_password_`, so reset tokens can't be confused with email-confirmation tokens. `auth.py` and `utils/initialization/__init__.py` already imported these names, so this should also fix that missing code.\n\n**A human needs to confirm one approval.** `check_code` flagged two high-severity deviations on `verify_reset_password_token` (PC100 and PC102). The pattern raises `UserConfirmTokenInvalidException`, and I raise the reset-specific exception instead. The callers in `auth.py` and `initialization/__init__.py` catch the reset exception, so the pattern's exception would break their handling. The invalid-token check itself is unchanged. I added two `# pcat-allow` lines (hash `514686d7`) above that function. They don't count until a human confirms them in the pull request. The other flags were low severity (the changed cache key prefix) and need no action."
+  },
+  "task": "ctfd_reset_token",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "security.email_confirm_token"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 2,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 34.0
+}

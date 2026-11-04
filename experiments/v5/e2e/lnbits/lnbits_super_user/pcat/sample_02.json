@@ -1,0 +1,209 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.check_admin",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "FastAPI dependency requiring super user, raises 403 for non-super-users"
+      },
+      "result": {
+        "ids": [
+          "auth.check_admin"
+        ],
+        "scores": [
+          19.887
+        ]
+      },
+      "timestamp": "2026-11-04T14:05:17.342+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.check_admin",
+        "names": {
+          "f0": "check_super_user"
+        }
+      },
+      "result": {
+        "id": "auth.check_admin@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:05:42.603+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 443,
+        "pattern_id": "auth.check_admin"
+      },
+      "result": {
+        "deviations": [
+          [
+            "check_super_user",
+            "auth.check_admin@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC102",
+                false
+              ],
+              [
+                "PC102",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "check_super_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:05:59.874+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 729,
+        "pattern_id": "auth.check_admin"
+      },
+      "result": {
+        "deviations": [
+          [
+            "check_super_user",
+            "auth.check_admin@v1",
+            [
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "check_super_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:06:04.677+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency `check_super_user` that raises 403 for non-super-users, and use it on the admin endpoints.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 38,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC109",
+            "PC110"
+          ],
+          "function": "check_super_user",
+          "high": [],
+          "pattern": "auth.check_admin@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "check_super_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "check_admin",
+        "pattern": "auth.check_admin",
+        "similarity": 0.9223
+      },
+      "marker": "auth.check_admin@v1",
+      "matches_pattern": null,
+      "path": "lnbits/decorators.py",
+      "similarity_to_original": 0.9714,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1516448,
+    "duration_ms": 77532,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 15,
+    "result_text": "I added `check_super_user` to `lnbits/decorators.py`, but I haven't run any tests or imported the module. The import check I tried needed approval, so I skipped it.\n\n- **What it does:** it raises 403 unless the account is `settings.super_user`. It also raises 403 if that account has no credentials configured, which matches how `check_admin` behaves. It is based on the catalog pattern `auth.check_admin@v1`, and the `# pcat:` marker is above it.\n- **Where I departed from the pattern:** the pattern also lets through accounts in `settings.lnbits_admin_users`, and I removed that clause so only the super user passes. The 403 messages now say \"super user\". `check_code` reports no high-severity deviations, only low ones for the changed condition and messages. So there's no `pcat-allow` line and nothing for a human to confirm.\n- **Missing definition:** `lnbits/__init__.py`, `admin_api.py`, `user_api.py` and `node_api.py` already imported and used `check_super_user`, but `decorators.py` never defined it. Those imports would have failed, and they should resolve now.\n- **Not changed:** the admin endpoints already use `check_super_user` where it was intended, such as deleting settings, restoring settings and some user and node routes. I left the many `check_admin` routes alone. Switching them would lock out users in `lnbits_admin_users` from things like the settings UI and extension management, and I didn't want to make that call for you.\n\nIf you want specific routes tightened, tell me which. For example, I could switch all of `admin_api.py` to super-user only."
+  },
+  "task": "lnbits_super_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "auth.check_admin"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 79.0
+}

@@ -1,0 +1,85 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/lib/date.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "format a timedelta as human readable string like \"2 hours 30 minutes\""
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:00:03.118+00:00",
+      "tool": "search_patterns"
+    }
+  ],
+  "relation": null,
+  "request": "Add a helper in the date utils that formats a timedelta as \"2 hours 30 minutes\" or \"8 days\".",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": {
+      "function": "format_duration_words",
+      "how": "most similar",
+      "inferred": {
+        "derived": false,
+        "function": "parse_bool",
+        "pattern": "config.env.load_settings",
+        "similarity": 0.4139
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/lib/date.py",
+      "similarity_to_original": 0.6325,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09294749999999999,
+    "duration_ms": 52268,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `format_duration_words(duration: timedelta)` to `hc/lib/date.py`, but I haven't run it. The shell command to test it needed approval and I didn't get it.\n\nThe catalog had no matching pattern, so I wrote it directly. It reuses the `DAY`/`HOUR`/`MINUTE`/`SECOND` units already in that file.\n\nGoing by the code, these are the outputs I'd expect:\n- `timedelta(hours=2, minutes=30)` gives `\"2 hours 30 minutes\"`.\n- `timedelta(days=8)` gives `\"8 days\"`.\n- `timedelta(days=1, hours=1)` gives `\"1 day 1 hour\"`.\n- `timedelta(0)` gives `\"0 seconds\"`.\n- A negative duration gets a `-` prefix.\n\nZero-valued units are skipped, and it shows at most the two largest non-zero units. For example, 8 days and 5 seconds comes out as `\"8 days 5 seconds\"` and 2 days 3 hours 4 minutes as `\"2 days 3 hours\"`. If you'd rather it list every non-zero unit, that's a one-line change.\n\nI also haven't added unit tests. If you approve running Python, I can check the outputs above and add tests."
+  },
+  "task": "hc_format_duration",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Glob": 3,
+      "Grep": 2,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 53.9
+}

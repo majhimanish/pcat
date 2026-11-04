@@ -1,0 +1,191 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/config/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "config.mail_provider_configured",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Is a mail provider configured (app config or admin settings)"
+      },
+      "result": {
+        "ids": [
+          "config.mail_provider_configured"
+        ],
+        "scores": [
+          25.2
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:32.522+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "config.mail_provider_configured",
+        "names": null
+      },
+      "result": {
+        "id": "config.mail_provider_configured@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:11:34.049+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 250,
+        "pattern_id": "config.mail_provider_configured"
+      },
+      "result": {
+        "deviations": [
+          [
+            "mailserver",
+            "config.mail_provider_configured@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "mailserver",
+            "near",
+            "config.mail_provider_configured"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:43.133+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 324,
+        "pattern_id": "config.mail_provider_configured"
+      },
+      "result": {
+        "deviations": [
+          [
+            "mailserver",
+            "config.mail_provider_configured@v1",
+            [
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "mailserver",
+            "near",
+            "config.mail_provider_configured"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:49.168+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a `mailserver()` helper to CTFd/utils/config/__init__.py that returns True if SMTP is configured in app config or admin settings.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "mailserver",
+          "high": [],
+          "pattern": "config.mail_provider_configured@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "mailserver",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "mailgun",
+        "pattern": "config.mail_provider_configured",
+        "similarity": 1.0
+      },
+      "marker": "config.mail_provider_configured@v1",
+      "matches_pattern": "config.mail_provider_configured",
+      "path": "CTFd/utils/config/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.10032690000000001,
+    "duration_ms": 28271,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `mailserver()` to `CTFd/utils/config/__init__.py`, just above `mailgun()`. I haven't run any tests.\n\nIt returns `True` if `MAIL_SERVER` and `MAIL_PORT` are both set in the app config, or if the admin settings `mail_server` and `mail_port` are both set. Otherwise it returns `False`. That matches how `get_mail_provider()` in the same file decides SMTP is configured.\n\n`can_send_mail()` in that file already called `mailserver()`, but it wasn't defined anywhere, so that call would have raised a `NameError`. It should work now.\n\nI built it from the catalog pattern `config.mail_provider_configured@v1`, which is the `mailgun()` check, and swapped in the SMTP keys. The marker comment stays above the function. The `check_code` run on the file's real imports reports only low-severity \"literal changed\" notes for the SMTP keys, and no high-severity deviations, so no `pcat-allow` approval is needed.\n\nMy first `check_code` run flagged a high-severity \"library swapped\" deviation. That was because I'd passed only the function body, without its `flask` and `get_config` imports. It disappeared once I included them."
+  },
+  "task": "ctfd_mailserver",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "config.mail_provider_configured"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 29.6
+}

@@ -1,0 +1,99 @@
+{
+  "app": "ctfd",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/teams.py",
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.ratelimit",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a rate-limit decorator for POST requests per client IP, and apply it to login, register, and team forms.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 4,
+        "medium": 10
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "ratelimit",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC110"
+          ],
+          "function": "ratelimit.<locals>.ratelimit_decorator",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "ratelimit",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "ratelimit",
+        "pattern": "decorators.ratelimit",
+        "similarity": 0.7964
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "CTFd/utils/decorators/__init__.py",
+      "similarity_to_original": 0.7964,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.13268780000000002,
+    "duration_ms": 45443,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added the `ratelimit` decorator and applied it to login, register and team creation, but I couldn't run any tests. The shell asked for approval on my test commands and I didn't get it, so none of this has been run, not even an import check.\n\n- **Decorator:** `CTFd/utils/decorators/__init__.py` now defines `ratelimit(method=\"POST\", limit=50, interval=300, key_prefix=\"rl\")`.\n  - **Keying:** it counts requests by client IP (via the existing `get_ip()`) and endpoint, using the app cache.\n  - **Over the limit:** it returns a 429 JSON response, `{\"code\": 429, \"message\": \"Too many requests. Limit is N requests in M seconds\"}`.\n  - **Window:** it uses a fixed window per IP and endpoint. The check and update aren't atomic, so concurrent requests can slightly exceed the limit.\n- **Routes:**\n  - `/login`, `/register` and `/teams/join` already had `@ratelimit(method=\"POST\", limit=10, interval=5)`.\n  - I added the same decorator to `/teams/new` in `CTFd/teams.py`.\n  - `/teams/invite` is still unlimited.\n\nThe repo already had `@ratelimit` calls, and `auth.py` and `teams.py` imported `ratelimit` from `CTFd.utils.decorators`. The function itself wasn't defined anywhere, so those modules couldn't import. Defining it is what makes the existing decorators work.\n\nTo check it, run `python -c \"import CTFd.auth, CTFd.teams\"` and then `python -m pytest tests/test_auth.py tests/teams -q`. I also haven't tried the login limit by hand: 10 POSTs to `/login` within 5 seconds should return a 429 on the 11th."
+  },
+  "task": "ctfd_ratelimit",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 3
+    }
+  },
+  "wall_seconds": 46.4
+}

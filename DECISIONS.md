@@ -922,10 +922,11 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 193. **Skipped candidates:** class methods and classes (model methods, Pydantic
      validators, `KeyChecker`, Flask-RESTX resources, `TokenBucket.authorize_*`),
      and `checks.post_action`, whose extraction pulled in a v5 task's target.
-194. **Tasks** (`experiments/v5/tasks.yaml`): per app 6 pattern tasks (4 *sibling*:
-     the pattern was promoted from another occurrence that stays in the repo; 2
-     *same*: the pattern is the removed function, its only occurrence, so the pcat
-     condition can recover it verbatim) and 2 negatives no pattern covers. Removal
+194. **Tasks** (`experiments/v5/tasks.yaml`): per app 6 pattern tasks and 2 negatives no
+     pattern covers. Pattern tasks are *sibling* (the pattern was promoted from
+     another occurrence that stays in the repo: 4 in healthchecks, 5 in CTFd and
+     LNbits) or *same* (the pattern is the removed function, its only occurrence,
+     so the pcat condition can recover it verbatim: 2, 1 and 1). Removal
      deletes the top-level function(s) with their decorators, the comment block
      directly above and the following blank lines; callers and now-unused imports
      stay (an import of a removed name fails, as it would for a developer).
@@ -974,3 +975,14 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      not checked against imports) is in KNOWN_GAPS.
 200. **No scaling.** Smoke runs cost $0.08–0.16 (mean about $0.12), so 144 runs are
      estimated at about $18, under the $60 cap: 3 samples per task per condition.
+201. **Usage limit during Part F.** The first full pass hit the account's 5-hour
+     usage limit after 52 runs; the other 92 ended at once with "You've hit your
+     5-hour limit". After the reset the runner resumed (completed runs are skipped,
+     cut-off ones rerun from scratch), so every one of the 144 runs is a complete
+     run. CLI cost estimate: $14.59 for the 144 completed runs, about $15.84
+     including the cut-off attempts and the smoke test.
+202. **Negatives metric.** "Forced a pattern" = the agent fetched a pattern and its
+     new code carries a marker or matches a pattern; advisory inference alone
+     ("inferred similar") is reported separately, since small helpers (regex or
+     boolean parsers) score above 0.56 against `regex_match` / `parse_bool`.
+

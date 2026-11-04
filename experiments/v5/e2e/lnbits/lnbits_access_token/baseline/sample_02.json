@@ -1,0 +1,80 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.lnbits_access_token",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a function that creates a signed JWT access token with expiry from the configured minutes setting, for the login endpoints.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC105",
+            "PC110"
+          ],
+          "function": "create_access_token",
+          "high": [],
+          "pattern": "auth.lnbits_access_token@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "create_access_token",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "create_access_token",
+        "pattern": "auth.lnbits_access_token",
+        "similarity": 0.8743
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/helpers.py",
+      "similarity_to_original": 0.8743,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1136851,
+    "duration_ms": 53343,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `create_access_token` to `lnbits/helpers.py`, but I haven't run or tested it. Both the lint run and my quick decode check were blocked on approval.\n\n`lnbits/core/views/auth_api.py` already imports and calls `create_access_token` from `lnbits.helpers`. That function didn't exist, so the import would have failed. I wrote it to match the two existing call sites, which are `create_access_token(data=...)` and `create_access_token(data=..., token_expire_minutes=...)`.\n\n- **Signing:** it builds an HS256 JWT signed with `settings.auth_secret_key`, the same key and algorithm `lnbits/decorators.py` uses to decode tokens.\n- **Expiry:** the `exp` claim is the current UTC time plus `settings.auth_token_expire_minutes`. An optional `token_expire_minutes` argument overrides that. The existing API-token path in `auth_api.py` passes it.\n- **Imports:** no new dependencies or imports were needed.\n\nTo verify it, run `make checkruff` and `make checkblack`, and decode a token from the function to check the `exp` claim. I can run them if you approve.\n\nFiles touched: `lnbits/helpers.py`. I also wrote a throwaway check script in the scratchpad, `t.py`, which never ran."
+  },
+  "task": "lnbits_access_token",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 7,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 54.2
+}

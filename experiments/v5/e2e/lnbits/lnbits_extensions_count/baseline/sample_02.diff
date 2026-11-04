@@ -1,0 +1,38 @@
+diff --git a/lnbits/core/crud/__init__.py b/lnbits/core/crud/__init__.py
+index cb381dc..467a326 100644
+--- a/lnbits/core/crud/__init__.py
++++ b/lnbits/core/crud/__init__.py
+@@ -13,6 +13,7 @@ from .extensions import (
+     get_installed_extension,
+     get_installed_extensions,
+     get_installed_extensions_count,
++    get_installed_extensions_count,
+     get_user_active_extensions_ids,
+     get_user_extension,
+     get_user_extensions,
+@@ -125,6 +126,7 @@ __all__ = [
+     "get_installed_extension",
+     "get_installed_extensions",
+     "get_installed_extensions_count",
++    "get_installed_extensions_count",
+     "get_latest_payments_by_extension",
+     "get_payment",
+     "get_payments",
+diff --git a/lnbits/core/crud/extensions.py b/lnbits/core/crud/extensions.py
+index 83ba286..7348f7f 100644
+--- a/lnbits/core/crud/extensions.py
++++ b/lnbits/core/crud/extensions.py
+@@ -132,6 +132,13 @@ async def get_installed_extensions(
+     return all_extensions
+ 
+ 
++async def get_installed_extensions_count(conn: Connection | None = None) -> int:
++    row: dict | None = await (conn or db).fetchone(
++        "SELECT COUNT(*) as count FROM installed_extensions"
++    )
++    return int(row["count"]) if row else 0
++
++
+ async def get_user_extension(
+     user_id: str, extension: str, conn: Connection | None = None
+ ) -> UserExtension | None:

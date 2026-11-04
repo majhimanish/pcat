@@ -1,0 +1,20 @@
+diff --git a/hc/front/decorators.py b/hc/front/decorators.py
+index c7f4b53..0fc1c01 100644
+--- a/hc/front/decorators.py
++++ b/hc/front/decorators.py
+@@ -10,3 +10,15 @@ from django.http import HttpRequest, HttpResponse
+ from hc.lib.typealias import ViewFunc
+ 
+ 
++# pcat: views.require_setting@v1
++def require_setting(key: str) -> Callable[[ViewFunc], ViewFunc]:
++
++    def decorator(f: ViewFunc) -> ViewFunc:
++
++        @wraps(f)
++        def wrapper(request: HttpRequest, *args: Any, **kwds: Any) -> HttpResponse:
++            if not getattr(settings, key):
++                return HttpResponse(status=404)
++            return f(request, *args, **kwds)
++        return wrapper
++    return decorator

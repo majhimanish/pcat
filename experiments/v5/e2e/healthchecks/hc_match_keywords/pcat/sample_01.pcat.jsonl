@@ -1,0 +1,1 @@
+{"arguments": {"limit": 5, "request": "check if any keyword from a comma-separated list appears in a text"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T13:59:54.881+00:00", "tool": "search_patterns"}

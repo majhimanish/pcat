@@ -1,0 +1,29 @@
+diff --git a/hc/lib/string.py b/hc/lib/string.py
+index 1d97527..58804c8 100644
+--- a/hc/lib/string.py
++++ b/hc/lib/string.py
+@@ -51,3 +51,24 @@ def is_valid_uuid_string(value: str) -> bool:
+     return bool(uuid_match_regex.match(value))
+ 
+ 
++def contains_any_keyword(text: str, keywords: str) -> bool:
++    """Return True if any keyword from a comma-separated list appears in text.
++
++    Matching is case-insensitive. Whitespace around keywords is stripped and
++    empty keywords are ignored.
++
++    >>> contains_any_keyword("Backup failed", "error, FAILED")
++    True
++    >>> contains_any_keyword("All good", "error,failed")
++    False
++    """
++
++    haystack = text.casefold()
++    for keyword in keywords.split(","):
++        keyword = keyword.strip().casefold()
++        if keyword and keyword in haystack:
++            return True
++
++    return False
++
++

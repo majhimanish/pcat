@@ -1,0 +1,243 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/teams.py",
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.ratelimit",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "per-IP rate limit decorator for POST requests"
+      },
+      "result": {
+        "ids": [
+          "decorators.ratelimit",
+          "ratelimit.token_bucket.check"
+        ],
+        "scores": [
+          15.963,
+          10.209
+        ]
+      },
+      "timestamp": "2026-11-04T02:12:38.323+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "decorators.ratelimit",
+        "names": null
+      },
+      "result": {
+        "id": "decorators.ratelimit@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:12:48.050+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1134,
+        "pattern_id": "decorators.ratelimit"
+      },
+      "result": {
+        "deviations": [
+          [
+            "ratelimit",
+            "decorators.ratelimit@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "ratelimit",
+            "covered",
+            "decorators.ratelimit"
+          ],
+          [
+            "ratelimit.<locals>.ratelimit_decorator",
+            "none",
+            null
+          ],
+          [
+            "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:13:02.635+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 1263,
+        "pattern_id": "decorators.ratelimit"
+      },
+      "result": {
+        "deviations": [
+          [
+            "ratelimit",
+            "decorators.ratelimit@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "ratelimit",
+            "covered",
+            "decorators.ratelimit"
+          ],
+          [
+            "ratelimit.<locals>.ratelimit_decorator",
+            "none",
+            null
+          ],
+          [
+            "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:13:07.471+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a rate-limit decorator for POST requests per client IP, and apply it to login, register, and team forms.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 3,
+        "medium": 10
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "ratelimit",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC110"
+          ],
+          "function": "ratelimit.<locals>.ratelimit_decorator",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function",
+          "high": [],
+          "pattern": "decorators.ratelimit@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "ratelimit",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "ratelimit",
+        "pattern": "decorators.ratelimit",
+        "similarity": 1.0
+      },
+      "marker": "decorators.ratelimit@v1",
+      "matches_pattern": "decorators.ratelimit",
+      "path": "CTFd/utils/decorators/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1704734,
+    "duration_ms": 38584,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 17,
+    "result_text": "I added the `ratelimit` decorator and applied it to login, register and both team forms. I didn't run the app or its tests.\n\n`CTFd/utils/decorators/__init__.py` imported and used `ratelimit` in several places but never defined it. I added it from the catalog pattern `decorators.ratelimit@v1`, with the `# pcat:` marker kept above it. It counts requests per client IP and endpoint in the shared cache. Once the limit is reached, it returns a JSON 429 until the interval expires. It only counts requests whose method matches, which is `POST` by default.\n\n| Form | Location | Limit |\n|---|---|---|\n| Login | `auth.py` `login()` | 10 per 5s (already decorated) |\n| Register | `auth.py` `register()` | 10 per 5s (already decorated) |\n| Join team | `teams.py` `join()` | 10 per 5s (already decorated) |\n| New team | `teams.py` `new()` | 10 per 5s (**added**) |\n\nThe team invite form (`/teams/invite`) is not rate-limited. You only named login, register and the team forms, so I left it alone. It's a one-line addition if you want it covered.\n\n`check_code` reports no deviations from the pattern. My first check flagged four high-severity deviations, but that was because I submitted the code without its import lines. Re-running with the real imports came back clean, so no `pcat-allow` approvals are needed."
+  },
+  "task": "ctfd_ratelimit",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "decorators.ratelimit"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 2,
+      "Grep": 7,
+      "Read": 2,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 40.2
+}

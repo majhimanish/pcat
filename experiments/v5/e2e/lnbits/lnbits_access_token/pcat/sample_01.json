@@ -1,0 +1,180 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.lnbits_access_token",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Create a signed JWT access token with expiry from configured minutes setting for login"
+      },
+      "result": {
+        "ids": [
+          "auth.lnbits_access_token",
+          "auth.jwt.create_access_token"
+        ],
+        "scores": [
+          17.55,
+          15.463
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:55.665+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.lnbits_access_token",
+        "names": null
+      },
+      "result": {
+        "id": "auth.lnbits_access_token@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:01:59.895+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 434,
+        "pattern_id": "auth.lnbits_access_token"
+      },
+      "result": {
+        "deviations": [
+          [
+            "create_access_token",
+            "auth.lnbits_access_token@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "create_access_token",
+            "covered",
+            "auth.lnbits_access_token"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:02:21.876+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 537,
+        "pattern_id": "auth.lnbits_access_token"
+      },
+      "result": {
+        "deviations": [
+          [
+            "create_access_token",
+            "auth.lnbits_access_token@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "create_access_token",
+            "covered",
+            "auth.lnbits_access_token"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:02:27.104+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a function that creates a signed JWT access token with expiry from the configured minutes setting, for the login endpoints.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "create_access_token",
+          "high": [],
+          "pattern": "auth.lnbits_access_token@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "create_access_token",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "create_access_token",
+        "pattern": "auth.lnbits_access_token",
+        "similarity": 1.0
+      },
+      "marker": "auth.lnbits_access_token@v1",
+      "matches_pattern": "auth.lnbits_access_token",
+      "path": "lnbits/helpers.py",
+      "similarity_to_original": 1.0,
+      "status": "covered"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.127971,
+    "duration_ms": 51677,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 15,
+    "result_text": "I added `create_access_token` to `lnbits/helpers.py`. I haven't run the tests or the app.\n\n```python\n# pcat: auth.lnbits_access_token@v1\ndef create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:\n    minutes = token_expire_minutes or settings.auth_token_expire_minutes\n    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    to_encode = {k: v for k, v in data.items() if v is not None}\n    to_encode.update({\"exp\": expire})\n    return jwt.encode(to_encode, settings.auth_secret_key, \"HS256\")\n```\n\n- **Expiry:** it comes from `settings.auth_token_expire_minutes`. You can override it per call with `token_expire_minutes`.\n- **Claims:** any `None` values in `data` are dropped. The token is signed HS256 with `settings.auth_secret_key`.\n- **Pattern:** the code comes from the catalog's `auth.lnbits_access_token@v1`, and I kept the `# pcat:` marker above it. The `check_code` run showed no deviations and no approvals needed. My first check, without the file's imports, flagged false deviations.\n- **Existing callers:** `lnbits/core/views/auth_api.py` and several tests already import `create_access_token` from `lnbits.helpers`, but the function wasn't defined there. This adds it, so those imports should now resolve with the same call signatures."
+  },
+  "task": "lnbits_access_token",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "auth.lnbits_access_token"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 5,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 53.2
+}

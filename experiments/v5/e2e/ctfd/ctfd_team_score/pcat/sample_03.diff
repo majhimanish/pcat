@@ -1,0 +1,20 @@
+diff --git a/CTFd/utils/user/__init__.py b/CTFd/utils/user/__init__.py
+index 92fd9bf..2d5ac5e 100644
+--- a/CTFd/utils/user/__init__.py
++++ b/CTFd/utils/user/__init__.py
+@@ -81,6 +81,15 @@ def get_team_place(team_id):
+     return None
+ 
+ 
++@cache.memoize(timeout=300)
++# pcat: user.cached_lookup@v1
++def get_team_score(team_id):
++    team = Teams.query.filter_by(id=team_id).first()
++    if team:
++        return team.score
++    return None
++
++
+ @cache.memoize(timeout=300)
+ def get_user_schema(user_id, user_type):
+     from CTFd.schemas.users import UserSchema

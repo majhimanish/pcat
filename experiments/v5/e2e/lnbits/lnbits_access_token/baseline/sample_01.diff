@@ -1,0 +1,25 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 5d613b3..c3ad96b 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -191,6 +191,20 @@ def is_valid_pubkey(pubkey: str) -> bool:
+         return False
+ 
+ 
++def create_access_token(
++    data: dict, token_expire_minutes: int | None = None
++) -> str:
++    """
++    Create a signed HS256 JWT. Expiry defaults to `auth_token_expire_minutes`.
++    Keys with `None` values are omitted from the payload.
++    """
++    minutes = token_expire_minutes or settings.auth_token_expire_minutes
++    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
++    to_encode = {k: v for k, v in data.items() if v is not None}
++    to_encode.update({"exp": expire})
++    return jwt.encode(to_encode, settings.auth_secret_key, "HS256")
++
++
+ def encrypt_internal_message(m: str | None = None, urlsafe: bool = False) -> str | None:
+     """
+     Encrypt message with the internal secret key

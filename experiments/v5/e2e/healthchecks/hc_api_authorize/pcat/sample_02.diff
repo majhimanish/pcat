@@ -1,0 +1,51 @@
+diff --git a/hc/api/decorators.py b/hc/api/decorators.py
+index 8206c3f..25e5398 100644
+--- a/hc/api/decorators.py
++++ b/hc/api/decorators.py
+@@ -55,6 +55,46 @@ def authorize_read(f: ViewFunc) -> ViewFunc:
+     return wrapper
+ 
+ 
++def authorize_write(f: ViewFunc) -> ViewFunc:
++    """Require the read-write project API key.
++
++    The key is read from the X-Api-Key header, or from the "api_key" field
++    of the JSON request body. The parsed body is exposed as request.json.
++    """
++
++    @wraps(f)
++    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:
++        if request.body:
++            try:
++                request.json = json.loads(request.body.decode())
++            except ValueError:
++                return error("could not parse request body")
++
++            if not isinstance(request.json, dict):
++                return error("request body must be a JSON object")
++        else:
++            request.json = {}
++
++        if "X-Api-Key" in request.headers:
++            api_key = request.headers["X-Api-Key"]
++        else:
++            api_key = str(request.json.get("api_key", ""))
++
++        if len(api_key) != 32:
++            return error("missing api key", 401)
++
++        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)
++        if project is None:
++            return error("wrong api key", 401)
++
++        request.project = project
++        request.readonly = False
++        request.v = _get_api_version(request)
++        return f(request, *args, **kwds)
++
++    return wrapper
++
++
+ def cors(*methods: str) -> Callable[[ViewFunc], ViewFunc]:
+     methods_set = set(methods)
+     methods_set.add("OPTIONS")

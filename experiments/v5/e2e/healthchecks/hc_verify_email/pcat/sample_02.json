@@ -1,0 +1,168 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/lib/emails.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "emails.templated_send",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "send a templated transactional email"
+      },
+      "result": {
+        "ids": [
+          "emails.templated_send",
+          "emails.templated_send_blocking"
+        ],
+        "scores": [
+          14.743,
+          10.245
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:33.200+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "emails.templated_send",
+        "names": {
+          "f0": "send_verify_link",
+          "v0": "to",
+          "v1": "ctx"
+        }
+      },
+      "result": {
+        "id": "emails.templated_send@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:01:37.534+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 141,
+        "pattern_id": "emails.templated_send"
+      },
+      "result": {
+        "deviations": [
+          [
+            "send_verify_link",
+            "emails.templated_send@v1",
+            [
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "send_verify_link",
+            "near",
+            "emails.templated_send"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:01:42.620+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a `send_verify_link(to, ctx)` function to the email module that sends the verify-email message using the existing template.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC105",
+            "PC108",
+            "PC110"
+          ],
+          "function": "send_verify_link",
+          "high": [],
+          "pattern": "emails.templated_send@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "send_verify_link",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "login",
+        "pattern": "emails.templated_send",
+        "similarity": 1.0
+      },
+      "marker": "emails.templated_send@v1",
+      "matches_pattern": "emails.templated_send",
+      "path": "hc/lib/emails.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09082089999999998,
+    "duration_ms": 22937,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added `send_verify_link(to, ctx)` to `hc/lib/emails.py`, just above `transfer_request`. It does `send(make_message(\"verify-email\", to, ctx))`. The `verify-email` subject, text-body and HTML-body templates all already exist in `templates/emails/`. I didn't run the tests or send a real email.\n\nIt follows the catalog's `emails.templated_send@v1` pattern, so it sends on a background thread like `login` does. The `# pcat:` marker is above it. `check_code` found no high-severity deviations. The only differences from the pattern are the template name, which the request requires, and the imports, which are already in the module."
+  },
+  "task": "hc_verify_email",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "emails.templated_send"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 24.6
+}

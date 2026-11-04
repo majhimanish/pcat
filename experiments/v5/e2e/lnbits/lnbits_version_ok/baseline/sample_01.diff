@@ -1,0 +1,27 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 33a45c6..aed640a 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -245,6 +245,22 @@ def version_parse(v: str):
+         return version.parse("0.0.0")
+ 
+ 
++def is_lnbits_version_ok(
++    min_lnbits_version: str | None, max_lnbits_version: str | None
++) -> bool:
++    """
++    Check that the running LNbits version is within the optional range:
++    min_lnbits_version <= settings.version < max_lnbits_version.
++    A missing bound is not enforced.
++    """
++    current = version_parse(settings.version)
++    if min_lnbits_version and version_parse(min_lnbits_version) > current:
++        return False
++    if max_lnbits_version and version_parse(max_lnbits_version) <= current:
++        return False
++    return True
++
++
+ def check_callback_url(url: str):
+     u = urlparse(url)
+     try:

@@ -1,0 +1,100 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "views.require_setting",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a decorator in the integrations views that returns 404 unless a given Django setting is enabled.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "require_setting",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "require_setting.<locals>.decorator.<locals>.wrapper",
+          "high": [],
+          "pattern": "views.require_setting@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "require_setting",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "require_setting",
+        "pattern": "views.require_setting",
+        "similarity": 0.9897
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/front/decorators.py",
+      "similarity_to_original": 0.9897,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0849074,
+    "duration_ms": 31256,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added `require_setting(key)` to `hc/front/decorators.py`. I haven't run the tests or the app, so it's untested.\n\nThe integrations views already import and use it, for example `@require_setting(\"APPRISE_ENABLED\")` in `hc/integrations/apprise/views.py`. That file had the imports but no function body, so those imports would have failed. The decorator now exists.\n\nIt looks up `key` on `django.conf.settings` and returns a plain 404 `HttpResponse` if the setting is missing or falsy. Otherwise it calls the view as normal.\n\nIt checks truthiness, whereas the dashboard context in `hc/front/views.py` uses `is True`. A setting that is truthy but not exactly `True` would therefore enable the views while hiding the UI entry. If you want the same strictness there, change the check to `getattr(settings, key, False) is not True`."
+  },
+  "task": "hc_require_setting",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 4,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 32.2
+}

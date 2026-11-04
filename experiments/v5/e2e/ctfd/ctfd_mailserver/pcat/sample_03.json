@@ -1,0 +1,144 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/config/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "config.mail_provider_configured",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Is a mail provider configured (app config or admin settings)"
+      },
+      "result": {
+        "ids": [
+          "config.mail_provider_configured"
+        ],
+        "scores": [
+          25.2
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:39.025+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "config.mail_provider_configured",
+        "names": null
+      },
+      "result": {
+        "id": "config.mail_provider_configured@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:11:40.923+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 322,
+        "pattern_id": "config.mail_provider_configured"
+      },
+      "result": {
+        "deviations": [
+          [
+            "mailserver",
+            "config.mail_provider_configured@v1",
+            [
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "mailserver",
+            "near",
+            "config.mail_provider_configured"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:11:44.871+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a `mailserver()` helper to CTFd/utils/config/__init__.py that returns True if SMTP is configured in app config or admin settings.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "mailserver",
+          "high": [],
+          "pattern": "config.mail_provider_configured@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "mailserver",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "mailgun",
+        "pattern": "config.mail_provider_configured",
+        "similarity": 1.0
+      },
+      "marker": "config.mail_provider_configured@v1",
+      "matches_pattern": "config.mail_provider_configured",
+      "path": "CTFd/utils/config/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.05909590000000001,
+    "duration_ms": 15006,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added `mailserver()` to `CTFd/utils/config/__init__.py`. I didn't run the CTFd tests or any code that calls it.\n\nIt returns `True` when `MAIL_SERVER` and `MAIL_PORT` are both set in the Flask app config. It also returns `True` when the admin settings `mail_server` and `mail_port` are both set. Otherwise it returns `False`.\n\nThe catalog pattern covers `mailgun()` rather than SMTP. I copied its structure for `mailserver()`, with the SMTP keys swapped in for the Mailgun ones, and kept the `# pcat: config.mail_provider_configured@v1` marker above it. `check_code` reported only low-severity \"literal changed\" deviations, which are the key names I swapped. Nothing needs approval.\n\n`can_send_mail()` in that file already called `mailserver()`, which didn't exist before, so it would have raised a `NameError`. It should work now."
+  },
+  "task": "ctfd_mailserver",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "config.mail_provider_configured"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 16.5
+}

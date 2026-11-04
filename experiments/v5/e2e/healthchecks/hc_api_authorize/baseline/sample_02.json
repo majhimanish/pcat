@@ -1,0 +1,112 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/api/decorators.py",
+    "hc/api/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [],
+          "function": "authorize_read",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_read.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "authorize_write",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "authorize_read",
+        "pattern": "api.authorize_read",
+        "similarity": 0.7898
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/api/decorators.py",
+      "similarity_to_original": 0.8985,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1281693,
+    "duration_ms": 40124,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 13,
+    "result_text": "I added `authorize_write` to `hc/api/decorators.py`, but I haven't run the tests. The sandbox asked for approval on the `pytest` command, so nothing has been exercised yet. The repo has no top-level `api/` directory; the module is `hc/api/decorators.py`.\n\nThe decorator behaves like this:\n- **Request body:** it parses the JSON body into `request.json`. An empty body becomes `{}`. A body that isn't valid JSON, or whose root isn't an object, returns a 400.\n- **Key source:** it uses the `X-Api-Key` header if present, otherwise the `api_key` field in the body.\n- **Key check:** the key must be 32 characters, otherwise it returns 401 \"missing api key\". It then looks the key up with `Project.objects.for_api_key(..., accept_rw=True, accept_ro=False)`, so read-only keys are rejected with 401 \"wrong api key\".\n- **On success:** it sets `request.project`, `request.readonly = False` and `request.v`, then calls the view.\n\n`hc/api/views.py` already imported a function called `authorize` that no longer existed in the decorators module, so the import was broken. I changed that import to `authorize_write` and replaced every `@authorize` with `@authorize_write`.\n\nRun `python -m pytest hc/api/tests` to confirm nothing broke."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 7,
+      "Edit": 3,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 40.9
+}

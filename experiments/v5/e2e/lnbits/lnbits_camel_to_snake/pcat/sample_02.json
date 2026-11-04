@@ -1,0 +1,82 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "tools/codegen/extension_sdk_typescript.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [],
+  "relation": null,
+  "request": "Add a camel_to_snake helper to the code generator and use it wherever names are converted.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 1,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC108"
+          ],
+          "function": "camel_to_snake",
+          "high": [
+            "PC100"
+          ],
+          "pattern": "validators.regex_match@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "camel_to_snake",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "is_valid_username",
+        "pattern": "validators.regex_match",
+        "similarity": 0.655
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "tools/codegen/extension_sdk_typescript.py",
+      "similarity_to_original": 0.875,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09562290000000001,
+    "duration_ms": 21604,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `camel_to_snake` to `tools/codegen/extension_sdk_typescript.py`, next to `_camel`. It isn't called anywhere, and I couldn't run it.\n\n- **Not tested:** the sandbox denied both of my attempts to run it, so I don't know how it handles inputs like `hostJsName` or `HTTPServer`.\n- **No call sites:** every name conversion in that file goes snake→camel (`_camel`, at lines 108, 191, 211, 215 and 270). Nothing there converts camel→snake, so there was nothing to swap the new helper in for. I didn't rewrite `_camel` or change the generated output.\n- **Missing import:** `tests/unit/test_helpers.py` imports `camel_to_snake` (and `camel_to_words`) from `lnbits.helpers`, but `lnbits/helpers.py` doesn't define them. That test file will fail on import. If you meant the helper to live there, I can move it and have the codegen import it. Do you want that?\n\nThe pattern catalog has nothing for case conversion, so I wrote the helper directly instead of using a catalog pattern."
+  },
+  "task": "lnbits_camel_to_snake",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 2
+    }
+  },
+  "wall_seconds": 23.3
+}

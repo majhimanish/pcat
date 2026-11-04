@@ -1,0 +1,70 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/lib/string.py",
+    "hc/lib/tests/test_string.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [],
+  "relation": null,
+  "request": "Add a helper to the string utils that returns True if any keyword from a comma-separated list appears in a text.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": {
+      "function": "contains_any_keyword",
+      "how": "most similar",
+      "inferred": {
+        "derived": false,
+        "function": "parse_bool",
+        "pattern": "config.env.load_settings",
+        "similarity": 0.5553
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/lib/string.py",
+      "similarity_to_original": 0.9172,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09138520000000001,
+    "duration_ms": 58246,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `contains_any_keyword(text, keywords)` to `hc/lib/string.py`, but I couldn't run the tests. The command to run them (`python -m unittest hc.lib.tests.test_string`) needs approval, and I didn't get it.\n\nThe helper behaves like this:\n- **Matching:** it is a case-insensitive substring check, so `\"Backup failed\"` matches the list `\"error, failed\"`.\n- **Whitespace:** spaces around each keyword are stripped.\n- **Empty keywords:** these are ignored. Without that, a stray comma or an empty list would match every text.\n\nI also added four tests to `hc/lib/tests/test_string.py`. They cover a match, case-insensitivity, no match, and empty keywords.\n\nI chose case-insensitive matching because you didn't say either way. If you want case-sensitive matching, it's a small change."
+  },
+  "task": "hc_match_keywords",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 3,
+      "Glob": 1,
+      "Grep": 1
+    }
+  },
+  "wall_seconds": 59.0
+}

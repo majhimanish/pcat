@@ -1,0 +1,23 @@
+diff --git a/CTFd/plugins/challenges/decay.py b/CTFd/plugins/challenges/decay.py
+index f0323b8..c7c9697 100644
+--- a/CTFd/plugins/challenges/decay.py
++++ b/CTFd/plugins/challenges/decay.py
+@@ -21,6 +21,18 @@ def get_solve_count(challenge):
+     return solve_count
+ 
+ 
++# pcat: challenges.decay_linear@v1
++def linear(challenge):
++    solve_count = get_solve_count(challenge)
++    if solve_count != 0:
++        solve_count -= 1
++    value = challenge.initial - challenge.decay * solve_count
++    value = math.ceil(value)
++    if value < challenge.minimum:
++        value = challenge.minimum
++    return value
++
++
+ def logarithmic(challenge):
+     solve_count = get_solve_count(challenge)
+ 

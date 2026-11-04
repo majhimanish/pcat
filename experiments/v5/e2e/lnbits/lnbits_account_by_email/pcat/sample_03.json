@@ -1,0 +1,145 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/core/crud/users.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.get_account_by_field",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "fetch account by case-insensitive email"
+      },
+      "result": {
+        "ids": [
+          "crud.get_account_by_field"
+        ],
+        "scores": [
+          15.782
+        ]
+      },
+      "timestamp": "2026-11-04T14:02:46.706+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "crud.get_account_by_field",
+        "names": null
+      },
+      "result": {
+        "id": "crud.get_account_by_field@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:02:51.908+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 515,
+        "pattern_id": "crud.get_account_by_field"
+      },
+      "result": {
+        "deviations": [
+          [
+            "get_account_by_email_ci",
+            "crud.get_account_by_field@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "get_account_by_email_ci",
+            "near",
+            "crud.get_account_by_field"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:03:01.581+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an async `get_account_by_email_ci` to the users CRUD that looks up an account by email, case-insensitive.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "get_account_by_email_ci",
+          "high": [],
+          "pattern": "crud.get_account_by_field@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_account_by_email_ci",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "get_account_by_username",
+        "pattern": "crud.get_account_by_field",
+        "similarity": 1.0
+      },
+      "marker": "crud.get_account_by_field@v1",
+      "matches_pattern": "crud.get_account_by_field",
+      "path": "lnbits/core/crud/users.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0685533,
+    "duration_ms": 26492,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added `get_account_by_email_ci` to `lnbits/core/crud/users.py`, just above `get_account_by_pubkey`. I haven't run the function or any tests.\n\nIt's based on the catalog pattern `crud.get_account_by_field@v1`, with the `# pcat:` marker kept above it. The pattern looks accounts up by username, so I changed it to match on `LOWER(email)` and renamed the parameter to `email`. Like the sibling lookups, it:\n- returns `None` for an empty email;\n- lowercases the input before comparing;\n- only returns activated accounts unless you pass `active_only=False`;\n- takes an optional `conn`.\n\n`check_code` found no high-severity deviations and nothing needing human approval. It flagged two low-severity differences, which come from the username-to-email change.\n\nThe lookup compares `LOWER(email)` in the query, so it won't use a plain index on `email`. The existing `get_account_by_username_or_email` already queries that way."
+  },
+  "task": "lnbits_account_by_email",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "crud.get_account_by_field"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 28.1
+}

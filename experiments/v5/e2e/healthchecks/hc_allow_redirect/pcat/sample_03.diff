@@ -1,0 +1,25 @@
+diff --git a/hc/accounts/views.py b/hc/accounts/views.py
+index 9419fc7..c59d8c3 100644
+--- a/hc/accounts/views.py
++++ b/hc/accounts/views.py
+@@ -56,6 +56,20 @@ POST_LOGIN_ROUTES = (
+ )
+ 
+ 
++# pcat: accounts.allow_redirect@v1
++def _allow_redirect(redirect_url: str | None) -> bool:
++    if not redirect_url:
++        return False
++    parsed = urlparse(redirect_url)
++    if parsed.netloc:
++        return False
++    try:
++        match = resolve(parsed.path)
++    except Resolver404:
++        return False
++    return match.url_name in POST_LOGIN_ROUTES
++
++
+ def _make_user(email: str, tz: str | None = None, with_project: bool = True) -> User:
+     username = str(uuid4())[:30]
+     user = User(username=username, email=email)

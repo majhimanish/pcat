@@ -1,0 +1,82 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/lib/emails.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "emails.templated_send",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a `send_verify_link(to, ctx)` function to the email module that sends the verify-email message using the existing template.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC105",
+            "PC108",
+            "PC110"
+          ],
+          "function": "send_verify_link",
+          "high": [],
+          "pattern": "emails.templated_send@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "send_verify_link",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "login",
+        "pattern": "emails.templated_send",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "emails.templated_send",
+      "path": "hc/lib/emails.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0615645,
+    "duration_ms": 24226,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added `send_verify_link(to, ctx)` to `hc/lib/emails.py`, next to `login` and `transfer_request`. It renders the existing `verify-email` template (subject, text and HTML parts) and sends it the same way `login` does. I haven't run it or any tests.\n\n`hc/api/models.py:1080` already calls `emails.verify_email(...)`, and no function with that name exists in the email module. I left that call alone since you didn't ask me to change it. You'll probably want to point it at `send_verify_link`, or I can do that."
+  },
+  "task": "hc_verify_email",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 25.2
+}

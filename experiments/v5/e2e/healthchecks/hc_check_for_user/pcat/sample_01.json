@@ -1,0 +1,270 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Look up an object the current user may access, with read-write variant"
+      },
+      "result": {
+        "ids": [
+          "access.channel_for_user"
+        ],
+        "scores": [
+          22.532
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:54.282+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "access.channel_for_user",
+        "names": null
+      },
+      "result": {
+        "id": "access.channel_for_user@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:58:56.624+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 957,
+        "pattern_id": "access.channel_for_user"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_get_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ],
+          [
+            "_get_rw_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC102",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_get_check_for_user",
+            "none",
+            null
+          ],
+          [
+            "_get_rw_check_for_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:59:07.937+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 1185,
+        "pattern_id": "access.channel_for_user"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_get_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ],
+          [
+            "_get_rw_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_get_check_for_user",
+            "none",
+            null
+          ],
+          [
+            "_get_rw_check_for_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:59:14.333+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add `_get_check_for_user` and `_get_rw_check_for_user` helpers to hc/front/views.py that load a check by code and reject read-only members.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC107",
+            "PC110"
+          ],
+          "function": "_get_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "_get_rw_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_get_rw_check_for_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_get_rw_channel_for_user",
+        "pattern": "access.channel_for_user",
+        "similarity": 0.9592
+      },
+      "marker": "access.channel_for_user@v1",
+      "matches_pattern": null,
+      "path": "hc/front/views.py",
+      "similarity_to_original": 1.0,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11308739999999999,
+    "duration_ms": 50481,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I've added both helpers to `hc/front/views.py`, and I'm wrapping up the pattern check. I haven't run the Django tests or the existing call sites.\n\n- **`_get_check_for_user(request, code, preload_owner_profile=False)`** returns `(check, rw)`. Superusers and the project owner get `rw=True`. Anyone else must be a project member, otherwise it returns a 404. A member gets `rw` from their membership.\n- **`_get_rw_check_for_user(request, code)`** returns the check, or raises `PermissionDenied` for read-only members.\n\nThe existing call sites already use `preload_owner_profile=True`, so I added that parameter. When it's set, the query pulls in `project__owner__profile`, which the pattern doesn't have. Otherwise the code follows the `access.channel_for_user@v1` pattern, with the `# pcat:` marker above each function.\n\nMy first `check_code` run reported 5 high-severity deviations. That run had no imports, so it couldn't see `get_object_or_404` or `PermissionDenied`. I re-ran it with the imports and got no high-severity deviations. The two that remain are the extra parameter (medium) and the extra `if` branch (low), and both come from the request, so no `pcat-allow` line is needed."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 2,
+    "fetched": [
+      "access.channel_for_user"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 2,
+      "mcp__pcat__check_code": 2,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 51.9
+}

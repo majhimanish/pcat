@@ -1,0 +1,83 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/lib/string.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "check if any keyword from a comma-separated list appears in a text"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T13:59:54.881+00:00",
+      "tool": "search_patterns"
+    }
+  ],
+  "relation": null,
+  "request": "Add a helper to the string utils that returns True if any keyword from a comma-separated list appears in a text.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": {
+      "function": "contains_any_keyword",
+      "how": "most similar",
+      "inferred": {
+        "derived": false,
+        "function": "parse_bool",
+        "pattern": "config.env.load_settings",
+        "similarity": 0.5553
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/lib/string.py",
+      "similarity_to_original": 0.8817,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.045126,
+    "duration_ms": 21881,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 6,
+    "result_text": "I added `contains_any_keyword(text, keywords)` to `hc/lib/string.py`. I haven't run it or written tests for it.\n\n- **Matching:** it returns `True` if any keyword from the comma-separated list appears in the text. The match is a case-insensitive substring match.\n- **Keyword cleanup:** it strips whitespace around each keyword and ignores empty ones. An empty keyword list therefore returns `False`.\n- **Catalog:** the pattern catalog had nothing matching this request, so I wrote it from scratch."
+  },
+  "task": "hc_match_keywords",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 23.4
+}

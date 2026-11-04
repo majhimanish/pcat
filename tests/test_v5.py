@@ -202,5 +202,5 @@ def test_summarize_runs():
     assert (s["runs"], s["ok"], s["timeouts"], s["pattern_runs"]) == (4, 3, 1, 2)
     assert (s["fetched_right_rate"], s["matches_rate"], s["derives_rate"]) == (0.5, 0.5, 0.5)
     assert s["median_similarity_pattern_tasks"] == 0.7 and s["lint_fail_rate"] == 0.333
-    assert (s["negatives_fetched_a_pattern"], s["negatives_used_a_pattern"]) == (1, 1)
+    assert (s["negatives_fetched_a_pattern"], s["negatives_used_a_pattern"], s["negatives_forced_a_pattern"]) == (1, 1, 1)
     assert s["deviations"]["high"] == 1 and s["total_cost_usd"] == 0.3

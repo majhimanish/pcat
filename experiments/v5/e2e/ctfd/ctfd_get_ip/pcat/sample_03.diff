@@ -1,0 +1,62 @@
+diff --git a/CTFd/utils/__init__.py b/CTFd/utils/__init__.py
+index a07adfb..010b9de 100644
+--- a/CTFd/utils/__init__.py
++++ b/CTFd/utils/__init__.py
+@@ -1,9 +1,12 @@
++import ipaddress
+ import json
++import re
+ from enum import Enum
+ 
+ import cmarkgfm
+ from cmarkgfm.cmark import Options
+ from flask import current_app as app
++from flask import request
+ 
+ # isort:imports-firstparty
+ from CTFd.cache import cache
+@@ -99,6 +102,44 @@ def set_config(key, value):
+     return config
+ 
+ 
++def _is_trusted_proxy(addr):
++    patterns = app.config.get("TRUSTED_PROXIES") or []
++    return any(re.match(pattern, addr) for pattern in patterns)
++
++
++def _valid_ip(value):
++    try:
++        ipaddress.ip_address(value)
++        return True
++    except ValueError:
++        return False
++
++
++def get_ip(req=None):
++    """
++    Return the real client IP address.
++
++    X-Forwarded-For is only honored when the direct peer is a configured
++    trusted proxy (TRUSTED_PROXIES). The header is walked right to left,
++    skipping trusted proxies; the first untrusted address is the client.
++    An invalid entry stops the walk and falls back to the direct peer.
++    """
++    req = req or request
++    peer = req.remote_addr or ""
++    if not peer or not _is_trusted_proxy(peer):
++        return peer
++
++    forwarded = req.headers.get("X-Forwarded-For", "")
++    hops = [h.strip() for h in forwarded.split(",") if h.strip()]
++    for hop in reversed(hops):
++        if not _valid_ip(hop):
++            return peer
++        if not _is_trusted_proxy(hop):
++            return hop
++    # Every hop was a trusted proxy: use the leftmost one
++    return hops[0] if hops else peer
++
++
+ def import_in_progress():
+     import_status = cache.get(key="import_status")
+     import_error = cache.get(key="import_error")

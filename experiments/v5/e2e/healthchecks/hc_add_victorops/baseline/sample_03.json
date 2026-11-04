@@ -1,0 +1,78 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/integrations/victorops/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "integrations.add_url_channel",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add the add_victorops view in hc/front/views.py so logged-in users can save a VictorOps webhook URL to their project.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "add",
+          "high": [],
+          "pattern": "integrations.add_url_channel@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "add",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "add_msteams",
+        "pattern": "integrations.add_url_channel",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "integrations.add_url_channel",
+      "path": "hc/integrations/victorops/views.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0891407,
+    "duration_ms": 30753,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added the `add` view, but in `hc/integrations/victorops/views.py` rather than `hc/front/views.py`. I haven't run the tests: the test command was blocked pending approval.\n\n`hc/integrations/victorops/urls.py` already routes `add_victorops/` to `views.add` in that file, and the file had only imports and no function. Putting it in `hc/front/views.py` would have left the URL conf unchanged and pointing at nothing.\n\nThe view follows the same pattern as the Opsgenie one:\n- It requires `VICTOROPS_ENABLED`, so it returns 404 when the integration is disabled.\n- It requires login and read-write access to the project, so read-only members get 403.\n- It validates the submitted URL with `forms.AddUrlForm`, so a bad URL re-renders the form with an error.\n- On a valid POST it saves a `victorops` channel with the URL as its value, assigns all the project's checks to it, and redirects to the channels page.\n- It renders the existing `add_victorops.html` template.\n\nTo check it, run `python manage.py test hc.integrations.victorops`. That runs the existing `test_add.py` and `test_notify.py` for this integration."
+  },
+  "task": "hc_add_victorops",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1,
+      "Grep": 2
+    }
+  },
+  "wall_seconds": 31.7
+}

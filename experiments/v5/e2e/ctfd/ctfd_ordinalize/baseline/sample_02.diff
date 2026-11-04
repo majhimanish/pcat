@@ -1,0 +1,59 @@
+diff --git a/CTFd/utils/humanize/numbers.py b/CTFd/utils/humanize/numbers.py
+index 8b13789..1b6231a 100644
+--- a/CTFd/utils/humanize/numbers.py
++++ b/CTFd/utils/humanize/numbers.py
+@@ -1 +1,12 @@
++def ordinalize(n):
++    """
++    Return an integer as an ordinal string: 1 -> "1st", 22 -> "22nd", 11 -> "11th".
+ 
++    Numbers ending in 11, 12, or 13 always take "th" (including 111, 112, 113).
++    """
++    n = int(n)
++    if 10 <= abs(n) % 100 <= 20:
++        suffix = "th"
++    else:
++        suffix = {1: "st", 2: "nd", 3: "rd"}.get(abs(n) % 10, "th")
++    return f"{n}{suffix}"
+diff --git a/tests/utils/test_humanize.py b/tests/utils/test_humanize.py
+index 2119488..5283cac 100644
+--- a/tests/utils/test_humanize.py
++++ b/tests/utils/test_humanize.py
+@@ -3,17 +3,37 @@ from CTFd.utils.humanize.numbers import ordinalize
+ 
+ def test_ordinalize():
+     tests = {
++        0: "0th",
+         1: "1st",
+         2: "2nd",
+         3: "3rd",
+         4: "4th",
++        10: "10th",
+         11: "11th",
+         12: "12th",
+         13: "13th",
++        14: "14th",
++        20: "20th",
++        21: "21st",
++        22: "22nd",
++        23: "23rd",
++        100: "100th",
+         101: "101st",
+         102: "102nd",
+         103: "103rd",
+         111: "111th",
++        112: "112th",
++        113: "113th",
++        211: "211th",
++        1011: "1011th",
++        1012: "1012th",
++        1013: "1013th",
++        1021: "1021st",
+     }
+     for t, v in tests.items():
+         assert ordinalize(t) == v
++
++
++def test_ordinalize_accepts_numeric_strings():
++    assert ordinalize("2") == "2nd"
++    assert ordinalize("12") == "12th"

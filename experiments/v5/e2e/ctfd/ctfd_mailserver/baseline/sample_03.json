@@ -1,0 +1,78 @@
+{
+  "app": "ctfd",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/config/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "config.mail_provider_configured",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a `mailserver()` helper to CTFd/utils/config/__init__.py that returns True if SMTP is configured in app config or admin settings.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "mailserver",
+          "high": [],
+          "pattern": "config.mail_provider_configured@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "mailserver",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "mailgun",
+        "pattern": "config.mail_provider_configured",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "config.mail_provider_configured",
+      "path": "CTFd/utils/config/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0337254,
+    "duration_ms": 11685,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I added `mailserver()` to `CTFd/utils/config/__init__.py`, just above `mailgun()`. I haven't run it or any tests.\n\nIt returns `True` if `MAIL_SERVER` and `MAIL_PORT` are both set in the app config. It also returns `True` if `mail_server` and `mail_port` are both set in the admin settings. Otherwise it returns `False`. It follows the same pattern as `mailgun()`.\n\n`can_send_mail()` in the same file already called `mailserver()`, which didn't exist, so it would have raised a `NameError` until now."
+  },
+  "task": "ctfd_mailserver",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 12.5
+}

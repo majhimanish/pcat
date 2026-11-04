@@ -1,0 +1,44 @@
+diff --git a/lnbits/core/wasm_ext/api/runtime.py b/lnbits/core/wasm_ext/api/runtime.py
+index e4a62a6..f9bac7f 100644
+--- a/lnbits/core/wasm_ext/api/runtime.py
++++ b/lnbits/core/wasm_ext/api/runtime.py
+@@ -1,12 +1,13 @@
+ from __future__ import annotations
+ 
+ import inspect
+-import re
+ from collections.abc import Awaitable, Callable, Mapping
+ from typing import Any
+ 
+ from pydantic import BaseModel
+ 
++from lnbits.helpers import camel_to_snake
++
+ from .host import ExtensionHostAPI
+ from .models import ExtensionAPIMethod
+ from .registry import list_extension_api_methods
+@@ -131,8 +132,7 @@ def _snake_to_camel(value: str) -> str:
+ 
+ 
+ def _to_snake(value: str) -> str:
+-    value = value.replace("-", "_")
+-    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", value).lower()
++    return camel_to_snake(value.replace("-", "_"))
+ 
+ 
+ def _resolve_attr_path(value: Any, path: str) -> Any:
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index fae13ac..35bd41a 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -359,6 +359,10 @@ def camel_to_words(name: str) -> str:
+     return words.strip()
+ 
+ 
++def camel_to_snake(name: str) -> str:
++    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", name).lower()
++
++
+ def snake_to_camel(name: str, capitalize_first: bool | None = False) -> str:
+     components = name.split("_")
+     camel = components[0] + "".join(x.capitalize() for x in components[1:])

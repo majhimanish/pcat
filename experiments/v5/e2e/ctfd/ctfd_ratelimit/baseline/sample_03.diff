@@ -1,0 +1,61 @@
+diff --git a/CTFd/teams.py b/CTFd/teams.py
+index 192d576..99445c4 100644
+--- a/CTFd/teams.py
++++ b/CTFd/teams.py
+@@ -188,6 +188,7 @@ def join():
+ @teams.route("/teams/new", methods=["GET", "POST"])
+ @authed_only
+ @require_team_mode
++@ratelimit(method="POST", limit=10, interval=5)
+ def new():
+     infos = get_infos()
+     errors = get_errors()
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 3f83d74..d4a0f58 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -11,6 +11,44 @@ from CTFd.utils.dates import ctf_ended, ctf_started, ctftime, view_after_ctf
+ from CTFd.utils.user import authed, get_current_team, get_current_user, is_admin
+ 
+ 
++def ratelimit(method="POST", limit=50, interval=300, key_prefix="rl"):
++    """
++    Limit requests of the given HTTP method to `limit` per `interval` seconds, per client IP and endpoint.
++    Requests over the limit receive a 429 response. Other HTTP methods are not counted.
++    """
++
++    def ratelimit_decorator(f):
++        @functools.wraps(f)
++        def decorated_function(*args, **kwargs):
++            if request.method == method:
++                key = "{}:{}:{}".format(
++                    key_prefix, current_user.get_ip(), request.endpoint
++                )
++                current = cache.get(key)
++
++                if current and int(current) >= limit:
++                    return (
++                        jsonify(
++                            {
++                                "code": 429,
++                                "message": "Too many requests. Limit is %s requests in %s seconds"
++                                % (limit, interval),
++                            }
++                        ),
++                        429,
++                    )
++                # Fixed window: the timer starts on the first counted request
++                if current is None:
++                    cache.set(key, 1, timeout=interval)
++                else:
++                    cache.set(key, int(current) + 1, timeout=interval)
++            return f(*args, **kwargs)
++
++        return decorated_function
++
++    return ratelimit_decorator
++
++
+ def during_ctf_time_only(f):
+     """
+     Decorator to restrict an endpoint to only be seen during a CTF

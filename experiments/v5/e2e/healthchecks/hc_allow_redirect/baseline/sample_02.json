@@ -1,0 +1,81 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a helper in accounts/views.py that checks if the post-login `next` URL is safe, and use it in the login view.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC108",
+            "PC110"
+          ],
+          "function": "_allow_redirect",
+          "high": [],
+          "pattern": "accounts.allow_redirect@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_allow_redirect",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_allow_redirect",
+        "pattern": "accounts.allow_redirect",
+        "similarity": 0.8277
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/accounts/views.py",
+      "similarity_to_original": 0.8277,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1013091,
+    "duration_ms": 44906,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `_allow_redirect(redirect_url)` to `hc/accounts/views.py`, just above `_make_user`. I haven't run any tests: the test command needed approval and wasn't run.\n\n`login` already called `_allow_redirect`, and so do `_redirect_after_login`, `_check_2fa` and `login_webauthn`. The function itself was missing from the file and git history, so those calls would have raised `NameError`. I didn't need to change `login`. Its magic-link branch already passes `?next=` through the check, and the password path reaches it through `_check_2fa` and `_redirect_after_login`.\n\nThe helper returns `True` only when all of these hold:\n- **Not empty:** the value is non-empty and has no backslashes.\n- **Relative:** it has no scheme or host, and its path starts with a single `/`, so `https://evil.com` and `//evil.com` are rejected.\n- **Allowed route:** the path resolves to a URL whose name is in the existing `POST_LOGIN_ROUTES` (checks, details, log, channels, project settings and so on). Anything else, including unknown paths, is rejected.\n\nI limited it to `POST_LOGIN_ROUTES` because that tuple and the unused `resolve`/`Resolver404`/`urlparse` imports were already in the file. If you'd rather allow any same-host path, drop the route check, or use Django's `url_has_allowed_host_and_scheme`.\n\nTo check it, run `python manage.py test hc.accounts.tests.test_login`."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 3,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 46.9
+}

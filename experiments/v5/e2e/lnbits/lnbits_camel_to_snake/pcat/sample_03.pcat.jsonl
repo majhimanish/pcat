@@ -1,0 +1,1 @@
+{"arguments": {"limit": 5, "request": "convert camelCase name to snake_case"}, "result": {"ids": [], "scores": []}, "timestamp": "2026-11-04T14:03:36.973+00:00", "tool": "search_patterns"}

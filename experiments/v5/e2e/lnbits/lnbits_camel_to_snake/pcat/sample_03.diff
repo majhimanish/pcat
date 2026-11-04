@@ -1,0 +1,17 @@
+diff --git a/tools/codegen/extension_sdk_typescript.py b/tools/codegen/extension_sdk_typescript.py
+index b1dfac0..ada5c47 100644
+--- a/tools/codegen/extension_sdk_typescript.py
++++ b/tools/codegen/extension_sdk_typescript.py
+@@ -324,6 +324,12 @@ def _camel(value: str) -> str:
+     return head + "".join(part.capitalize() for part in tail)
+ 
+ 
++def camel_to_snake(value: str) -> str:
++    """Convert camelCase/PascalCase to snake_case (e.g. "hostJsName" -> "host_js_name")."""
++    value = re.sub(r"(.)([A-Z][a-z]+)", r"\1_\2", value)
++    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", value).lower()
++
++
+ def _ts_property(value: str) -> str:
+     if re.match(r"^[A-Za-z_$][A-Za-z0-9_$]*$", value):
+         return value

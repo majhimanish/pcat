@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "safe post-login redirect check"}, "result": {"ids": ["accounts.allow_redirect"], "scores": [15.309]}, "timestamp": "2026-11-04T13:57:48.095+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "accounts.allow_redirect", "names": null}, "result": {"id": "accounts.allow_redirect@v1", "status": "active"}, "timestamp": "2026-11-04T13:57:50.095+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 620, "pattern_id": "accounts.allow_redirect"}, "result": {"deviations": [["_allow_redirect", "accounts.allow_redirect@v1", []]], "statuses": [["_allow_redirect", "covered", "accounts.allow_redirect"]]}, "timestamp": "2026-11-04T13:58:09.418+00:00", "tool": "check_code"}

@@ -1,0 +1,100 @@
+{
+  "app": "ctfd",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/security/email.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.email_confirm_token",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add password reset helpers: generate a token for an email, resolve email from token, and invalidate it.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "generate_password_reset_token",
+          "high": [],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC100",
+            "PC102",
+            "PC110"
+          ],
+          "function": "verify_reset_password_token",
+          "high": [
+            "PC100",
+            "PC102"
+          ],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "remove_reset_password_token",
+          "high": [],
+          "pattern": "security.email_confirm_token@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "remove_reset_password_token",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "remove_email_confirm_token",
+        "pattern": "security.email_confirm_token",
+        "similarity": 1.0
+      },
+      "marker": null,
+      "matches_pattern": "security.email_confirm_token",
+      "path": "CTFd/utils/security/email.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.087114,
+    "duration_ms": 23879,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added the three reset helpers to `CTFd/utils/security/email.py`. I haven't run them: the import check I tried needed approval and wasn't run, so the code is untested.\n\n`CTFd/auth.py`, `CTFd/utils/email/__init__.py` and `CTFd/utils/initialization/__init__.py` already imported these names, and they didn't exist in the module.\n\n- **`generate_password_reset_token(addr, timeout=1800)`** makes a random 256-bit hex token. It stores the email in the cache under `reset_password_<token>` for 30 minutes and returns the token.\n- **`verify_reset_password_token(nonce)`** returns the email for a token. It raises `UserResetPasswordTokenInvalidException` if the token is unknown or expired, which is what `auth.py` catches.\n- **`remove_reset_password_token(nonce)`** deletes the token so it can't be used again. `auth.py` calls it after a successful reset.\n\nThey follow the same pattern as the existing email-confirm token helpers in that file."
+  },
+  "task": "ctfd_reset_token",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1
+    }
+  },
+  "wall_seconds": 25.0
+}

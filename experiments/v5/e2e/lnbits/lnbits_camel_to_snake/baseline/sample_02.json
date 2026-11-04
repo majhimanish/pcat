@@ -1,0 +1,82 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/wasm_ext/api/runtime.py",
+    "lnbits/helpers.py"
+  ],
+  "kind": "negative",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": null,
+  "pcat_calls": [],
+  "relation": null,
+  "request": "Add a camel_to_snake helper to the code generator and use it wherever names are converted.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 1,
+        "low": 2,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC100",
+            "PC108"
+          ],
+          "function": "camel_to_snake",
+          "high": [
+            "PC100"
+          ],
+          "pattern": "validators.regex_match@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "camel_to_snake",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "is_valid_username",
+        "pattern": "validators.regex_match",
+        "similarity": 0.6294
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/helpers.py",
+      "similarity_to_original": 0.6829,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.14012940000000002,
+    "duration_ms": 55340,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 15,
+    "result_text": "I added `camel_to_snake` to `lnbits/helpers.py` and pointed the other camel-to-snake converter at it. I haven't run any tests: the pytest command (`test_helpers.py`, the Makefile `test-unit` env vars) needed an approval I didn't get, so none of this is verified.\n\n- **Missing helper:** `camel_to_snake` was imported in `lnbits/core/models/extensions_builder.py`, `lnbits/core/services/extensions_builder.py` and `tests/unit/test_helpers.py`, but never defined. It now is: `re.sub(r\"([a-z0-9])([A-Z])\", r\"\\1_\\2\", name).lower()`. That should turn `CamelCaseName` into `camel_case_name`, as the existing test expects.\n- **Duplicate converter:** `_to_snake` in `lnbits/core/wasm_ext/api/runtime.py` now calls `camel_to_snake(value.replace(\"-\", \"_\"))`. It does the same conversion as before. I also added the `lnbits.helpers` import and dropped the `re` import, which that file no longer uses.\n- **Not changed:** `tools/codegen/extension_sdk_typescript.py` only converts snake to camel (`_camel`), so there was nothing to swap there. I also left `_camel_to_kebab` in `lnbits/core/wasm_ext/wasm/host.py` alone because it produces kebab-case, not snake_case.\n\nFiles touched: `lnbits/helpers.py` and `lnbits/core/wasm_ext/api/runtime.py`.\n\nTo check it, run the `make test-unit` target. I haven't looked at what it runs, so you may want to run `tests/unit/test_helpers.py` directly."
+  },
+  "task": "lnbits_camel_to_snake",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 4,
+      "Grep": 4
+    }
+  },
+  "wall_seconds": 56.1
+}

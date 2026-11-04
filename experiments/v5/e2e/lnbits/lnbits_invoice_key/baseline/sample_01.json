@@ -1,0 +1,51 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency requiring a wallet's invoice key from header or query param, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": []
+    },
+    "new_function": null
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0574789,
+    "duration_ms": 12652,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I didn't change anything, because this dependency already exists. `require_base_invoice_key` in `lnbits/decorators.py:204` does what you asked:\n\n- **Key source:** it reads the key from the `X-API-KEY` header or the `api-key` query param. It prefers the header when both are sent.\n- **Authentication:** it looks up the wallet from the key, returns 404 if no wallet matches, and runs the user access check. It returns a `BaseWalletTypeInfo`, which holds the key type and the wallet. It reuses the cached auth lookup (`LightKeyChecker`).\n- **Missing key:** it returns 401 \"No Api Key provided.\"\n- **Current use:** it's already used in `payment_api.py`, `lnurl_api.py` and `tinyurl_api.py`.\n\nAn admin key also passes this check. Only `KeyType.admin` is enforced strictly (`_extract_key_type`, line 101), and the invoice dependency accepts either key. That's the existing behaviour: the admin key is a superset of the invoice key, so an invoice endpoint can't reject it without breaking current callers. If you need to reject admin keys on an endpoint, that would be a new strict variant, so tell me if you want one.\n\nUse it on an invoice-creating endpoint like this:\n\n```python\nfrom lnbits.decorators import require_base_invoice_key\n\n@router.post(\"/api/v1/payments\")\nasync def create_invoice(\n    data: CreateInvoice,\n    key_info: BaseWalletTypeInfo = Depends(require_base_invoice_key),\n):\n    wallet = key_info.wallet\n```\n\nIf you need the full `WalletTypeInfo` (a full `Wallet` with its `KeyChecker`) rather than the light version, I can add a `require_invoice_key` counterpart. There's no such function today.\n\nI ran no Makefile targets, since there was no code change."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 13.4
+}

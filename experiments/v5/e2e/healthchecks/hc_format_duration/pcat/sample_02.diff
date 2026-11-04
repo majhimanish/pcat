@@ -1,0 +1,33 @@
+diff --git a/hc/lib/date.py b/hc/lib/date.py
+index 9d3e749..ca5c156 100644
+--- a/hc/lib/date.py
++++ b/hc/lib/date.py
+@@ -81,6 +81,28 @@ def format_duration_for_sentence(duration: timedelta) -> str:
+     return f"{secs} second{pluralize(secs)}"
+ 
+ 
++def format_duration_words(duration: timedelta) -> str:
++    """Format a timedelta as e.g. "2 hours 30 minutes" or "8 days".
++
++    Shows at most two units, starting from the largest non-zero one
++    (days, hours, minutes, seconds). Zero-valued units are skipped.
++    """
++    remaining = int(duration.total_seconds())
++    if remaining < 0:
++        return "-" + format_duration_words(-duration)
++
++    parts = []
++    for unit in (DAY, HOUR, MINUTE, SECOND):
++        value, remaining = divmod(remaining, unit.nsecs)
++        if value:
++            parts.append(f"{value} {unit.name if value == 1 else unit.plural}")
++
++    if not parts:
++        return f"0 {SECOND.plural}"
++
++    return " ".join(parts[:2])
++
++
+ def month_boundaries(months: int, tzstr: str) -> list[datetime]:
+     """Return month start times in descending order starting from the current month."""
+     tz = ZoneInfo(tzstr)

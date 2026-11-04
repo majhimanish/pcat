@@ -1,0 +1,48 @@
+diff --git a/CTFd/utils/__init__.py b/CTFd/utils/__init__.py
+index a07adfb..b93f346 100644
+--- a/CTFd/utils/__init__.py
++++ b/CTFd/utils/__init__.py
+@@ -1,9 +1,11 @@
+ import json
++import re
+ from enum import Enum
+ 
+ import cmarkgfm
+ from cmarkgfm.cmark import Options
+ from flask import current_app as app
++from flask import request
+ 
+ # isort:imports-firstparty
+ from CTFd.cache import cache
+@@ -108,3 +110,31 @@ def import_in_progress():
+         return True
+     else:
+         return False
++
++
++def _is_trusted_proxy(addr):
++    patterns = app.config.get("TRUSTED_PROXIES") or []
++    return any(re.match(p, addr) for p in patterns)
++
++
++def get_ip(req=None):
++    """
++    Return the real client IP address.
++
++    X-Forwarded-For is only honored when the direct peer (remote_addr) is one of
++    the configured TRUSTED_PROXIES. The header is then walked from right to left
++    and the first address that is not a trusted proxy is returned, so entries a
++    client prepends to the header can never be chosen over a real hop.
++    """
++    req = req or request
++    peer = req.remote_addr
++    if not peer or not _is_trusted_proxy(peer):
++        return peer
++
++    forwarded = req.headers.get("X-Forwarded-For", "")
++    hops = [h.strip() for h in forwarded.split(",") if h.strip()]
++    for hop in reversed(hops):
++        if not _is_trusted_proxy(hop):
++            return hop
++    # Every hop was a trusted proxy (or the header is absent): use the leftmost
++    return hops[0] if hops else peer

@@ -1,0 +1,92 @@
+{
+  "app": "healthchecks",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an `authorize_write` decorator in api/decorators.py that checks the read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 15,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC103",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        },
+        {
+          "codes": [
+            "PC103",
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "authorize_write.<locals>.wrapper",
+          "high": [],
+          "pattern": "api.authorize_read@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "authorize_write",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "authorize_read",
+        "pattern": "api.authorize_read",
+        "similarity": 0.7246
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "hc/api/decorators.py",
+      "similarity_to_original": 0.9072,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.07631299999999999,
+    "duration_ms": 28490,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added `authorize_write` to `hc/api/decorators.py`, since there is no top-level `api/` directory. I haven't run it or the tests. My syntax check was blocked by a permission prompt.\n\nThe decorator works like this:\n- **Request body:** it parses a non-empty body as JSON and stores the result in `request.json`. An empty body gives `{}`. A body that isn't valid JSON, or isn't a JSON object, returns a 400.\n- **Key lookup:** it takes the key from the `X-Api-Key` header, or from the body's `api_key` field if the header is absent. A key that isn't 32 characters long returns 401 \"missing api key\".\n- **Read-write only:** the key is looked up with `accept_rw=True, accept_ro=False`, so a read-only key returns 401 \"wrong api key\".\n- **Request fields:** on success it sets `request.project`, sets `request.readonly = False`, and sets `request.v` to the API version.\n\n`hc/api/views.py` already imports and uses a decorator called `authorize`, which no longer existed in `decorators.py`, so that import was broken. I added `authorize = authorize_write` so those views work again. If you'd rather rename the usages in `views.py` to `authorize_write`, I can do that and drop the alias."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 4,
+      "Edit": 1,
+      "Grep": 1
+    }
+  },
+  "wall_seconds": 29.6
+}

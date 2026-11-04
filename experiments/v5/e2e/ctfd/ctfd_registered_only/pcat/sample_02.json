@@ -1,0 +1,157 @@
+{
+  "app": "ctfd",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.authed_only",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Flask view decorator requiring a logged-in user"
+      },
+      "result": {
+        "ids": [
+          "decorators.authed_only"
+        ],
+        "scores": [
+          12.728
+        ]
+      },
+      "timestamp": "2026-11-04T02:13:34.406+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "decorators.authed_only",
+        "names": null
+      },
+      "result": {
+        "id": "decorators.authed_only@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T02:13:36.346+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 533,
+        "pattern_id": "decorators.authed_only"
+      },
+      "result": {
+        "deviations": [
+          [
+            "registered_only",
+            "decorators.authed_only@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "registered_only",
+            "near",
+            "decorators.authed_only"
+          ],
+          [
+            "registered_only.<locals>.registered_only_wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T02:13:41.894+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a `registered_only` decorator in CTFd utils that redirects anonymous users to the register page.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "registered_only",
+          "high": [],
+          "pattern": "decorators.authed_only@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC107",
+            "PC108",
+            "PC110"
+          ],
+          "function": "registered_only.<locals>.registered_only_wrapper",
+          "high": [],
+          "pattern": "decorators.authed_only@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "registered_only",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "authed_only",
+        "pattern": "decorators.authed_only",
+        "similarity": 1.0
+      },
+      "marker": "decorators.authed_only@v1",
+      "matches_pattern": "decorators.authed_only",
+      "path": "CTFd/utils/decorators/__init__.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0693593,
+    "duration_ms": 17968,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added `registered_only` to `CTFd/utils/decorators/__init__.py`, next to `authed_only`. I haven't run it or any tests.\n\n- **Anonymous browser requests:** they are redirected to `auth.register` with `next=request.full_path`, so they return to the page after signing up.\n- **Authenticated users:** they pass through to the view.\n- **JSON and event-stream requests:** these get a 403 instead of a redirect, the same as `authed_only`.\n\nI built it from the catalog's `authed_only` pattern. The only difference from that pattern is the redirect target, which is `auth.register` instead of `auth.login`. The pattern check reported one low-severity deviation for that change and no high-severity ones, so no human approval is needed."
+  },
+  "task": "ctfd_registered_only",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "decorators.authed_only"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 19.6
+}

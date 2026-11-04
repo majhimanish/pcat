@@ -1,0 +1,2 @@
+{"arguments": {"limit": 5, "request": "API-key authorization decorator for read-write endpoints"}, "result": {"ids": ["api.authorize_read"], "scores": [17.875]}, "timestamp": "2026-11-04T13:57:58.216+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "api.authorize_read", "names": null}, "result": {"id": "api.authorize_read@v1", "status": "active"}, "timestamp": "2026-11-04T13:58:00.147+00:00", "tool": "get_pattern"}

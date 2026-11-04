@@ -1,0 +1,42 @@
+diff --git a/hc/accounts/views.py b/hc/accounts/views.py
+index 9419fc7..649811b 100644
+--- a/hc/accounts/views.py
++++ b/hc/accounts/views.py
+@@ -90,6 +90,37 @@ def _make_user(email: str, tz: str | None = None, with_project: bool = True) ->
+     return user
+ 
+ 
++def _allow_redirect(redirect_url: str | None) -> bool:
++    """Return True if `redirect_url` is a safe post-login destination.
++
++    Only relative, same-site paths that resolve to one of POST_LOGIN_ROUTES
++    are allowed. Absolute URLs, scheme-relative URLs ("//evil.com") and
++    backslash tricks are rejected to prevent open redirects.
++    """
++
++    if not redirect_url or not isinstance(redirect_url, str):
++        return False
++
++    # Browsers treat backslashes like forward slashes ("/\evil.com")
++    # and strip control characters, so reject them outright.
++    if "\\" in redirect_url or any(ord(c) < 32 for c in redirect_url):
++        return False
++
++    parsed = urlparse(redirect_url)
++    if parsed.scheme or parsed.netloc:
++        return False
++
++    if not parsed.path.startswith("/") or parsed.path.startswith("//"):
++        return False
++
++    try:
++        match = resolve(parsed.path)
++    except Resolver404:
++        return False
++
++    return match.url_name in POST_LOGIN_ROUTES
++
++
+ def _redirect_after_login(request: HttpRequest) -> HttpResponse:
+     """Redirect to the URL indicated in ?next= query parameter."""
+ 

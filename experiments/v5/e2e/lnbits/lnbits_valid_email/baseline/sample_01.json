@@ -1,0 +1,80 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/models/users.py",
+    "lnbits/helpers.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "validators.regex_match",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an `is_valid_email` helper to lnbits/helpers.py and use it in the account update validation.",
+  "returncode": 0,
+  "sample": 1,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC108"
+          ],
+          "function": "is_valid_email",
+          "high": [],
+          "pattern": "validators.regex_match@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "is_valid_email",
+      "how": "most similar",
+      "inferred": {
+        "derived": true,
+        "function": "is_valid_username",
+        "pattern": "validators.regex_match",
+        "similarity": 0.905
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/helpers.py",
+      "similarity_to_original": 0.905,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1399315,
+    "duration_ms": 70056,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 16,
+    "result_text": "I added `is_valid_email` to `lnbits/helpers.py` and switched the account update validation to use it. I haven't run any tests or checks, because the sandbox blocked my command.\n\n- **Helper:** `is_valid_email(email: str) -> bool` in `lnbits/helpers.py` is a regex full-match plus a 254-character length cap.\n- **Validation:** `Account.validate_fields` in `lnbits/core/models/users.py` now calls it. I also updated that file's import.\n\n**Existing breakage:** other files already import a function called `is_valid_email_address` from `lnbits.helpers`, but nothing defines it. Those files are `lnbits/core/views/auth_api.py` (lines 48, 460 and 638) and `lnbits/core/services/notifications.py` (lines 33, 215 and 220). Those files will fail to import until that name is defined or the callers move to `is_valid_email`. I left them alone since they're outside what you asked for.\n\nThe `PATCH` update endpoint in `auth_api.py` doesn't touch `email`, so `Account.validate_fields` was the only account-update validation I changed.\n\nNext, I'd run `make test-unit`, but I haven't asked you whether to go ahead. Do you want me to run it, and also point the other callers at `is_valid_email`?"
+  },
+  "task": "lnbits_valid_email",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 2,
+      "Edit": 3,
+      "Grep": 5,
+      "Read": 5
+    }
+  },
+  "wall_seconds": 71.1
+}

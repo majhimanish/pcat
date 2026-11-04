@@ -1,0 +1,99 @@
+diff --git a/CTFd/teams.py b/CTFd/teams.py
+index 192d576..2ba03d9 100644
+--- a/CTFd/teams.py
++++ b/CTFd/teams.py
+@@ -56,6 +56,7 @@ def listing():
+ @teams.route("/teams/invite", methods=["GET", "POST"])
+ @registered_only
+ @require_team_mode
++@ratelimit(method="POST", limit=10, interval=5)
+ def invite():
+     infos = get_infos()
+     errors = get_errors()
+@@ -188,6 +189,7 @@ def join():
+ @teams.route("/teams/new", methods=["GET", "POST"])
+ @authed_only
+ @require_team_mode
++@ratelimit(method="POST", limit=10, interval=5)
+ def new():
+     infos = get_infos()
+     errors = get_errors()
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 3f83d74..263a9fb 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -1,6 +1,6 @@
+ import functools
+ 
+-from flask import abort, jsonify, redirect, request, url_for
++from flask import abort, jsonify, redirect, render_template, request, url_for
+ from flask_babel import gettext
+ 
+ from CTFd.cache import cache
+@@ -8,7 +8,13 @@ from CTFd.utils import config, get_config
+ from CTFd.utils import user as current_user
+ from CTFd.utils.config import is_teams_mode
+ from CTFd.utils.dates import ctf_ended, ctf_started, ctftime, view_after_ctf
+-from CTFd.utils.user import authed, get_current_team, get_current_user, is_admin
++from CTFd.utils.user import (
++    authed,
++    get_current_team,
++    get_current_user,
++    get_ip,
++    is_admin,
++)
+ 
+ 
+ def during_ctf_time_only(f):
+@@ -193,3 +199,51 @@ def require_complete_profile(f):
+             return f(*args, **kwargs)
+ 
+     return _require_complete_profile
++
++
++def ratelimit(method="POST", limit=50, interval=300, key_prefix="rl"):
++    """
++    Limit how many requests of a given HTTP method a single client IP can make
++    to an endpoint within `interval` seconds. Excess requests receive a 429.
++    :param method: HTTP method to limit (other methods pass through)
++    :param limit: max requests allowed per window
++    :param interval: window length in seconds
++    """
++
++    def ratelimit_decorator(f):
++        @functools.wraps(f)
++        def decorated_function(*args, **kwargs):
++            if request.method != method:
++                return f(*args, **kwargs)
++
++            key = f"{key_prefix}:{request.endpoint}:{get_ip()}:{request.method}"
++            count = cache.get(key)
++
++            if count is not None and int(count) >= limit:
++                # Refresh the window so continued hammering keeps the block active
++                cache.set(key, int(count), timeout=interval)
++                if request.is_json:
++                    resp = jsonify(
++                        {
++                            "success": False,
++                            "errors": {
++                                "": ["Too many requests. Please try again later."]
++                            },
++                        }
++                    )
++                    resp.status_code = 429
++                    return resp
++                return render_template("errors/429.html"), 429
++
++            if count is None:
++                cache.set(key, 1, timeout=interval)
++            else:
++                try:
++                    cache.inc(key)
++                except NotImplementedError:
++                    cache.set(key, int(count) + 1, timeout=interval)
++            return f(*args, **kwargs)
++
++        return decorated_function
++
++    return ratelimit_decorator

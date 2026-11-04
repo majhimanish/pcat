@@ -1,0 +1,80 @@
+{
+  "app": "lnbits",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/core/crud/extensions.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.count_rows",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add an async function to the extensions crud module that returns the count of installed extensions, for the admin page.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC105",
+            "PC108"
+          ],
+          "function": "get_installed_extensions_count",
+          "high": [],
+          "pattern": "crud.count_rows@v1",
+          "provenance": "inferred"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_installed_extensions_count",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "get_accounts_count",
+        "pattern": "crud.count_rows",
+        "similarity": 0.7645
+      },
+      "marker": null,
+      "matches_pattern": null,
+      "path": "lnbits/core/crud/extensions.py",
+      "similarity_to_original": 0.7645,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1050808,
+    "duration_ms": 25186,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `get_installed_extensions_count` to `lnbits/core/crud/extensions.py`. I did not run any checks, because the command was blocked pending approval.\n\nThe function is `async def get_installed_extensions_count(conn: Connection | None = None) -> int`. It runs `SELECT COUNT(*) FROM installed_extensions`, in the same style as `get_user_assets_count`, and returns 0 if no row comes back.\n\n**Missing function:** `lnbits/core/crud/__init__.py` already imported and exported this name, and `check_extensions_limit` in `lnbits/core/services/extensions.py` already calls it. The function itself was missing, so importing `lnbits.core.crud` would have failed. The new function fixes that, and no export changes were needed. The admin page can use it directly, but I haven't wired it into any route or template.\n\n**Not verified:** I did not run `make checkruff checkblack` or an import check, so the change is untested. I can run them if you approve.\n\n**Files touched:** `lnbits/core/crud/extensions.py` (+8 lines)."
+  },
+  "task": "lnbits_extensions_count",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 4
+    }
+  },
+  "wall_seconds": 26.0
+}

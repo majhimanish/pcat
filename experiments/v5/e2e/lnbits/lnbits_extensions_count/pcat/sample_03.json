@@ -1,0 +1,155 @@
+{
+  "app": "lnbits",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/core/crud/extensions.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.count_rows",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Count rows in a table"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:04:14.878+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "count rows crud"
+      },
+      "result": {
+        "ids": [],
+        "scores": []
+      },
+      "timestamp": "2026-11-04T14:04:16.839+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "crud.count_rows",
+        "names": null
+      },
+      "result": {
+        "id": "crud.count_rows@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T14:04:20.213+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 270,
+        "pattern_id": "crud.count_rows"
+      },
+      "result": {
+        "deviations": [
+          [
+            "get_installed_extensions_count",
+            "crud.count_rows@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "get_installed_extensions_count",
+            "near",
+            "crud.count_rows"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T14:04:24.163+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an async function to the extensions crud module that returns the count of installed extensions, for the admin page.",
+  "returncode": 0,
+  "sample": 3,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC109"
+          ],
+          "function": "get_installed_extensions_count",
+          "high": [],
+          "pattern": "crud.count_rows@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "get_installed_extensions_count",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "get_accounts_count",
+        "pattern": "crud.count_rows",
+        "similarity": 1.0
+      },
+      "marker": "crud.count_rows@v1",
+      "matches_pattern": "crud.count_rows",
+      "path": "lnbits/core/crud/extensions.py",
+      "similarity_to_original": 1.0,
+      "status": "near"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0942521,
+    "duration_ms": 15572,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `get_installed_extensions_count` to `lnbits/core/crud/extensions.py`, just above `get_user_extension`. It's an async function that runs `SELECT COUNT(*) FROM installed_extensions` and returns an int, or 0 if no row comes back. It takes an optional `conn`, like the other functions in that module. I haven't run it or any tests.\n\nIt's built from the catalog's `crud.count_rows@v1` pattern, with only the function name and table changed, and the `# pcat:` marker is kept above it. `search_patterns` returned nothing for this, so I fetched the pattern directly by its id.\n\n`check_code` reported no high-severity deviations. The two low ones come from the table swap and the line wrap, so nothing needs a human to confirm.\n\nFor the admin page, call it as `await get_installed_extensions_count()`."
+  },
+  "task": "lnbits_extensions_count",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "crud.count_rows"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Glob": 1,
+      "Grep": 2,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 17.0
+}

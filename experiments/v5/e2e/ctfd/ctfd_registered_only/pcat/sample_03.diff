@@ -1,0 +1,32 @@
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index d6bbc00..014602c 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -102,6 +102,27 @@ def authed_only(f):
+     return authed_only_wrapper
+ 
+ 
++# pcat: decorators.authed_only@v1
++def registered_only(f):
++    """
++    Decorator that requires the user to be authenticated, sending anonymous
++    users to the register page
++    :param f:
++    :return:
++    """
++
++    @functools.wraps(f)
++    def registered_only_wrapper(*args, **kwargs):
++        if authed():
++            return f(*args, **kwargs)
++        elif request.is_json or request.accept_mimetypes.best == "text/event-stream":
++            abort(403)
++        else:
++            return redirect(url_for("auth.register", next=request.full_path))
++
++    return registered_only_wrapper
++
++
+ def admins_only(f):
+     """
+     Decorator that requires the user to be authenticated and an admin

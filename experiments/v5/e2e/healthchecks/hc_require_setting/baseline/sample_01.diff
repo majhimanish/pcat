@@ -1,0 +1,28 @@
+diff --git a/hc/front/decorators.py b/hc/front/decorators.py
+index c7f4b53..bed754a 100644
+--- a/hc/front/decorators.py
++++ b/hc/front/decorators.py
+@@ -5,8 +5,22 @@ from functools import wraps
+ from typing import Any
+ 
+ from django.conf import settings
+-from django.http import HttpRequest, HttpResponse
++from django.http import HttpRequest, HttpResponse, HttpResponseNotFound
+ 
+ from hc.lib.typealias import ViewFunc
+ 
+ 
++def require_setting(key: str) -> Callable[[ViewFunc], ViewFunc]:
++    """Return a 404 response unless the Django setting `key` is truthy."""
++
++    def decorator(f: ViewFunc) -> ViewFunc:
++        @wraps(f)
++        def wrapper(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
++            if not getattr(settings, key, None):
++                return HttpResponseNotFound()
++            return f(request, *args, **kwargs)
++
++        return wrapper
++
++    return decorator
++

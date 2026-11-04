@@ -1,0 +1,171 @@
+{
+  "app": "healthchecks",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "kind": "pattern",
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Look up an object the current user may access, with read-write variant"
+      },
+      "result": {
+        "ids": [
+          "access.channel_for_user"
+        ],
+        "scores": [
+          22.532
+        ]
+      },
+      "timestamp": "2026-11-04T13:58:54.533+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "access.channel_for_user",
+        "names": null
+      },
+      "result": {
+        "id": "access.channel_for_user@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T13:58:56.951+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1067,
+        "pattern_id": "access.channel_for_user"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_get_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ],
+          [
+            "_get_rw_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_get_check_for_user",
+            "none",
+            null
+          ],
+          [
+            "_get_rw_check_for_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T13:59:06.310+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add `_get_check_for_user` and `_get_rw_check_for_user` helpers to hc/front/views.py that load a check by code and reject read-only members.",
+  "returncode": 0,
+  "sample": 2,
+  "score": {
+    "lint": {
+      "deviations": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "failed": false,
+      "failing": 0,
+      "findings": [
+        {
+          "codes": [
+            "PC107",
+            "PC110"
+          ],
+          "function": "_get_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "marked"
+        },
+        {
+          "codes": [
+            "PC110"
+          ],
+          "function": "_get_rw_check_for_user",
+          "high": [],
+          "pattern": "access.channel_for_user@v1",
+          "provenance": "marked"
+        }
+      ]
+    },
+    "new_function": {
+      "function": "_get_rw_check_for_user",
+      "how": "same name",
+      "inferred": {
+        "derived": true,
+        "function": "_get_rw_channel_for_user",
+        "pattern": "access.channel_for_user",
+        "similarity": 0.9592
+      },
+      "marker": "access.channel_for_user@v1",
+      "matches_pattern": null,
+      "path": "hc/front/views.py",
+      "similarity_to_original": 1.0,
+      "status": "none"
+    }
+  },
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09197930000000001,
+    "duration_ms": 39078,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added both helpers to `hc/front/views.py`, and the pattern check found no high-severity deviations. I haven't run the Django tests.\n\n- **`_get_check_for_user(request, code, preload_owner_profile=False)`** loads the check by code. It returns `(check, rw)` and gives `rw=True` for superusers and project owners. For other users it looks up their `Member` row and returns that row's `is_rw`. If they aren't a member at all, it returns a 404.\n- **`_get_rw_check_for_user(request, code)`** calls the first helper and raises `PermissionDenied` when `rw` is false.\n\nThe helpers follow the `access.channel_for_user@v1` pattern, with the `# pcat:` marker kept above each one. They sit right above `_get_channel_for_user`. I added the optional `preload_owner_profile` argument because existing views already call `_get_check_for_user(..., preload_owner_profile=True)`. When it's set, the query also loads the project's owner and their profile.\n\nThe check reported two small deviations from the pattern, both because of that argument:\n- **PC107, medium:** the signature has one extra parameter.\n- **PC110, low:** the code has a small structural change.\n\nI didn't add any `pcat-allow` approval lines, so nothing needs human confirmation."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "access.channel_for_user"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 40.8
+}
