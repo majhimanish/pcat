@@ -1,0 +1,50 @@
+# pcat benchmark summary (v2 – v5)
+
+Every headline number, the rule set it was measured under, and whether it is safe to
+use in a pitch. "Rule set" = canonicalization v2 / shape v1 throughout; linter rules
+v4 (PC100–PC110) or v4.1 (hashed approvals, proposals need a human, PC111,
+`must_include` 429, graded PC103). Models: claude-sonnet-5-5 via `claude -p`. Costs
+are the CLI's estimates and may reflect plan usage rather than billing.
+
+| Phase | Headline | Measured under | Pitch? |
+|---|---|---|---|
+| v2 mining | Libraries barely repeat: requests + Flask + FastAPI, 1,215 functions, 55 clusters, **all** from FastAPI's tutorial docs; 0 across repos | miner v2 | Yes, as "real code has few exact repeats" |
+| v5 mining | Apps barely repeat either: 3 / 6 / 8 function clusters in 587 / 608 / 1,768 functions (CTFd, healthchecks, LNbits) | miner v2 | Yes, with v2: catalogs come from review, not from mining |
+| v2.1 variance | Same prompt, 20 samples: **15.7** effective shapes on average; paraphrased: 17.4; with a reference in the prompt: **2.0** (480 samples, 8 tasks) | shape v1 | Yes: "an agent writes a different version almost every time; a reference collapses it" |
+| v2.2 coverage | **0 of 135** catalog-free samples matched the reviewed pattern for their task | canonical v2 | Yes, with "lab prompts" |
+| v3 retrieval | Top-1 **35/35** dev and **35/35** held-out; false matches 0/10 dev, **2/15** held-out | BM25, threshold 9.08 | Yes for 7 distinct patterns and long requests only |
+| v3 end to end | Searched 160/160, right pattern fetched **140/140**, pattern in the code **122/140 (87%)** vs 0/135 without | v3 metrics, tool-less agent | Indicative only (not controlled; long prompts; MCP tools only) |
+| v4 replay | Exact matches flagged above low **0/122**; misses flagged **18/18** | linter v4 | Superseded by v4.1; do not quote alone |
+| v4 feedback | Unapproved high deviations shipped 12/60 → **0/60** | linter v4 | **No**: under v4.1 rules the same samples are 21/60 (approvals had no hash) |
+| v4.1 replay | 20/20 HTTP samples flagged for dropping 429; 25/140 would fail CI | linter v4.1 | Yes, with "all 5 HTTP requests asked for no 4xx retries" |
+| v5 Part A | v4 feedback rerun: high unapproved v3 / v4 / v4.1 = **25 / 21 / 20 of 60**; in v4.1 all 20 covered by correctly hashed proposals (22 lines), 0 uncovered | linter v4.1 | Yes: "nothing high ships without a human decision" |
+| v5 retrieval | Brief requests, 15–16-pattern catalogs: top-1 **0.94 / 0.89 / 0.67**; 6/54 right-but-below-threshold; expected pattern first in 3/3 house-vs-generic overlaps | BM25, threshold 9.08 | Yes, with the LNbits drop |
+| v5 end to end | Inside real repos: search 71/72, right pattern 54/54, matches pattern **0.72 vs 0.46** baseline; similarity to the house original **1.00 in both**; same-function tasks **12/12 vs 2/12**; negatives forced 0/36; $14.59 for 144 runs | linter v4.1, restricted shell | Yes, framed correctly (below) |
+
+## Safe claims, with caveats
+
+- **"Agents rarely write the same code twice"** (v2.1): 15.7/20 effective shapes. Lab
+  prompts, one model, 8 tasks.
+- **"Given the reviewed pattern, agents use it"** (v3, v5): 140/140 and 54/54 fetched
+  the right one; brief requests in real repos still worked. Self-reviewed catalogs in v5.
+- **"The gate makes deviations a human decision"** (v4.1, v5 A): under one rule set,
+  0 high deviations ship uncovered; all are hashed proposals. Agents write the
+  proposals; a human must still read them.
+- **"Inside a repo, agents copy what is nearby"** (v5): with a sibling present, the
+  baseline already matches the house original (similarity 1.00). The catalog's
+  measured value is for code that is **not** in the repo (12/12 vs 2/12).
+
+## Do not claim
+
+- That pcat makes code "87% consistent" in real use: v3's number is lab-only, and in
+  real repos the baseline is already consistent where siblings exist.
+- v4's "0/60 shipped": it relied on hash-less, agent-written approvals.
+- Anything about a human-reviewed v5 catalog, or about test pass rates (agents could
+  not run tests in v5).
+- Effects across models or clients: everything used one model through Claude Code.
+
+## Open issues that affect the numbers
+
+- `pcat lint` does not resolve same-module classes in guards (3 false CI failures in v5).
+- Brief requests on thin metadata fall below the search threshold (LNbits).
+- 3 samples per task in v5; 4 same-function tasks carry the main effect.
