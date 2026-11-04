@@ -424,6 +424,18 @@ Replaying the v4 agent samples with the v4.1 rules (addendum in
 dropping 429 from the retry statuses (v4: low), and 25 of 140 would fail CI
 (v4: 12).
 
+## Realistic simulation (v5)
+
+`docs/benchmarks/v5-open-source.md` repeats the experiment on three open-source
+applications (CTFd, healthchecks, LNbits), each with its own catalog under
+`experiments/v5/catalogs/<app>/` (house patterns plus the 7 generic ones), brief
+requests, and agents working inside the repository (144 runs, baseline vs pcat).
+Agents with the server found the right pattern every time, but where similar code
+already sits in the repo the baseline copied it just as well; the catalog decided the
+outcome where the code existed nowhere else (12/12 vs 2/12). Every headline number
+from v2 to v5, with the rule set it was measured under and what is safe to claim, is
+in `docs/benchmarks/summary.md`.
+
 **Guards** are the properties a reviewer cared about, declared per pattern in
 `pattern.yaml` (metadata only; validation check 11 requires each to hold on the
 pattern itself). Kinds: `must_catch`, `must_call`, `must_not_call`,
@@ -473,6 +485,6 @@ In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern fold
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
   `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`,
-  `v4.1-human-approval.md`)
-- `docs/benchmarks/` — miner benchmark, variance experiment, MCP and linter results
+  `v4.1-human-approval.md`, `v5-open-source-simulation.md`)
+- `docs/benchmarks/` — results per phase and `summary.md` (all headline numbers)
 - `docs/ci/pcat-lint.yml` — reusable workflow that lints client pull requests

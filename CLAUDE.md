@@ -11,23 +11,21 @@ approved patterns instead of producing a new variation per prompt.
 
 ## Status
 
-- **v1 / v1.1:** catalog format, canonicalizer (`CANONICAL_VERSION = 2`), CLI,
-  validation + `--base`, CI, 6 seeds, `migrate-fingerprints`. **v2:** miner
-  (`pcat mine`, `pcat promote`). **v2.1:** LLM variance (480 samples; a reference in
-  the prompt cuts effective shapes 17.4 → 2.0). **v2.2:** 7 application patterns
-  from the owner's `docs/catalog-review/choices.yaml` (FastAPI deferred: no classes).
+- **v1–v2.2:** catalog, canonicalizer (`CANONICAL_VERSION = 2`), CLI, validation +
+  `--base`, CI, miner (`pcat mine`, `promote`), LLM variance study, 7 application
+  patterns from the owner's `docs/catalog-review/choices.yaml` (+ 6 seeds).
 - **v3:** MCP server `pcat serve` (`search_patterns`, `get_pattern`, `check_code`),
-  BM25 `pcat search`; right pattern fetched 140/140, pattern in code 87%.
-- **v4:** deviation linter: markers `# pcat: <id>@vN`, inferred provenance (0.56),
+  BM25 `pcat search`. **v4:** linter: markers `# pcat: <id>@vN`, inference (0.56),
   `guards` (check 11), PC100–PC110, `pcat lint`, `check_code(code, pattern_id)`.
-- **v4.1 (done):** approvals carry the function hash (`# pcat-allow: PC100 #<hash> --
-  reason`) and are confirmed / proposed / stale against the base ref; proposals
-  need a human (`pcat approvals check`, `.pcat/approvers.yaml`, workflow
-  `pcat-approvals.yml`); PC111 (marker removed); `must_include` (429); graded PC103;
-  quieter PC110. Replay addendum: 20/20 HTTP samples flagged for dropping 429.
-  Demo PR #1 (left open) shows the gate failing until confirmed.
-- **Next ideas:** guards grown from observed deviations; team CODEOWNERS; a signed
-  confirmation that does not rely on commit dates.
+- **v4.1:** hashed approvals (`# pcat-allow: PC100 #<hash> -- reason`), confirmed /
+  proposed / stale vs the base ref; proposals need a human (`pcat approvals check`,
+  `.pcat/approvers.yaml`, `pcat-approvals.yml`); PC111; `must_include` (429). Demo PR #1
+  (left open) shows the gate failing until confirmed.
+- **v5 (done):** CTFd, healthchecks, LNbits as orgs with own catalogs
+  (`experiments/v5/catalogs/<app>/`, self-reviewed); 144 in-repo runs: pcat matches
+  the pattern 0.72 vs 0.46, but baseline already copies siblings (similarity 1.00);
+  same-function tasks 12/12 vs 2/12. Headlines: `docs/benchmarks/summary.md`.
+- **Next ideas:** resolve same-module names in guards; plant outdated siblings.
 
 ## Setup and commands
 
@@ -51,6 +49,7 @@ python scripts/mcp_eval.py heldout|retrieval|e2e|e2e-analyze   # v3 evaluation (
 pcat lint <path>... [--changed-since REF] [--format text|json|github] [--fail-on high] [--catalog P]
 pcat approvals check --repo OWNER/REPO --pr N   # GITHUB_TOKEN; fails while proposals wait
 python scripts/lint_eval.py calibrate|replay|feedback|feedback-analyze   # v4 evaluation
+python scripts/v5.py clone|mine|references|requests|retrieval; python scripts/v5_e2e.py run|analyze
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -84,13 +83,14 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `lint.py` — `pcat lint` (approval states, PC111, `--changed-since`, text/json/github).
   `approvals.py` — approver config, CODEOWNERS, GitHub client, confirmation gate.
   `linteval.py` + `scripts/lint_eval.py` — v4 evaluation; data in `experiments/linter/`.
+- `src/pcat/v5.py` — tasks, function removal, working copies, run command, scoring;
+  data in `experiments/v5/` (apps, mining, catalogs, tasks, requests, e2e).
 - `src/pcat/cli.py` — typer app, thin; errors → `error: …` + exit 1. `errors.py`: `PcatError`.
 - `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`, v3 fields, `guards`),
   `impl.py`, `test_impl.py`; `catalog/index.json` is generated. App patterns + 6 seeds.
 - `tests/` — tool tests; `root` fixture = temp copy of the catalog.
-- `src/pcat/variance.py` — variance logic (backends incl. `claude -p`, similarity);
-  `scripts/variance.py`. Data (frozen): `experiments/variance/`, `experiments/mcp/`
-  (v3 held-out set, `e2e/<task>/sample_NN.{json,log.jsonl}`, results).
+- `src/pcat/variance.py` — variance logic (`claude -p` backends, similarity). Frozen data:
+  `experiments/variance/`, `experiments/mcp/`, `experiments/linter/`, `experiments/v5/`.
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
   `docs/ci/pcat-{lint,approvals}.yml` — workflows for client repositories; this repo
   runs `.github/workflows/pcat-approvals.yml` with `.pcat/approvers.yaml` (solo mode).
@@ -134,8 +134,8 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 ## Where to look
 
 - `DECISIONS.md` (every assumption; read before changing behavior), `KNOWN_GAPS.md` (backlog)
-- `docs/specs/` — phase specs (`v1-catalog.md` … `v4-linter.md`, `v4.1-human-approval.md`)
-- `docs/benchmarks/` — `v2-results.md`, `v2.1-variance.md`, `v3-mcp.md`, `v4-linter.md`
+- `docs/specs/` — phase specs (`v1-catalog.md` … `v4.1-human-approval.md`, `v5-…`)
+- `docs/benchmarks/` — per phase, `v5-open-source.md`, and `summary.md` (all headlines)
 - `README.md` — user-facing docs: adding patterns, review flow, versioning
 
 ## Rule for later sessions
