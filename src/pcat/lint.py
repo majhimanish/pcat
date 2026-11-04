@@ -251,6 +251,7 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
     findings: list[Finding] = []
     messages: list[Message] = []
     removed = _removed_markers(base_source)
+    derived: dict[str, str] = {}  # qualname -> pattern id of every function with a finding
     for info in provenance.functions(source, tree):
         if info.marker is None and info.qualname in removed:
             got = _marker_removed(info, removed[info.qualname], tree, path, catalog, base_keys,
@@ -277,6 +278,8 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             inf = provenance.infer(info.node, catalog.refs)
             if inf is None or not inf.derived:
                 continue
+            if any(derived.get(outer) == inf.pattern_id for outer in _enclosing(info.qualname)):
+                continue  # v5.1: a nested function of code already analyzed against this pattern
             pattern = catalog.by_key(inf.pattern_id, inf.version)
             function, similarity, kind = inf.function, inf.similarity, "inferred"
         else:
@@ -292,6 +295,7 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             base_keys=base_keys, confirmed_proposals=confirmed_proposals)
         messages.extend(approval_messages)
         meta = pattern.meta
+        derived[info.qualname] = meta.id
         findings.append(Finding(
             path=path, function=info.qualname, line=info.node.lineno, provenance=kind,
             pattern=meta.key, pattern_function=analysis.pattern_function, similarity=similarity,
@@ -303,6 +307,12 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
             messages.append(Message(path, info.node.lineno, "warning",
                                     f"`{info.qualname}` uses deprecated {meta.key}; use {meta.replaced_by}"))
     return findings, messages
+
+
+def _enclosing(qualname: str) -> list[str]:
+    """`f.<locals>.g.<locals>.h` -> [`f`, `f.<locals>.g`]."""
+    parts = qualname.split(".<locals>.")
+    return [".<locals>.".join(parts[:i]) for i in range(1, len(parts))]
 
 
 def _removed_markers(base: str | None) -> dict[str, provenance.Marker]:

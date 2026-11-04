@@ -26,7 +26,8 @@ def survey_files(app_dir: Path) -> list[str]:
         if any(p in SURVEY_EXCLUDED_DIRS or p.startswith(".") for p in parts[:-1]):
             continue
         name = parts[-1]
-        if name.startswith("test_") or name.endswith("_test.py") or name in ("conftest.py", "tests.py"):
+        if name.startswith("test_") or name.endswith("_test.py") or name in (
+                "conftest.py", "tests.py", "migrations.py"):
             continue
         out.append(rel.as_posix())
     return out

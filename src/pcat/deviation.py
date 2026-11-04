@@ -113,9 +113,26 @@ def _params(func: ast.FunctionDef) -> list[ast.arg]:
     return canonical._arg_nodes(func.args)
 
 
+RECEIVERS = ("self", "cls")
+
+
+def _receiver(func: ast.FunctionDef) -> str | None:
+    """`self`/`cls` when `func` takes one as its first positional parameter."""
+    positional = [*func.args.posonlyargs, *func.args.args]
+    return positional[0].arg if positional and positional[0].arg in RECEIVERS else None
+
+
+def _extra_receiver(p: ast.FunctionDef, u: ast.FunctionDef) -> bool:
+    """v5.1: the user's function is a method and the pattern function is not; the
+    receiver is not one of the pattern's parameters."""
+    return _receiver(u) is not None and _receiver(p) is None
+
+
 def _align_params(p: ast.FunctionDef, u: ast.FunctionDef) -> dict[str, str]:
     pnames = [a.arg for a in _params(p)]
     unames = [a.arg for a in _params(u)]
+    if _extra_receiver(p, u):
+        unames = unames[1:]
     out = {n: n for n in pnames if n in unames}
     rest_p = [n for n in pnames if n not in out]
     rest_u = [n for n in unames if n not in out.values()]
@@ -442,13 +459,16 @@ def _private_names(unit: Unit) -> dict[str, tuple[int, str]]:
     return out
 
 
-def _default_key(func: ast.FunctionDef, unit: Unit) -> dict[str, tuple[str, str, str]]:
-    """param -> (kind, default shape, default exact)."""
+def _default_key(func: ast.FunctionDef, unit: Unit, skip_receiver: bool = False) -> dict[str, tuple[str, str, str]]:
+    """param -> (kind, default shape, default exact); `skip_receiver` drops `self`/`cls`."""
     args = func.args
     positional = [*args.posonlyargs, *args.args]
     out = {}
     pos_defaults = [None] * (len(positional) - len(args.defaults)) + list(args.defaults)
-    for a, d in zip(positional, pos_defaults):
+    pairs = list(zip(positional, pos_defaults))
+    if skip_receiver and _receiver(func):
+        pairs = pairs[1:]
+    for a, d in pairs:
         kind = "positional-only" if a in args.posonlyargs else "positional"
         out[a.arg] = (kind, *_expr_text(d, unit, func))
     for a, d in zip(args.kwonlyargs, args.kw_defaults):
@@ -719,7 +739,7 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
                  + (" (an attribute)" if shown.startswith(".") else ""), line, fname)
 
     # PC107 / PC109: signature ---------------------------------------------
-    p_sig, u_sig = _default_key(pu.func, pu), _default_key(uu.func, uu)
+    p_sig, u_sig = _default_key(pu.func, pu), _default_key(uu.func, uu, _extra_receiver(pu.func, uu.func))
     params = al.params
     for pname, (pkind, pshape, pexact) in p_sig.items():
         if pname.startswith("*"):

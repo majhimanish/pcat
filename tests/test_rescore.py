@@ -7,7 +7,8 @@ from pcat import rescore
 
 def test_survey_files_skip_tests_docs_and_migrations(tmp_path):
     for rel in ("app/views.py", "app/tests/test_views.py", "app/test_x.py", "app/x_test.py", "conftest.py",
-                "docs/conf.py", "app/migrations/0001_initial.py", "app/models.py", ".hidden/x.py", "README.md"):
+                "docs/conf.py", "app/migrations/0001_initial.py", "app/migrations.py", "app/models.py",
+                ".hidden/x.py", "README.md"):
         (tmp_path / rel).parent.mkdir(parents=True, exist_ok=True)
         (tmp_path / rel).write_text("def f():\n    return 1\n\n\nclass A:\n    def m(self):\n        return 2\n")
     files = rescore.survey_files(tmp_path)

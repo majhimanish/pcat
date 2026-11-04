@@ -1103,3 +1103,27 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      instead of high "dropped". Removing the raise is still high. This is the CTFd
      reset-token case: the agent's own proposed approval said "same check kept,
      only the exception type differs".
+218. **Survey scope (Part E).** Untouched app code at the pinned commits: every
+     `.py` file except folders named tests/test/testing/docs/doc/migrations/alembic
+     (and build/vendor folders) and files `test_*.py`, `*_test.py`, `conftest.py`,
+     `tests.py`, `migrations.py`. My first pass missed LNbits' single-file
+     `lnbits/core/migrations.py` (33 inferred functions, 70 medium/high findings);
+     all reported numbers use the corrected scope. "Functions checked" = every
+     function `pcat lint` considers (methods and nested functions included);
+     every one is run through inference. Random samples of 30 use
+     `random.Random(<app name>)` over the medium/high findings in file order.
+219. **Fix: a method's receiver is not a parameter.** When the user's function takes
+     `self`/`cls` first and the pattern function does not, the receiver is left out
+     of parameter alignment and the signature comparison. Before, `get(self,
+     award_id)` vs a pattern `f(user_id)` aligned `self` with `user_id` and reported
+     "adds parameter `award_id`" (PC107) or "`self` is now positional".
+220. **Fix: nested functions are not analyzed twice.** An inferred function nested
+     inside a function that already has a finding for the same pattern is skipped:
+     the outer function's unit already contains it. Before, CTFd's decorators were
+     reported once for `registered_only` and again for `_registered_only`.
+     Marked nested functions are still analyzed.
+221. **Not fixed: inference on app code.** Most medium/high survey findings are on
+     functions that do not derive from any pattern but score >= 0.56 (short CRUD
+     helpers, Flask resources, decorators). That is calibration, not a bug, and the
+     threshold was calibrated on v3 data; changing it would need new labeled data.
+     Inferred findings are advisory and never fail CI; KNOWN_GAPS has the numbers.
