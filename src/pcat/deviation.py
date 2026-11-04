@@ -710,10 +710,17 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     u_calls = codeunit.calls(uu)
     p_keys = {c.key: c for c in reversed(p_calls)}
     u_keys = {c.key: c for c in reversed(u_calls)}
+    # v5.1: `(conn or db).execute` on one side and `db.execute` on the other are the same call
+    p_alts = {name_key(a): k for k, c in p_keys.items() for a in c.alternatives}
+    u_alts = {name_key(a): k for k, c in u_keys.items() for a in c.alternatives}
+    via_alt_p = {k for k in p_keys if any(name_key(a) in u_keys for a in p_keys[k].alternatives)} | {
+        p_alts[k] for k in u_keys if k in p_alts} | {k for k in p_keys if k in u_alts}
+    via_alt_u = {k for k in u_keys if any(name_key(a) in p_keys for a in u_keys[k].alternatives)} | {
+        u_alts[k] for k in p_keys if k in u_alts} | {k for k in u_keys if k in p_alts}
     helper_names = {h.name for h in pu.helpers}
     maybe_added: set[str] = set()
     for key in sorted(set(p_keys) - set(u_keys)):
-        if key in suppressed["call"]:
+        if key in suppressed["call"] or key in via_alt_p:
             continue
         maybe = [k for k, c in u_keys.items() if k not in p_keys and uu.is_unresolved(c.dotted)
                  and codeunit.last_segment(c.dotted) == codeunit.last_segment(p_keys[key].dotted)]
@@ -724,7 +731,7 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
         emit("PC105", f"`{uname}` no longer calls `{user_spelling(p_keys[key].display, uu)}` (the pattern does)",
              uu.func.lineno)
     for key in sorted(set(u_keys) - set(p_keys), key=lambda k: (u_keys[k].line, k)):
-        if key in suppressed["nocall"] or key in helper_names or key in maybe_added:
+        if key in suppressed["nocall"] or key in helper_names or key in maybe_added or key in via_alt_u:
             continue
         c = u_keys[key]
         attributed_lines.add(c.line)

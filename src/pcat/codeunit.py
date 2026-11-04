@@ -149,6 +149,8 @@ def target_matches(target: str, dotted: str | None, unit: Unit | None = None, *,
         return False
     if name_key(target) == name_key(dotted):
         return True
+    if target.startswith("."):  # a method on any value: any attribute call with that name
+        return "." in dotted and last_segment(dotted) == target[1:]
     if "." in target or dotted.startswith("."):
         return False
     if last_segment(dotted) != target:
@@ -372,6 +374,7 @@ class Fact:
     line: int
     func: str  # owning function's real name
     dotted: str = ""  # full resolution
+    alternatives: tuple[str, ...] = ()  # v5.1: `(conn or db).execute` -> ("<db origin>.execute",)
 
 
 def calls(unit: Unit) -> list[Fact]:
@@ -386,8 +389,26 @@ def calls(unit: Unit) -> list[Fact]:
                 dotted = unit.resolve(node.func, f)
                 if dotted is None or dotted.startswith(("fn:", "const:")):
                     continue
-                out.append(Fact(name_key(dotted), unit.spell(dotted), node.lineno, f.name, dotted))
+                out.append(Fact(name_key(dotted), unit.spell(dotted), node.lineno, f.name, dotted,
+                                _alternatives(node.func, unit, f)))
     return sorted(out, key=lambda x: (x.line, x.key))
+
+
+def _alternatives(func_expr: ast.expr, unit: Unit, func: ast.FunctionDef) -> tuple[str, ...]:
+    """For a method call on `a or b` / `a if c else b`, the resolved `a.m`, `b.m` (named
+    operands only): the call is a call on one of them."""
+    if not isinstance(func_expr, ast.Attribute):
+        return ()
+    base = func_expr.value
+    operands = base.values if isinstance(base, ast.BoolOp) else (
+        [base.body, base.orelse] if isinstance(base, ast.IfExp) else [])
+    out = []
+    for operand in operands:
+        if isinstance(operand, (ast.Name, ast.Attribute)):
+            r = unit.resolve(operand, func)
+            if r is not None and not r.startswith((".", "fn:", "const:")):
+                out.append(f"{r}.{func_expr.attr}")
+    return tuple(sorted(set(out)))
 
 
 def handler_types(handler: ast.ExceptHandler, unit: Unit, func: ast.FunctionDef) -> list[str]:

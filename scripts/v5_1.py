@@ -10,7 +10,7 @@
         worktree of the pre-v5.1 commit: PYTHONPATH=<worktree>/src python scripts/v5_1.py ...
     python scripts/v5_1.py compare-e2e --old LABEL --new LABEL
         Flips and tables -> experiments/v5.1/rescore/e2e_compare.json (+ printed markdown).
-    python scripts/v5_1.py survey --label LABEL
+    python scripts/v5_1.py survey --label LABEL [--catalogs DIR]
         Lint the untouched app code (pinned commits in .bench/apps; tests, docs and
         migrations excluded) with each app's catalog, --include-inferred.
         Output: experiments/v5.1/survey/survey_<LABEL>.json.
@@ -37,6 +37,16 @@ OUT = ROOT / "experiments" / "v5.1"
 APPS_DIR = ROOT / ".bench" / "apps"
 RUNS = Path(os.environ.get("PCAT_V51_RUNS", tempfile.gettempdir())) / "pcat-v51-runs"
 APPS = ("ctfd", "healthchecks", "lnbits")
+
+
+def _rescore():
+    """src/pcat/rescore.py of this checkout, also when an older `pcat` is on the path."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("pcat_v51_rescore", ROOT / "src" / "pcat" / "rescore.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
 
 
 def write_json(path: Path, data) -> None:
@@ -125,7 +135,7 @@ def cmd_lint_e2e(args) -> int:
 
 
 def cmd_compare_e2e(args) -> int:
-    from pcat import rescore
+    rescore = _rescore()
 
     old = json.loads((OUT / "rescore" / f"e2e_{args.old}.json").read_text())
     new = json.loads((OUT / "rescore" / f"e2e_{args.new}.json").read_text())
@@ -141,13 +151,17 @@ def cmd_compare_e2e(args) -> int:
 
 
 def cmd_survey(args) -> int:
-    from pcat import lint, rescore
+    import pcat
+    from pcat import lint
+
+    rescore = _rescore()
+    print(f"pcat from {Path(pcat.__file__).parent}", flush=True)
 
     out = {"label": args.label, "apps": {}}
     for app in APPS:
         app_dir = APPS_DIR / app
         files = rescore.survey_files(app_dir)
-        data = lint.lint_paths([str(app_dir / f) for f in files], V5 / "catalogs" / app,
+        data = lint.lint_paths([str(app_dir / f) for f in files], Path(args.catalogs) / app,
                                include_inferred=True).to_dict()
         report = _report(data)
         for f in report["findings"]:
@@ -174,6 +188,8 @@ def main() -> int:
     ce.add_argument("--new", required=True)
     sv = sub.add_parser("survey")
     sv.add_argument("--label", required=True)
+    sv.add_argument("--catalogs", default=str(V5 / "catalogs"),
+                    help="folder of per-app catalogs (an older checkout's, for an older linter)")
     args = parser.parse_args()
     return {"lint-e2e": cmd_lint_e2e, "compare-e2e": cmd_compare_e2e, "survey": cmd_survey}[args.command](args)
 

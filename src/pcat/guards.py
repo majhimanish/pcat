@@ -58,7 +58,7 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
         elif guard.kind == "must_call":
             facts = codeunit.calls(unit)
             for call in guard.names:
-                ok = any(target_matches(call, f.dotted, unit) for f in facts)
+                ok = any(target_matches(call, x, unit) for f in facts for x in (f.dotted, *f.alternatives))
                 if not ok and _maybe(unit, call, [f.dotted for f in facts]):
                     out.append(_skip(index, guard.kind, call, fname, unit.func.lineno))
                     continue
@@ -68,7 +68,8 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
         elif guard.kind == "must_not_call":
             facts = codeunit.calls(unit)
             for call in guard.names:
-                bad = [f for f in facts if target_matches(call, f.dotted, unit, strict=True)]
+                bad = [f for f in facts if any(target_matches(call, x, unit, strict=True)
+                                                for x in (f.dotted, *f.alternatives))]
                 out.append(GuardResult(index, guard.kind, call, not bad,
                                        f"`{bad[0].func if bad else fname}` calls `{bad[0].display if bad else call}`, "
                                        f"which the reviewed pattern forbids{why}",

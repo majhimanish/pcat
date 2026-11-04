@@ -1127,3 +1127,19 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      helpers, Flask resources, decorators). That is calibration, not a bug, and the
      threshold was calibrated on v3 data; changing it would need new labeled data.
      Inferred findings are advisory and never fail CI; KNOWN_GAPS has the numbers.
+222. **Fix: calls through `(conn or db)`.** A method call on `a or b` / `a if c else b`
+     records `a.m` and `b.m` (named operands) as alternatives; PC105/PC108 treat a
+     call matching an alternative on the other side as the same call, and guards
+     check the alternatives too. Before, LNbits CRUD helpers calling `db.execute`
+     were "no longer calling `.execute`" and "adding `db.execute`" against the
+     pattern's `(conn or db).execute`.
+223. **`.method` guard targets match any attribute call of that name.** `.fetchone`
+     now matches `db.fetchone(...)` (a method on an imported object), not only calls
+     on local values; for `must_not_call` this is stricter (`requests.post` now also
+     violates `.post`). Deliberate behavior change; no earlier test depended on it.
+224. **Survey classification.** Three verdicts: true deviation (derived code that
+     really differs), debatable (a sibling of the pattern where the difference is
+     legitimate or minor, e.g. LNbits CRUD helpers with positional `conn`, the house
+     style, against a keyword-only pattern), false positive (the finding is wrong,
+     or the function does not derive from the pattern at all). Sampled from the
+     `before` survey so the effect of the Part E fixes is visible per item.
