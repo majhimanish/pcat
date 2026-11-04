@@ -1,0 +1,84 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\nfrom typing import TextIO\nimport csv\nimport io\nimport os\nREQUIRED_COLUMNS = ('name', 'email')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n# pcat: importers.users_csv.parse@v1\ndef import_users(source: str | TextIO, max_rows: int=MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:\n    reader = csv.DictReader(io.StringIO(source) if isinstance(source, str) else source)\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return ([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n    reader.fieldnames = header\n    valid, errors, seen = ([], [], set())\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            stop = f'more than {max_rows} rows; stopped'\n            errors.append({'row': reader.line_num, 'errors': [stop]})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        age_raw = (row.get('age') or '').strip()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if age_raw and (not (age_raw.isdigit() and int(age_raw) <= 150)):\n            problems.append('age must be a whole number from 0 to 150')\n        if problems:\n            errors.append({'row': reader.line_num, 'errors': problems})\n        else:\n            seen.add(email)\n            valid.append({'name': name, 'email': email, 'age': int(age_raw) if age_raw else None})\n    return (valid, errors)\n\n\ndef excel_to_csv_text(data: bytes, max_rows: int = MAX_ROWS) -> str:\n    \"\"\"Convert the first sheet of an .xlsx file to CSV text, keeping row numbers aligned.\"\"\"\n    from openpyxl import load_workbook\n    workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=True)\n    try:\n        sheet = workbook.worksheets[0]\n        out = io.StringIO()\n        writer = csv.writer(out)\n        for number, cells in enumerate(sheet.iter_rows(values_only=True), 1):\n            if number > max_rows + 1:\n                break\n            writer.writerow(\n                ['' if c is None else str(c).replace('\\r', ' ').replace('\\n', ' ') for c in cells]\n            )\n        return out.getvalue()\n    finally:\n        workbook.close()\n\n\ndef validate_user_upload(filename: str, data: bytes, max_rows: int = MAX_ROWS) -> dict[str, Any]:\n    \"\"\"Validate an uploaded users export (.csv or .xlsx) and report every invalid row.\"\"\"\n    extension = os.path.splitext(filename or '')[1].lower()\n    try:\n        if extension == '.csv':\n            text = data.decode('utf-8-sig')\n        elif extension == '.xlsx':\n            text = excel_to_csv_text(data, max_rows)\n        else:\n            return {'valid_count': 0, 'invalid_count': 1, 'valid_users': [],\n                    'invalid_rows': [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]}\n    except Exception:\n        return {'valid_count': 0, 'invalid_count': 1, 'valid_users': [],\n                'invalid_rows': [{'row': 1, 'errors': ['file could not be read']}]}\n    valid_users, errors = import_users(text, max_rows)\n    return {\n        'valid_count': len(valid_users),\n        'invalid_count': len(errors),\n        'valid_users': valid_users,\n        'invalid_rows': sorted(errors, key=lambda e: e['row']),\n    }\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0823395,
+    "duration_ms": 27503,
+    "num_turns": 5
+  },
+  "group": "csv_import",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any\nfrom typing import TextIO\nimport csv\nimport io\nimport os\nREQUIRED_COLUMNS = ('name', 'email')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n# pcat: importers.users_csv.parse@v1\ndef import_users(source: str | TextIO, max_rows: int=MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:\n    reader = csv.DictReader(io.StringIO(source) if isinstance(source, str) else source)\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return ([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n    reader.fieldnames = header\n    valid, errors, seen = ([], [], set())\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            stop = f'more than {max_rows} rows; stopped'\n            errors.append({'row': reader.line_num, 'errors': [stop]})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        age_raw = (row.get('age') or '').strip()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if age_raw and (not (age_raw.isdigit() and int(age_raw) <= 150)):\n            problems.append('age must be a whole number from 0 to 150')\n        if problems:\n            errors.append({'row': reader.line_num, 'errors': problems})\n        else:\n            seen.add(email)\n            valid.append({'name': name, 'email': email, 'age': int(age_raw) if age_raw else None})\n    return (valid, errors)\n\n\ndef excel_to_csv_text(data: bytes, max_rows: int = MAX_ROWS) -> str:\n    \"\"\"Convert the first sheet of an .xlsx file to CSV text, keeping row numbers aligned.\"\"\"\n    from openpyxl import load_workbook\n    workbook = load_workbook(io.BytesIO(data), read_only=True, data_only=True)\n    try:\n        sheet = workbook.worksheets[0]\n        out = io.StringIO()\n        writer = csv.writer(out)\n        for number, cells in enumerate(sheet.iter_rows(values_only=True), 1):\n            if number > max_rows + 1:\n                break\n            writer.writerow(\n                ['' if c is None else str(c).replace('\\r', ' ').replace('\\n', ' ') for c in cells]\n            )\n        return out.getvalue()\n    finally:\n        workbook.close()\n\n\ndef validate_user_upload(filename: str, data: bytes, max_rows: int = MAX_ROWS) -> dict[str, Any]:\n    \"\"\"Validate an uploaded users export (.csv or .xlsx) and report every invalid row.\"\"\"\n    extension = os.path.splitext(filename or '')[1].lower()\n    try:\n        if extension == '.csv':\n            text = data.decode('utf-8-sig')\n        elif extension == '.xlsx':\n            text = excel_to_csv_text(data, max_rows)\n        else:\n            return {'valid_count': 0, 'invalid_count': 1, 'valid_users': [],\n                    'invalid_rows': [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]}\n    except Exception:\n        return {'valid_count': 0, 'invalid_count': 1, 'valid_users': [],\n                'invalid_rows': [{'row': 1, 'errors': ['file could not be read']}]}\n    valid_users, errors = import_users(text, max_rows)\n    return {\n        'valid_count': len(valid_users),\n        'invalid_count': len(errors),\n        'valid_users': valid_users,\n        'invalid_rows': sorted(errors, key=lambda e: e['row']),\n    }\n```",
+  "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 19,
+  "status": "ok",
+  "timestamp": "2026-11-04T01:34:04+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Parse and validate uploaded users spreadsheet (CSV or Excel) with per-row errors, required fields, email format, duplicates"
+      },
+      "result": {
+        "ids": [
+          "importers.users_csv.parse"
+        ],
+        "scores": [
+          29.405
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:38.934+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "importers.users_csv.parse",
+        "names": null
+      },
+      "result": {
+        "id": "importers.users_csv.parse@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T01:33:39.882+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 3709,
+        "pattern_id": "importers.users_csv.parse"
+      },
+      "result": {
+        "deviations": [
+          [
+            "import_users",
+            "importers.users_csv.parse@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "import_users",
+            "covered",
+            "importers.users_csv.parse"
+          ],
+          [
+            "excel_to_csv_text",
+            "none",
+            null
+          ],
+          [
+            "validate_user_upload",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:51.504+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

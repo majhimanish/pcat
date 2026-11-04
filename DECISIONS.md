@@ -888,3 +888,14 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      and `examples/`, run from each app's root so reports hold relative paths;
      the cache lives in `.bench/mine-cache`. Reports are reproducible
      (`scripts/v5.py mine`, checked byte-identical on a rerun).
+189. **Part A** reruns v4's feedback run unchanged (same 60 held-out requests,
+     prompt, model, flags, server = current v4.1 code) into
+     `experiments/linter/feedback_v4.1/<task>/`; `feedback --dir` and
+     `feedback-analyze --dir/--out` keep v4's `feedback/` and
+     `feedback_results.json` untouched (writing to the latter is refused). The v4
+     samples are re-scored under v4.1 rules into `feedback_v4.1/v4_rescored.json`;
+     the v3 baseline comes from `replay_v4.1.json`. "High unapproved" counts a
+     deviation covered only by a proposal as unapproved (v4.1 semantics);
+     `high_not_covered_by_a_proposal` excludes those. The approval census classes
+     every `# pcat-allow` line in the final code as confirmable (hash matches the
+     function), stale_hash, no_hash (v4 format) or invalid.

@@ -160,24 +160,25 @@ FEEDBACK = OUT / "feedback"
 FEEDBACK_TASKS = ("http_retry", "csv_import", "paginate_query")
 
 
-def _mcp_eval():
+def _mcp_eval(out_dir: Path = FEEDBACK):
     """scripts/mcp_eval.py as a module: the v3 end-to-end setup, reused unchanged."""
     spec = importlib.util.spec_from_file_location("mcp_eval", ROOT / "scripts" / "mcp_eval.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    module.E2E = FEEDBACK  # write to experiments/linter/feedback/, never to the v3 data
+    module.E2E = out_dir  # write under experiments/linter/<dir>/, never to the v3 data
     return module
 
 
 def cmd_feedback(args) -> int:
-    me = _mcp_eval()
+    feedback_dir = OUT / args.dir
+    me = _mcp_eval(feedback_dir)
     groups = args.groups.split(",") if args.groups else list(FEEDBACK_TASKS)
     jobs = [j for j in me.e2e_jobs(args.samples, 0) if j["group"] in groups]
     if args.only:
         jobs = [j for j in jobs if j["sample"] in {int(x) for x in args.only.split(",")}]
     todo = []
     for job in jobs:
-        path = FEEDBACK / job["group"] / f"sample_{job['sample']:02d}.json"
+        path = feedback_dir / job["group"] / f"sample_{job['sample']:02d}.json"
         if path.exists() and json.loads(path.read_text())["status"] == "ok":
             continue
         job.update(model=args.model, pcat=str(Path(sys.executable).parent / "pcat"))
@@ -196,16 +197,18 @@ def cmd_feedback_analyze(args) -> int:
     service = CatalogService(ROOT)
     tasks = evaluation.cataloged_tasks(ROOT)
     v3 = json.loads((ROOT / "experiments" / "mcp" / "e2e_results.json").read_text())
-    replay = json.loads((OUT / "replay.json").read_text())
-    results: dict = {"note": "v4 feedback run: same held-out requests and v3 setup, v4 server; "
-                             "cost is the CLI's estimate and may reflect plan usage", "tasks": {}}
+    replay = json.loads((OUT / args.replay).read_text())
+    feedback_dir = OUT / args.dir
+    results: dict = {"note": f"feedback run in {args.dir}/, scored with the current rules; v3 baseline "
+                             f"from {args.replay}; cost is the CLI's estimate and may reflect plan usage",
+                     "tasks": {}}
     total_cost = 0.0
     for task in FEEDBACK_TASKS:
         pattern_id = tasks[task]
         pattern = cat.get_one(ROOT, pattern_id)
         functions = [pattern.meta.entry_point, *pattern.meta.exports]
         rows = []
-        for path in sorted((FEEDBACK / task).glob("sample_*.json")):
+        for path in sorted((feedback_dir / task).glob("sample_*.json")):
             rec = json.loads(path.read_text())
             if rec["status"] != "ok":
                 rows.append({"sample": rec["sample"], "status": rec["status"]})
@@ -228,6 +231,8 @@ def cmd_feedback_analyze(args) -> int:
                 "cost_usd": rec["extra"].get("cost_usd"), "turns": rec["extra"].get("num_turns"),
                 **{k: scored[k] for k in ("codes", "high_codes", "worst", "worst_including_approved",
                                           "approvals", "marked", "third_party")},
+                "approval_lines": linteval.approval_census(rec["code"] or ""),
+                "worst_not_proposed": linteval.worst_not_proposed(scored["analyses"]),
             })
         ok = [r for r in rows if r["status"] == "ok"]
         n = len(ok) or 1
@@ -250,11 +255,17 @@ def cmd_feedback_analyze(args) -> int:
             "v3_worst": {s: sum(r["worst"] == s for r in v3_rows) for s in linteval.SEVERITIES},
             "worst": {s: sum(r["worst"] == s for r in ok) for s in linteval.SEVERITIES},
             "approval_codes": sorted({c for r in ok for c, _ in r["approvals"]}),
+            "high_not_covered_by_a_proposal_samples": sum(r["worst_not_proposed"] == "high" for r in ok),
+            "approval_lines": {state: sum(1 for r in ok for a in r["approval_lines"] if a["state"] == state)
+                               for state in linteval.CENSUS_STATES},
+            "samples_with_approval_lines": sum(bool(r["approval_lines"]) for r in ok),
         }
         results["tasks"][task] = {"pattern": pattern_id, "summary": summary, "samples": rows}
     results["total_cost_usd_estimate"] = round(total_cost, 2)
-    write_json(OUT / "feedback_results.json", results)
-    print("| Task | v3 match | v4 match | v3 high unapproved | v4 high unapproved | approved | check w/ id | cost |")
+    if (OUT / args.out).resolve() == (OUT / "feedback_results.json").resolve():
+        sys.exit("feedback_results.json is the frozen v4 result; pass another --out")
+    write_json(OUT / args.out, results)
+    print("| Task | v3 match | match | v3 high unapproved | high unapproved | approved | check w/ id | cost |")
     print("|---|---|---|---|---|---|---|---|")
     for task, data in results["tasks"].items():
         s = data["summary"]
@@ -274,8 +285,12 @@ def main() -> int:
     rp = sub.add_parser("replay")
     rp.add_argument("--out", default="replay_v4.1.json",
                     help="file under experiments/linter/ (replay.json is the frozen v4 result)")
-    sub.add_parser("feedback-analyze")
+    fa = sub.add_parser("feedback-analyze")
+    fa.add_argument("--dir", default="feedback", help="samples under experiments/linter/<dir>/")
+    fa.add_argument("--out", required=True, help="file under experiments/linter/")
+    fa.add_argument("--replay", default="replay_v4.1.json", help="v3 baseline replay file")
     f = sub.add_parser("feedback")
+    f.add_argument("--dir", default="feedback", help="output under experiments/linter/<dir>/")
     f.add_argument("--samples", type=int, default=20)
     f.add_argument("--groups", default="")
     f.add_argument("--only", default="", help="comma-separated sample numbers")

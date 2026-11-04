@@ -1,0 +1,324 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any, Iterator\nimport csv\nimport io\nimport zipfile\nfrom openpyxl import load_workbook\nfrom openpyxl.utils.exceptions import InvalidFileException\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _read_xlsx(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict[Any, Any]]]]:\n    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)\n    try:\n        lines = workbook.active.iter_rows(max_row=max_rows + 2, values_only=True)\n        first = next(lines, None)\n        if first is None:\n            return ([], [])\n        header = [('' if v is None else str(v)) for v in first]\n        rows = []\n        for number, values in enumerate(lines, 2):\n            cells = ['' if v is None else str(v).strip() for v in values]\n            row = dict(zip(header, cells))\n            row = {**{h: '' for h in header}, **row}\n            if len(cells) > len(header) and any(cells[len(header):]):\n                row[None] = cells[len(header):]\n            rows.append((number, row))\n        return (header, rows)\n    finally:\n        workbook.close()\n\n\n# pcat: importers.users_csv.parse@v1\ndef validate_user_upload(content: bytes, filename: str, valid_roles: tuple[str, ...]=VALID_ROLES, max_rows: int=MAX_ROWS) -> list[dict[str, Any]]:\n    lowered = filename.lower()\n    rows: Iterator[tuple[int, dict[Any, Any]]]\n    if lowered.endswith('.csv'):\n        try:\n            reader = csv.DictReader(io.StringIO(content.decode('utf-8-sig')))\n            fieldnames = reader.fieldnames\n        except (UnicodeDecodeError, csv.Error):\n            return [{'row': 1, 'errors': ['file is not a readable UTF-8 CSV']}]\n        raw_header = list(fieldnames or [])\n        rows = ((reader.line_num, row) for row in reader)\n    elif lowered.endswith('.xlsx'):\n        try:\n            raw_header, loaded = _read_xlsx(content, max_rows)\n        except (zipfile.BadZipFile, InvalidFileException, KeyError, OSError):\n            return [{'row': 1, 'errors': ['file is not a readable XLSX workbook']}]\n        rows = iter(loaded)\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]\n    header = [h.strip().lstrip('\\ufeff').lower() for h in raw_header]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}]\n    renamed = dict(zip(raw_header, header))\n    allowed = {r.strip().lower() for r in valid_roles}\n    errors, seen, count = ([], set(), 0)\n    try:\n        for number, raw in rows:\n            row = {renamed.get(k, k): v for k, v in raw.items()}\n            name = (row.get('name') or '').strip()\n            email = (row.get('email') or '').strip().lower()\n            role = (row.get('role') or '').strip().lower()\n            if not any((v or '').strip() for k, v in row.items() if k is not None) and None not in row:\n                continue\n            count += 1\n            if count > max_rows:\n                errors.append({'row': number, 'errors': [f'more than {max_rows} rows; stopped']})\n                break\n            local, _, domain = email.partition('@')\n            problems = [] if name else ['name is required']\n            if None in row:\n                problems.append('too many fields')\n            if not email:\n                problems.append('email is required')\n            elif len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n                problems.append('email is invalid')\n            elif email in seen:\n                problems.append('duplicate email')\n            if not role:\n                problems.append('role is required')\n            elif role not in allowed:\n                problems.append(f\"role must be one of: {', '.join(sorted(allowed))}\")\n            if problems:\n                errors.append({'row': number, 'errors': problems})\n            else:\n                seen.add(email)\n    except csv.Error:\n        errors.append({'row': 1, 'errors': ['file could not be fully parsed as CSV']})\n    return errors\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.1622746,
+    "duration_ms": 46263,
+    "num_turns": 6
+  },
+  "group": "csv_import",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any, Iterator\nimport csv\nimport io\nimport zipfile\nfrom openpyxl import load_workbook\nfrom openpyxl.utils.exceptions import InvalidFileException\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\ndef _read_xlsx(content: bytes, max_rows: int) -> tuple[list[str], list[tuple[int, dict[Any, Any]]]]:\n    workbook = load_workbook(io.BytesIO(content), read_only=True, data_only=True)\n    try:\n        lines = workbook.active.iter_rows(max_row=max_rows + 2, values_only=True)\n        first = next(lines, None)\n        if first is None:\n            return ([], [])\n        header = [('' if v is None else str(v)) for v in first]\n        rows = []\n        for number, values in enumerate(lines, 2):\n            cells = ['' if v is None else str(v).strip() for v in values]\n            row = dict(zip(header, cells))\n            row = {**{h: '' for h in header}, **row}\n            if len(cells) > len(header) and any(cells[len(header):]):\n                row[None] = cells[len(header):]\n            rows.append((number, row))\n        return (header, rows)\n    finally:\n        workbook.close()\n\n\n# pcat: importers.users_csv.parse@v1\ndef validate_user_upload(content: bytes, filename: str, valid_roles: tuple[str, ...]=VALID_ROLES, max_rows: int=MAX_ROWS) -> list[dict[str, Any]]:\n    lowered = filename.lower()\n    rows: Iterator[tuple[int, dict[Any, Any]]]\n    if lowered.endswith('.csv'):\n        try:\n            reader = csv.DictReader(io.StringIO(content.decode('utf-8-sig')))\n            fieldnames = reader.fieldnames\n        except (UnicodeDecodeError, csv.Error):\n            return [{'row': 1, 'errors': ['file is not a readable UTF-8 CSV']}]\n        raw_header = list(fieldnames or [])\n        rows = ((reader.line_num, row) for row in reader)\n    elif lowered.endswith('.xlsx'):\n        try:\n            raw_header, loaded = _read_xlsx(content, max_rows)\n        except (zipfile.BadZipFile, InvalidFileException, KeyError, OSError):\n            return [{'row': 1, 'errors': ['file is not a readable XLSX workbook']}]\n        rows = iter(loaded)\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; use .csv or .xlsx']}]\n    header = [h.strip().lstrip('\\ufeff').lower() for h in raw_header]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}]\n    renamed = dict(zip(raw_header, header))\n    allowed = {r.strip().lower() for r in valid_roles}\n    errors, seen, count = ([], set(), 0)\n    try:\n        for number, raw in rows:\n            row = {renamed.get(k, k): v for k, v in raw.items()}\n            name = (row.get('name') or '').strip()\n            email = (row.get('email') or '').strip().lower()\n            role = (row.get('role') or '').strip().lower()\n            if not any((v or '').strip() for k, v in row.items() if k is not None) and None not in row:\n                continue\n            count += 1\n            if count > max_rows:\n                errors.append({'row': number, 'errors': [f'more than {max_rows} rows; stopped']})\n                break\n            local, _, domain = email.partition('@')\n            problems = [] if name else ['name is required']\n            if None in row:\n                problems.append('too many fields')\n            if not email:\n                problems.append('email is required')\n            elif len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n                problems.append('email is invalid')\n            elif email in seen:\n                problems.append('duplicate email')\n            if not role:\n                problems.append('role is required')\n            elif role not in allowed:\n                problems.append(f\"role must be one of: {', '.join(sorted(allowed))}\")\n            if problems:\n                errors.append({'row': number, 'errors': problems})\n            else:\n                seen.add(email)\n    except csv.Error:\n        errors.append({'row': 1, 'errors': ['file could not be fully parsed as CSV']})\n    return errors\n```",
+  "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 17,
+  "status": "ok",
+  "timestamp": "2026-11-04T01:34:11+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Parse and validate a users CSV/XLSX upload with per-row errors"
+      },
+      "result": {
+        "ids": [
+          "importers.users_csv.parse"
+        ],
+        "scores": [
+          23.865
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:27.571+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "importers.users_csv.parse",
+        "names": null
+      },
+      "result": {
+        "id": "importers.users_csv.parse@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T01:33:28.539+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 3511,
+        "pattern_id": "importers.users_csv.parse"
+      },
+      "result": {
+        "deviations": [
+          [
+            "validate_user_upload",
+            "importers.users_csv.parse@v1",
+            [
+              [
+                "PC100",
+                false
+              ],
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC104",
+                false
+              ],
+              [
+                "PC104",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_cell",
+            "none",
+            null
+          ],
+          [
+            "_read_csv",
+            "none",
+            null
+          ],
+          [
+            "_read_xlsx",
+            "none",
+            null
+          ],
+          [
+            "validate_user_upload",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:41.759+00:00",
+      "tool": "check_code"
+    },
+    {
+      "arguments": {
+        "length": 4195,
+        "pattern_id": "importers.users_csv.parse"
+      },
+      "result": {
+        "deviations": [
+          [
+            "validate_user_upload",
+            "importers.users_csv.parse@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC105",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC107",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_read_xlsx",
+            "none",
+            null
+          ],
+          [
+            "validate_user_upload",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:58.502+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

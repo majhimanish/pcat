@@ -54,3 +54,21 @@ def test_confusion_and_replay_checks():
     assert checks["http_misses_high_PC100_or_PC101"] == 1
     assert checks["pagination_misses_with_PC106"] == 0
     assert (checks["csv_misses_switched_library"], checks["csv_switched_with_PC103"]) == (1, 1)
+
+
+def test_approval_census_and_worst_not_proposed():
+    import ast
+
+    from pcat import provenance
+
+    body = "def f(x):\n    return x + 1\n"
+    h = provenance.function_hash(ast.parse(body).body[0])
+    code = (f"# pcat-allow: PC100 #{h} -- the request needs this change\n"
+            "# pcat-allow: PC101 #00000000 -- written for some older code\n"
+            "# pcat-allow: PC109 -- v4 style approval without a hash\n"
+            "# pcat-allow: PC105 -- short\n" + body)
+    states = [(a["code"], a["state"]) for a in linteval.approval_census(code)]
+    assert states == [("PC100", "confirmable"), ("PC101", "stale_hash"), ("PC109", "no_hash"), ("PC105", "invalid")]
+    analyses = [{"deviations": [{"severity": "high", "approved": False, "approval_state": "proposed"},
+                                {"severity": "medium", "approved": False, "approval_state": None}]}]
+    assert linteval.worst_not_proposed(analyses) == "medium" and linteval.worst(analyses) == "high"

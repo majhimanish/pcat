@@ -145,3 +145,42 @@ def replay_checks(rows: list[dict]) -> dict:
         "csv_misses_switched_library": len(csv_switched),
         "csv_switched_with_PC103": sum("PC103" in r["codes"] for r in csv_switched),
     }
+
+
+CENSUS_STATES = ("confirmable", "stale_hash", "no_hash", "invalid")
+
+
+def approval_census(code: str) -> list[dict]:
+    """Every `# pcat-allow` line in final code: confirmable (hash matches the function, a
+    human could confirm it), stale_hash (hash of other code), no_hash (v4 format), invalid."""
+    try:
+        infos = provenance.functions(code)
+    except (SyntaxError, ValueError):
+        return []
+    out = []
+    for info in infos:
+        current = provenance.function_hash(info.node)
+        for a in info.approvals:
+            if a.problem and a.code is None:
+                state = "invalid"
+            elif a.problem:
+                state = "invalid"
+            elif a.hash is None:
+                state = "no_hash"
+            elif a.hash != current:
+                state = "stale_hash"
+            else:
+                state = "confirmable"
+            out.append({"function": info.qualname, "code": a.code, "hash": a.hash,
+                        "current_hash": current, "state": state, "reason": a.reason})
+    return out
+
+
+def worst_not_proposed(analyses: list[dict]) -> str:
+    """Highest severity among deviations neither approved nor covered by a proposal."""
+    rank = 0
+    for a in analyses:
+        for d in a["deviations"]:
+            if not d["approved"] and d.get("approval_state") != "proposed":
+                rank = max(rank, SEVERITIES.index(d["severity"]))
+    return SEVERITIES[rank]

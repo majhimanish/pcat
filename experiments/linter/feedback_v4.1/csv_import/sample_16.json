@@ -1,0 +1,88 @@
+{
+  "attempts": 1,
+  "backend": "cli",
+  "code": "from typing import Any\nfrom typing import TextIO\nimport csv\nimport io\n\nimport pandas as pd\n\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\n# pcat: importers.users_csv.parse@v1\ndef import_users(source: str | TextIO, max_rows: int=MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:\n    reader = csv.DictReader(io.StringIO(source) if isinstance(source, str) else source)\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return ([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n    reader.fieldnames = header\n    valid, errors, seen = ([], [], set())\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            stop = f'more than {max_rows} rows; stopped'\n            errors.append({'row': reader.line_num, 'errors': [stop]})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        role = (row.get('role') or '').strip().lower()\n        age_raw = (row.get('age') or '').strip()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if not role:\n            problems.append('role is required')\n        elif role not in VALID_ROLES:\n            problems.append(f\"role must be one of: {', '.join(VALID_ROLES)}\")\n        if age_raw and (not (age_raw.isdigit() and int(age_raw) <= 150)):\n            problems.append('age must be a whole number from 0 to 150')\n        if problems:\n            errors.append({'row': reader.line_num, 'errors': problems})\n        else:\n            seen.add(email)\n            valid.append({'name': name, 'email': email, 'role': role, 'age': int(age_raw) if age_raw else None})\n    return (valid, errors)\n\n\ndef validate_users_upload(data: bytes, filename: str, max_rows: int=MAX_ROWS) -> list[dict[str, Any]]:\n    \"\"\"Validate an uploaded CSV/xlsx of new users and return only the bad rows.\n\n    Each item is {\"row\": <spreadsheet row number, header = row 1>, \"errors\": [reasons]}.\n    All problems in every row are reported; validation never stops at the first error.\n    \"\"\"\n    lower = filename.lower()\n    if lower.endswith('.xlsx'):\n        try:\n            frame = pd.read_excel(io.BytesIO(data), dtype=str, keep_default_na=False, nrows=max_rows + 1)\n        except Exception:\n            return [{'row': 1, 'errors': ['could not read the xlsx file']}]\n        text = frame.to_csv(index=False)\n    elif lower.endswith('.csv'):\n        try:\n            text = data.decode('utf-8-sig')\n        except UnicodeDecodeError:\n            return [{'row': 1, 'errors': ['file is not valid UTF-8']}]\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; upload .csv or .xlsx']}]\n    return import_users(text, max_rows)[1]\n\n\n# ---------------------------------------------------------------- tests (pytest)\ndef _csv(text: str) -> bytes:\n    return text.encode('utf-8')\n\n\ndef test_reports_all_problems_per_row_without_stopping():\n    data = _csv(\n        'name,email,role\\n'\n        'Ann,ann@example.com,admin\\n'      # row 2: ok\n        ',not-an-email,boss\\n'             # row 3: three problems\n        'Bob,ANN@example.com,viewer\\n'     # row 4: duplicate of row 2\n        'Cy,cy@example.com,\\n'             # row 5: missing role\n    )\n    errors = validate_users_upload(data, 'users.csv')\n    assert [e['row'] for e in errors] == [3, 4, 5]\n    assert errors[0]['errors'] == [\n        'name is required',\n        'email is invalid',\n        'role must be one of: admin, editor, viewer',\n    ]\n    assert errors[1]['errors'] == ['duplicate email']\n    assert errors[2]['errors'] == ['role is required']\n\n\ndef test_valid_file_returns_no_errors():\n    data = _csv('name,email,role,age\\nAnn,ann@example.com,Admin,30\\nBob,bob@example.com,viewer,\\n')\n    assert validate_users_upload(data, 'ok.csv') == []\n\n\ndef test_missing_required_column_and_bad_extension():\n    errors = validate_users_upload(_csv('name,email\\nAnn,ann@example.com\\n'), 'u.csv')\n    assert errors == [{'row': 1, 'errors': ['missing columns: role']}]\n    assert 'unsupported' in validate_users_upload(b'x', 'u.txt')[0]['errors'][0]\n\n\ndef test_xlsx_upload_matches_csv_behaviour():\n    buf = io.BytesIO()\n    pd.DataFrame(\n        {'name': ['Ann', 'Bob'], 'email': ['ann@example.com', 'bad'], 'role': ['admin', 'viewer']}\n    ).to_excel(buf, index=False)\n    errors = validate_users_upload(buf.getvalue(), 'users.xlsx')\n    assert errors == [{'row': 3, 'errors': ['email is invalid']}]\n",
+  "error": null,
+  "extra": {
+    "cost_usd": 0.0874607,
+    "duration_ms": 26567,
+    "num_turns": 5
+  },
+  "group": "csv_import",
+  "model": "claude-sonnet-5-5",
+  "prompt": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.\n\nThis repo uses the organization's pattern catalog via the pcat tools.\n\nRespond with exactly one Python code block and nothing else: standalone functions only (no classes), no explanation before or after the code.",
+  "raw_response": "```python\nfrom typing import Any\nfrom typing import TextIO\nimport csv\nimport io\n\nimport pandas as pd\n\nREQUIRED_COLUMNS = ('name', 'email', 'role')\nVALID_ROLES = ('admin', 'editor', 'viewer')\nMAX_ROWS = 10000\nMAX_EMAIL_LENGTH = 254\n\n\n# pcat: importers.users_csv.parse@v1\ndef import_users(source: str | TextIO, max_rows: int=MAX_ROWS) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:\n    reader = csv.DictReader(io.StringIO(source) if isinstance(source, str) else source)\n    header = [h.strip().lstrip('\\ufeff').lower() for h in reader.fieldnames or []]\n    missing = [c for c in REQUIRED_COLUMNS if c not in header]\n    if missing:\n        return ([], [{'row': 1, 'errors': [f\"missing columns: {', '.join(missing)}\"]}])\n    reader.fieldnames = header\n    valid, errors, seen = ([], [], set())\n    for count, row in enumerate(reader, 1):\n        if count > max_rows:\n            stop = f'more than {max_rows} rows; stopped'\n            errors.append({'row': reader.line_num, 'errors': [stop]})\n            break\n        name = (row.get('name') or '').strip()\n        email = (row.get('email') or '').strip().lower()\n        role = (row.get('role') or '').strip().lower()\n        age_raw = (row.get('age') or '').strip()\n        local, _, domain = email.partition('@')\n        problems = [] if name else ['name is required']\n        if None in row:\n            problems.append('too many fields')\n        if len(email) > MAX_EMAIL_LENGTH or not local or ' ' in email or ('@' in domain) or ('.' not in domain.strip('.')):\n            problems.append('email is invalid')\n        elif email in seen:\n            problems.append('duplicate email')\n        if not role:\n            problems.append('role is required')\n        elif role not in VALID_ROLES:\n            problems.append(f\"role must be one of: {', '.join(VALID_ROLES)}\")\n        if age_raw and (not (age_raw.isdigit() and int(age_raw) <= 150)):\n            problems.append('age must be a whole number from 0 to 150')\n        if problems:\n            errors.append({'row': reader.line_num, 'errors': problems})\n        else:\n            seen.add(email)\n            valid.append({'name': name, 'email': email, 'role': role, 'age': int(age_raw) if age_raw else None})\n    return (valid, errors)\n\n\ndef validate_users_upload(data: bytes, filename: str, max_rows: int=MAX_ROWS) -> list[dict[str, Any]]:\n    \"\"\"Validate an uploaded CSV/xlsx of new users and return only the bad rows.\n\n    Each item is {\"row\": <spreadsheet row number, header = row 1>, \"errors\": [reasons]}.\n    All problems in every row are reported; validation never stops at the first error.\n    \"\"\"\n    lower = filename.lower()\n    if lower.endswith('.xlsx'):\n        try:\n            frame = pd.read_excel(io.BytesIO(data), dtype=str, keep_default_na=False, nrows=max_rows + 1)\n        except Exception:\n            return [{'row': 1, 'errors': ['could not read the xlsx file']}]\n        text = frame.to_csv(index=False)\n    elif lower.endswith('.csv'):\n        try:\n            text = data.decode('utf-8-sig')\n        except UnicodeDecodeError:\n            return [{'row': 1, 'errors': ['file is not valid UTF-8']}]\n    else:\n        return [{'row': 1, 'errors': ['unsupported file type; upload .csv or .xlsx']}]\n    return import_users(text, max_rows)[1]\n\n\n# ---------------------------------------------------------------- tests (pytest)\ndef _csv(text: str) -> bytes:\n    return text.encode('utf-8')\n\n\ndef test_reports_all_problems_per_row_without_stopping():\n    data = _csv(\n        'name,email,role\\n'\n        'Ann,ann@example.com,admin\\n'      # row 2: ok\n        ',not-an-email,boss\\n'             # row 3: three problems\n        'Bob,ANN@example.com,viewer\\n'     # row 4: duplicate of row 2\n        'Cy,cy@example.com,\\n'             # row 5: missing role\n    )\n    errors = validate_users_upload(data, 'users.csv')\n    assert [e['row'] for e in errors] == [3, 4, 5]\n    assert errors[0]['errors'] == [\n        'name is required',\n        'email is invalid',\n        'role must be one of: admin, editor, viewer',\n    ]\n    assert errors[1]['errors'] == ['duplicate email']\n    assert errors[2]['errors'] == ['role is required']\n\n\ndef test_valid_file_returns_no_errors():\n    data = _csv('name,email,role,age\\nAnn,ann@example.com,Admin,30\\nBob,bob@example.com,viewer,\\n')\n    assert validate_users_upload(data, 'ok.csv') == []\n\n\ndef test_missing_required_column_and_bad_extension():\n    errors = validate_users_upload(_csv('name,email\\nAnn,ann@example.com\\n'), 'u.csv')\n    assert errors == [{'row': 1, 'errors': ['missing columns: role']}]\n    assert 'unsupported' in validate_users_upload(b'x', 'u.txt')[0]['errors'][0]\n\n\ndef test_xlsx_upload_matches_csv_behaviour():\n    buf = io.BytesIO()\n    pd.DataFrame(\n        {'name': ['Ann', 'Bob'], 'email': ['ann@example.com', 'bad'], 'role': ['admin', 'viewer']}\n    ).to_excel(buf, index=False)\n    errors = validate_users_upload(buf.getvalue(), 'users.xlsx')\n    assert errors == [{'row': 3, 'errors': ['email is invalid']}]\n```",
+  "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+  "requested_model": "claude-sonnet-5-5",
+  "sample": 16,
+  "status": "ok",
+  "timestamp": "2026-11-04T01:33:41+00:00",
+  "tool_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Parse and validate a users CSV/xlsx upload with per-row errors"
+      },
+      "result": {
+        "ids": [
+          "importers.users_csv.parse"
+        ],
+        "scores": [
+          23.865
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:16.512+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "importers.users_csv.parse",
+        "names": null
+      },
+      "result": {
+        "id": "importers.users_csv.parse@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-04T01:33:17.390+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 2879,
+        "pattern_id": "importers.users_csv.parse"
+      },
+      "result": {
+        "deviations": [
+          [
+            "import_users",
+            "importers.users_csv.parse@v1",
+            [
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "import_users",
+            "none",
+            null
+          ],
+          [
+            "validate_users_upload",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-04T01:33:27.528+00:00",
+      "tool": "check_code"
+    }
+  ]
+}

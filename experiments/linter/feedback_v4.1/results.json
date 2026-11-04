@@ -1,0 +1,1854 @@
+{
+  "note": "feedback run in feedback_v4.1/, scored with the current rules; v3 baseline from replay_v4.1.json; cost is the CLI's estimate and may reflect plan usage",
+  "tasks": {
+    "csv_import": {
+      "pattern": "importers.users_csv.parse",
+      "samples": [
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.0881823,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 1,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "pandas"
+          ],
+          "turns": 5,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.0862135,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 2,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.08120530000000001,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 3,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0734033,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 4,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0792555,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 5,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 2,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.12244909999999999,
+          "high_codes": [],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 6,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "pandas"
+          ],
+          "turns": 6,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC105",
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.075716,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 7,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "medium",
+          "worst_including_approved": "medium",
+          "worst_not_proposed": "medium"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0781588,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 8,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0772303,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 9,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.072374,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 10,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.08325350000000001,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 11,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "pandas"
+          ],
+          "turns": 5,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.0819676,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 12,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.07631160000000001,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 13,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.07676530000000001,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 14,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0773673,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 15,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 6,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.0874607,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (CSV or xlsx), validates every row (required fields, email format, duplicate emails, valid role, etc.), and returns a list of the bad rows with the row number and a clear reason for each problem rather than stopping at the first error. I'd like it to use pandas if that makes sense, and include a few pytest tests.",
+          "retrieved": true,
+          "sample": 16,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "pandas"
+          ],
+          "turns": 5,
+          "worst": "low",
+          "worst_including_approved": "low",
+          "worst_not_proposed": "low"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 2,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC103",
+            "PC105",
+            "PC107",
+            "PC108",
+            "PC109",
+            "PC110"
+          ],
+          "cost_usd": 0.1622746,
+          "high_codes": [],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or XLSX), validates every row (e.g. required fields, email format, duplicate emails, valid role values), and returns a list of the bad rows with the row number and a clear reason for each problem, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 17,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 6,
+          "worst": "medium",
+          "worst_including_approved": "medium",
+          "worst_not_proposed": "medium"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0758476,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (required fields, email format, duplicates, etc.), and returns a report listing each invalid row with its row number and the specific reason(s) it failed. I want it to keep going after the first error so staff see all the problems at once, not just the first one.",
+          "retrieved": true,
+          "sample": 18,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0823395,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a Python function for our admin tool that reads an uploaded spreadsheet export of new users (CSV or Excel), validates every row (e.g., required fields, email format, duplicates), and returns a report listing each invalid row by row number with a clear reason for each problem. It should keep going after the first error instead of stopping, so staff can see all the bad rows at once.",
+          "retrieved": true,
+          "sample": 19,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0735818,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a function for our admin tool that takes an uploaded spreadsheet export of new users (xlsx or csv), validates every row (required fields, email format, duplicates, etc.), and returns a clear list of which rows are invalid and the reason for each, rather than stopping at the first error.",
+          "retrieved": true,
+          "sample": 20,
+          "searched": true,
+          "status": "ok",
+          "third_party": [
+            "openpyxl"
+          ],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        }
+      ],
+      "summary": {
+        "approval_codes": [],
+        "approval_lines": {
+          "confirmable": 0,
+          "invalid": 0,
+          "no_hash": 0,
+          "stale_hash": 0
+        },
+        "approved_samples": 0,
+        "check_rate": 1.0,
+        "check_with_pattern_id_rate": 1.0,
+        "cost_usd": 1.7114,
+        "high_not_covered_by_a_proposal_samples": 0,
+        "kept_marker": 20,
+        "mean_check_calls": 1.1,
+        "ok": 20,
+        "pattern_match_exact": 0.6,
+        "pattern_match_shape": 0.6,
+        "samples": 20,
+        "samples_with_approval_lines": 0,
+        "unapproved_high_samples": 0,
+        "v3_pattern_match_shape": 0.5,
+        "v3_unapproved_high_samples": 5,
+        "v3_worst": {
+          "high": 5,
+          "low": 0,
+          "medium": 5,
+          "none": 10
+        },
+        "worst": {
+          "high": 0,
+          "low": 6,
+          "medium": 2,
+          "none": 12
+        }
+      }
+    },
+    "http_retry": {
+      "pattern": "http.get_with_retry.requests",
+      "samples": [
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says retry only on timeouts and 5xx, never on 4xx (including 429)",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.18306850000000002,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 1,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "Request explicitly limits retries to timeouts and 5xx; 429 is a 4xx and plain connection errors are not timeouts, so neither is retried.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.061231900000000006,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 2,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says never retry 4xx; 429 is a 4xx. NOTE: a human must confirm this approval in the pull request.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0620613,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 3,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 6,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "Request explicitly says to retry only timeouts and 5xx, never 4xx (429 is a 4xx)",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0601761,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 4,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "call_payments_api",
+              "hash": "90b31ba6",
+              "reason": "Request explicitly says not to retry any 4xx; 429 is a 4xx, so it is removed from RETRY_STATUSES. A human must confirm this approval in the pull request.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0609071,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 5,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request requires no retries on any 4xx response, including 429",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.05697050000000001,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 6,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "Request explicitly limits retries to timeouts and 5xx; 429 (a 4xx) and non-timeout connection errors must not be retried. Needs human confirmation in the PR.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.057989799999999994,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 7,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says to never retry 4xx, so 429 is excluded (NOTE: a human must confirm this approval in the pull request)",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.05879530000000001,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 8,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says retry only timeouts and 5xx, never 4xx (429 excluded); needs human confirmation in the PR",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0577766,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 9,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "call_payments_api",
+              "hash": "90b31ba6",
+              "reason": "request explicitly forbids retrying any 4xx, including 429; needs human confirmation in the PR",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0589869,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 10,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says never retry 4xx, so 429 is excluded; needs human confirmation in the PR",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0595648,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 11,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 7,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "request says to retry only timeouts and 5xx, never 4xx, so 429 is dropped from RETRY_STATUSES; human confirmation required",
+              "state": "confirmable"
+            },
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "request says to retry only timeouts and server errors, so requests.ConnectionError is no longer retried; human confirmation required",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0584378,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 12,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says not to retry 4xx; 429 is a 4xx, so it is removed from RETRY_STATUSES (needs human confirmation in the PR)",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0568525,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 13,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly requires no retries on any 4xx response, including 429",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0616397,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 14,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 7,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "call_payments_api",
+              "hash": "90b31ba6",
+              "reason": "Request explicitly says not to retry any 4xx; 429 is a 4xx, so it is removed from RETRY_STATUSES.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0587071,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 15,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request says to retry only timeouts and 5xx and never 4xx; 429 is a 4xx, so it is removed from RETRY_STATUSES",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.058630299999999996,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter so retries don't all hit at once.",
+          "retrieved": true,
+          "sample": 16,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "Request explicitly says to retry only on timeouts and 5xx, never on 4xx; 429 is a 4xx so it is excluded from RETRY_STATUSES.",
+              "state": "confirmable"
+            },
+            {
+              "code": "PC100",
+              "current_hash": "6db40061",
+              "function": "get_with_retry",
+              "hash": "6db40061",
+              "reason": "Request explicitly says to retry only on timeouts and server errors, so requests.ConnectionError is deliberately not retried; only requests.Timeout is.",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0594386,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": false,
+          "match_shape": false,
+          "request": "Our service calls a flaky external HTTP API that sometimes times out or returns 5xx errors, so can you write a Python helper that retries the request with exponential backoff (and some jitter), gives up after a max number of attempts, and only retries on timeouts and server errors, not on 4xx responses?",
+          "retrieved": true,
+          "sample": 17,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request says retry only on timeouts and 5xx, never on 4xx (429 is 4xx)",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 2,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0825167,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts, add a bit of jitter to the delays, and raise the original error if it still fails after the last try.",
+          "retrieved": true,
+          "sample": 18,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 7,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says not to retry any 4xx, which includes 429; NOTE: a human must confirm this approval in the pull request",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0572164,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic with exponential backoff to the function in my service that calls the external HTTP API, so it retries on timeouts and 5xx responses but not on 4xx errors. Cap it at a few attempts and add a little jitter to the delays so it doesn't hammer the API.",
+          "retrieved": true,
+          "sample": 19,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 6,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [
+            {
+              "code": "PC100",
+              "current_hash": "90b31ba6",
+              "function": "get_with_retry",
+              "hash": "90b31ba6",
+              "reason": "request explicitly says never to retry 4xx responses, and 429 is a 4xx; only timeouts and 5xx are retried",
+              "state": "confirmable"
+            }
+          ],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [
+            "PC100"
+          ],
+          "cost_usd": 0.0597739,
+          "high_codes": [
+            "PC100"
+          ],
+          "high_seen_in_check": true,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add retry logic to my function that calls the external payments HTTP API so it retries on timeouts and 5xx responses with exponential backoff (and some jitter), giving up after a handful of attempts. Please don't retry on 4xx errors, and make the max attempts and base delay configurable.",
+          "retrieved": true,
+          "sample": 20,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "high",
+          "worst_including_approved": "high",
+          "worst_not_proposed": "none"
+        }
+      ],
+      "summary": {
+        "approval_codes": [],
+        "approval_lines": {
+          "confirmable": 22,
+          "invalid": 0,
+          "no_hash": 0,
+          "stale_hash": 0
+        },
+        "approved_samples": 0,
+        "check_rate": 1.0,
+        "check_with_pattern_id_rate": 1.0,
+        "cost_usd": 1.3307,
+        "high_not_covered_by_a_proposal_samples": 0,
+        "kept_marker": 20,
+        "mean_check_calls": 1.05,
+        "ok": 20,
+        "pattern_match_exact": 0.8,
+        "pattern_match_shape": 0.8,
+        "samples": 20,
+        "samples_with_approval_lines": 20,
+        "unapproved_high_samples": 20,
+        "v3_pattern_match_shape": 0.7,
+        "v3_unapproved_high_samples": 20,
+        "v3_worst": {
+          "high": 20,
+          "low": 0,
+          "medium": 0,
+          "none": 0
+        },
+        "worst": {
+          "high": 20,
+          "low": 0,
+          "medium": 0,
+          "none": 0
+        }
+      }
+    },
+    "paginate_query": {
+      "pattern": "db.pagination.select_page",
+      "samples": [
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.052017299999999995,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 1,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0557177,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 2,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0521203,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 3,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.038971399999999996,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 4,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.0407077,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 5,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.038954199999999994,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 6,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0556742,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 7,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.036140700000000005,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 8,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.036131,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 9,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.036126599999999995,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 10,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0493459,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 11,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.054751,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 12,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.036149299999999995,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 13,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.048317399999999996,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 14,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.045189900000000005,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 15,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.036112599999999995,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. I want the count and the page fetched correctly without loading everything into memory.",
+          "retrieved": true,
+          "sample": 16,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 2,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0689989,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Add pagination to my SQLAlchemy-backed list endpoint so it takes page and page size parameters and returns just that page of records along with the total count of matching records. Please make sure the total is computed efficiently and the page ordering is stable so records don't shift between pages.",
+          "retrieved": true,
+          "sample": 17,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 6,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.0483774,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My SQLAlchemy-backed list endpoint needs pagination: can you write a function that takes a query plus page and page size, and returns that page of records along with the total count of matching records?",
+          "retrieved": true,
+          "sample": 18,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 1,
+          "checked_with_pattern_id": true,
+          "codes": [],
+          "cost_usd": 0.048317399999999996,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "Write a helper for my SQLAlchemy-backed list endpoint that takes a query plus page and page size, and returns that page of records along with the total count of matching records. Please keep it efficient, so the count doesn't load all the rows into memory.",
+          "retrieved": true,
+          "sample": 19,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 5,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        },
+        {
+          "approval_lines": [],
+          "approvals": [],
+          "check_calls": 0,
+          "checked_with_pattern_id": false,
+          "codes": [],
+          "cost_usd": 0.0361524,
+          "high_codes": [],
+          "high_seen_in_check": false,
+          "marked": true,
+          "match_exact": true,
+          "match_shape": true,
+          "request": "My list endpoint queries records with SQLAlchemy, and I need it to return results one page at a time along with the total number of matching records. Can you write the pagination code, taking page number and page size as parameters?",
+          "retrieved": true,
+          "sample": 20,
+          "searched": true,
+          "status": "ok",
+          "third_party": [],
+          "turns": 4,
+          "worst": "none",
+          "worst_including_approved": "none",
+          "worst_not_proposed": "none"
+        }
+      ],
+      "summary": {
+        "approval_codes": [],
+        "approval_lines": {
+          "confirmable": 0,
+          "invalid": 0,
+          "no_hash": 0,
+          "stale_hash": 0
+        },
+        "approved_samples": 0,
+        "check_rate": 0.55,
+        "check_with_pattern_id_rate": 0.55,
+        "cost_usd": 0.9143,
+        "high_not_covered_by_a_proposal_samples": 0,
+        "kept_marker": 20,
+        "mean_check_calls": 0.6,
+        "ok": 20,
+        "pattern_match_exact": 1.0,
+        "pattern_match_shape": 1.0,
+        "samples": 20,
+        "samples_with_approval_lines": 0,
+        "unapproved_high_samples": 0,
+        "v3_pattern_match_shape": 0.9,
+        "v3_unapproved_high_samples": 0,
+        "v3_worst": {
+          "high": 0,
+          "low": 0,
+          "medium": 2,
+          "none": 18
+        },
+        "worst": {
+          "high": 0,
+          "low": 0,
+          "medium": 0,
+          "none": 20
+        }
+      }
+    }
+  },
+  "total_cost_usd_estimate": 3.96
+}
