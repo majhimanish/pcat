@@ -872,3 +872,19 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      a confirmation by the agent would defeat the purpose.
 186. **CLAUDE.md** was compressed (status merged per phase, checklist folded) to
      stay at 150 lines.
+
+## v5 — realistic simulation on open-source applications (`docs/specs/v5-open-source-simulation.md`)
+
+187. **Apps** (`experiments/v5/apps.yaml`, pinned to release tags and commits):
+     CTFd 3.8.9 (Flask, Apache-2.0), healthchecks v5.0.3 (Django, BSD-3),
+     LNbits v1.6.2 (FastAPI, MIT). Rejected from the list: the FastAPI template
+     (3k lines), mealie (AGPL), netbox (420k lines, class-based throughout).
+     No listed FastAPI candidate fit, so two outside the list were checked:
+     Netflix/dispatch (last commit 2025-09-02, not maintained) and polar (659k
+     lines); LNbits fits. "Lines of Python" = all `.py` files at the tag (also
+     reported without tests/migrations/docs).
+188. **Mining** uses `pcat mine` defaults (tests excluded) plus excludes for
+     `migrations/`, `migrations.py` (LNbits keeps migrations in files), `docs/`
+     and `examples/`, run from each app's root so reports hold relative paths;
+     the cache lives in `.bench/mine-cache`. Reports are reproducible
+     (`scripts/v5.py mine`, checked byte-identical on a rerun).

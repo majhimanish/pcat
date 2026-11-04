@@ -1,0 +1,2229 @@
+{
+  "canonical_version": 2,
+  "coverage": {
+    "catalog_patterns": 13,
+    "covered": 0,
+    "covered_percent": 0.0,
+    "functions": 1768,
+    "near_covered": 0,
+    "near_covered_percent": 0.0,
+    "patterns": [
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.jwt.create_access_token@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.password.pbkdf2@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "collections.group_by.dict_of_lists@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "config.env.load_settings@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "db.pagination.select_page@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "http.get_with_retry.requests@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "importers.users_csv.parse@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "ratelimit.token_bucket.check@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "retry.with_exponential_backoff@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.iterative@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "sort.merge_sort.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "text.slugify.ascii@v1"
+      }
+    ]
+  },
+  "fragment_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "5c542e6682ad57b6f96e65e931b52f7d27bc78f3b6d66ae7144310ef95062a92",
+          "members": [
+            0,
+            1,
+            4
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "4e1607a9d4b59d6ad221b748322bc579bc25f6a48e3be05b921fea233ff517ae",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "65e27afc1993916da204200d8810917613da347877b45b2f40fc580ab68597aa",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fr-9f1729a54528",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 50,
+          "end_lineno": 62,
+          "exact_fingerprint": "5c542e6682ad57b6f96e65e931b52f7d27bc78f3b6d66ae7144310ef95062a92",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 0,
+          "input": 0,
+          "lineno": 61,
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StorageSetRequest.parse_data_json",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 50,
+          "end_lineno": 79,
+          "exact_fingerprint": "5c542e6682ad57b6f96e65e931b52f7d27bc78f3b6d66ae7144310ef95062a92",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 1,
+          "input": 0,
+          "lineno": 78,
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StorageAppendPublicRequest.parse_data_json",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 101,
+          "exact_fingerprint": "4e1607a9d4b59d6ad221b748322bc579bc25f6a48e3be05b921fea233ff517ae",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 2,
+          "input": 0,
+          "lineno": 100,
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StoragePaginatedRequest.parse_json_fields",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 68,
+          "end_lineno": 105,
+          "exact_fingerprint": "65e27afc1993916da204200d8810917613da347877b45b2f40fc580ab68597aa",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 3,
+          "input": 0,
+          "lineno": 104,
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StoragePaginatedRequest.parse_json_fields",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 50,
+          "end_lineno": 129,
+          "exact_fingerprint": "5c542e6682ad57b6f96e65e931b52f7d27bc78f3b6d66ae7144310ef95062a92",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 4,
+          "input": 0,
+          "lineno": 128,
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "WebsocketPublishRequest.parse_data_json",
+          "statement": "if"
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 5,
+      "score": 104,
+      "shape_fingerprint": "9f1729a545286058dd87b483bacd34a73b5a58be5ed416a73e74ba1f39447477",
+      "shape_text": "if v0 is not None and '' not in v1:\n    v1[''] = json.loads(v0)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "547b4ab6aec949ca5044f95baa92110f27d7e2ac30d41eca1534800de27c9ad9",
+          "members": [
+            0,
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "c09fc0c40268252bb2b2aae67d580db60362c61392fd97d97923c12c0ef8fb78",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fr-134f51405118",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 86,
+          "exact_fingerprint": "547b4ab6aec949ca5044f95baa92110f27d7e2ac30d41eca1534800de27c9ad9",
+          "file_hash": "bdb38ad0c8cebf41b7f4139da0e50375fe9e53bc04ab4f929a61793ac1d7e7d0",
+          "index": 0,
+          "input": 0,
+          "lineno": 81,
+          "path": "lnbits/wallets/alby.py",
+          "qualname": "AlbyWallet.create_invoice",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 89,
+          "exact_fingerprint": "547b4ab6aec949ca5044f95baa92110f27d7e2ac30d41eca1534800de27c9ad9",
+          "file_hash": "de9b4c53c5853a264772eb6d83195d296d1d46815ce8f5dcce286aa652e4c2ee",
+          "index": 1,
+          "input": 0,
+          "lineno": 84,
+          "path": "lnbits/wallets/lnpay.py",
+          "qualname": "LNPayWallet.create_invoice",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 44,
+          "end_lineno": 83,
+          "exact_fingerprint": "c09fc0c40268252bb2b2aae67d580db60362c61392fd97d97923c12c0ef8fb78",
+          "file_hash": "f6d796adc26a312a231edc80fae1fa46807a56758e157b1cc74db8eda667051d",
+          "index": 2,
+          "input": 0,
+          "lineno": 78,
+          "path": "lnbits/wallets/zbd.py",
+          "qualname": "ZBDWallet.create_invoice",
+          "statement": "if"
+        }
+      ],
+      "node_count": 44,
+      "occurrences": 3,
+      "score": 88,
+      "shape_fingerprint": "134f51405118293be71ee6fc6be27e68c75c072409f5cfc6c95949d54e1aa694",
+      "shape_text": "if v0:\n    v1[''] = v0.hex()\nelif v2:\n    v1[''] = hashlib.sha256(v2).hexdigest()\nelse:\n    v1[''] = v3 or ''\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 4,
+          "exact_fingerprint": "f0ec83e8f210a795686366e5b37732adc7c727a473b5710305dd3fc8f829c651",
+          "members": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "id": "fr-39922336ea7e",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 76,
+          "end_lineno": 299,
+          "exact_fingerprint": "f0ec83e8f210a795686366e5b37732adc7c727a473b5710305dd3fc8f829c651",
+          "file_hash": "93e715416fae58d03ef66821f5f388a7606d596cd08181ff359700179bfbc675",
+          "index": 0,
+          "input": 0,
+          "lineno": 298,
+          "path": "lnbits/core/views/auth_api.py",
+          "qualname": "api_update_user_acl",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 76,
+          "end_lineno": 329,
+          "exact_fingerprint": "f0ec83e8f210a795686366e5b37732adc7c727a473b5710305dd3fc8f829c651",
+          "file_hash": "93e715416fae58d03ef66821f5f388a7606d596cd08181ff359700179bfbc675",
+          "index": 1,
+          "input": 0,
+          "lineno": 328,
+          "path": "lnbits/core/views/auth_api.py",
+          "qualname": "api_delete_user_acl",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 76,
+          "end_lineno": 344,
+          "exact_fingerprint": "f0ec83e8f210a795686366e5b37732adc7c727a473b5710305dd3fc8f829c651",
+          "file_hash": "93e715416fae58d03ef66821f5f388a7606d596cd08181ff359700179bfbc675",
+          "index": 2,
+          "input": 0,
+          "lineno": 343,
+          "path": "lnbits/core/views/auth_api.py",
+          "qualname": "api_create_user_api_token",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 76,
+          "end_lineno": 373,
+          "exact_fingerprint": "f0ec83e8f210a795686366e5b37732adc7c727a473b5710305dd3fc8f829c651",
+          "file_hash": "93e715416fae58d03ef66821f5f388a7606d596cd08181ff359700179bfbc675",
+          "index": 3,
+          "input": 0,
+          "lineno": 372,
+          "path": "lnbits/core/views/auth_api.py",
+          "qualname": "api_delete_user_api_token",
+          "statement": "if"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 4,
+      "score": 81,
+      "shape_fingerprint": "39922336ea7e8b6d353874920d08aecc003a20419679f007e464b2dd5e8bea45",
+      "shape_text": "if not v0 or not v0.verify_password(v1.password):\n    raise HTTPException(HTTPStatus.UNAUTHORIZED, '')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 4,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 4,
+          "exact_fingerprint": "051cd43189779a6b5ff1649f5843c7c9939521ae066e35ff2f87f8d3d09f1be6",
+          "members": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "id": "fr-f21be551d4f9",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 48,
+          "end_lineno": 90,
+          "exact_fingerprint": "051cd43189779a6b5ff1649f5843c7c9939521ae066e35ff2f87f8d3d09f1be6",
+          "file_hash": "34a0705aa3eaa1282c9241335fe86c21f6aa89322eeee6517dcb8a754a56c39d",
+          "index": 0,
+          "input": 0,
+          "lineno": 87,
+          "path": "lnbits/fiat/paypal.py",
+          "qualname": "PayPalWallet.status",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 48,
+          "end_lineno": 125,
+          "exact_fingerprint": "051cd43189779a6b5ff1649f5843c7c9939521ae066e35ff2f87f8d3d09f1be6",
+          "file_hash": "20bdb4ad85e739ab39b0ea17482c1d3d85655c5f80d36b43959d6bc49c361b11",
+          "index": 1,
+          "input": 0,
+          "lineno": 122,
+          "path": "lnbits/fiat/revolut.py",
+          "qualname": "RevolutWallet.status",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 48,
+          "end_lineno": 96,
+          "exact_fingerprint": "051cd43189779a6b5ff1649f5843c7c9939521ae066e35ff2f87f8d3d09f1be6",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 2,
+          "input": 0,
+          "lineno": 93,
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet.status",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 48,
+          "end_lineno": 120,
+          "exact_fingerprint": "051cd43189779a6b5ff1649f5843c7c9939521ae066e35ff2f87f8d3d09f1be6",
+          "file_hash": "3c5ece97c573d5195187a4942d5ef46736c081e0d3c55bb1c7b9bcae9d03ee44",
+          "index": 3,
+          "input": 0,
+          "lineno": 117,
+          "path": "lnbits/fiat/stripe.py",
+          "qualname": "StripeWallet.status",
+          "statement": "if"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 4,
+      "score": 81,
+      "shape_fingerprint": "f21be551d4f9b3107ad3d7e520448afce6c2867dba56ac1b1fa272992d3ba4f2",
+      "shape_text": "if v0:\n    if self._settings_fields != self._settings_connection_fields():\n        return FiatStatusResponse('', 0)\n    return FiatStatusResponse(balance=0)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 4,
+          "exact_fingerprint": "ba12941f47c168d0687c53603e8a9372c95717559b8e97a73f9cb549e0c1ce88",
+          "members": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "id": "fr-105e3894d8e5",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 409,
+          "exact_fingerprint": "ba12941f47c168d0687c53603e8a9372c95717559b8e97a73f9cb549e0c1ce88",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 0,
+          "input": 0,
+          "lineno": 406,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_grant_background_payment_permission",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 471,
+          "exact_fingerprint": "ba12941f47c168d0687c53603e8a9372c95717559b8e97a73f9cb549e0c1ce88",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 1,
+          "input": 0,
+          "lineno": 468,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_grant_wallet_payments_watch_permission",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 597,
+          "exact_fingerprint": "ba12941f47c168d0687c53603e8a9372c95717559b8e97a73f9cb549e0c1ce88",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 2,
+          "input": 0,
+          "lineno": 594,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_check_extension_permissions",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 1087,
+          "exact_fingerprint": "ba12941f47c168d0687c53603e8a9372c95717559b8e97a73f9cb549e0c1ce88",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 3,
+          "input": 0,
+          "lineno": 1084,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "_require_active_wasm_extension",
+          "statement": "if"
+        }
+      ],
+      "node_count": 25,
+      "occurrences": 4,
+      "score": 75,
+      "shape_fingerprint": "105e3894d8e5055a5a61d1c11d64ba0a8238d92fe58cb23f1185f567edfae600",
+      "shape_text": "if not v0 or not v0.active:\n    raise HTTPException(HTTPStatus.NOT_FOUND, f'{v1}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "72a155605a08e7354527814dc4e99c24d61885514cf84a875bcf2bcb212cfe32",
+          "members": [
+            1,
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7a5cd8b5f01f8ace16ed90ef6d39d0fc85188e80ee845f47242da7aa74204419",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-97aaef8fee13",
+      "members": [
+        {
+          "col_offset": 12,
+          "end_col_offset": 56,
+          "end_lineno": 252,
+          "exact_fingerprint": "7a5cd8b5f01f8ace16ed90ef6d39d0fc85188e80ee845f47242da7aa74204419",
+          "file_hash": "983024ebecfcdb02f42d646a9b28d5190e8c6337714c202110004b079dcce210",
+          "index": 0,
+          "input": 0,
+          "lineno": 251,
+          "path": "lnbits/wallets/corelightningrest.py",
+          "qualname": "CoreLightningRestWallet.get_invoice_status",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 59,
+          "end_lineno": 220,
+          "exact_fingerprint": "72a155605a08e7354527814dc4e99c24d61885514cf84a875bcf2bcb212cfe32",
+          "file_hash": "53cc1591e600c73756a7aabefe3c5dbf50c19ee1be082d9cb0571f587c14ee51",
+          "index": 1,
+          "input": 0,
+          "lineno": 219,
+          "path": "lnbits/wallets/eclair.py",
+          "qualname": "EclairWallet.get_invoice_status",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 59,
+          "end_lineno": 244,
+          "exact_fingerprint": "72a155605a08e7354527814dc4e99c24d61885514cf84a875bcf2bcb212cfe32",
+          "file_hash": "53cc1591e600c73756a7aabefe3c5dbf50c19ee1be082d9cb0571f587c14ee51",
+          "index": 2,
+          "input": 0,
+          "lineno": 243,
+          "path": "lnbits/wallets/eclair.py",
+          "qualname": "EclairWallet.get_payment_status",
+          "statement": "if"
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 3,
+      "score": 52,
+      "shape_fingerprint": "97aaef8fee13f0402fda581971ba37b8d699640a63f7010ee6c65fd7d251d228",
+      "shape_text": "if v0.is_error or '' in v1 or v1.get('') is None:\n    raise Exception('')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "7898b01b0e3acf31e2838b253c7184f1da83619f6c2a425f4e2e95ff9ae035ab",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-866efb2b04ea",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 425,
+          "exact_fingerprint": "7898b01b0e3acf31e2838b253c7184f1da83619f6c2a425f4e2e95ff9ae035ab",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 0,
+          "input": 0,
+          "lineno": 421,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_grant_background_payment_permission",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 487,
+          "exact_fingerprint": "7898b01b0e3acf31e2838b253c7184f1da83619f6c2a425f4e2e95ff9ae035ab",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 1,
+          "input": 0,
+          "lineno": 483,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_grant_wallet_payments_watch_permission",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 9,
+          "end_lineno": 608,
+          "exact_fingerprint": "7898b01b0e3acf31e2838b253c7184f1da83619f6c2a425f4e2e95ff9ae035ab",
+          "file_hash": "e083221cd3317821e18c630c4f717781992af0684c9a71af24522f360458ad3b",
+          "index": 2,
+          "input": 0,
+          "lineno": 604,
+          "path": "lnbits/core/views/extension_api.py",
+          "qualname": "api_check_extension_permissions",
+          "statement": "if"
+        }
+      ],
+      "node_count": 25,
+      "occurrences": 3,
+      "score": 50,
+      "shape_fingerprint": "866efb2b04ea0c190198de21ae2b23ce223d64bacfddc73ecd8e62098ad03845",
+      "shape_text": "if not v0 or not v0.active:\n    raise HTTPException(HTTPStatus.FORBIDDEN, f'{v1}')\n"
+    }
+  ],
+  "function_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 18,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 14,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "members": [
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "2c2514bf2f840af8176d00658a90d49d2050da85967d38406373b9450f14c33f",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "3c93601b480ae9fe27574f3f8e5917e927dc747a539746cdaef0409cb05793b3",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "86498484d3d2d9fea865880efd3fcafde79a12022e8b17dcb65b5a46f3013e84",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "2efb7b9bb60c0bf4a2867572533f57206374e8f3cc07628436c295d3ebb4c94f",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fn-ef11fff5c065",
+      "members": [
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 82,
+          "exact_fingerprint": "2c2514bf2f840af8176d00658a90d49d2050da85967d38406373b9450f14c33f",
+          "file_hash": "34a0705aa3eaa1282c9241335fe86c21f6aa89322eeee6517dcb8a754a56c39d",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 78,
+          "name": "cleanup",
+          "path": "lnbits/fiat/paypal.py",
+          "qualname": "PayPalWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 117,
+          "exact_fingerprint": "3c93601b480ae9fe27574f3f8e5917e927dc747a539746cdaef0409cb05793b3",
+          "file_hash": "20bdb4ad85e739ab39b0ea17482c1d3d85655c5f80d36b43959d6bc49c361b11",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 113,
+          "name": "cleanup",
+          "path": "lnbits/fiat/revolut.py",
+          "qualname": "RevolutWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 88,
+          "exact_fingerprint": "86498484d3d2d9fea865880efd3fcafde79a12022e8b17dcb65b5a46f3013e84",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 84,
+          "name": "cleanup",
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 112,
+          "exact_fingerprint": "2efb7b9bb60c0bf4a2867572533f57206374e8f3cc07628436c295d3ebb4c94f",
+          "file_hash": "3c5ece97c573d5195187a4942d5ef46736c081e0d3c55bb1c7b9bcae9d03ee44",
+          "index": 3,
+          "input": 0,
+          "kind": "method",
+          "lineno": 108,
+          "name": "cleanup",
+          "path": "lnbits/fiat/stripe.py",
+          "qualname": "StripeWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 43,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "bdb38ad0c8cebf41b7f4139da0e50375fe9e53bc04ab4f929a61793ac1d7e7d0",
+          "index": 4,
+          "input": 0,
+          "kind": "method",
+          "lineno": 39,
+          "name": "cleanup",
+          "path": "lnbits/wallets/alby.py",
+          "qualname": "AlbyWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 75,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "9d4e233e9dec23544e88a58ea63a65f2a38fa1ffbfeb8fa7bbb5a4de0e37e0ca",
+          "index": 5,
+          "input": 0,
+          "kind": "method",
+          "lineno": 71,
+          "name": "cleanup",
+          "path": "lnbits/wallets/bark.py",
+          "qualname": "BarkWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 121,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "cb067f257502131dab641ea0302930ae8de9a6b83997b271f9a060287ccc4a03",
+          "index": 6,
+          "input": 0,
+          "kind": "method",
+          "lineno": 117,
+          "name": "cleanup",
+          "path": "lnbits/wallets/clnrest.py",
+          "qualname": "CLNRestWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 79,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "983024ebecfcdb02f42d646a9b28d5190e8c6337714c202110004b079dcce210",
+          "index": 7,
+          "input": 0,
+          "kind": "method",
+          "lineno": 75,
+          "name": "cleanup",
+          "path": "lnbits/wallets/corelightningrest.py",
+          "qualname": "CoreLightningRestWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 60,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "53cc1591e600c73756a7aabefe3c5dbf50c19ee1be082d9cb0571f587c14ee51",
+          "index": 8,
+          "input": 0,
+          "kind": "method",
+          "lineno": 56,
+          "name": "cleanup",
+          "path": "lnbits/wallets/eclair.py",
+          "qualname": "EclairWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 49,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "3d875ab658a6443807f63852dd85962654f1a3bfc0d8d481309703fb235d2c04",
+          "index": 9,
+          "input": 0,
+          "kind": "method",
+          "lineno": 45,
+          "name": "cleanup",
+          "path": "lnbits/wallets/lnbits.py",
+          "qualname": "LNbitsWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 118,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "84e779225793818ab05cc1280b47ea5fdea486feb9a6511ca4d33d73bcd252c1",
+          "index": 10,
+          "input": 0,
+          "kind": "method",
+          "lineno": 114,
+          "name": "cleanup",
+          "path": "lnbits/wallets/lndrest.py",
+          "qualname": "LndRestWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 53,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "de9b4c53c5853a264772eb6d83195d296d1d46815ce8f5dcce286aa652e4c2ee",
+          "index": 11,
+          "input": 0,
+          "kind": "method",
+          "lineno": 49,
+          "name": "cleanup",
+          "path": "lnbits/wallets/lnpay.py",
+          "qualname": "LNPayWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 53,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "22c03826f955e7f65cff1fcc886f2be689c3c6555eea7e87f0292a29526a2f92",
+          "index": 12,
+          "input": 0,
+          "kind": "method",
+          "lineno": 49,
+          "name": "cleanup",
+          "path": "lnbits/wallets/lntips.py",
+          "qualname": "LnTipsWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 55,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "af521ff4d0f288ec5ab89d1670afc5bdc518a33e5b04fd02744a35a5814e1eea",
+          "index": 13,
+          "input": 0,
+          "kind": "method",
+          "lineno": 51,
+          "name": "cleanup",
+          "path": "lnbits/wallets/opennode.py",
+          "qualname": "OpenNodeWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 78,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "5937b399a31b39fa0af9c988feccf398e69b65509be18914ae165dcf95dadbbd",
+          "index": 14,
+          "input": 0,
+          "kind": "method",
+          "lineno": 74,
+          "name": "cleanup",
+          "path": "lnbits/wallets/phoenixd.py",
+          "qualname": "PhoenixdWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 51,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "690af683091556c720b5b32547b69b796695488b8e1f5ed08bb54d04718eec8e",
+          "index": 15,
+          "input": 0,
+          "kind": "method",
+          "lineno": 47,
+          "name": "cleanup",
+          "path": "lnbits/wallets/spark.py",
+          "qualname": "SparkWallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 79,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "32a028322e852afa6d00a086a56c00627fd568c44b2da54ac0e129a4e70d9f24",
+          "index": 16,
+          "input": 0,
+          "kind": "method",
+          "lineno": 75,
+          "name": "cleanup",
+          "path": "lnbits/wallets/sparkl2.py",
+          "qualname": "SparkL2Wallet.cleanup",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 42,
+          "exact_fingerprint": "d95861a83e3192ca71befa7a8fc2eca1cba9fca58fcf6b7410fdabbcddd2f7bb",
+          "file_hash": "f6d796adc26a312a231edc80fae1fa46807a56758e157b1cc74db8eda667051d",
+          "index": 17,
+          "input": 0,
+          "kind": "method",
+          "lineno": 38,
+          "name": "cleanup",
+          "path": "lnbits/wallets/zbd.py",
+          "qualname": "ZBDWallet.cleanup",
+          "top_level": false
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 18,
+      "score": 442,
+      "shape_fingerprint": "ef11fff5c06560cc0684e6e3b04808a73e801d636635286f506053caa4e791b1",
+      "shape_text": "async def f0(self):\n    try:\n        await self.client.aclose()\n    except RuntimeError as v0:\n        logger.warning(f'{v0}')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 4,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "9ae430e6e555eeeb3e1d71b05669b8083bd29708c63e86f04b70728d5bd27174",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "11e9f440342e901b3b5d97a87d0929395af9c80a51a11a1df88ae4d1b0fe4e4b",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "8496f5b47cec66c58fbe0ed39f83f3e97711c0911ab191242d3352545acf7186",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "dbde88ec932c3b82037cb045dd0a3f4adce7091e753926003822042c99316f75",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fn-5f24461b3223",
+      "members": [
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 307,
+          "exact_fingerprint": "9ae430e6e555eeeb3e1d71b05669b8083bd29708c63e86f04b70728d5bd27174",
+          "file_hash": "34a0705aa3eaa1282c9241335fe86c21f6aa89322eeee6517dcb8a754a56c39d",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 300,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/fiat/paypal.py",
+          "qualname": "PayPalWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 347,
+          "exact_fingerprint": "11e9f440342e901b3b5d97a87d0929395af9c80a51a11a1df88ae4d1b0fe4e4b",
+          "file_hash": "20bdb4ad85e739ab39b0ea17482c1d3d85655c5f80d36b43959d6bc49c361b11",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 340,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/fiat/revolut.py",
+          "qualname": "RevolutWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 251,
+          "exact_fingerprint": "8496f5b47cec66c58fbe0ed39f83f3e97711c0911ab191242d3352545acf7186",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 244,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 334,
+          "exact_fingerprint": "dbde88ec932c3b82037cb045dd0a3f4adce7091e753926003822042c99316f75",
+          "file_hash": "3c5ece97c573d5195187a4942d5ef46736c081e0d3c55bb1c7b9bcae9d03ee44",
+          "index": 3,
+          "input": 0,
+          "kind": "method",
+          "lineno": 327,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/fiat/stripe.py",
+          "qualname": "StripeWallet.paid_invoices_stream",
+          "top_level": false
+        }
+      ],
+      "node_count": 54,
+      "occurrences": 4,
+      "score": 162,
+      "shape_fingerprint": "5f24461b32233a471b6ea8e545b0bb593ffe4d4dd3e89abf671f694af6d5245c",
+      "shape_text": "async def f0(self) -> AsyncGenerator[str, None]:\n    logger.warning('')\n    v0: asyncio.Queue[str] = asyncio.Queue(0)\n    while settings.lnbits_running:\n        v1 = await v0.get()\n        yield v1\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 4,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 4,
+          "exact_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+          "members": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "id": "fn-fd3ea1010ad6",
+      "members": [
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 214,
+          "exact_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+          "file_hash": "bdb38ad0c8cebf41b7f4139da0e50375fe9e53bc04ab4f929a61793ac1d7e7d0",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 210,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/wallets/alby.py",
+          "qualname": "AlbyWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 165,
+          "exact_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+          "file_hash": "de9b4c53c5853a264772eb6d83195d296d1d46815ce8f5dcce286aa652e4c2ee",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 161,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/wallets/lnpay.py",
+          "qualname": "LNPayWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 170,
+          "exact_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+          "file_hash": "af521ff4d0f288ec5ab89d1670afc5bdc518a33e5b04fd02744a35a5814e1eea",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 166,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/wallets/opennode.py",
+          "qualname": "OpenNodeWallet.paid_invoices_stream",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 211,
+          "exact_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+          "file_hash": "f6d796adc26a312a231edc80fae1fa46807a56758e157b1cc74db8eda667051d",
+          "index": 3,
+          "input": 0,
+          "kind": "method",
+          "lineno": 207,
+          "name": "paid_invoices_stream",
+          "path": "lnbits/wallets/zbd.py",
+          "qualname": "ZBDWallet.paid_invoices_stream",
+          "top_level": false
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 4,
+      "score": 141,
+      "shape_fingerprint": "fd3ea1010ad620e6485a41f915b6ef14f065320366118c269bf64ba5106ddfea",
+      "shape_text": "async def f0(self) -> AsyncGenerator[str, None]:\n    self.queue: asyncio.Queue = asyncio.Queue(0)\n    while settings.lnbits_running:\n        v0 = await self.queue.get()\n        yield v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "4808575af8db1f787193f566ea96f0adc4b002fc9b276c9f6dc3267fa19fe51f",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "22410b0ac5892c04c1a7e9e897da6f863bc2eae279811a52836ccedf7ed287e7",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "8ae26fc7869e4fd404244fb1006d51d6da3308942b30713b4eafd2a06d9fa28e",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "baa28b8f69f7ac87281398b1866ab2f87320e979f115daaf47821f20075826c2",
+          "members": [
+            3
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "954140c25c68aeed767c16b9e7a15ceea59eddde3f53b81c5f9e328beff9d616",
+          "members": [
+            4
+          ]
+        }
+      ],
+      "id": "fn-daf22a872a2e",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "validator('label')"
+          ],
+          "end_lineno": 180,
+          "exact_fingerprint": "4808575af8db1f787193f566ea96f0adc4b002fc9b276c9f6dc3267fa19fe51f",
+          "file_hash": "01121b8ffb087447f2efcdd14bfc6abc99e4321c761865d1893a2bcc93b2bfd4",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 175,
+          "name": "validate_label",
+          "path": "lnbits/core/models/extensions_builder.py",
+          "qualname": "DataField.validate_label",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "validator('hint')"
+          ],
+          "end_lineno": 186,
+          "exact_fingerprint": "22410b0ac5892c04c1a7e9e897da6f863bc2eae279811a52836ccedf7ed287e7",
+          "file_hash": "01121b8ffb087447f2efcdd14bfc6abc99e4321c761865d1893a2bcc93b2bfd4",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 183,
+          "name": "validate_hint",
+          "path": "lnbits/core/models/extensions_builder.py",
+          "qualname": "DataField.validate_hint",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "validator('stub_version')"
+          ],
+          "end_lineno": 457,
+          "exact_fingerprint": "8ae26fc7869e4fd404244fb1006d51d6da3308942b30713b4eafd2a06d9fa28e",
+          "file_hash": "01121b8ffb087447f2efcdd14bfc6abc99e4321c761865d1893a2bcc93b2bfd4",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 452,
+          "name": "validate_stub_version",
+          "path": "lnbits/core/models/extensions_builder.py",
+          "qualname": "ExtensionData.validate_stub_version",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "validator('short_description')"
+          ],
+          "end_lineno": 465,
+          "exact_fingerprint": "baa28b8f69f7ac87281398b1866ab2f87320e979f115daaf47821f20075826c2",
+          "file_hash": "01121b8ffb087447f2efcdd14bfc6abc99e4321c761865d1893a2bcc93b2bfd4",
+          "index": 3,
+          "input": 0,
+          "kind": "method",
+          "lineno": 460,
+          "name": "validate_short_description",
+          "path": "lnbits/core/models/extensions_builder.py",
+          "qualname": "ExtensionData.validate_short_description",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "validator('description')"
+          ],
+          "end_lineno": 473,
+          "exact_fingerprint": "954140c25c68aeed767c16b9e7a15ceea59eddde3f53b81c5f9e328beff9d616",
+          "file_hash": "01121b8ffb087447f2efcdd14bfc6abc99e4321c761865d1893a2bcc93b2bfd4",
+          "index": 4,
+          "input": 0,
+          "kind": "method",
+          "lineno": 468,
+          "name": "validate_description",
+          "path": "lnbits/core/models/extensions_builder.py",
+          "qualname": "ExtensionData.validate_description",
+          "top_level": false
+        }
+      ],
+      "node_count": 35,
+      "occurrences": 5,
+      "score": 140,
+      "shape_fingerprint": "daf22a872a2eab2e55ca7dd0aa432fbdb4988771c94f34129f1443ae75c76a2c",
+      "shape_text": "def f0(cls, v0: str | None) -> str | None:\n    if v0 and '' in v0:\n        raise ValueError(f'{v0}')\n    return v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "96f665f708010c2cdf72a2d065ebcc39240a54c5f68bf2fcdd66c7ef1752caa5",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-61551696e6ea",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "root_validator(pre=True)"
+          ],
+          "end_lineno": 63,
+          "exact_fingerprint": "96f665f708010c2cdf72a2d065ebcc39240a54c5f68bf2fcdd66c7ef1752caa5",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 59,
+          "name": "parse_data_json",
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StorageSetRequest.parse_data_json",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "root_validator(pre=True)"
+          ],
+          "end_lineno": 80,
+          "exact_fingerprint": "96f665f708010c2cdf72a2d065ebcc39240a54c5f68bf2fcdd66c7ef1752caa5",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 76,
+          "name": "parse_data_json",
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "StorageAppendPublicRequest.parse_data_json",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "root_validator(pre=True)"
+          ],
+          "end_lineno": 130,
+          "exact_fingerprint": "96f665f708010c2cdf72a2d065ebcc39240a54c5f68bf2fcdd66c7ef1752caa5",
+          "file_hash": "90fe26c6b9135c2234068b8d67e380f936c5b5607674fb534558d8977f0bc717",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 126,
+          "name": "parse_data_json",
+          "path": "lnbits/core/wasm_ext/api/models.py",
+          "qualname": "WebsocketPublishRequest.parse_data_json",
+          "top_level": false
+        }
+      ],
+      "node_count": 62,
+      "occurrences": 3,
+      "score": 124,
+      "shape_fingerprint": "61551696e6ea7247d0515fdc10fc448271bcba7878b5e738a6315ebed7625c40",
+      "shape_text": "def f0(cls, v0: dict[str, Any]) -> dict[str, Any]:\n    v1 = v0.get('')\n    if v1 is not None and '' not in v0:\n        v0[''] = json.loads(v1)\n    return v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "0c8eabcf13e1482175e89613fd242c7f0f1136f04040d6c00bb4cedf3576c635",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "782b56882bc70ee342032207746dd13a237392a6003b825a7ebf25518ecd8109",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "b308840ab939bf96258718f25ff3ce754a1b9e6763836cd4356835f79132dea7",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fn-dd55b2947e01",
+      "members": [
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 266,
+          "exact_fingerprint": "0c8eabcf13e1482175e89613fd242c7f0f1136f04040d6c00bb4cedf3576c635",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 263,
+          "name": "_get_order",
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet._get_order",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 289,
+          "exact_fingerprint": "782b56882bc70ee342032207746dd13a237392a6003b825a7ebf25518ecd8109",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 286,
+          "name": "_get_payment",
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet._get_payment",
+          "top_level": false
+        },
+        {
+          "async": true,
+          "decorators": [],
+          "end_lineno": 347,
+          "exact_fingerprint": "b308840ab939bf96258718f25ff3ce754a1b9e6763836cd4356835f79132dea7",
+          "file_hash": "6bcd6cebed37d043f055dfba91690248486f65b018feabb46889805f25a8869a",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 344,
+          "name": "_get_catalog_object",
+          "path": "lnbits/fiat/square.py",
+          "qualname": "SquareWallet._get_catalog_object",
+          "top_level": false
+        }
+      ],
+      "node_count": 50,
+      "occurrences": 3,
+      "score": 100,
+      "shape_fingerprint": "dd55b2947e0157aaea903a77d315df3d6f49d9b29ff8f4b9050ada101c863dfa",
+      "shape_text": "async def f0(self, v0: str) -> dict[str, Any]:\n    v1 = await self.client.get(f'{v0}')\n    v1.raise_for_status()\n    return v1.json().get('') or {}\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "7747692addd3e5b7f4ff2a2a54caaf5f332a4e69b3d122a9d6441a4cef5a414e",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-65f947296262",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 130,
+          "exact_fingerprint": "7747692addd3e5b7f4ff2a2a54caaf5f332a4e69b3d122a9d6441a4cef5a414e",
+          "file_hash": "8c2c226767fd346da17b7865837aaf75bc13083a25bacfe7a8170b622bf9bef8",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 128,
+          "name": "_snake_to_camel",
+          "path": "lnbits/core/wasm_ext/api/runtime.py",
+          "qualname": "_snake_to_camel",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 391,
+          "exact_fingerprint": "7747692addd3e5b7f4ff2a2a54caaf5f332a4e69b3d122a9d6441a4cef5a414e",
+          "file_hash": "a4e73393814d61c0611280b9be1c68c3491865bd39a48e3a11e969b9067c94f6",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 389,
+          "name": "_snake_to_camel",
+          "path": "lnbits/core/wasm_ext/routes/api.py",
+          "qualname": "_snake_to_camel",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 324,
+          "exact_fingerprint": "7747692addd3e5b7f4ff2a2a54caaf5f332a4e69b3d122a9d6441a4cef5a414e",
+          "file_hash": "452ec0a6f27e4768a8ba028a9e66892e2b26e510e5c50cff3d5afd48c089cc65",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 322,
+          "name": "_camel",
+          "path": "tools/codegen/extension_sdk_typescript.py",
+          "qualname": "_camel",
+          "top_level": true
+        }
+      ],
+      "node_count": 42,
+      "occurrences": 3,
+      "score": 84,
+      "shape_fingerprint": "65f947296262288ca695816e90ba62c7ec2406cff2aa5fb4ed9422138b60bb69",
+      "shape_text": "def f0(v0: str) -> str:\n    v1, *v2 = v0.split('')\n    return v1 + ''.join((v3.capitalize() for v3 in v2))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "b8ae4124684781f78832ce6995cbe7a1e1ca2f0d033f6533270a1ac3b108e4fa",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "25a307a6c953e57d6baa9cce720e6badb61982279ac213ccf6bf609f4fbcbf6d",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "b039d341552c6aabba13dd95f45631ddd958a360387906790bf5f1eeb94733dd",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fn-4d5ecfb7c12f",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 163,
+          "exact_fingerprint": "b8ae4124684781f78832ce6995cbe7a1e1ca2f0d033f6533270a1ac3b108e4fa",
+          "file_hash": "f93f736995d69043d2194e30f01167674d6b42809289deec6a64dd4622e77bd8",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 161,
+          "name": "is_valid_email_address",
+          "path": "lnbits/helpers.py",
+          "qualname": "is_valid_email_address",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 168,
+          "exact_fingerprint": "25a307a6c953e57d6baa9cce720e6badb61982279ac213ccf6bf609f4fbcbf6d",
+          "file_hash": "f93f736995d69043d2194e30f01167674d6b42809289deec6a64dd4622e77bd8",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 166,
+          "name": "is_valid_username",
+          "path": "lnbits/helpers.py",
+          "qualname": "is_valid_username",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 173,
+          "exact_fingerprint": "b039d341552c6aabba13dd95f45631ddd958a360387906790bf5f1eeb94733dd",
+          "file_hash": "f93f736995d69043d2194e30f01167674d6b42809289deec6a64dd4622e77bd8",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 171,
+          "name": "is_valid_label",
+          "path": "lnbits/helpers.py",
+          "qualname": "is_valid_label",
+          "top_level": true
+        }
+      ],
+      "node_count": 24,
+      "occurrences": 3,
+      "score": 48,
+      "shape_fingerprint": "4d5ecfb7c12f0fd26531e245921436531b6c890b9f9b8ed9384bafee22318055",
+      "shape_text": "def f0(v0: str) -> bool:\n    v1 = ''\n    return re.fullmatch(v1, v0) is not None\n"
+    }
+  ],
+  "inputs": [
+    {
+      "git": {
+        "commit": "9349da153c223b008f7d80453b53a54e09c8ed3d",
+        "tag": "v1.6.2"
+      },
+      "path": "."
+    }
+  ],
+  "settings": {
+    "excludes": [
+      "migrations/*",
+      "*/migrations/*",
+      "migrations.py",
+      "*/migrations.py",
+      "docs/*",
+      "*/docs/*",
+      "examples/*",
+      "*/examples/*"
+    ],
+    "fragments": true,
+    "include_generated": false,
+    "include_tests": false,
+    "include_trivial": false,
+    "min_fragment_nodes": 25,
+    "min_nodes": 20,
+    "min_occurrences": 3,
+    "skip_dirs": true
+  },
+  "shape_version": 1,
+  "skipped_files": [
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/core/migrations.py",
+      "reason": "excluded"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/boltz_grpc_files/boltzrpc_pb2.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/boltz_grpc_files/boltzrpc_pb2_grpc.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/invoices_pb2.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/invoices_pb2_grpc.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/lightning_pb2.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/lightning_pb2_grpc.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/router_pb2.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "lnbits/wallets/lnd_grpc_files/router_pb2_grpc.py",
+      "reason": "generated"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_admin_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_asset_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_audit_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_auth.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_auth_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_callback_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_extension_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_extensions_builder_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_fiat_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_generic.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_lnurl_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_node_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_payment_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_phoenixd_node_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_tinyurl_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_user_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_wallet_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_wallet_key_access.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_webpush_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_websocket_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/conftest.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/helpers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/conftest.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/helpers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_electrum.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_real_hold_invoice.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_real_invoice.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_services_create_invoice.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_services_pay_invoice.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/regtest/test_x_node_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_admin_backup_command.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_app_check_installed_extension_files.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_app_extensions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_blockexplorer.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_cache.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_crud_payments.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_crud_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_crypto_aes.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_db.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_db_fetch_page.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_decorators.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_exchange_rates.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_fiat_providers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_first_install.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_helpers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_helpers_query.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_models_extensions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_models_wallets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_node_template.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_pay_invoice.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_phoenixd_node.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_assets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_extensions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_extensions_builder.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_fees.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_funding_source.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_lnurl.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_nostr.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_notifications.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_payments.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_settings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_shared_wallet.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_wallet_limit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_services_websockets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_settings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wallet_payment_ambiguity.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_api_client.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_events.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_frontend.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_host_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_http.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_loader.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_permissions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_routes.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_storage.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_websocket_api.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/unit/test_wasm_extension_websockets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/fixtures/models.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/helpers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/test_bark.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/test_blink.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/test_nwc_wallets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/test_rest_wallets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/wallets/test_rpc_wallets.py",
+      "reason": "test"
+    }
+  ],
+  "stats": {
+    "files_mined": 167,
+    "files_seen": 267,
+    "files_skipped": {
+      "excluded": 1,
+      "generated": 8,
+      "test": 91
+    },
+    "fragment_clusters": 7,
+    "fragments_mined": 1513,
+    "function_clusters": 8,
+    "functions_filtered": {
+      "too_small": 48,
+      "trivial_body": 370
+    },
+    "functions_found": 2186,
+    "functions_mined": 1768
+  }
+}

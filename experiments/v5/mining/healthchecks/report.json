@@ -1,0 +1,2894 @@
+{
+  "canonical_version": 2,
+  "coverage": {
+    "catalog_patterns": 13,
+    "covered": 0,
+    "covered_percent": 0.0,
+    "functions": 608,
+    "near_covered": 0,
+    "near_covered_percent": 0.0,
+    "patterns": [
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.jwt.create_access_token@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.password.pbkdf2@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "collections.group_by.dict_of_lists@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "config.env.load_settings@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "db.pagination.select_page@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "http.get_with_retry.requests@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "importers.users_csv.parse@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "ratelimit.token_bucket.check@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "retry.with_exponential_backoff@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.iterative@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "sort.merge_sort.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "text.slugify.ascii@v1"
+      }
+    ]
+  },
+  "fragment_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 7,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "c27e4faa31966467ab6fadee7c3dff71a82e7390bc7d2e389e0f98ef9e4443fe",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "6648b2d55482c0cf808d009e06c02a741b8efb419fdd202cfabb7074dd89b171",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "517c875f948ef26a452e24ced24dc535a89983c1149a6380a221f4162f8f5109",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "9c21dc7e679a0540e769eaa7b3b7a9da66d413dbef220fbde2b24efc8f28d000",
+          "members": [
+            3
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "be05f73a6f7279b86517040f8dbf7bcf8928dd29445fcd085ab9828849a39624",
+          "members": [
+            4
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7458a5d022ad037acdc7a725a0d8e67353117cd96c290693ec28c362bb6d4655",
+          "members": [
+            5
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "aa28693c7a3ebe21280dfdc585103aa6c094f51f0406333bcf78c42117b4aafc",
+          "members": [
+            6
+          ]
+        }
+      ],
+      "id": "fr-82ade26f9d26",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 36,
+          "exact_fingerprint": "c27e4faa31966467ab6fadee7c3dff71a82e7390bc7d2e389e0f98ef9e4443fe",
+          "file_hash": "e6c82877cfd62f2c884cfd0123621765b8a7de85452d9bbe2ea505af9f0f60e8",
+          "index": 0,
+          "input": 0,
+          "lineno": 26,
+          "path": "hc/integrations/mattermost/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 31,
+          "exact_fingerprint": "6648b2d55482c0cf808d009e06c02a741b8efb419fdd202cfabb7074dd89b171",
+          "file_hash": "06c0a1feed84cad8de7a3fd9589107a1c562e5839081fc239bde0e6c00ca4d07",
+          "index": 1,
+          "input": 0,
+          "lineno": 21,
+          "path": "hc/integrations/msteamsw/views.py",
+          "qualname": "add_msteams",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 34,
+          "exact_fingerprint": "517c875f948ef26a452e24ced24dc535a89983c1149a6380a221f4162f8f5109",
+          "file_hash": "9b310556448d7b551d9a3cc6d2d3efa24e0849457c274d1e4a02c5a037becd20",
+          "index": 2,
+          "input": 0,
+          "lineno": 24,
+          "path": "hc/integrations/pagertree/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 36,
+          "exact_fingerprint": "9c21dc7e679a0540e769eaa7b3b7a9da66d413dbef220fbde2b24efc8f28d000",
+          "file_hash": "a056113a2fc5d67e66d09700adf99734bf85d9f67b7c3e9cc04398ee1c887dcc",
+          "index": 3,
+          "input": 0,
+          "lineno": 26,
+          "path": "hc/integrations/rocketchat/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 39,
+          "exact_fingerprint": "be05f73a6f7279b86517040f8dbf7bcf8928dd29445fcd085ab9828849a39624",
+          "file_hash": "783565ba4e40a6583f16975b777bb094f33006764e8d7464ee8c41e43519d682",
+          "index": 4,
+          "input": 0,
+          "lineno": 29,
+          "path": "hc/integrations/slack/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 31,
+          "exact_fingerprint": "7458a5d022ad037acdc7a725a0d8e67353117cd96c290693ec28c362bb6d4655",
+          "file_hash": "b9bcd5d7a4eaf9a4269ba40055b1a9f53a529515c3b61fe0a35afcce6db8b5b1",
+          "index": 5,
+          "input": 0,
+          "lineno": 21,
+          "path": "hc/integrations/spike/views.py",
+          "qualname": "add_spike",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 33,
+          "end_lineno": 31,
+          "exact_fingerprint": "aa28693c7a3ebe21280dfdc585103aa6c094f51f0406333bcf78c42117b4aafc",
+          "file_hash": "c2089d672af39c99a03003dfbbf5f207880c2115e1ab81624a9e05c94743bccb",
+          "index": 6,
+          "input": 0,
+          "lineno": 21,
+          "path": "hc/integrations/victorops/views.py",
+          "qualname": "add",
+          "statement": "if"
+        }
+      ],
+      "node_count": 78,
+      "occurrences": 7,
+      "score": 468,
+      "shape_fingerprint": "82ade26f9d264eb28130cee47478884e64bd0a086e1f29c4388619eea7fa699b",
+      "shape_text": "if v0.method == '':\n    v1 = forms.AddUrlForm(v0.POST)\n    if v1.is_valid():\n        v2 = Channel(project=v3, kind='')\n        v2.value = v1.cleaned_data['']\n        v2.save()\n        v2.assign_all_checks()\n        return redirect('', v3.code)\nelse:\n    v1 = forms.AddUrlForm()\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 8,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "752ce4ce4f2ffc87fe82430de7387713e1af8a1dacbbe62e80bea1b8117bc1d5",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "425cfc33c90c2af2370d09dcb53b5f77e7003ed090bb92b94fc4069fd6f68596",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "1be196327ba7d9c6097a79c93fe7632f2249043bbc9b87ee3a97491434894b28",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "31429e1a4d27633b364cba0341b096ccaf9322af671e41dc3c4be4bc65abdbd1",
+          "members": [
+            3
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "a6f27bee332dd64be6b33648c82d927257d31a53d9a720e3c6a4e494bf21acae",
+          "members": [
+            4
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "19fdea291ce65ab7002a02f256c6a68f3b87a3c88634642f81471761d32264da",
+          "members": [
+            5
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "c41203905e07b446d50883e5df0f9e2d8a240f7471816a7e94140a0f8dc25acc",
+          "members": [
+            6
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "d5c68c25235460e4ab9b91ec7cee73fc16529467cd0dc6c39d531a9c04d4922d",
+          "members": [
+            7
+          ]
+        }
+      ],
+      "id": "fr-3dd4e930053a",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 34,
+          "exact_fingerprint": "752ce4ce4f2ffc87fe82430de7387713e1af8a1dacbbe62e80bea1b8117bc1d5",
+          "file_hash": "e6c82877cfd62f2c884cfd0123621765b8a7de85452d9bbe2ea505af9f0f60e8",
+          "index": 0,
+          "input": 0,
+          "lineno": 28,
+          "path": "hc/integrations/mattermost/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 29,
+          "exact_fingerprint": "425cfc33c90c2af2370d09dcb53b5f77e7003ed090bb92b94fc4069fd6f68596",
+          "file_hash": "06c0a1feed84cad8de7a3fd9589107a1c562e5839081fc239bde0e6c00ca4d07",
+          "index": 1,
+          "input": 0,
+          "lineno": 23,
+          "path": "hc/integrations/msteamsw/views.py",
+          "qualname": "add_msteams",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 32,
+          "exact_fingerprint": "1be196327ba7d9c6097a79c93fe7632f2249043bbc9b87ee3a97491434894b28",
+          "file_hash": "9b310556448d7b551d9a3cc6d2d3efa24e0849457c274d1e4a02c5a037becd20",
+          "index": 2,
+          "input": 0,
+          "lineno": 26,
+          "path": "hc/integrations/pagertree/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 52,
+          "exact_fingerprint": "31429e1a4d27633b364cba0341b096ccaf9322af671e41dc3c4be4bc65abdbd1",
+          "file_hash": "68db5f72309e8e746804fd784722afec6ed62085edd8218b235e146340a1a5f3",
+          "index": 3,
+          "input": 0,
+          "lineno": 46,
+          "path": "hc/integrations/pd/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 34,
+          "exact_fingerprint": "a6f27bee332dd64be6b33648c82d927257d31a53d9a720e3c6a4e494bf21acae",
+          "file_hash": "a056113a2fc5d67e66d09700adf99734bf85d9f67b7c3e9cc04398ee1c887dcc",
+          "index": 4,
+          "input": 0,
+          "lineno": 28,
+          "path": "hc/integrations/rocketchat/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 37,
+          "exact_fingerprint": "19fdea291ce65ab7002a02f256c6a68f3b87a3c88634642f81471761d32264da",
+          "file_hash": "783565ba4e40a6583f16975b777bb094f33006764e8d7464ee8c41e43519d682",
+          "index": 5,
+          "input": 0,
+          "lineno": 31,
+          "path": "hc/integrations/slack/views.py",
+          "qualname": "add",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 29,
+          "exact_fingerprint": "c41203905e07b446d50883e5df0f9e2d8a240f7471816a7e94140a0f8dc25acc",
+          "file_hash": "b9bcd5d7a4eaf9a4269ba40055b1a9f53a529515c3b61fe0a35afcce6db8b5b1",
+          "index": 6,
+          "input": 0,
+          "lineno": 23,
+          "path": "hc/integrations/spike/views.py",
+          "qualname": "add_spike",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 29,
+          "exact_fingerprint": "d5c68c25235460e4ab9b91ec7cee73fc16529467cd0dc6c39d531a9c04d4922d",
+          "file_hash": "c2089d672af39c99a03003dfbbf5f207880c2115e1ab81624a9e05c94743bccb",
+          "index": 7,
+          "input": 0,
+          "lineno": 23,
+          "path": "hc/integrations/victorops/views.py",
+          "qualname": "add",
+          "statement": "if"
+        }
+      ],
+      "node_count": 50,
+      "occurrences": 8,
+      "score": 350,
+      "shape_fingerprint": "3dd4e930053af12b503630bdd33cb10c2cc415ad07afe5aa3dbb760fa13080fa",
+      "shape_text": "if v0.is_valid():\n    v1 = Channel(project=v2, kind='')\n    v1.value = v0.cleaned_data['']\n    v1.save()\n    v1.assign_all_checks()\n    return redirect('', v2.code)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "544534f9d6cf6e3f3553f64815edb9f531629f920dfb9a23431fb30b91e48b25",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-2760ce005fbe",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 34,
+          "exact_fingerprint": "544534f9d6cf6e3f3553f64815edb9f531629f920dfb9a23431fb30b91e48b25",
+          "file_hash": "74f5e3875122cdc3ab222ad6e0af13ce3a1b6622ef8e7a3c8d5c657ce3472593",
+          "index": 0,
+          "input": 0,
+          "lineno": 27,
+          "path": "hc/integrations/signal/views.py",
+          "qualname": "signal_form",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 29,
+          "exact_fingerprint": "544534f9d6cf6e3f3553f64815edb9f531629f920dfb9a23431fb30b91e48b25",
+          "file_hash": "01af79df1d34e95cc3b6fe2cd218c04754472daa43bbda3e7803c0843aba0520",
+          "index": 1,
+          "input": 0,
+          "lineno": 22,
+          "path": "hc/integrations/sms/views.py",
+          "qualname": "sms_form",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 28,
+          "exact_fingerprint": "544534f9d6cf6e3f3553f64815edb9f531629f920dfb9a23431fb30b91e48b25",
+          "file_hash": "06fc8a0df734b143be3882ae73692430bb47ef1feba931a6373eb88753c363cf",
+          "index": 2,
+          "input": 0,
+          "lineno": 21,
+          "path": "hc/integrations/whatsapp/views.py",
+          "qualname": "whatsapp_form",
+          "statement": "if"
+        }
+      ],
+      "node_count": 54,
+      "occurrences": 3,
+      "score": 108,
+      "shape_fingerprint": "2760ce005fbed2baf69dad92d7c5edbc1be6811c12c501d6c5fb7c4ad33b6658",
+      "shape_text": "if v0.is_valid():\n    v1.name = v0.cleaned_data['']\n    v1.value = v0.get_json()\n    v1.save()\n    if v2:\n        v1.assign_all_checks()\n    return redirect('', v1.project.code)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "7fa7b8a8d7a251b2ebf47e1c02cb9cc07dc329e14b32f4a0ce2af4cd7b5d7c23",
+          "members": [
+            0,
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "3cb80de82e151468bca5cb328ef434c07189738f5c578775fe113d4f9ba065a3",
+          "members": [
+            1
+          ]
+        }
+      ],
+      "id": "fr-308688ef0e92",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 44,
+          "end_lineno": 47,
+          "exact_fingerprint": "7fa7b8a8d7a251b2ebf47e1c02cb9cc07dc329e14b32f4a0ce2af4cd7b5d7c23",
+          "file_hash": "55e2150ada6a66b12459075b1247f609fa14e97a0f62c53f2f38436c4c1eab74",
+          "index": 0,
+          "input": 0,
+          "lineno": 42,
+          "path": "hc/integrations/googlechat/transport.py",
+          "qualname": "GoogleChat.notify",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 45,
+          "end_lineno": 90,
+          "exact_fingerprint": "3cb80de82e151468bca5cb328ef434c07189738f5c578775fe113d4f9ba065a3",
+          "file_hash": "60342f2a25d4e84fe1ccbd09db650cf5ca189a9dcd9cf168b50b741883468a93",
+          "index": 1,
+          "input": 0,
+          "lineno": 85,
+          "path": "hc/integrations/msteamsw/transport.py",
+          "qualname": "MsTeamsWorkflow.payload",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 44,
+          "end_lineno": 80,
+          "exact_fingerprint": "7fa7b8a8d7a251b2ebf47e1c02cb9cc07dc329e14b32f4a0ce2af4cd7b5d7c23",
+          "file_hash": "1622e931f3e81b60b2e5786dfa7af1b3fee340023903ca47e1a7d38fb3f7699f",
+          "index": 2,
+          "input": 0,
+          "lineno": 75,
+          "path": "hc/integrations/slack/transport.py",
+          "qualname": "Slackalike.payload",
+          "statement": "if"
+        }
+      ],
+      "node_count": 53,
+      "occurrences": 3,
+      "score": 106,
+      "shape_fingerprint": "308688ef0e928ed72553131144e7bcc63ab71b903c4a9e3a054779a5992bc30d",
+      "shape_text": "if (v0 := self.last_ping(v1)):\n    v2.add('', str(v0.n))\n    v2.add('', v0.formatted_kind_created())\nelse:\n    v2.add('', '')\n    v2.add('', '')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 4,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "902e572a3d968414acbb885b71a91d6c27dad3cbf8b2cccfb695e2942540aac5",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "371a51a320333fbfed475b1900162c2aa63b9e602090cb6f44ae2a742091d93e",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "1b051ae2efaecbd7efcbfd70b845d18da1a5b7cbc1122981bc40d6fca02b64a0",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "c50067ba717711d8653451259fa57f32282e7bf793ae1b7cda3fb57d7c53b69a",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fr-feba92b152a6",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 52,
+          "end_lineno": 57,
+          "exact_fingerprint": "902e572a3d968414acbb885b71a91d6c27dad3cbf8b2cccfb695e2942540aac5",
+          "file_hash": "53492bb56d851337262ff544b4905e0f33b7ee43a87338e5db2cf435dcce7551",
+          "index": 0,
+          "input": 0,
+          "lineno": 55,
+          "path": "hc/integrations/discord/views.py",
+          "qualname": "add_complete",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 56,
+          "end_lineno": 61,
+          "exact_fingerprint": "371a51a320333fbfed475b1900162c2aa63b9e602090cb6f44ae2a742091d93e",
+          "file_hash": "5c6156451641aa7adc3480936d8ee1585e5ba020343c38b531b6e1136bd9c928",
+          "index": 1,
+          "input": 0,
+          "lineno": 59,
+          "path": "hc/integrations/github/views.py",
+          "qualname": "select",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 52,
+          "end_lineno": 66,
+          "exact_fingerprint": "1b051ae2efaecbd7efcbfd70b845d18da1a5b7cbc1122981bc40d6fca02b64a0",
+          "file_hash": "7f6e67c574391046c61d634540a51a6cd184528d8d319d69257a8a10ff6e4f41",
+          "index": 2,
+          "input": 0,
+          "lineno": 64,
+          "path": "hc/integrations/pushbullet/views.py",
+          "qualname": "add_complete",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 52,
+          "end_lineno": 93,
+          "exact_fingerprint": "c50067ba717711d8653451259fa57f32282e7bf793ae1b7cda3fb57d7c53b69a",
+          "file_hash": "783565ba4e40a6583f16975b777bb094f33006764e8d7464ee8c41e43519d682",
+          "index": 3,
+          "input": 0,
+          "lineno": 91,
+          "path": "hc/integrations/slack/views.py",
+          "qualname": "add_complete",
+          "statement": "if"
+        }
+      ],
+      "node_count": 30,
+      "occurrences": 4,
+      "score": 90,
+      "shape_fingerprint": "feba92b152a66d18f22191c2b0e955fc44b2b731234c95d6ef524c1becc1b1c6",
+      "shape_text": "if v0.GET.get('') == '':\n    messages.warning(v0, '')\n    return redirect('', v1.code)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "837e82e14e3ec08bceeeffd728447431858d079c78432baedeb279d80711808d",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-578d971c6024",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 26,
+          "exact_fingerprint": "837e82e14e3ec08bceeeffd728447431858d079c78432baedeb279d80711808d",
+          "file_hash": "4a7da4421ac8dfa4ee68ffdc03182c027fc0b3535fe7af1214549df2e2186a6e",
+          "index": 0,
+          "input": 0,
+          "lineno": 20,
+          "path": "hc/integrations/gotify/views.py",
+          "qualname": "gotify_form",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 25,
+          "exact_fingerprint": "837e82e14e3ec08bceeeffd728447431858d079c78432baedeb279d80711808d",
+          "file_hash": "4c6485bd9b22f4a46d3a32b07c2fe33fbb714e73a41631749817b6cf4f5e7c97",
+          "index": 1,
+          "input": 0,
+          "lineno": 19,
+          "path": "hc/integrations/ntfy/views.py",
+          "qualname": "ntfy_form",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 64,
+          "end_lineno": 28,
+          "exact_fingerprint": "837e82e14e3ec08bceeeffd728447431858d079c78432baedeb279d80711808d",
+          "file_hash": "ca09459d1150c2f32ac969a4272434490a9d4444c5d1c026f14d2380bc67b711",
+          "index": 2,
+          "input": 0,
+          "lineno": 22,
+          "path": "hc/integrations/shell/views.py",
+          "qualname": "shell_form",
+          "statement": "if"
+        }
+      ],
+      "node_count": 42,
+      "occurrences": 3,
+      "score": 84,
+      "shape_fingerprint": "578d971c6024c9fd9d4b61713296966b9c21eb577a26681940102946725187d7",
+      "shape_text": "if v0.is_valid():\n    v1.value = v0.get_value()\n    v1.save()\n    if v2:\n        v1.assign_all_checks()\n    return redirect('', v1.project.code)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "fc00de0855632a2f53f16e4a79ee5bdaabaf9b2b2ca08fd4ad430b44ae950256",
+          "members": [
+            1,
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "0a0cee80583649c80b4cccb613e84c59db74719c70a8b424e66dc79697362d1e",
+          "members": [
+            0
+          ]
+        }
+      ],
+      "id": "fr-89bf279c2f41",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 46,
+          "end_lineno": 83,
+          "exact_fingerprint": "0a0cee80583649c80b4cccb613e84c59db74719c70a8b424e66dc79697362d1e",
+          "file_hash": "60342f2a25d4e84fe1ccbd09db650cf5ca189a9dcd9cf168b50b741883468a93",
+          "index": 0,
+          "input": 0,
+          "lineno": 81,
+          "path": "hc/integrations/msteamsw/transport.py",
+          "qualname": "MsTeamsWorkflow.payload",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 45,
+          "end_lineno": 44,
+          "exact_fingerprint": "fc00de0855632a2f53f16e4a79ee5bdaabaf9b2b2ca08fd4ad430b44ae950256",
+          "file_hash": "39163574966f1b86a67e7f7535bc75abbc10ce3007e066379815fe100d6aaa6e",
+          "index": 1,
+          "input": 0,
+          "lineno": 42,
+          "path": "hc/integrations/rocketchat/transport.py",
+          "qualname": "RocketChat.payload",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 45,
+          "end_lineno": 73,
+          "exact_fingerprint": "fc00de0855632a2f53f16e4a79ee5bdaabaf9b2b2ca08fd4ad430b44ae950256",
+          "file_hash": "1622e931f3e81b60b2e5786dfa7af1b3fee340023903ca47e1a7d38fb3f7699f",
+          "index": 2,
+          "input": 0,
+          "lineno": 71,
+          "path": "hc/integrations/slack/transport.py",
+          "qualname": "Slackalike.payload",
+          "statement": "if"
+        }
+      ],
+      "node_count": 38,
+      "occurrences": 3,
+      "score": 76,
+      "shape_fingerprint": "89bf279c2f41b3a66ee06d8375bc5801844e5eff9a2b37dd4f222381f3af01bf",
+      "shape_text": "if v0.kind in ('', ''):\n    v1.add('', self.fix_asterisks(v0.schedule))\n    v1.add('', v0.tz)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "f903616de72b955521d1c5fffa74d1bb51e8007eaac1692f04a86f9ed5eac529",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "edc63d035e15017ff735679e4400bdd80b8e68829bb88e8eebe55c14f5260e1f",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "6e537ddd03fe9dffb54a2ff8fa4975dcce93cfbfcf03e050bd10f96a26253893",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fr-e78bb726afce",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 50,
+          "end_lineno": 86,
+          "exact_fingerprint": "f903616de72b955521d1c5fffa74d1bb51e8007eaac1692f04a86f9ed5eac529",
+          "file_hash": "48fcdb517be405e79d71d8b6c0f13c478398e6cf6c4d8dc0e760c346fd0d799a",
+          "index": 0,
+          "input": 0,
+          "lineno": 84,
+          "path": "hc/integrations/prometheus/views.py",
+          "qualname": "metrics.<locals>.output",
+          "statement": "for"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 53,
+          "end_lineno": 99,
+          "exact_fingerprint": "edc63d035e15017ff735679e4400bdd80b8e68829bb88e8eebe55c14f5260e1f",
+          "file_hash": "48fcdb517be405e79d71d8b6c0f13c478398e6cf6c4d8dc0e760c346fd0d799a",
+          "index": 1,
+          "input": 0,
+          "lineno": 97,
+          "path": "hc/integrations/prometheus/views.py",
+          "qualname": "metrics.<locals>.output",
+          "statement": "for"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 54,
+          "end_lineno": 106,
+          "exact_fingerprint": "6e537ddd03fe9dffb54a2ff8fa4975dcce93cfbfcf03e050bd10f96a26253893",
+          "file_hash": "48fcdb517be405e79d71d8b6c0f13c478398e6cf6c4d8dc0e760c346fd0d799a",
+          "index": 2,
+          "input": 0,
+          "lineno": 104,
+          "path": "hc/integrations/prometheus/views.py",
+          "qualname": "metrics.<locals>.output",
+          "statement": "for"
+        }
+      ],
+      "node_count": 31,
+      "occurrences": 3,
+      "score": 62,
+      "shape_fingerprint": "e78bb726afce8ae1e8b573a8dba820450214b65cc8fb72fb86996cf12861fe6d",
+      "shape_text": "for v0, v1, v2 in v3:\n    v4 = 0 if v1 == '' else 0\n    yield f'{v0}{v4}'\n"
+    }
+  ],
+  "function_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 4,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "023ae17d59ba8fa01d03d0d8b6a7337357237292a54b781c24e1aac1f8d0d1c0",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "e4e25dad79b2d3d6dfd6545cfd9b53cf34f3eeff27451e81af6a404f7e11d112",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "36760697a7c6841421ecef333083c65cc4bed6f6322e0b5993e2792ea043eb86",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7364d3f8e813f23be2e0eedf836b3589e592a504efa99b311ed3712954aff0f4",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fn-9a554c57b6ce",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('MSTEAMS_ENABLED')",
+            "login_required"
+          ],
+          "end_lineno": 34,
+          "exact_fingerprint": "023ae17d59ba8fa01d03d0d8b6a7337357237292a54b781c24e1aac1f8d0d1c0",
+          "file_hash": "06c0a1feed84cad8de7a3fd9589107a1c562e5839081fc239bde0e6c00ca4d07",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 18,
+          "name": "add_msteams",
+          "path": "hc/integrations/msteamsw/views.py",
+          "qualname": "add_msteams",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('PAGERTREE_ENABLED')",
+            "login_required"
+          ],
+          "end_lineno": 37,
+          "exact_fingerprint": "e4e25dad79b2d3d6dfd6545cfd9b53cf34f3eeff27451e81af6a404f7e11d112",
+          "file_hash": "9b310556448d7b551d9a3cc6d2d3efa24e0849457c274d1e4a02c5a037becd20",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 21,
+          "name": "add",
+          "path": "hc/integrations/pagertree/views.py",
+          "qualname": "add",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('SPIKE_ENABLED')",
+            "login_required"
+          ],
+          "end_lineno": 34,
+          "exact_fingerprint": "36760697a7c6841421ecef333083c65cc4bed6f6322e0b5993e2792ea043eb86",
+          "file_hash": "b9bcd5d7a4eaf9a4269ba40055b1a9f53a529515c3b61fe0a35afcce6db8b5b1",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 18,
+          "name": "add_spike",
+          "path": "hc/integrations/spike/views.py",
+          "qualname": "add_spike",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('VICTOROPS_ENABLED')",
+            "login_required"
+          ],
+          "end_lineno": 34,
+          "exact_fingerprint": "7364d3f8e813f23be2e0eedf836b3589e592a504efa99b311ed3712954aff0f4",
+          "file_hash": "c2089d672af39c99a03003dfbbf5f207880c2115e1ab81624a9e05c94743bccb",
+          "index": 3,
+          "input": 0,
+          "kind": "function",
+          "lineno": 18,
+          "name": "add",
+          "path": "hc/integrations/victorops/views.py",
+          "qualname": "add",
+          "top_level": true
+        }
+      ],
+      "node_count": 119,
+      "occurrences": 4,
+      "score": 357,
+      "shape_fingerprint": "9a554c57b6cee7235e8ce7077a7244b32ff0c804e066ee9fef107940b4084323",
+      "shape_text": "def f0(v0: AuthenticatedHttpRequest, v1: UUID) -> HttpResponse:\n    v2 = _get_rw_project_for_user(v0, v1)\n    if v0.method == '':\n        v3 = forms.AddUrlForm(v0.POST)\n        if v3.is_valid():\n            v4 = Channel(project=v2, kind='')\n            v4.value = v3.cleaned_data['']\n            v4.save()\n            v4.assign_all_checks()\n            return redirect('', v2.code)\n    else:\n        v3 = forms.AddUrlForm()\n    v5 = {'': '', '': v2, '': v3}\n    return render(v0, '', v5)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "9cee08f5b22efd8199ea5fb556bd1531e4f1b905045f4a8084d0cd904f759b45",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "40693ec5095e4c83240c4ffdaf3cb57c65820204767528d33776e6187e556f05",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "e3a66d8fc817e7d0d1d4c77b4ba924e1e5b887d7113354d63a026a69e2702ab7",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7a043abb3bd7efa13958fa0c342b7c1916d1253202272d78bd3ed76cb1e27df5",
+          "members": [
+            3
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "66da77a61162b42a3f65a80f8afd3f0d025961ea69e9d5aa1b8b1d43e5620a90",
+          "members": [
+            4
+          ]
+        }
+      ],
+      "id": "fn-4eb4f50323b4",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 89,
+          "exact_fingerprint": "9cee08f5b22efd8199ea5fb556bd1531e4f1b905045f4a8084d0cd904f759b45",
+          "file_hash": "e8646a5c6c1622f1e8cde6e3cb823191344600f141fc31ca0ac077c3ce3557dd",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 88,
+          "name": "login",
+          "path": "hc/lib/emails.py",
+          "qualname": "login",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 93,
+          "exact_fingerprint": "40693ec5095e4c83240c4ffdaf3cb57c65820204767528d33776e6187e556f05",
+          "file_hash": "e8646a5c6c1622f1e8cde6e3cb823191344600f141fc31ca0ac077c3ce3557dd",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 92,
+          "name": "transfer_request",
+          "path": "hc/lib/emails.py",
+          "qualname": "transfer_request",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 109,
+          "exact_fingerprint": "e3a66d8fc817e7d0d1d4c77b4ba924e1e5b887d7113354d63a026a69e2702ab7",
+          "file_hash": "e8646a5c6c1622f1e8cde6e3cb823191344600f141fc31ca0ac077c3ce3557dd",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 108,
+          "name": "verify_email",
+          "path": "hc/lib/emails.py",
+          "qualname": "verify_email",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 146,
+          "exact_fingerprint": "7a043abb3bd7efa13958fa0c342b7c1916d1253202272d78bd3ed76cb1e27df5",
+          "file_hash": "e8646a5c6c1622f1e8cde6e3cb823191344600f141fc31ca0ac077c3ce3557dd",
+          "index": 3,
+          "input": 0,
+          "kind": "function",
+          "lineno": 145,
+          "name": "sudo_code",
+          "path": "hc/lib/emails.py",
+          "qualname": "sudo_code",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 150,
+          "exact_fingerprint": "66da77a61162b42a3f65a80f8afd3f0d025961ea69e9d5aa1b8b1d43e5620a90",
+          "file_hash": "e8646a5c6c1622f1e8cde6e3cb823191344600f141fc31ca0ac077c3ce3557dd",
+          "index": 4,
+          "input": 0,
+          "kind": "function",
+          "lineno": 149,
+          "name": "signal_rate_limited",
+          "path": "hc/lib/emails.py",
+          "qualname": "signal_rate_limited",
+          "top_level": true
+        }
+      ],
+      "node_count": 29,
+      "occurrences": 5,
+      "score": 116,
+      "shape_fingerprint": "4eb4f50323b4d50e24e70a976bd8407ea66522562f6f0e454ba3a44350f1987a",
+      "shape_text": "def f0(v0: str, v1: dict[str, Any]) -> None:\n    send(make_message('', v0, v1))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "b448c7f9502d7d1b82c5fc7f8db48b85eb1325a87dbe2ab9dcffd151d57546d7",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-ff558bb0f0c4",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 161,
+          "exact_fingerprint": "b448c7f9502d7d1b82c5fc7f8db48b85eb1325a87dbe2ab9dcffd151d57546d7",
+          "file_hash": "dcd8300aae25bd12ed98f90706e38bb2c4b57df9be0ef38e611e9788513147f8",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 154,
+          "name": "clean",
+          "path": "hc/front/forms.py",
+          "qualname": "PhoneUpDownForm.clean",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 21,
+          "exact_fingerprint": "b448c7f9502d7d1b82c5fc7f8db48b85eb1325a87dbe2ab9dcffd151d57546d7",
+          "file_hash": "8463aa810c0208e8510cc638c50b43bb8b26bfd66ad74dd5e06e026b0d6988e5",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 14,
+          "name": "clean",
+          "path": "hc/integrations/email/forms.py",
+          "qualname": "EmailForm.clean",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 43,
+          "exact_fingerprint": "b448c7f9502d7d1b82c5fc7f8db48b85eb1325a87dbe2ab9dcffd151d57546d7",
+          "file_hash": "773fa28bd99ed13a0e3fd08a42ee891a5d0ac344732505aa5af6c8165de00fe5",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 36,
+          "name": "clean",
+          "path": "hc/integrations/signal/forms.py",
+          "qualname": "SignalForm.clean",
+          "top_level": false
+        }
+      ],
+      "node_count": 52,
+      "occurrences": 3,
+      "score": 104,
+      "shape_fingerprint": "ff558bb0f0c4e0ec0d2ce61d33f26d6944ea16b3c974a598893e5433575b6245",
+      "shape_text": "def f0(self) -> None:\n    super().clean()\n    v0 = self.cleaned_data.get('')\n    v1 = self.cleaned_data.get('')\n    if not v0 and (not v1):\n        self.add_error('', '')\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "53e807898367bad47bfe1b7bc479e634ef32f86331d1948890b40ac7f45cd251",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "bdf6410783ae12ba8e55a8d9cafeb0963e7917034b7182e4f5bdf02d5d6344e4",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "8e0d4f50319cddf8dd68777259fb756c9e9d19b9d30c3061885bbfbde907d846",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "d1f734785dbb7e1e52b8704ce494bec0c814ee8c09562734b90c33a5482e47f6",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fn-5fb9f4b7d4d4",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "staticmethod"
+          ],
+          "end_lineno": 1500,
+          "exact_fingerprint": "53e807898367bad47bfe1b7bc479e634ef32f86331d1948890b40ac7f45cd251",
+          "file_hash": "29703801fa1b887f31189e74df0a00df3893af74e174bce3878a91d3d8ff7339",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 1496,
+          "name": "authorize_invite",
+          "path": "hc/api/models.py",
+          "qualname": "TokenBucket.authorize_invite",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "staticmethod"
+          ],
+          "end_lineno": 1528,
+          "exact_fingerprint": "bdf6410783ae12ba8e55a8d9cafeb0963e7917034b7182e4f5bdf02d5d6344e4",
+          "file_hash": "29703801fa1b887f31189e74df0a00df3893af74e174bce3878a91d3d8ff7339",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 1524,
+          "name": "authorize_signal_verification",
+          "path": "hc/api/models.py",
+          "qualname": "TokenBucket.authorize_signal_verification",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "staticmethod"
+          ],
+          "end_lineno": 1551,
+          "exact_fingerprint": "8e0d4f50319cddf8dd68777259fb756c9e9d19b9d30c3061885bbfbde907d846",
+          "file_hash": "29703801fa1b887f31189e74df0a00df3893af74e174bce3878a91d3d8ff7339",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 1547,
+          "name": "authorize_sudo_code",
+          "path": "hc/api/models.py",
+          "qualname": "TokenBucket.authorize_sudo_code",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "staticmethod"
+          ],
+          "end_lineno": 1559,
+          "exact_fingerprint": "d1f734785dbb7e1e52b8704ce494bec0c814ee8c09562734b90c33a5482e47f6",
+          "file_hash": "29703801fa1b887f31189e74df0a00df3893af74e174bce3878a91d3d8ff7339",
+          "index": 3,
+          "input": 0,
+          "kind": "method",
+          "lineno": 1554,
+          "name": "authorize_totp_attempt",
+          "path": "hc/api/models.py",
+          "qualname": "TokenBucket.authorize_totp_attempt",
+          "top_level": false
+        }
+      ],
+      "node_count": 29,
+      "occurrences": 4,
+      "score": 87,
+      "shape_fingerprint": "5fb9f4b7d4d426a4ce03b7e44a2285fa08b87963f42e2ee82b10b51cfa9ff4f7",
+      "shape_text": "def f0(v0: User) -> bool:\n    v1 = f'{v0.id}'\n    return TokenBucket.authorize(v1, 0, 0 * 0)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "d20f1a437ce6cf775484f7242bbc9d26651b98bcfc1c7f168b158d0a9698dcf6",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-470b07c1e95d",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 58,
+          "exact_fingerprint": "d20f1a437ce6cf775484f7242bbc9d26651b98bcfc1c7f168b158d0a9698dcf6",
+          "file_hash": "21ff1acbe478bade6874cfd3e0cbce9ba96d3fda1cf821c55d93a97cc53da116",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 54,
+          "name": "is_noop",
+          "path": "hc/integrations/signal/transport.py",
+          "qualname": "Signal.is_noop",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 40,
+          "exact_fingerprint": "d20f1a437ce6cf775484f7242bbc9d26651b98bcfc1c7f168b158d0a9698dcf6",
+          "file_hash": "95761dcd6c21b28bf7da1b5723fc3c4a2892cb27b3db7dc585ff5163480de645",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 36,
+          "name": "is_noop",
+          "path": "hc/integrations/sms/transport.py",
+          "qualname": "Sms.is_noop",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 43,
+          "exact_fingerprint": "d20f1a437ce6cf775484f7242bbc9d26651b98bcfc1c7f168b158d0a9698dcf6",
+          "file_hash": "d9738f3acd1e93f324537e9898daa03f9357020fb9255f973b9aa82cf366d2e5",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 39,
+          "name": "is_noop",
+          "path": "hc/integrations/whatsapp/transport.py",
+          "qualname": "WhatsApp.is_noop",
+          "top_level": false
+        }
+      ],
+      "node_count": 36,
+      "occurrences": 3,
+      "score": 72,
+      "shape_fingerprint": "470b07c1e95dcfc8a0b0fb40f3bdff0b43f22a3a096c5cf346628d93664f3c4f",
+      "shape_text": "def f0(self, v0: str) -> bool:\n    if v0 == '':\n        return not self.channel.phone.notify_down\n    else:\n        return not self.channel.phone.notify_up\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 3,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "8a08b769e53349d6f56a1df9160edebb9fcee959773e9efa880fde0d11a55fff",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7bcad8a205133b65e15c7be34d79e251a4bf77b1db3d6ff99d34e6756424ebe5",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "0bcc34e960d749ba3a3305d738920803052f2ca115ceb2cc1db1df1f35ea110c",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fn-cb188ce5c23f",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('PD_ENABLED')",
+            "require_setting('PD_APP_ID')"
+          ],
+          "end_lineno": 92,
+          "exact_fingerprint": "8a08b769e53349d6f56a1df9160edebb9fcee959773e9efa880fde0d11a55fff",
+          "file_hash": "68db5f72309e8e746804fd784722afec6ed62085edd8218b235e146340a1a5f3",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 90,
+          "name": "pd_help",
+          "path": "hc/integrations/pd/views.py",
+          "qualname": "pd_help",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('PUSHOVER_API_TOKEN')"
+          ],
+          "end_lineno": 30,
+          "exact_fingerprint": "7bcad8a205133b65e15c7be34d79e251a4bf77b1db3d6ff99d34e6756424ebe5",
+          "file_hash": "0ad8f2612420c26ca8b250079f9676e24ef6df9da321cf1af951364c27c3a547",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 28,
+          "name": "pushover_help",
+          "path": "hc/integrations/po/views.py",
+          "qualname": "pushover_help",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [
+            "require_setting('SLACK_ENABLED')",
+            "require_setting('SLACK_CLIENT_ID')"
+          ],
+          "end_lineno": 53,
+          "exact_fingerprint": "0bcc34e960d749ba3a3305d738920803052f2ca115ceb2cc1db1df1f35ea110c",
+          "file_hash": "783565ba4e40a6583f16975b777bb094f33006764e8d7464ee8c41e43519d682",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 51,
+          "name": "slack_help",
+          "path": "hc/integrations/slack/views.py",
+          "qualname": "slack_help",
+          "top_level": true
+        }
+      ],
+      "node_count": 22,
+      "occurrences": 3,
+      "score": 44,
+      "shape_fingerprint": "cb188ce5c23f57a5ab761c2dafe4b3618050e2d43aa25940214dbe43a0213338",
+      "shape_text": "def f0(v0: HttpRequest) -> HttpResponse:\n    v1 = {'': ''}\n    return render(v0, '', v1)\n"
+    }
+  ],
+  "inputs": [
+    {
+      "git": {
+        "commit": "51a503531d845fc11d5ef270d576c59c300e3620",
+        "tag": "v5.0.3"
+      },
+      "path": "."
+    }
+  ],
+  "settings": {
+    "excludes": [
+      "migrations/*",
+      "*/migrations/*",
+      "migrations.py",
+      "*/migrations.py",
+      "docs/*",
+      "*/docs/*",
+      "examples/*",
+      "*/examples/*"
+    ],
+    "fragments": true,
+    "include_generated": false,
+    "include_tests": false,
+    "include_trivial": false,
+    "min_fragment_nodes": 25,
+    "min_nodes": 20,
+    "min_occurrences": 3,
+    "skip_dirs": true
+  },
+  "shape_version": 1,
+  "skipped_files": [
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_add_project.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_add_totp.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_add_webauthn.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_admin.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_change_email.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_change_email_verify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_check_token.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_close_account.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_createsuperuser.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_login.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_login_totp.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_login_webauthn.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_notifications.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_profile.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_profile_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_project.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_project_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_pruneusers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_remote_user_header_login.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_remove_credential.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_remove_project.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_remove_totp.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_senddeletionscheduled.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_sendflappingnotices.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_sendinactivitynotices.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_set_password.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_signup.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_signup_csrf.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_sudo_mode.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_team_access_middleware.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_transfer_project.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/accounts/tests/test_unsubscribe_reports.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_admin.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_auth.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_badge.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_bounces.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_channel_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_check_badge.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_check_going_down_after.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_check_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_create_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_delete_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_flip_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_get_badges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_get_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_get_flips.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_get_ping_body.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_get_pings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_list_channels.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_list_checks.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_metrics.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_notification_status.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_pause.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_ping.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_ping_by_slug.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_ping_model.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_prunepingsslow.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_resume.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_sendalerts.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_sendreports.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_smtpd.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_status.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_system_checks.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_tokenbucket.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/api/tests/test_update_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_add_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_asciitable_tag.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_badges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_basics.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_channel_checks.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_channels.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_clear_events.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_contact_vcf.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_copy.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_cron_preview.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_details.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_filtering_rules.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_get_events.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_hc_extras.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_index.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_linemode_tag.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_log.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_log_events.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_my_checks.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_oncalendar_preview.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_pause.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_ping_body.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_ping_details.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_projects_menu.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_remove_channel.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_remove_check.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_resume.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_search.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_send_test_notification.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_serve_doc.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_status.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_status_single.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_switch_channel.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_transfer.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_uncloak.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_update_channel.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_update_channel_name.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_update_name.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_update_timeout.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_validate_schedule.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/front/tests/test_webhook_validator.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/apprise/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/apprise/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/apprise/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/call/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/call/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/call/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/discord/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/discord/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/discord/tests/test_add_complete.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/discord/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/test_unsubscribe.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/email/tests/test_verify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/github/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/github/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/github/tests/test_add_save.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/github/tests/test_add_select.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/github/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/googlechat/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/googlechat/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/googlechat/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/gotify/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/gotify/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/gotify/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/gotify/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/group/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/group/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/group/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/group/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/matrix/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/matrix/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/matrix/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/mattermost/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/mattermost/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/mattermost/tests/test_help.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/mattermost/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/msteamsw/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/msteamsw/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/msteamsw/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/ntfy/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/ntfy/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/ntfy/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/ntfy/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/opsgenie/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/opsgenie/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/opsgenie/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pagertree/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pagertree/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pagertree/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pd/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pd/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pd/tests/test_add_complete.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pd/tests/test_help.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pd/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/po/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/po/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/po/tests/test_help.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/po/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/prometheus/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/prometheus/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/prometheus/tests/test_metrics.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pushbullet/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pushbullet/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pushbullet/tests/test_add_complete.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/pushbullet/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/rocketchat/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/rocketchat/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/rocketchat/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/shell/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/shell/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/shell/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/shell/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/test_signal_captcha.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/signal/tests/test_verify_signal_number.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/test_add_btn.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/test_add_complete.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/test_help.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/slack/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/sms/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/sms/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/sms/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/sms/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/spike/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/spike/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/spike/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/telegram/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/telegram/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/telegram/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/trello/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/trello/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/trello/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/trello/tests/test_settings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/victorops/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/victorops/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/victorops/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/webhook/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/webhook/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/webhook/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/webhook/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/whatsapp/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/whatsapp/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/whatsapp/tests/test_edit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/whatsapp/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/zulip/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/zulip/tests/test_add.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/integrations/zulip/tests/test_notify.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_badges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_curl.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_date.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_emails.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_html.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_s3.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_signing.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_statsd.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/lib/tests/test_string.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/logs/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "hc/logs/tests/test_sendlogs.py",
+      "reason": "test"
+    }
+  ],
+  "stats": {
+    "files_mined": 228,
+    "files_seen": 465,
+    "files_skipped": {
+      "test": 237
+    },
+    "fragment_clusters": 8,
+    "fragments_mined": 494,
+    "function_clusters": 6,
+    "functions_filtered": {
+      "too_small": 14,
+      "trivial_body": 145
+    },
+    "functions_found": 767,
+    "functions_mined": 608
+  }
+}

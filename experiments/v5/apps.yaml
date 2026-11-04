@@ -1,0 +1,46 @@
+# v5 applications (Part B). Each is treated as its own organization.
+# Pinned to a release tag; `python scripts/v5.py clone` checks them out into .bench/apps/.
+apps:
+  ctfd:
+    repo: https://github.com/CTFd/CTFd
+    tag: 3.8.9
+    commit: 5f345fbaa424e6a22b51addf7f27430927879ae2
+    framework: Flask (+ Flask-RESTX, SQLAlchemy, Marshmallow)
+    licence: Apache-2.0
+    python_lines: {total: 47497, without_tests_migrations_docs: 22599}
+    why: >-
+      Capture-the-flag platform with real business logic (users/teams, auth,
+      scoring, uploads, email, exports, plugin system); active (release 2026-10);
+      the Flask app among the candidates.
+  healthchecks:
+    repo: https://github.com/healthchecks/healthchecks
+    tag: v5.0.3
+    commit: 51a503531d845fc11d5ef270d576c59c300e3620
+    framework: Django (function-based views)
+    licence: BSD-3-Clause
+    python_lines: {total: 45188, without_tests_migrations_docs: 16978}
+    why: >-
+      Cron/heartbeat monitoring service with accounts, projects, API keys, 30+
+      notification integrations, background senders and rate limits; active
+      (release 2026-10); mostly function-based views, which suit function-only patterns.
+  lnbits:
+    repo: https://github.com/lnbits/lnbits
+    tag: v1.6.2
+    commit: 9349da153c223b008f7d80453b53a54e09c8ed3d
+    framework: FastAPI (+ Pydantic, async SQL)
+    licence: MIT
+    python_lines: {total: 85115, without_tests_migrations_docs: 54784}
+    why: >-
+      Lightning wallet/accounts server with auth (keys, JWT, OAuth), payments,
+      background tasks, fiat providers and extensions; active (release 2026-09).
+      Chosen as the FastAPI app because no FastAPI candidate on the list fit.
+rejected:
+  fastapi/full-stack-fastapi-template: "3,051 lines of Python in total: below 20k (tag 0.12.0)"
+  mealie-recipes/mealie: "AGPL-3.0: not a permissive licence (v3.30.0)"
+  netbox-community/netbox: >-
+    420k lines in total (275k without tests/migrations), above the range, and
+    built almost entirely on classes (models, class-based views, forms), which
+    patterns cannot contain; the Django slot went to healthchecks
+  Netflix/dispatch: "FastAPI, Apache-2.0, 84k lines, but last commit 2025-09-02: not actively maintained"
+  polarsource/polar: "FastAPI, Apache-2.0, but 659k lines of Python: above the range"
+mining_excludes: ["migrations/*", "*/migrations/*", "migrations.py", "*/migrations.py", "docs/*", "*/docs/*", "examples/*", "*/examples/*"]

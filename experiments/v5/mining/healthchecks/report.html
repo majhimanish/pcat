@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pattern mining report</title><style>
+:root { --bg:#fbfbfa; --fg:#1d1d1b; --muted:#6b6b66; --line:#e2e1dc; --card:#ffffff;
+        --accent:#2f5d8a; --code:#f3f2ee; --ok:#2e7d4f; --warn:#9a6a00; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#151614; --fg:#e8e7e2; --muted:#9a9993; --line:#2c2d2a; --card:#1d1e1b;
+          --accent:#8db4dc; --code:#232421; --ok:#6fc28f; --warn:#e0b44c; }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--bg); color:var(--fg);
+       font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 64px; }
+h1 { font-size: 1.5rem; margin: 0 0 4px; }
+h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+.sub { color: var(--muted); margin: 0 0 20px; overflow-wrap: anywhere; }
+.grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap:10px; }
+.stat { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
+.stat b { display:block; font-size:1.3rem; font-variant-numeric: tabular-nums; }
+.stat span { color:var(--muted); font-size:.85rem; }
+.rows { border:1px solid var(--line); border-radius:8px; background:var(--card); }
+.head, summary { display:grid; gap:8px; align-items:center; padding:8px 12px;
+  grid-template-columns: 3rem minmax(9rem,1.4fr) repeat(4, minmax(3.5rem,.6fr)) minmax(6rem,1.2fr); }
+.head { color:var(--muted); font-size:.8rem; border-bottom:1px solid var(--line); }
+details { border-bottom:1px solid var(--line); }
+details:last-child { border-bottom:0; }
+summary { cursor:pointer; list-style:none; font-variant-numeric: tabular-nums; }
+summary::-webkit-details-marker { display:none; }
+summary:hover { background: var(--code); }
+.id { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:.9rem;
+      color:var(--accent); overflow-wrap:anywhere; }
+.num { text-align:right; }
+.match { font-size:.85rem; overflow-wrap:anywhere; }
+.match .exact { color: var(--ok); } .match .shape { color: var(--warn); }
+.body { padding: 4px 12px 14px; }
+pre { background:var(--code); border-radius:6px; padding:10px; overflow-x:auto; margin:8px 0;
+      font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
+ul.members { margin: 6px 0 0; padding-left: 1.1rem; font-size:.9rem; }
+ul.members li { overflow-wrap:anywhere; }
+.muted { color: var(--muted); }
+table.cov { border-collapse: collapse; width:100%; font-size:.9rem; }
+table.cov td, table.cov th { border-bottom:1px solid var(--line); padding:4px 8px; text-align:left; }
+.empty { padding: 12px; color: var(--muted); }
+@media (max-width: 640px) {
+  .head { display:none; }
+  summary { grid-template-columns: 2.2rem 1fr 1fr 1fr; }
+  summary .lbl::before { content: attr(data-l) " "; color: var(--muted); font-size:.75rem; }
+  summary .id { grid-column: 2 / -1; }
+  summary .match { grid-column: 1 / -1; }
+  .num { text-align:left; }
+}
+</style></head><body><main><h1>Pattern mining report</h1><p class="sub">. @ v5.0.3 · canonical v2 · shape v1</p><div class="grid"><div class="stat"><b>465</b><span>files seen</span></div><div class="stat"><b>228</b><span>files mined</span></div><div class="stat"><b>237</b><span>files skipped</span></div><div class="stat"><b>608</b><span>functions mined</span></div><div class="stat"><b>159</b><span>functions filtered</span></div><div class="stat"><b>494</b><span>fragments mined</span></div><div class="stat"><b>6</b><span>function clusters</span></div><div class="stat"><b>8</b><span>fragment clusters</span></div><div class="stat"><b>0.0%</b><span>covered (0)</span></div><div class="stat"><b>0.0%</b><span>near-covered (0)</span></div></div><p class="sub" style="margin-top:10px">test: 237; too_small: 14; trivial_body: 145</p><p class="sub">settings: excludes=[&#x27;migrations/*&#x27;, &#x27;*/migrations/*&#x27;, &#x27;migrations.py&#x27;, &#x27;*/migrations.py&#x27;, &#x27;docs/*&#x27;, &#x27;*/docs/*&#x27;, &#x27;examples/*&#x27;, &#x27;*/examples/*&#x27;], fragments=True, include_generated=False, include_tests=False, include_trivial=False, min_fragment_nodes=25, min_nodes=20, min_occurrences=3, skip_dirs=True</p><h2>Catalog coverage</h2><table class="cov"><tr><th>pattern</th><th>covered</th><th>near-covered</th></tr><tr><td class="id">auth.jwt.create_access_token@v1</td><td>0</td><td>0</td></tr><tr><td class="id">auth.password.pbkdf2@v1</td><td>0</td><td>0</td></tr><tr><td class="id">collections.group_by.dict_of_lists@v1</td><td>0</td><td>0</td></tr><tr><td class="id">config.env.load_settings@v1</td><td>0</td><td>0</td></tr><tr><td class="id">db.pagination.select_page@v1</td><td>0</td><td>0</td></tr><tr><td class="id">http.get_with_retry.requests@v1</td><td>0</td><td>0</td></tr><tr><td class="id">importers.users_csv.parse@v1</td><td>0</td><td>0</td></tr><tr><td class="id">ratelimit.token_bucket.check@v1</td><td>0</td><td>0</td></tr><tr><td class="id">retry.with_exponential_backoff@v1</td><td>0</td><td>0</td></tr><tr><td class="id">search.binary_search.iterative@v1</td><td>0</td><td>0</td></tr><tr><td class="id">search.binary_search.recursive@v1</td><td>0</td><td>0</td></tr><tr><td class="id">sort.merge_sort.recursive@v1</td><td>0</td><td>0</td></tr><tr><td class="id">text.slugify.ascii@v1</td><td>0</td><td>0</td></tr></table><h2>Function clusters (6)</h2><div class="rows"><div class="head"><span>#</span><span>cluster</span><span class="num">score</span><span class="num">occ.</span><span class="num">nodes</span><span class="num">files</span><span>catalog</span></div><details id="fn-9a554c57b6ce"><summary><span class="muted">1</span><span class="id">fn-9a554c57b6ce</span><span class="num lbl" data-l="score">357</span><span class="num lbl" data-l="occ.">4</span><span class="num lbl" data-l="nodes">119</span><span class="num lbl" data-l="files">4</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 023ae17d59ba, 1× e4e25dad79b2, 1× 36760697a7c6, 1× 7364d3f8e813; inputs: 1</div><pre>def f0(v0: AuthenticatedHttpRequest, v1: UUID) -&gt; HttpResponse:
+    v2 = _get_rw_project_for_user(v0, v1)
+    if v0.method == &#x27;&#x27;:
+        v3 = forms.AddUrlForm(v0.POST)
+        if v3.is_valid():
+            v4 = Channel(project=v2, kind=&#x27;&#x27;)
+            v4.value = v3.cleaned_data[&#x27;&#x27;]
+            v4.save()
+            v4.assign_all_checks()
+            return redirect(&#x27;&#x27;, v2.code)
+    else:
+        v3 = forms.AddUrlForm()
+    v5 = {&#x27;&#x27;: &#x27;&#x27;, &#x27;&#x27;: v2, &#x27;&#x27;: v3}
+    return render(v0, &#x27;&#x27;, v5)
+</pre><ul class="members"><li><span class="id">./hc/integrations/msteamsw/views.py:18-34</span> add_msteams<span class="muted"> @require_setting(&#x27;MSTEAMS_ENABLED&#x27;) @login_required [#0, exact 023ae17d59ba]</span></li><li><span class="id">./hc/integrations/pagertree/views.py:21-37</span> add<span class="muted"> @require_setting(&#x27;PAGERTREE_ENABLED&#x27;) @login_required [#1, exact e4e25dad79b2]</span></li><li><span class="id">./hc/integrations/spike/views.py:18-34</span> add_spike<span class="muted"> @require_setting(&#x27;SPIKE_ENABLED&#x27;) @login_required [#2, exact 36760697a7c6]</span></li><li><span class="id">./hc/integrations/victorops/views.py:18-34</span> add<span class="muted"> @require_setting(&#x27;VICTOROPS_ENABLED&#x27;) @login_required [#3, exact 7364d3f8e813]</span></li></ul></div></details><details id="fn-4eb4f50323b4"><summary><span class="muted">2</span><span class="id">fn-4eb4f50323b4</span><span class="num lbl" data-l="score">116</span><span class="num lbl" data-l="occ.">5</span><span class="num lbl" data-l="nodes">29</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 9cee08f5b22e, 1× 40693ec5095e, 1× e3a66d8fc817, 1× 7a043abb3bd7, 1× 66da77a61162; inputs: 1</div><pre>def f0(v0: str, v1: dict[str, Any]) -&gt; None:
+    send(make_message(&#x27;&#x27;, v0, v1))
+</pre><ul class="members"><li><span class="id">./hc/lib/emails.py:88-89</span> login<span class="muted"> [#0, exact 9cee08f5b22e]</span></li><li><span class="id">./hc/lib/emails.py:92-93</span> transfer_request<span class="muted"> [#1, exact 40693ec5095e]</span></li><li><span class="id">./hc/lib/emails.py:108-109</span> verify_email<span class="muted"> [#2, exact e3a66d8fc817]</span></li><li><span class="id">./hc/lib/emails.py:145-146</span> sudo_code<span class="muted"> [#3, exact 7a043abb3bd7]</span></li><li><span class="id">./hc/lib/emails.py:149-150</span> signal_rate_limited<span class="muted"> [#4, exact 66da77a61162]</span></li></ul></div></details><details id="fn-ff558bb0f0c4"><summary><span class="muted">3</span><span class="id">fn-ff558bb0f0c4</span><span class="num lbl" data-l="score">104</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">52</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 3× b448c7f9502d; inputs: 1</div><pre>def f0(self) -&gt; None:
+    super().clean()
+    v0 = self.cleaned_data.get(&#x27;&#x27;)
+    v1 = self.cleaned_data.get(&#x27;&#x27;)
+    if not v0 and (not v1):
+        self.add_error(&#x27;&#x27;, &#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">./hc/front/forms.py:154-161</span> PhoneUpDownForm.clean<span class="muted"> [#0, exact b448c7f9502d]</span></li><li><span class="id">./hc/integrations/email/forms.py:14-21</span> EmailForm.clean<span class="muted"> [#1, exact b448c7f9502d]</span></li><li><span class="id">./hc/integrations/signal/forms.py:36-43</span> SignalForm.clean<span class="muted"> [#2, exact b448c7f9502d]</span></li></ul></div></details><details id="fn-5fb9f4b7d4d4"><summary><span class="muted">4</span><span class="id">fn-5fb9f4b7d4d4</span><span class="num lbl" data-l="score">87</span><span class="num lbl" data-l="occ.">4</span><span class="num lbl" data-l="nodes">29</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 53e807898367, 1× bdf6410783ae, 1× 8e0d4f50319c, 1× d1f734785dbb; inputs: 1</div><pre>def f0(v0: User) -&gt; bool:
+    v1 = f&#x27;{v0.id}&#x27;
+    return TokenBucket.authorize(v1, 0, 0 * 0)
+</pre><ul class="members"><li><span class="id">./hc/api/models.py:1496-1500</span> TokenBucket.authorize_invite<span class="muted"> @staticmethod [#0, exact 53e807898367]</span></li><li><span class="id">./hc/api/models.py:1524-1528</span> TokenBucket.authorize_signal_verification<span class="muted"> @staticmethod [#1, exact bdf6410783ae]</span></li><li><span class="id">./hc/api/models.py:1547-1551</span> TokenBucket.authorize_sudo_code<span class="muted"> @staticmethod [#2, exact 8e0d4f50319c]</span></li><li><span class="id">./hc/api/models.py:1554-1559</span> TokenBucket.authorize_totp_attempt<span class="muted"> @staticmethod [#3, exact d1f734785dbb]</span></li></ul></div></details><details id="fn-470b07c1e95d"><summary><span class="muted">5</span><span class="id">fn-470b07c1e95d</span><span class="num lbl" data-l="score">72</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">36</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 3× d20f1a437ce6; inputs: 1</div><pre>def f0(self, v0: str) -&gt; bool:
+    if v0 == &#x27;&#x27;:
+        return not self.channel.phone.notify_down
+    else:
+        return not self.channel.phone.notify_up
+</pre><ul class="members"><li><span class="id">./hc/integrations/signal/transport.py:54-58</span> Signal.is_noop<span class="muted"> [#0, exact d20f1a437ce6]</span></li><li><span class="id">./hc/integrations/sms/transport.py:36-40</span> Sms.is_noop<span class="muted"> [#1, exact d20f1a437ce6]</span></li><li><span class="id">./hc/integrations/whatsapp/transport.py:39-43</span> WhatsApp.is_noop<span class="muted"> [#2, exact d20f1a437ce6]</span></li></ul></div></details><details id="fn-cb188ce5c23f"><summary><span class="muted">6</span><span class="id">fn-cb188ce5c23f</span><span class="num lbl" data-l="score">44</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">22</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 8a08b769e533, 1× 7bcad8a20513, 1× 0bcc34e960d7; inputs: 1</div><pre>def f0(v0: HttpRequest) -&gt; HttpResponse:
+    v1 = {&#x27;&#x27;: &#x27;&#x27;}
+    return render(v0, &#x27;&#x27;, v1)
+</pre><ul class="members"><li><span class="id">./hc/integrations/pd/views.py:90-92</span> pd_help<span class="muted"> @require_setting(&#x27;PD_ENABLED&#x27;) @require_setting(&#x27;PD_APP_ID&#x27;) [#0, exact 8a08b769e533]</span></li><li><span class="id">./hc/integrations/po/views.py:28-30</span> pushover_help<span class="muted"> @require_setting(&#x27;PUSHOVER_API_TOKEN&#x27;) [#1, exact 7bcad8a20513]</span></li><li><span class="id">./hc/integrations/slack/views.py:51-53</span> slack_help<span class="muted"> @require_setting(&#x27;SLACK_ENABLED&#x27;) @require_setting(&#x27;SLACK_CLIENT_ID&#x27;) [#2, exact 0bcc34e960d7]</span></li></ul></div></details></div><h2>Fragment clusters (8)</h2><div class="rows"><div class="head"><span>#</span><span>cluster</span><span class="num">score</span><span class="num">occ.</span><span class="num">nodes</span><span class="num">files</span><span>catalog</span></div><details id="fr-82ade26f9d26"><summary><span class="muted">1</span><span class="id">fr-82ade26f9d26</span><span class="num lbl" data-l="score">468</span><span class="num lbl" data-l="occ.">7</span><span class="num lbl" data-l="nodes">78</span><span class="num lbl" data-l="files">7</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× c27e4faa3196, 1× 6648b2d55482, 1× 517c875f948e, 1× 9c21dc7e679a, 1× be05f73a6f72, 1× 7458a5d022ad, 1× aa28693c7a3e; inputs: 1</div><pre>if v0.method == &#x27;&#x27;:
+    v1 = forms.AddUrlForm(v0.POST)
+    if v1.is_valid():
+        v2 = Channel(project=v3, kind=&#x27;&#x27;)
+        v2.value = v1.cleaned_data[&#x27;&#x27;]
+        v2.save()
+        v2.assign_all_checks()
+        return redirect(&#x27;&#x27;, v3.code)
+else:
+    v1 = forms.AddUrlForm()
+</pre><ul class="members"><li><span class="id">./hc/integrations/mattermost/views.py:26-36</span> add<span class="muted"> [#0, exact c27e4faa3196]</span></li><li><span class="id">./hc/integrations/msteamsw/views.py:21-31</span> add_msteams<span class="muted"> [#1, exact 6648b2d55482]</span></li><li><span class="id">./hc/integrations/pagertree/views.py:24-34</span> add<span class="muted"> [#2, exact 517c875f948e]</span></li><li><span class="id">./hc/integrations/rocketchat/views.py:26-36</span> add<span class="muted"> [#3, exact 9c21dc7e679a]</span></li><li><span class="id">./hc/integrations/slack/views.py:29-39</span> add<span class="muted"> [#4, exact be05f73a6f72]</span></li><li><span class="id">./hc/integrations/spike/views.py:21-31</span> add_spike<span class="muted"> [#5, exact 7458a5d022ad]</span></li><li><span class="id">./hc/integrations/victorops/views.py:21-31</span> add<span class="muted"> [#6, exact aa28693c7a3e]</span></li></ul></div></details><details id="fr-3dd4e930053a"><summary><span class="muted">2</span><span class="id">fr-3dd4e930053a</span><span class="num lbl" data-l="score">350</span><span class="num lbl" data-l="occ.">8</span><span class="num lbl" data-l="nodes">50</span><span class="num lbl" data-l="files">8</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 752ce4ce4f2f, 1× 425cfc33c90c, 1× 1be196327ba7, 1× 31429e1a4d27, 1× a6f27bee332d, 1× 19fdea291ce6, 1× c41203905e07, 1× d5c68c252354; inputs: 1</div><pre>if v0.is_valid():
+    v1 = Channel(project=v2, kind=&#x27;&#x27;)
+    v1.value = v0.cleaned_data[&#x27;&#x27;]
+    v1.save()
+    v1.assign_all_checks()
+    return redirect(&#x27;&#x27;, v2.code)
+</pre><ul class="members"><li><span class="id">./hc/integrations/mattermost/views.py:28-34</span> add<span class="muted"> [#0, exact 752ce4ce4f2f]</span></li><li><span class="id">./hc/integrations/msteamsw/views.py:23-29</span> add_msteams<span class="muted"> [#1, exact 425cfc33c90c]</span></li><li><span class="id">./hc/integrations/pagertree/views.py:26-32</span> add<span class="muted"> [#2, exact 1be196327ba7]</span></li><li><span class="id">./hc/integrations/pd/views.py:46-52</span> add<span class="muted"> [#3, exact 31429e1a4d27]</span></li><li><span class="id">./hc/integrations/rocketchat/views.py:28-34</span> add<span class="muted"> [#4, exact a6f27bee332d]</span></li><li><span class="id">./hc/integrations/slack/views.py:31-37</span> add<span class="muted"> [#5, exact 19fdea291ce6]</span></li><li><span class="id">./hc/integrations/spike/views.py:23-29</span> add_spike<span class="muted"> [#6, exact c41203905e07]</span></li><li><span class="id">./hc/integrations/victorops/views.py:23-29</span> add<span class="muted"> [#7, exact d5c68c252354]</span></li></ul></div></details><details id="fr-2760ce005fbe"><summary><span class="muted">3</span><span class="id">fr-2760ce005fbe</span><span class="num lbl" data-l="score">108</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">54</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 3× 544534f9d6cf; inputs: 1</div><pre>if v0.is_valid():
+    v1.name = v0.cleaned_data[&#x27;&#x27;]
+    v1.value = v0.get_json()
+    v1.save()
+    if v2:
+        v1.assign_all_checks()
+    return redirect(&#x27;&#x27;, v1.project.code)
+</pre><ul class="members"><li><span class="id">./hc/integrations/signal/views.py:27-34</span> signal_form<span class="muted"> [#0, exact 544534f9d6cf]</span></li><li><span class="id">./hc/integrations/sms/views.py:22-29</span> sms_form<span class="muted"> [#1, exact 544534f9d6cf]</span></li><li><span class="id">./hc/integrations/whatsapp/views.py:21-28</span> whatsapp_form<span class="muted"> [#2, exact 544534f9d6cf]</span></li></ul></div></details><details id="fr-308688ef0e92"><summary><span class="muted">4</span><span class="id">fr-308688ef0e92</span><span class="num lbl" data-l="score">106</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">53</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× 7fa7b8a8d7a2, 1× 3cb80de82e15; inputs: 1</div><pre>if (v0 := self.last_ping(v1)):
+    v2.add(&#x27;&#x27;, str(v0.n))
+    v2.add(&#x27;&#x27;, v0.formatted_kind_created())
+else:
+    v2.add(&#x27;&#x27;, &#x27;&#x27;)
+    v2.add(&#x27;&#x27;, &#x27;&#x27;)
+</pre><ul class="members"><li><span class="id">./hc/integrations/googlechat/transport.py:42-47</span> GoogleChat.notify<span class="muted"> [#0, exact 7fa7b8a8d7a2]</span></li><li><span class="id">./hc/integrations/msteamsw/transport.py:85-90</span> MsTeamsWorkflow.payload<span class="muted"> [#1, exact 3cb80de82e15]</span></li><li><span class="id">./hc/integrations/slack/transport.py:75-80</span> Slackalike.payload<span class="muted"> [#2, exact 7fa7b8a8d7a2]</span></li></ul></div></details><details id="fr-feba92b152a6"><summary><span class="muted">5</span><span class="id">fr-feba92b152a6</span><span class="num lbl" data-l="score">90</span><span class="num lbl" data-l="occ.">4</span><span class="num lbl" data-l="nodes">30</span><span class="num lbl" data-l="files">4</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× 902e572a3d96, 1× 371a51a32033, 1× 1b051ae2efae, 1× c50067ba7177; inputs: 1</div><pre>if v0.GET.get(&#x27;&#x27;) == &#x27;&#x27;:
+    messages.warning(v0, &#x27;&#x27;)
+    return redirect(&#x27;&#x27;, v1.code)
+</pre><ul class="members"><li><span class="id">./hc/integrations/discord/views.py:55-57</span> add_complete<span class="muted"> [#0, exact 902e572a3d96]</span></li><li><span class="id">./hc/integrations/github/views.py:59-61</span> select<span class="muted"> [#1, exact 371a51a32033]</span></li><li><span class="id">./hc/integrations/pushbullet/views.py:64-66</span> add_complete<span class="muted"> [#2, exact 1b051ae2efae]</span></li><li><span class="id">./hc/integrations/slack/views.py:91-93</span> add_complete<span class="muted"> [#3, exact c50067ba7177]</span></li></ul></div></details><details id="fr-578d971c6024"><summary><span class="muted">6</span><span class="id">fr-578d971c6024</span><span class="num lbl" data-l="score">84</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">42</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 3× 837e82e14e3e; inputs: 1</div><pre>if v0.is_valid():
+    v1.value = v0.get_value()
+    v1.save()
+    if v2:
+        v1.assign_all_checks()
+    return redirect(&#x27;&#x27;, v1.project.code)
+</pre><ul class="members"><li><span class="id">./hc/integrations/gotify/views.py:20-26</span> gotify_form<span class="muted"> [#0, exact 837e82e14e3e]</span></li><li><span class="id">./hc/integrations/ntfy/views.py:19-25</span> ntfy_form<span class="muted"> [#1, exact 837e82e14e3e]</span></li><li><span class="id">./hc/integrations/shell/views.py:22-28</span> shell_form<span class="muted"> [#2, exact 837e82e14e3e]</span></li></ul></div></details><details id="fr-89bf279c2f41"><summary><span class="muted">7</span><span class="id">fr-89bf279c2f41</span><span class="num lbl" data-l="score">76</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">38</span><span class="num lbl" data-l="files">3</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 2× fc00de085563, 1× 0a0cee805836; inputs: 1</div><pre>if v0.kind in (&#x27;&#x27;, &#x27;&#x27;):
+    v1.add(&#x27;&#x27;, self.fix_asterisks(v0.schedule))
+    v1.add(&#x27;&#x27;, v0.tz)
+</pre><ul class="members"><li><span class="id">./hc/integrations/msteamsw/transport.py:81-83</span> MsTeamsWorkflow.payload<span class="muted"> [#0, exact 0a0cee805836]</span></li><li><span class="id">./hc/integrations/rocketchat/transport.py:42-44</span> RocketChat.payload<span class="muted"> [#1, exact fc00de085563]</span></li><li><span class="id">./hc/integrations/slack/transport.py:71-73</span> Slackalike.payload<span class="muted"> [#2, exact fc00de085563]</span></li></ul></div></details><details id="fr-e78bb726afce"><summary><span class="muted">8</span><span class="id">fr-e78bb726afce</span><span class="num lbl" data-l="score">62</span><span class="num lbl" data-l="occ.">3</span><span class="num lbl" data-l="nodes">31</span><span class="num lbl" data-l="files">1</span><span class="match"><span class="muted">—</span></span></summary><div class="body"><div class="muted">exact sub-groups: 1× f903616de72b, 1× edc63d035e15, 1× 6e537ddd03fe; inputs: 1</div><pre>for v0, v1, v2 in v3:
+    v4 = 0 if v1 == &#x27;&#x27; else 0
+    yield f&#x27;{v0}{v4}&#x27;
+</pre><ul class="members"><li><span class="id">./hc/integrations/prometheus/views.py:84-86</span> metrics.&lt;locals&gt;.output<span class="muted"> [#0, exact f903616de72b]</span></li><li><span class="id">./hc/integrations/prometheus/views.py:97-99</span> metrics.&lt;locals&gt;.output<span class="muted"> [#1, exact edc63d035e15]</span></li><li><span class="id">./hc/integrations/prometheus/views.py:104-106</span> metrics.&lt;locals&gt;.output<span class="muted"> [#2, exact 6e537ddd03fe]</span></li></ul></div></details></div></main></body></html>

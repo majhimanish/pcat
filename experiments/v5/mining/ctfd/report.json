@@ -1,0 +1,1933 @@
+{
+  "canonical_version": 2,
+  "coverage": {
+    "catalog_patterns": 13,
+    "covered": 0,
+    "covered_percent": 0.0,
+    "functions": 587,
+    "near_covered": 0,
+    "near_covered_percent": 0.0,
+    "patterns": [
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.jwt.create_access_token@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "auth.password.pbkdf2@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "collections.group_by.dict_of_lists@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "config.env.load_settings@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "db.pagination.select_page@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "http.get_with_retry.requests@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "importers.users_csv.parse@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "ratelimit.token_bucket.check@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "retry.with_exponential_backoff@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.iterative@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "search.binary_search.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "sort.merge_sort.recursive@v1"
+      },
+      {
+        "covered": 0,
+        "near_covered": 0,
+        "pattern": "text.slugify.ascii@v1"
+      }
+    ]
+  },
+  "fragment_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 16,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "63409a9cdaab798c885fb1f1ca521fa38fd0a36f557fab4183ec8e2fb7d33e1a",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "02f4c8437a19c79e8cb70796408d2e0c59a7ebe1ac7a1988e3cd1a28cd40d60f",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "2f8e5a500adcf3fdb46e8824fd6d5c8d1bf1fc8873e32c540336f5316da82aca",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "5e712ed1cff8b1204122f3ffda7ae29fc6c0022f71f0c4ec676045a14b2075e1",
+          "members": [
+            3
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "c7fd0778740256a4b5559c57bccf412dabaa0bbf8c8e918274bace4634e40c71",
+          "members": [
+            4
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "774e818b03b33678c44e226f5aa9b3cac742c1c557d16dfa2f0195f38147b9c5",
+          "members": [
+            5
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "d367a30307adf7e2a0046fa37c8d923649b5b8df11b01b5704170151b91ec64a",
+          "members": [
+            6
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "3a824569ef0d30ab62039ad9365fd5d5bbdf7b0c8d0053b1811bfbd51f8d95aa",
+          "members": [
+            7
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "02f1d284df689788b71bf374351e1c00e0a2ff6f9429f90369418dc76f19cb25",
+          "members": [
+            8
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "094fd326ea31f2b60a476c605a05bb024f3fa12d548297cd822e63ab4553822e",
+          "members": [
+            9
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "535bae026d9b729e2f4cc6413f86a04135dead1568372ea23f852e6437dd6771",
+          "members": [
+            10
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "655dbde420f2192a5810587a0faf4cf889065ae3ff8bf2d4230fa131d6f9935e",
+          "members": [
+            11
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "054d0ac052b4dd1b1733d7681be1317feb337bc62b9a23b8ab0fda5b6fe2260f",
+          "members": [
+            12
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "c300474c6d3588470142ac14cdca31dcaf80ac62b99f7ac4398fa3b7df6cdfb7",
+          "members": [
+            13
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "8adf50b7d558d90890da6a95954af00f1aa37a4ad2f76032a8446bccdc6d1971",
+          "members": [
+            14
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "02fab293fb661ea2c12adabab0998c6089c734703aa6bfe702e3e9ba7f81916d",
+          "members": [
+            15
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7b951f2fca6d61739049fea16dea5e6c21a926d500ceea8a518090215df0e942",
+          "members": [
+            16
+          ]
+        }
+      ],
+      "id": "fr-010013dc23a1",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 50,
+          "exact_fingerprint": "63409a9cdaab798c885fb1f1ca521fa38fd0a36f557fab4183ec8e2fb7d33e1a",
+          "file_hash": "72433a5955d8cad9e0ba430e89ab7e9da7e87b8b2adf22d85664b6eeeee228a3",
+          "index": 0,
+          "input": 0,
+          "lineno": 42,
+          "path": "CTFd/schemas/awards.py",
+          "qualname": "AwardSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 45,
+          "exact_fingerprint": "02f4c8437a19c79e8cb70796408d2e0c59a7ebe1ac7a1988e3cd1a28cd40d60f",
+          "file_hash": "3c3244a2ca7922bc5c783c4b3ee0e9922d11037677d33d3d39d429c0105aceb1",
+          "index": 1,
+          "input": 0,
+          "lineno": 37,
+          "path": "CTFd/schemas/config.py",
+          "qualname": "ConfigSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 20,
+          "exact_fingerprint": "2f8e5a500adcf3fdb46e8824fd6d5c8d1bf1fc8873e32c540336f5316da82aca",
+          "file_hash": "954ecaf396ae2b46391168001ecfae6de25a887d7072dc2a64dd76fcd1b8bc55",
+          "index": 2,
+          "input": 0,
+          "lineno": 12,
+          "path": "CTFd/schemas/files.py",
+          "qualname": "FileSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 20,
+          "exact_fingerprint": "5e712ed1cff8b1204122f3ffda7ae29fc6c0022f71f0c4ec676045a14b2075e1",
+          "file_hash": "bc54ddcf4791f91dfc5ee637937a7119110e0bf257dfde26b11798dfcde0b620",
+          "index": 3,
+          "input": 0,
+          "lineno": 12,
+          "path": "CTFd/schemas/flags.py",
+          "qualname": "FlagSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 45,
+          "exact_fingerprint": "c7fd0778740256a4b5559c57bccf412dabaa0bbf8c8e918274bace4634e40c71",
+          "file_hash": "2a6ef07859a409f54e4f46b5d091f2adf83e307696e895c7b6cff5d7e356d27f",
+          "index": 4,
+          "input": 0,
+          "lineno": 37,
+          "path": "CTFd/schemas/hints.py",
+          "qualname": "HintSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 25,
+          "exact_fingerprint": "774e818b03b33678c44e226f5aa9b3cac742c1c557d16dfa2f0195f38147b9c5",
+          "file_hash": "69791c55b54477b7d98ce9b1280d8face47d2372e602a0019511eae51b4b47da",
+          "index": 5,
+          "input": 0,
+          "lineno": 17,
+          "path": "CTFd/schemas/notifications.py",
+          "qualname": "NotificationSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 79,
+          "exact_fingerprint": "d367a30307adf7e2a0046fa37c8d923649b5b8df11b01b5704170151b91ec64a",
+          "file_hash": "0f9213593c890ab54901a61928e5be641db70323eecf3ea359380301b3e13654",
+          "index": 6,
+          "input": 0,
+          "lineno": 71,
+          "path": "CTFd/schemas/pages.py",
+          "qualname": "PageSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 40,
+          "exact_fingerprint": "3a824569ef0d30ab62039ad9365fd5d5bbdf7b0c8d0053b1811bfbd51f8d95aa",
+          "file_hash": "db9470b7c1e5fe9eceee7f9ececfaced8b899b60ae77ca4dc57c5c5db91eac32",
+          "index": 7,
+          "input": 0,
+          "lineno": 32,
+          "path": "CTFd/schemas/ratings.py",
+          "qualname": "RatingSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 42,
+          "exact_fingerprint": "02f1d284df689788b71bf374351e1c00e0a2ff6f9429f90369418dc76f19cb25",
+          "file_hash": "d8235ae5e31855f341c97b7ca51299b72b5d505755ed2d035764c05e8c41a3a4",
+          "index": 8,
+          "input": 0,
+          "lineno": 34,
+          "path": "CTFd/schemas/solutions.py",
+          "qualname": "SolutionSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 54,
+          "exact_fingerprint": "094fd326ea31f2b60a476c605a05bb024f3fa12d548297cd822e63ab4553822e",
+          "file_hash": "e626dd5ddd9cd4b544344deabca587aedbc7e2baad3d92a4f36e5b3de9b5a3a0",
+          "index": 9,
+          "input": 0,
+          "lineno": 46,
+          "path": "CTFd/schemas/submissions.py",
+          "qualname": "SubmissionSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 22,
+          "exact_fingerprint": "535bae026d9b729e2f4cc6413f86a04135dead1568372ea23f852e6437dd6771",
+          "file_hash": "29ef746e430d8d4d615dd24309a82f6588aaf87540dd50e77ae2beee1cc53196",
+          "index": 10,
+          "input": 0,
+          "lineno": 14,
+          "path": "CTFd/schemas/tags.py",
+          "qualname": "TagSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 428,
+          "exact_fingerprint": "655dbde420f2192a5810587a0faf4cf889065ae3ff8bf2d4230fa131d6f9935e",
+          "file_hash": "e03b6b5bb8c5e8f3a9056149cecc87995ef435a10ff4213495c9bb3fb99e2663",
+          "index": 11,
+          "input": 0,
+          "lineno": 420,
+          "path": "CTFd/schemas/teams.py",
+          "qualname": "TeamSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 33,
+          "exact_fingerprint": "054d0ac052b4dd1b1733d7681be1317feb337bc62b9a23b8ab0fda5b6fe2260f",
+          "file_hash": "9b20d74cee70a18a6d6455573cca4bc89552e042981dce5fecdfeb4f5ba53972",
+          "index": 12,
+          "input": 0,
+          "lineno": 25,
+          "path": "CTFd/schemas/tokens.py",
+          "qualname": "TokenSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 22,
+          "exact_fingerprint": "c300474c6d3588470142ac14cdca31dcaf80ac62b99f7ac4398fa3b7df6cdfb7",
+          "file_hash": "61a8af059a082848a8c0a116f088d397451fc4e6f766b7cea756135a56dada01",
+          "index": 13,
+          "input": 0,
+          "lineno": 14,
+          "path": "CTFd/schemas/topics.py",
+          "qualname": "TopicSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 44,
+          "exact_fingerprint": "8adf50b7d558d90890da6a95954af00f1aa37a4ad2f76032a8446bccdc6d1971",
+          "file_hash": "61a8af059a082848a8c0a116f088d397451fc4e6f766b7cea756135a56dada01",
+          "index": 14,
+          "input": 0,
+          "lineno": 36,
+          "path": "CTFd/schemas/topics.py",
+          "qualname": "ChallengeTopicSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 25,
+          "exact_fingerprint": "02fab293fb661ea2c12adabab0998c6089c734703aa6bfe702e3e9ba7f81916d",
+          "file_hash": "beeec33ca6d384cb5dc00927fbaaadc25fab94ec6956ff511162296ad78fd8ae",
+          "index": 15,
+          "input": 0,
+          "lineno": 17,
+          "path": "CTFd/schemas/unlocks.py",
+          "qualname": "UnlockSchema.__init__",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 37,
+          "end_lineno": 421,
+          "exact_fingerprint": "7b951f2fca6d61739049fea16dea5e6c21a926d500ceea8a518090215df0e942",
+          "file_hash": "3f2aa570baa372971e61f140b78c8f048138bc306423e2d015a8430eeeb1b926",
+          "index": 16,
+          "input": 0,
+          "lineno": 413,
+          "path": "CTFd/schemas/users.py",
+          "qualname": "UserSchema.__init__",
+          "statement": "if"
+        }
+      ],
+      "node_count": 46,
+      "occurrences": 17,
+      "score": 736,
+      "shape_fingerprint": "010013dc23a195b050c4d5a31017625dfc515deea7cec73e1434d56bc5bf34a4",
+      "shape_text": "if v0:\n    if isinstance(v0, string_types):\n        v1[''] = self.views[v0]\n    elif isinstance(v0, list):\n        print('')\n        v1[''] = v0\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "17c4fb0e68e9d934f4c900cde41667784d62da0aa38004ca300ecbad4822647e",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-17c4fb0e68e9",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 70,
+          "end_lineno": 53,
+          "exact_fingerprint": "17c4fb0e68e9d934f4c900cde41667784d62da0aa38004ca300ecbad4822647e",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 0,
+          "input": 0,
+          "lineno": 51,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_standings",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 70,
+          "end_lineno": 167,
+          "exact_fingerprint": "17c4fb0e68e9d934f4c900cde41667784d62da0aa38004ca300ecbad4822647e",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 1,
+          "input": 0,
+          "lineno": 165,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_team_standings",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 70,
+          "end_lineno": 266,
+          "exact_fingerprint": "17c4fb0e68e9d934f4c900cde41667784d62da0aa38004ca300ecbad4822647e",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 2,
+          "input": 0,
+          "lineno": 264,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_user_standings",
+          "statement": "if"
+        }
+      ],
+      "node_count": 47,
+      "occurrences": 3,
+      "score": 94,
+      "shape_fingerprint": "17c4fb0e68e9d934f4c900cde41667784d62da0aa38004ca300ecbad4822647e",
+      "shape_text": "if not v0 and v1:\n    v2 = v2.filter(Solves.date < unix_time_to_utc(v1))\n    v3 = v3.filter(Awards.date < unix_time_to_utc(v1))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 4,
+          "exact_fingerprint": "ebaa5b66dffdc9f8a42bc3698c0e5335bd6c53ddf7096fe982ed4a53f1443f48",
+          "members": [
+            0,
+            1,
+            2,
+            3
+          ]
+        }
+      ],
+      "id": "fr-345f77dba7d2",
+      "members": [
+        {
+          "col_offset": 16,
+          "end_col_offset": 55,
+          "end_lineno": 288,
+          "exact_fingerprint": "ebaa5b66dffdc9f8a42bc3698c0e5335bd6c53ddf7096fe982ed4a53f1443f48",
+          "file_hash": "e03b6b5bb8c5e8f3a9056149cecc87995ef435a10ff4213495c9bb3fb99e2663",
+          "index": 0,
+          "input": 0,
+          "lineno": 286,
+          "path": "CTFd/schemas/teams.py",
+          "qualname": "TeamSchema.validate_fields",
+          "statement": "for"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 51,
+          "end_lineno": 332,
+          "exact_fingerprint": "ebaa5b66dffdc9f8a42bc3698c0e5335bd6c53ddf7096fe982ed4a53f1443f48",
+          "file_hash": "e03b6b5bb8c5e8f3a9056149cecc87995ef435a10ff4213495c9bb3fb99e2663",
+          "index": 1,
+          "input": 0,
+          "lineno": 330,
+          "path": "CTFd/schemas/teams.py",
+          "qualname": "TeamSchema.validate_fields",
+          "statement": "for"
+        },
+        {
+          "col_offset": 16,
+          "end_col_offset": 55,
+          "end_lineno": 279,
+          "exact_fingerprint": "ebaa5b66dffdc9f8a42bc3698c0e5335bd6c53ddf7096fe982ed4a53f1443f48",
+          "file_hash": "3f2aa570baa372971e61f140b78c8f048138bc306423e2d015a8430eeeb1b926",
+          "index": 2,
+          "input": 0,
+          "lineno": 277,
+          "path": "CTFd/schemas/users.py",
+          "qualname": "UserSchema.validate_fields",
+          "statement": "for"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 51,
+          "end_lineno": 323,
+          "exact_fingerprint": "ebaa5b66dffdc9f8a42bc3698c0e5335bd6c53ddf7096fe982ed4a53f1443f48",
+          "file_hash": "3f2aa570baa372971e61f140b78c8f048138bc306423e2d015a8430eeeb1b926",
+          "index": 3,
+          "input": 0,
+          "lineno": 321,
+          "path": "CTFd/schemas/users.py",
+          "qualname": "UserSchema.validate_fields",
+          "statement": "for"
+        }
+      ],
+      "node_count": 26,
+      "occurrences": 4,
+      "score": 78,
+      "shape_fingerprint": "345f77dba7d2fbc0262206130e3bcdd24e5389f5dac16408c43dd4277b61ac43",
+      "shape_text": "for v0 in v1:\n    if v0.id not in v2:\n        v3.append({'': v0.id})\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "aa59f8b925d95f8278ce07d0f8e6163a50f9705217a9ca966aea0d43de1ee907",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-24708885ae5d",
+      "members": [
+        {
+          "col_offset": 12,
+          "end_col_offset": 82,
+          "end_lineno": 30,
+          "exact_fingerprint": "aa59f8b925d95f8278ce07d0f8e6163a50f9705217a9ca966aea0d43de1ee907",
+          "file_hash": "311f62ca7e252dfe566e1ea6a801a6fe5362c8d33a15418fd3d64e9893f371dc",
+          "index": 0,
+          "input": 0,
+          "lineno": 24,
+          "path": "CTFd/utils/decorators/visibility.py",
+          "qualname": "check_score_visibility.<locals>._check_score_visibility",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 82,
+          "end_lineno": 69,
+          "exact_fingerprint": "aa59f8b925d95f8278ce07d0f8e6163a50f9705217a9ca966aea0d43de1ee907",
+          "file_hash": "311f62ca7e252dfe566e1ea6a801a6fe5362c8d33a15418fd3d64e9893f371dc",
+          "index": 1,
+          "input": 0,
+          "lineno": 63,
+          "path": "CTFd/utils/decorators/visibility.py",
+          "qualname": "check_challenge_visibility.<locals>._check_challenge_visibility",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 82,
+          "end_lineno": 103,
+          "exact_fingerprint": "aa59f8b925d95f8278ce07d0f8e6163a50f9705217a9ca966aea0d43de1ee907",
+          "file_hash": "311f62ca7e252dfe566e1ea6a801a6fe5362c8d33a15418fd3d64e9893f371dc",
+          "index": 2,
+          "input": 0,
+          "lineno": 97,
+          "path": "CTFd/utils/decorators/visibility.py",
+          "qualname": "check_account_visibility.<locals>._check_account_visibility",
+          "statement": "if"
+        }
+      ],
+      "node_count": 38,
+      "occurrences": 3,
+      "score": 76,
+      "shape_fingerprint": "24708885ae5d536fd9c1100f64379db56060c44fb5e08df117d6cb50ce60d44c",
+      "shape_text": "if authed():\n    return f(*v0, **v1)\nelif request.is_json:\n    abort(0)\nelse:\n    return redirect(url_for('', next=request.full_path))\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 2,
+          "exact_fingerprint": "86b10da0fa92e6a4263e6c656feec989fc62b9099e5e02edee8f71895ff21cd0",
+          "members": [
+            0,
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "f7baea6f2286ee572249fdbd522a42976c6bb1c1fcde25718e6ddee988ba2182",
+          "members": [
+            1
+          ]
+        }
+      ],
+      "id": "fr-e802a8d08a2c",
+      "members": [
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 119,
+          "exact_fingerprint": "86b10da0fa92e6a4263e6c656feec989fc62b9099e5e02edee8f71895ff21cd0",
+          "file_hash": "e03b6b5bb8c5e8f3a9056149cecc87995ef435a10ff4213495c9bb3fb99e2663",
+          "index": 0,
+          "input": 0,
+          "lineno": 110,
+          "path": "CTFd/schemas/teams.py",
+          "qualname": "TeamSchema.validate_email",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 84,
+          "exact_fingerprint": "f7baea6f2286ee572249fdbd522a42976c6bb1c1fcde25718e6ddee988ba2182",
+          "file_hash": "3f2aa570baa372971e61f140b78c8f048138bc306423e2d015a8430eeeb1b926",
+          "index": 1,
+          "input": 0,
+          "lineno": 75,
+          "path": "CTFd/schemas/users.py",
+          "qualname": "UserSchema.validate_name",
+          "statement": "if"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 122,
+          "exact_fingerprint": "86b10da0fa92e6a4263e6c656feec989fc62b9099e5e02edee8f71895ff21cd0",
+          "file_hash": "3f2aa570baa372971e61f140b78c8f048138bc306423e2d015a8430eeeb1b926",
+          "index": 2,
+          "input": 0,
+          "lineno": 113,
+          "path": "CTFd/schemas/users.py",
+          "qualname": "UserSchema.validate_email",
+          "statement": "if"
+        }
+      ],
+      "node_count": 37,
+      "occurrences": 3,
+      "score": 74,
+      "shape_fingerprint": "e802a8d08a2cd4bc6ef37620e6e9f71289a07184023822c7db1f93e5e86d014f",
+      "shape_text": "if v0:\n    if v1 and v1.id != v0:\n        raise ValidationError('', field_names=[''])\nelif v1:\n    raise ValidationError('', field_names=[''])\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "efea8f9ca788e4ac0756192f47bc602e54b280a122884d9d2d4e362762013af9",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7ff8091f9d09d0a4c3f526b15e721ed4249aa428a6e10b6e70227850807348e6",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "320831ea679a1dc6fe24021dbce5b456135dcd66d3661695eba042070277ce65",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fr-a6ba9f381d83",
+      "members": [
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 124,
+          "exact_fingerprint": "efea8f9ca788e4ac0756192f47bc602e54b280a122884d9d2d4e362762013af9",
+          "file_hash": "60960c6854704e87cb7de03eea165de1ac8abf8803458a232a12a4356c26c0e9",
+          "index": 0,
+          "input": 0,
+          "lineno": 120,
+          "path": "CTFd/api/v1/statistics/progression.py",
+          "qualname": "ProgressionMatrix.get",
+          "statement": "for"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 130,
+          "exact_fingerprint": "7ff8091f9d09d0a4c3f526b15e721ed4249aa428a6e10b6e70227850807348e6",
+          "file_hash": "60960c6854704e87cb7de03eea165de1ac8abf8803458a232a12a4356c26c0e9",
+          "index": 1,
+          "input": 0,
+          "lineno": 126,
+          "path": "CTFd/api/v1/statistics/progression.py",
+          "qualname": "ProgressionMatrix.get",
+          "statement": "for"
+        },
+        {
+          "col_offset": 12,
+          "end_col_offset": 21,
+          "end_lineno": 136,
+          "exact_fingerprint": "320831ea679a1dc6fe24021dbce5b456135dcd66d3661695eba042070277ce65",
+          "file_hash": "60960c6854704e87cb7de03eea165de1ac8abf8803458a232a12a4356c26c0e9",
+          "index": 2,
+          "input": 0,
+          "lineno": 132,
+          "path": "CTFd/api/v1/statistics/progression.py",
+          "qualname": "ProgressionMatrix.get",
+          "statement": "for"
+        }
+      ],
+      "node_count": 33,
+      "occurrences": 3,
+      "score": 66,
+      "shape_fingerprint": "a6ba9f381d8317ab08bbbc16ada3469a970432eed014a1598f686e108ecb0df4",
+      "shape_text": "for v0 in v1:\n    if v0.account_id in v2:\n        v2[v0.account_id][''].add(v0.challenge_id)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "64c3ebe00e41bec7cac06d1e2a893d935e25a7df42034d7935717d3e9d075cbb",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fr-64c3ebe00e41",
+      "members": [
+        {
+          "col_offset": 4,
+          "end_col_offset": 54,
+          "end_lineno": 132,
+          "exact_fingerprint": "64c3ebe00e41bec7cac06d1e2a893d935e25a7df42034d7935717d3e9d075cbb",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 0,
+          "input": 0,
+          "lineno": 129,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_standings",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 54,
+          "end_lineno": 231,
+          "exact_fingerprint": "64c3ebe00e41bec7cac06d1e2a893d935e25a7df42034d7935717d3e9d075cbb",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 1,
+          "input": 0,
+          "lineno": 228,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_team_standings",
+          "statement": "if"
+        },
+        {
+          "col_offset": 4,
+          "end_col_offset": 54,
+          "end_lineno": 331,
+          "exact_fingerprint": "64c3ebe00e41bec7cac06d1e2a893d935e25a7df42034d7935717d3e9d075cbb",
+          "file_hash": "08595eaad91b4497f6f1424caaad164be188c2af6b60cce39b471d7d4536b74e",
+          "index": 2,
+          "input": 0,
+          "lineno": 328,
+          "path": "CTFd/utils/scores/__init__.py",
+          "qualname": "get_user_standings",
+          "statement": "if"
+        }
+      ],
+      "node_count": 27,
+      "occurrences": 3,
+      "score": 54,
+      "shape_fingerprint": "64c3ebe00e41bec7cac06d1e2a893d935e25a7df42034d7935717d3e9d075cbb",
+      "shape_text": "if v0 is None:\n    v1 = v2.all()\nelse:\n    v1 = v2.limit(v0).all()\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "5c8a73641a3af519c70e272a83fc55849e085cc08103e0e3f37129c2e4db9f68",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "14deff1505b052ca1551082b705d31adc3ee3b7527ff91bca2a3a2540d712bb9",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "7b0b3de4416a828959db57b0bedb5afe6e525999426de88e7c551e1cd9f455d2",
+          "members": [
+            2
+          ]
+        }
+      ],
+      "id": "fr-4d5b70515038",
+      "members": [
+        {
+          "col_offset": 8,
+          "end_col_offset": 13,
+          "end_lineno": 323,
+          "exact_fingerprint": "5c8a73641a3af519c70e272a83fc55849e085cc08103e0e3f37129c2e4db9f68",
+          "file_hash": "fb471be02c3059aa9710a2dfbe4b47621030a1055a7b91f4d52150d9bc87dcb3",
+          "index": 0,
+          "input": 0,
+          "lineno": 316,
+          "path": "CTFd/api/v1/teams.py",
+          "qualname": "TeamPrivate.patch",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 13,
+          "end_lineno": 364,
+          "exact_fingerprint": "14deff1505b052ca1551082b705d31adc3ee3b7527ff91bca2a3a2540d712bb9",
+          "file_hash": "fb471be02c3059aa9710a2dfbe4b47621030a1055a7b91f4d52150d9bc87dcb3",
+          "index": 1,
+          "input": 0,
+          "lineno": 357,
+          "path": "CTFd/api/v1/teams.py",
+          "qualname": "TeamPrivate.delete",
+          "statement": "if"
+        },
+        {
+          "col_offset": 8,
+          "end_col_offset": 13,
+          "end_lineno": 422,
+          "exact_fingerprint": "7b0b3de4416a828959db57b0bedb5afe6e525999426de88e7c551e1cd9f455d2",
+          "file_hash": "fb471be02c3059aa9710a2dfbe4b47621030a1055a7b91f4d52150d9bc87dcb3",
+          "index": 2,
+          "input": 0,
+          "lineno": 415,
+          "path": "CTFd/api/v1/teams.py",
+          "qualname": "TeamPrivateMembers.post",
+          "statement": "if"
+        }
+      ],
+      "node_count": 25,
+      "occurrences": 3,
+      "score": 50,
+      "shape_fingerprint": "4d5b705150389c40b8ad25b41d5357b39a0687ae30fc53f5670c01445fcad6c9",
+      "shape_text": "if v0.captain_id != session['']:\n    return ({'': False, '': {'': ['']}}, 0)\n"
+    }
+  ],
+  "function_clusters": [
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 1,
+          "exact_fingerprint": "f8493d2da9d6c85c18a2b2916691fec689050dbcfcddf9c667b075b063b155be",
+          "members": [
+            0
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "388dece5d30e5a803d25a9512a96c2e663fdb5241dbc1257d8348fe361d834b5",
+          "members": [
+            1
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "d9bcba8e5212222aa3190d53d29c851dfc46389467e31a67d24b7dc08e3e8d9a",
+          "members": [
+            2
+          ]
+        },
+        {
+          "count": 1,
+          "exact_fingerprint": "b03dd21267abe93ec4be6176770d79c1d67c5252b3cf54abf8cadddb0ed92065",
+          "members": [
+            3
+          ]
+        }
+      ],
+      "id": "fn-f0e5765c0fff",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 100,
+          "exact_fingerprint": "f8493d2da9d6c85c18a2b2916691fec689050dbcfcddf9c667b075b063b155be",
+          "file_hash": "740ed25ce84110464216748e42b5c4a6082dd6811423cf8029052763a84f5347",
+          "index": 0,
+          "input": 0,
+          "kind": "function",
+          "lineno": 97,
+          "name": "set_import_error",
+          "path": "CTFd/utils/exports/__init__.py",
+          "qualname": "set_import_error",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 106,
+          "exact_fingerprint": "388dece5d30e5a803d25a9512a96c2e663fdb5241dbc1257d8348fe361d834b5",
+          "file_hash": "740ed25ce84110464216748e42b5c4a6082dd6811423cf8029052763a84f5347",
+          "index": 1,
+          "input": 0,
+          "kind": "function",
+          "lineno": 103,
+          "name": "set_import_status",
+          "path": "CTFd/utils/exports/__init__.py",
+          "qualname": "set_import_status",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 112,
+          "exact_fingerprint": "d9bcba8e5212222aa3190d53d29c851dfc46389467e31a67d24b7dc08e3e8d9a",
+          "file_hash": "740ed25ce84110464216748e42b5c4a6082dd6811423cf8029052763a84f5347",
+          "index": 2,
+          "input": 0,
+          "kind": "function",
+          "lineno": 109,
+          "name": "set_import_start_time",
+          "path": "CTFd/utils/exports/__init__.py",
+          "qualname": "set_import_start_time",
+          "top_level": true
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 118,
+          "exact_fingerprint": "b03dd21267abe93ec4be6176770d79c1d67c5252b3cf54abf8cadddb0ed92065",
+          "file_hash": "740ed25ce84110464216748e42b5c4a6082dd6811423cf8029052763a84f5347",
+          "index": 3,
+          "input": 0,
+          "kind": "function",
+          "lineno": 115,
+          "name": "set_import_end_time",
+          "path": "CTFd/utils/exports/__init__.py",
+          "qualname": "set_import_end_time",
+          "top_level": true
+        }
+      ],
+      "node_count": 32,
+      "occurrences": 4,
+      "score": 96,
+      "shape_fingerprint": "f0e5765c0fff4d5314a172712153033b90a849a2711a58e335016f8087ef8773",
+      "shape_text": "def f0(v0, v1=0, v2=False):\n    cache.set(key='', value=v0, timeout=v1)\n    if not v2:\n        print(v0)\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 2,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "2c58093e3631aec568df0a5048c5d2d3a955b0912d64e9236d2696d84c77b84f",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-7b96aa203f9e",
+      "members": [
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 181,
+          "exact_fingerprint": "2c58093e3631aec568df0a5048c5d2d3a955b0912d64e9236d2696d84c77b84f",
+          "file_hash": "c53042422532fd9d174ac7d48f8781318a8d8f639ef115f0c781fbde1bdd2ae4",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 174,
+          "name": "__init__",
+          "path": "CTFd/forms/teams.py",
+          "qualname": "TeamSettingsForm.<locals>._TeamSettingsForm.__init__",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 276,
+          "exact_fingerprint": "2c58093e3631aec568df0a5048c5d2d3a955b0912d64e9236d2696d84c77b84f",
+          "file_hash": "c53042422532fd9d174ac7d48f8781318a8d8f639ef115f0c781fbde1bdd2ae4",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 269,
+          "name": "__init__",
+          "path": "CTFd/forms/teams.py",
+          "qualname": "TeamEditForm.<locals>._TeamEditForm.__init__",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [],
+          "end_lineno": 214,
+          "exact_fingerprint": "2c58093e3631aec568df0a5048c5d2d3a955b0912d64e9236d2696d84c77b84f",
+          "file_hash": "f19673438c274a6666bfc0c7dbbdcb9409a096607b2908c088199198640fa3fd",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 207,
+          "name": "__init__",
+          "path": "CTFd/forms/users.py",
+          "qualname": "UserEditForm.<locals>._UserEditForm.__init__",
+          "top_level": false
+        }
+      ],
+      "node_count": 38,
+      "occurrences": 3,
+      "score": 76,
+      "shape_fingerprint": "7b96aa203f9e5d40bc74e1395d77e563438d306f7c04308e357c17f4ba72fcdb",
+      "shape_text": "def f0(self, *v0, **v1):\n    super().__init__(*v0, **v1)\n    v2 = v1.get('')\n    if v2:\n        self.obj = v2\n"
+    },
+    {
+      "catalog_matches": [],
+      "distinct_files": 1,
+      "distinct_inputs": 1,
+      "exact_groups": [
+        {
+          "count": 3,
+          "exact_fingerprint": "34da0cb9df266516fca87e99f41c4e7448c2f6408ed46245cd4818a387d518f1",
+          "members": [
+            0,
+            1,
+            2
+          ]
+        }
+      ],
+      "id": "fn-4ff9d851ab62",
+      "members": [
+        {
+          "async": false,
+          "decorators": [
+            "hybrid_property"
+          ],
+          "end_lineno": 264,
+          "exact_fingerprint": "34da0cb9df266516fca87e99f41c4e7448c2f6408ed46245cd4818a387d518f1",
+          "file_hash": "11e4519a9a2380f18f3caed3b2eb10b6dfb8b9026fdd0da083e988d146a9fd3b",
+          "index": 0,
+          "input": 0,
+          "kind": "method",
+          "lineno": 257,
+          "name": "account_id",
+          "path": "CTFd/models/__init__.py",
+          "qualname": "Awards.account_id",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "hybrid_property"
+          ],
+          "end_lineno": 902,
+          "exact_fingerprint": "34da0cb9df266516fca87e99f41c4e7448c2f6408ed46245cd4818a387d518f1",
+          "file_hash": "11e4519a9a2380f18f3caed3b2eb10b6dfb8b9026fdd0da083e988d146a9fd3b",
+          "index": 1,
+          "input": 0,
+          "kind": "method",
+          "lineno": 895,
+          "name": "account_id",
+          "path": "CTFd/models/__init__.py",
+          "qualname": "Submissions.account_id",
+          "top_level": false
+        },
+        {
+          "async": false,
+          "decorators": [
+            "hybrid_property"
+          ],
+          "end_lineno": 993,
+          "exact_fingerprint": "34da0cb9df266516fca87e99f41c4e7448c2f6408ed46245cd4818a387d518f1",
+          "file_hash": "11e4519a9a2380f18f3caed3b2eb10b6dfb8b9026fdd0da083e988d146a9fd3b",
+          "index": 2,
+          "input": 0,
+          "kind": "method",
+          "lineno": 986,
+          "name": "account_id",
+          "path": "CTFd/models/__init__.py",
+          "qualname": "Unlocks.account_id",
+          "top_level": false
+        }
+      ],
+      "node_count": 34,
+      "occurrences": 3,
+      "score": 68,
+      "shape_fingerprint": "4ff9d851ab62b288b220dbfe54525203b84a3fb4e1ab5ffc8e29485df97c8a27",
+      "shape_text": "def f0(self):\n    from CTFd.utils import get_config\n    v0 = get_config('')\n    if v0 == '':\n        return self.team_id\n    elif v0 == '':\n        return self.user_id\n"
+    }
+  ],
+  "inputs": [
+    {
+      "git": {
+        "commit": "5f345fbaa424e6a22b51addf7f27430927879ae2",
+        "tag": "3.8.9"
+      },
+      "path": "."
+    }
+  ],
+  "settings": {
+    "excludes": [
+      "migrations/*",
+      "*/migrations/*",
+      "migrations.py",
+      "*/migrations.py",
+      "docs/*",
+      "*/docs/*",
+      "examples/*",
+      "*/examples/*"
+    ],
+    "fragments": true,
+    "include_generated": false,
+    "include_tests": false,
+    "include_trivial": false,
+    "min_fragment_nodes": 25,
+    "min_nodes": 20,
+    "min_occurrences": 3,
+    "skip_dirs": true
+  },
+  "shape_version": 1,
+  "skipped_files": [
+    {
+      "error": null,
+      "input": 0,
+      "path": "CTFd/plugins/flags/tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "CTFd/plugins/flags/tests/test_flags.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "CTFd/plugins/migrations.py",
+      "reason": "excluded"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_config.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_csv.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_fields.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_notifications.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_pages.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_scoreboard.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_statistics.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_submissions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_teams.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/admin/test_views.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/test_tokens.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/challenges/requirements/test_requirements.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/statistics/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/statistics/test_scores.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/teams/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/teams/test_scoring.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/teams/test_team_members.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/teams/test_teams.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_awards.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_brackets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_comments.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_config.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_csrf.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_exports.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_fields.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_files.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_flags.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_hints.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_notifications.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_pages.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_scoreboard.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_solutions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_submissions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_tags.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_teams.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_tokens.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_topics.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_unlocks.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/user/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/user/test_admin_access.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/user/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/user/test_hints.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/users/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/users/test_scoring.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/api/v1/users/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/brackets/test_brackets.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/cache/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/cache/test_cache.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/cache/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_base_challenge.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_challenge_logic.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_challenge_types.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_dynamic.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_ratings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/challenges/test_standard_dynamic.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/constants/test_constants.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/constants/time.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/helpers.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/models/test_model_utils.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/oauth/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/oauth/test_redirect.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/oauth/test_teams.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/oauth/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_auth.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_fields.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_hidden_team_scores.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_hints.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_invites.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_scoreboard.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/teams/test_teams.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_config.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_legal.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_plugin_utils.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_setup.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_share.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_themes.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/test_views.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_auth.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_challenges.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_fields.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_hints.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_profile.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_scoreboard.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_settings.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_setup.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_submissions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/users/test_users.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/__init__.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_ctftime.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_email.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_encoding.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_events.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_exports.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_formatters.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_humanize.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_markdown.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_passwords.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_plugins.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_ratelimit.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_sanitize.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_sessions.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_updates.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_uploaders.py",
+      "reason": "test"
+    },
+    {
+      "error": null,
+      "input": 0,
+      "path": "tests/utils/test_validators.py",
+      "reason": "test"
+    }
+  ],
+  "stats": {
+    "files_mined": 178,
+    "files_seen": 297,
+    "files_skipped": {
+      "excluded": 1,
+      "test": 118
+    },
+    "fragment_clusters": 8,
+    "fragments_mined": 699,
+    "function_clusters": 3,
+    "functions_filtered": {
+      "cannot_canonicalize": 9,
+      "too_small": 90,
+      "trivial_body": 120
+    },
+    "functions_found": 806,
+    "functions_mined": 587
+  }
+}
