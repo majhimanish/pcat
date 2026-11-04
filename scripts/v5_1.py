@@ -10,6 +10,9 @@
         worktree of the pre-v5.1 commit: PYTHONPATH=<worktree>/src python scripts/v5_1.py ...
     python scripts/v5_1.py compare-e2e --old LABEL --new LABEL
         Flips and tables -> experiments/v5.1/rescore/e2e_compare.json (+ printed markdown).
+    python scripts/v5_1.py compare-samples
+        v3-sample replay and v4/v4.1 feedback re-scores (scripts/lint_eval.py with --out under
+        experiments/v5.1/rescore/) vs their original scoring -> rescore/samples_compare.json.
     python scripts/v5_1.py survey --label LABEL [--catalogs DIR]
         Lint the untouched app code (pinned commits in .bench/apps; tests, docs and
         migrations excluded) with each app's catalog, --include-inferred.
@@ -145,6 +148,29 @@ def cmd_compare_e2e(args) -> int:
     return 0
 
 
+LINTER = ROOT / "experiments" / "linter"
+SAMPLE_COMPARISONS = {  # name -> (original scoring, v5.1 re-score)
+    "v3_samples_vs_v4_replay": (LINTER / "replay.json", OUT / "rescore" / "replay_v3_samples.json"),
+    "v3_samples_vs_v4.1_replay": (LINTER / "replay_v4.1.json", OUT / "rescore" / "replay_v3_samples.json"),
+    "v4_feedback_vs_v4.1_rescore": (LINTER / "feedback_v4.1" / "v4_rescored.json",
+                                    OUT / "rescore" / "feedback_v4.json"),
+    "v4.1_feedback_vs_v5_part_a": (LINTER / "feedback_v4.1" / "results.json", OUT / "rescore" / "feedback_v4.1.json"),
+}
+
+
+def cmd_compare_samples(args) -> int:
+    """Original scoring vs the v5.1 re-score for the lint_eval.py outputs."""
+    rescore = _rescore()
+    out = {}
+    for name, (old, new) in SAMPLE_COMPARISONS.items():
+        r = rescore.compare_samples(json.loads(old.read_text()), json.loads(new.read_text()))
+        out[name] = {"original": old.relative_to(ROOT).as_posix(), "rescored": new.relative_to(ROOT).as_posix(), **r}
+        print(f"{name}: high {r['high']['old']} -> {r['high']['new']} of {r['samples']}; "
+              f"high flips {len(r['high_flips'])}; samples whose codes changed {len(r['changed'])}")
+    write_json(OUT / "rescore" / "samples_compare.json", out)
+    return 0
+
+
 # --------------------------------------------------------------------------- #
 # False-positive survey on untouched app code
 # --------------------------------------------------------------------------- #
@@ -186,12 +212,14 @@ def main() -> int:
     ce = sub.add_parser("compare-e2e")
     ce.add_argument("--old", required=True)
     ce.add_argument("--new", required=True)
+    sub.add_parser("compare-samples")
     sv = sub.add_parser("survey")
     sv.add_argument("--label", required=True)
     sv.add_argument("--catalogs", default=str(V5 / "catalogs"),
                     help="folder of per-app catalogs (an older checkout's, for an older linter)")
     args = parser.parse_args()
-    return {"lint-e2e": cmd_lint_e2e, "compare-e2e": cmd_compare_e2e, "survey": cmd_survey}[args.command](args)
+    return {"lint-e2e": cmd_lint_e2e, "compare-e2e": cmd_compare_e2e, "compare-samples": cmd_compare_samples,
+            "survey": cmd_survey}[args.command](args)
 
 
 if __name__ == "__main__":

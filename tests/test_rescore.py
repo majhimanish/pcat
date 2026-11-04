@@ -54,3 +54,17 @@ def test_medium_high_items_and_reproducible_sample():
     assert a == b and len(a) == 30 and rescore.sample(items[:5], 30, "x") == items[:5]
     summary = rescore.survey_summary({"findings": findings})
     assert summary["inferred_derived"] == 40 and summary["by_severity"] == {"high": 0, "medium": 40, "low": 40}
+
+
+def test_compare_samples_reports_high_flips():
+    def row(task, n, codes, worst, high=()):
+        return {"task": task, "sample": n, "codes": list(codes), "worst": worst, "high_codes": list(high)}
+
+    old = {"samples": [row("a", 1, ["PC100"], "high", ["PC100"]), row("a", 2, ["PC108"], "low")]}
+    new = {"tasks": {"a": {"samples": [{**row("a", 1, ["PC110"], "low"), "status": "ok"},
+                                       {**row("a", 2, ["PC108"], "low"), "status": "ok"},
+                                       {"sample": 3, "status": "timeout"}]}}}
+    # sample 3 timed out: feedback files keep it, comparisons leave it out
+    r = rescore.compare_samples(old, new)
+    assert r["high"] == {"old": 1, "new": 0} and [f["sample"] for f in r["high_flips"]] == [1]
+    assert [c["sample"] for c in r["changed"]] == [1] and r["samples_with_code"]["new"] == {"PC108": 1, "PC110": 1}

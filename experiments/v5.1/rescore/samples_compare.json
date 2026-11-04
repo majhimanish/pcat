@@ -1,0 +1,771 @@
+{
+  "v3_samples_vs_v4.1_replay": {
+    "changed": [],
+    "high": {
+      "new": 25,
+      "old": 25
+    },
+    "high_flips": [],
+    "original": "experiments/linter/replay_v4.1.json",
+    "per_task_high": {
+      "csv_import": {
+        "new": 5,
+        "old": 5
+      },
+      "env_config": {
+        "new": 0,
+        "old": 0
+      },
+      "http_retry": {
+        "new": 20,
+        "old": 20
+      },
+      "jwt_create": {
+        "new": 0,
+        "old": 0
+      },
+      "paginate_query": {
+        "new": 0,
+        "old": 0
+      },
+      "password_hash": {
+        "new": 0,
+        "old": 0
+      },
+      "token_bucket": {
+        "new": 0,
+        "old": 0
+      }
+    },
+    "rescored": "experiments/v5.1/rescore/replay_v3_samples.json",
+    "samples": 140,
+    "samples_with_code": {
+      "new": {
+        "PC100": 25,
+        "PC103": 10,
+        "PC104": 3,
+        "PC105": 8,
+        "PC106": 1,
+        "PC107": 11,
+        "PC108": 10,
+        "PC109": 8,
+        "PC110": 12
+      },
+      "old": {
+        "PC100": 25,
+        "PC103": 10,
+        "PC104": 3,
+        "PC105": 8,
+        "PC106": 1,
+        "PC107": 11,
+        "PC108": 10,
+        "PC109": 8,
+        "PC110": 12
+      }
+    },
+    "worst": {
+      "new": {
+        "high": 25,
+        "low": 0,
+        "medium": 7,
+        "none": 108
+      },
+      "old": {
+        "high": 25,
+        "low": 0,
+        "medium": 7,
+        "none": 108
+      }
+    }
+  },
+  "v3_samples_vs_v4_replay": {
+    "changed": [
+      {
+        "new_codes": [
+          "PC103",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "new_worst": "medium",
+        "old_codes": [
+          "PC103",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "old_worst": "high",
+        "sample": 2,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC103",
+          "PC104",
+          "PC107",
+          "PC108",
+          "PC110"
+        ],
+        "new_worst": "medium",
+        "old_codes": [
+          "PC104",
+          "PC107",
+          "PC108",
+          "PC110"
+        ],
+        "old_worst": "medium",
+        "sample": 5,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC103",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "new_worst": "medium",
+        "old_codes": [
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "old_worst": "medium",
+        "sample": 7,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC100",
+          "PC103",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "old_worst": "high",
+        "sample": 12,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC103",
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "new_worst": "medium",
+        "old_codes": [
+          "PC105",
+          "PC107",
+          "PC108",
+          "PC109",
+          "PC110"
+        ],
+        "old_worst": "medium",
+        "sample": 17,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC103",
+          "PC104",
+          "PC107",
+          "PC108",
+          "PC110"
+        ],
+        "new_worst": "medium",
+        "old_codes": [
+          "PC104",
+          "PC107",
+          "PC108",
+          "PC110"
+        ],
+        "old_worst": "medium",
+        "sample": 19,
+        "task": "csv_import"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 1,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 2,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 3,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 4,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 5,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 6,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 7,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 8,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 9,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 10,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 11,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 12,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 13,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 14,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 15,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 16,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC100",
+          "PC109"
+        ],
+        "old_worst": "high",
+        "sample": 17,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 18,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 19,
+        "task": "http_retry"
+      },
+      {
+        "new_codes": [
+          "PC100"
+        ],
+        "new_worst": "high",
+        "old_codes": [
+          "PC109"
+        ],
+        "old_worst": "low",
+        "sample": 20,
+        "task": "http_retry"
+      }
+    ],
+    "high": {
+      "new": 25,
+      "old": 12
+    },
+    "high_flips": [
+      {
+        "new_high_codes": [],
+        "old_high_codes": [
+          "PC103"
+        ],
+        "sample": 2,
+        "task": "csv_import"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 1,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 4,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 5,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 6,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 9,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 10,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 11,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 13,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 14,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 15,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 16,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 18,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 19,
+        "task": "http_retry"
+      },
+      {
+        "new_high_codes": [
+          "PC100"
+        ],
+        "old_high_codes": [],
+        "sample": 20,
+        "task": "http_retry"
+      }
+    ],
+    "original": "experiments/linter/replay.json",
+    "per_task_high": {
+      "csv_import": {
+        "new": 5,
+        "old": 6
+      },
+      "env_config": {
+        "new": 0,
+        "old": 0
+      },
+      "http_retry": {
+        "new": 20,
+        "old": 6
+      },
+      "jwt_create": {
+        "new": 0,
+        "old": 0
+      },
+      "paginate_query": {
+        "new": 0,
+        "old": 0
+      },
+      "password_hash": {
+        "new": 0,
+        "old": 0
+      },
+      "token_bucket": {
+        "new": 0,
+        "old": 0
+      }
+    },
+    "rescored": "experiments/v5.1/rescore/replay_v3_samples.json",
+    "samples": 140,
+    "samples_with_code": {
+      "new": {
+        "PC100": 25,
+        "PC103": 10,
+        "PC104": 3,
+        "PC105": 8,
+        "PC106": 1,
+        "PC107": 11,
+        "PC108": 10,
+        "PC109": 8,
+        "PC110": 12
+      },
+      "old": {
+        "PC100": 11,
+        "PC103": 5,
+        "PC104": 3,
+        "PC105": 8,
+        "PC106": 1,
+        "PC107": 11,
+        "PC108": 10,
+        "PC109": 28,
+        "PC110": 12
+      }
+    },
+    "worst": {
+      "new": {
+        "high": 25,
+        "low": 0,
+        "medium": 7,
+        "none": 108
+      },
+      "old": {
+        "high": 12,
+        "low": 14,
+        "medium": 6,
+        "none": 108
+      }
+    }
+  },
+  "v4.1_feedback_vs_v5_part_a": {
+    "changed": [],
+    "high": {
+      "new": 20,
+      "old": 20
+    },
+    "high_flips": [],
+    "original": "experiments/linter/feedback_v4.1/results.json",
+    "per_task_high": {
+      "csv_import": {
+        "new": 0,
+        "old": 0
+      },
+      "http_retry": {
+        "new": 20,
+        "old": 20
+      },
+      "paginate_query": {
+        "new": 0,
+        "old": 0
+      }
+    },
+    "rescored": "experiments/v5.1/rescore/feedback_v4.1.json",
+    "samples": 60,
+    "samples_with_code": {
+      "new": {
+        "PC100": 20,
+        "PC103": 1,
+        "PC105": 2,
+        "PC107": 1,
+        "PC108": 1,
+        "PC109": 8,
+        "PC110": 8
+      },
+      "old": {
+        "PC100": 20,
+        "PC103": 1,
+        "PC105": 2,
+        "PC107": 1,
+        "PC108": 1,
+        "PC109": 8,
+        "PC110": 8
+      }
+    },
+    "worst": {
+      "new": {
+        "high": 20,
+        "low": 6,
+        "medium": 2,
+        "none": 32
+      },
+      "old": {
+        "high": 20,
+        "low": 6,
+        "medium": 2,
+        "none": 32
+      }
+    }
+  },
+  "v4_feedback_vs_v4.1_rescore": {
+    "changed": [],
+    "high": {
+      "new": 21,
+      "old": 21
+    },
+    "high_flips": [],
+    "original": "experiments/linter/feedback_v4.1/v4_rescored.json",
+    "per_task_high": {
+      "csv_import": {
+        "new": 1,
+        "old": 1
+      },
+      "http_retry": {
+        "new": 20,
+        "old": 20
+      },
+      "paginate_query": {
+        "new": 0,
+        "old": 0
+      }
+    },
+    "rescored": "experiments/v5.1/rescore/feedback_v4.json",
+    "samples": 60,
+    "samples_with_code": {
+      "new": {
+        "PC100": 21,
+        "PC103": 4,
+        "PC105": 4,
+        "PC107": 3,
+        "PC108": 4,
+        "PC109": 8,
+        "PC110": 8
+      },
+      "old": {
+        "PC100": 21,
+        "PC103": 4,
+        "PC105": 4,
+        "PC107": 3,
+        "PC108": 4,
+        "PC109": 8,
+        "PC110": 8
+      }
+    },
+    "worst": {
+      "new": {
+        "high": 21,
+        "low": 4,
+        "medium": 3,
+        "none": 32
+      },
+      "old": {
+        "high": 21,
+        "low": 4,
+        "medium": 3,
+        "none": 32
+      }
+    }
+  }
+}

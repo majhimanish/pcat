@@ -171,3 +171,51 @@ def e2e_markdown(result: dict) -> str:
         lines.append(f"- {f['app']}/{f['task']}/{f['condition']}/{f['sample']}: "
                      f"{'fail' if f['old_failed'] else 'pass'} -> {'fail' if f['new_failed'] else 'pass'}")
     return "\n".join(lines)
+
+
+# --------------------------------------------------------------------------- #
+# lint_eval.py outputs (v3 replay, v4/v4.1 feedback): old vs new scoring
+# --------------------------------------------------------------------------- #
+
+
+def _sample_rows(data: dict) -> list[dict]:
+    """Rows of a replay file (`samples`) or a feedback file (`tasks.*.samples`), ok rows only."""
+    if "samples" in data:
+        return [dict(r) for r in data["samples"]]
+    return [{**r, "task": task} for task, t in sorted(data["tasks"].items()) for r in t["samples"]
+            if r.get("status") == "ok"]
+
+
+def compare_samples(old: dict, new: dict) -> dict:
+    """Per-sample changes in deviation codes and worst severity between two scorings."""
+    o = {(r["task"], r["sample"]): r for r in _sample_rows(old)}
+    n = {(r["task"], r["sample"]): r for r in _sample_rows(new)}
+    if set(o) != set(n):
+        raise ValueError("the two scorings cover different samples")
+    changed, flips = [], []
+    for key in sorted(o):
+        a, b = o[key], n[key]
+        if a["codes"] != b["codes"] or a["worst"] != b["worst"]:
+            changed.append({"task": key[0], "sample": key[1], "old_codes": a["codes"], "new_codes": b["codes"],
+                            "old_worst": a["worst"], "new_worst": b["worst"]})
+        if (a["worst"] == "high") != (b["worst"] == "high"):
+            flips.append({"task": key[0], "sample": key[1], "old_high_codes": a["high_codes"],
+                          "new_high_codes": b["high_codes"]})
+
+    def worst(rows):
+        return {s: sum(r["worst"] == s for r in rows) for s in ("high", "medium", "low", "none")}
+
+    def codes(rows):
+        return dict(sorted(Counter(c for r in rows for c in r["codes"]).items()))
+
+    tasks = sorted({k[0] for k in o})
+    return {
+        "samples": len(o),
+        "high": {"old": sum(r["worst"] == "high" for r in o.values()),
+                 "new": sum(r["worst"] == "high" for r in n.values())},
+        "per_task_high": {t: {"old": sum(r["worst"] == "high" for k, r in o.items() if k[0] == t),
+                              "new": sum(r["worst"] == "high" for k, r in n.items() if k[0] == t)} for t in tasks},
+        "worst": {"old": worst(o.values()), "new": worst(n.values())},
+        "samples_with_code": {"old": codes(o.values()), "new": codes(n.values())},
+        "high_flips": flips, "changed": changed,
+    }

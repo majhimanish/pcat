@@ -1143,3 +1143,12 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      style, against a keyword-only pattern), false positive (the finding is wrong,
      or the function does not derive from the pattern at all). Sampled from the
      `before` survey so the effect of the Part E fixes is visible per item.
+225. **Re-scoring method (Part F).** v5 runs are rebuilt with `v5.prepare_workdir` and
+     `git apply --index` of the saved diff, then linted exactly as `scripts/v5_e2e.py`
+     did; each copy is deleted after linting (disk). The v5 linter runs from a git
+     worktree of the pre-v5.1 commit with its own catalogs (an older schema rejects
+     the new `match` key and would silently drop that pattern; found when the v5
+     survey's CTFd numbers looked wrong, and corrected). Lab data is re-scored with
+     the unchanged `lint_eval.py` commands writing to `experiments/v5.1/rescore/`;
+     no earlier file is rewritten. Only lint-derived metrics are re-scored; match,
+     similarity and retrieval metrics do not depend on the linter.

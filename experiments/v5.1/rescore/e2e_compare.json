@@ -1,0 +1,1661 @@
+{
+  "changed_runs": [
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 4,
+        "medium": 10
+      },
+      "old_high_codes": [],
+      "removed": [
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` adds `**kwargs`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` adds `*args`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC107 medium: `decorated_function` dropped parameter `method`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC108 low: `decorated_function` adds a call to `f`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.decorated_function: PC110 low: `decorated_function` differs from the pattern's structure: 11 statement(s) added, 17 pattern statement(s) missing or changed (e.g. `if request.method == method:`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: parameter `f` of `ratelimit_decorator`: lost its default (pattern: `'POST'`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC110 low: `ratelimit_decorator` differs from the pattern's structure: 12 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `@functools.wraps(f)`)"
+      ],
+      "sample": 1,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 2,
+        "medium": 4
+      },
+      "old_high_codes": [],
+      "removed": [
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: parameter `f` of `ratelimit_decorator`: lost its default (pattern: `'POST'`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC110 low: `ratelimit_decorator` differs from the pattern's structure: 10 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `@functools.wraps(f)`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 10
+      },
+      "old_high_codes": [],
+      "removed": [
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `**kwargs`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `*args`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `method`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC108 low: `ratelimit_function` adds a call to `f`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC110 low: `ratelimit_function` differs from the pattern's structure: 12 statement(s) added, 17 pattern statement(s) missing or changed (e.g. `ip_address = current_user.get_ip()`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: parameter `f` of `ratelimit_decorator`: lost its default (pattern: `'POST'`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC110 low: `ratelimit_decorator` differs from the pattern's structure: 14 statement(s) added, 16 pattern statement(s) missing or changed (e.g. `@functools.wraps(f)`)"
+      ],
+      "sample": 1,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 10
+      },
+      "old_high_codes": [],
+      "removed": [
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `**kwargs`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `*args`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `method`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC108 low: `ratelimit_function` adds a call to `f`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC110 low: `ratelimit_function` differs from the pattern's structure: 12 statement(s) added, 17 pattern statement(s) missing or changed (e.g. `ip_address = current_user.get_ip()`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: parameter `f` of `ratelimit_decorator`: lost its default (pattern: `'POST'`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC110 low: `ratelimit_decorator` differs from the pattern's structure: 14 statement(s) added, 16 pattern statement(s) missing or changed (e.g. `@functools.wraps(f)`)"
+      ],
+      "sample": 2,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 10
+      },
+      "old_high_codes": [],
+      "removed": [
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `**kwargs`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` adds `*args`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC107 medium: `ratelimit_function` dropped parameter `method`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC108 low: `ratelimit_function` adds a call to `f`",
+        "ratelimit.<locals>.ratelimit_decorator.<locals>.ratelimit_function: PC110 low: `ratelimit_function` differs from the pattern's structure: 12 statement(s) added, 17 pattern statement(s) missing or changed (e.g. `ip_address = current_user.get_ip()`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `interval`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `key_prefix`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: `ratelimit_decorator` dropped parameter `limit`",
+        "ratelimit.<locals>.ratelimit_decorator: PC107 medium: parameter `f` of `ratelimit_decorator`: lost its default (pattern: `'POST'`)",
+        "ratelimit.<locals>.ratelimit_decorator: PC110 low: `ratelimit_decorator` differs from the pattern's structure: 14 statement(s) added, 16 pattern statement(s) missing or changed (e.g. `@functools.wraps(f)`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 1,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 2,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 1,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 2,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `**kwargs`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` adds `*args`",
+        "registered_only.<locals>.registered_only_wrapper: PC107 medium: `registered_only_wrapper` dropped parameter `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC108 low: `registered_only_wrapper` adds a call to `f`",
+        "registered_only.<locals>.registered_only_wrapper: PC110 low: `registered_only_wrapper` differs from the pattern's structure: 5 statement(s) added, 8 pattern statement(s) missing or changed (e.g. `if authed():`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "added": [
+        "verify_reset_password_token: PC102 medium: `verify_reset_password_token` raises `CTFd.exceptions.email.UserResetPasswordTokenInvalidException` instead of the pattern's `CTFd.exceptions.email.UserConfirmTokenInvalidException` for the check `if addr is None`; callers that catch the pattern's exception will not catch it"
+      ],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100",
+        "PC102"
+      ],
+      "removed": [
+        "verify_reset_password_token: PC100 high: `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 high: `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern",
+        "verify_reset_password_token: PC110 low: `verify_reset_password_token` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `raise UserResetPasswordTokenInvalidException`)"
+      ],
+      "sample": 1,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "added": [
+        "verify_reset_password_token: PC102 medium: `verify_reset_password_token` raises `CTFd.exceptions.email.UserResetPasswordTokenInvalidException` instead of the pattern's `CTFd.exceptions.email.UserConfirmTokenInvalidException` for the check `if addr is None`; callers that catch the pattern's exception will not catch it"
+      ],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100",
+        "PC102"
+      ],
+      "removed": [
+        "verify_reset_password_token: PC100 high: `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 high: `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern",
+        "verify_reset_password_token: PC110 low: `verify_reset_password_token` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `raise UserResetPasswordTokenInvalidException`)"
+      ],
+      "sample": 2,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "added": [
+        "verify_reset_password_token: PC102 medium: `verify_reset_password_token` raises `CTFd.exceptions.email.UserResetPasswordTokenInvalidException` instead of the pattern's `CTFd.exceptions.email.UserConfirmTokenInvalidException` for the check `if addr is None`; callers that catch the pattern's exception will not catch it"
+      ],
+      "app": "ctfd",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100",
+        "PC102"
+      ],
+      "removed": [
+        "verify_reset_password_token: PC100 high: `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 high: `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern",
+        "verify_reset_password_token: PC110 low: `verify_reset_password_token` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `raise UserResetPasswordTokenInvalidException`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "added": [
+        "verify_reset_password_token: PC102 medium: `verify_reset_password_token` raises `CTFd.exceptions.email.UserResetPasswordTokenInvalidException` instead of the pattern's `CTFd.exceptions.email.UserConfirmTokenInvalidException` for the check `if addr is None`; callers that catch the pattern's exception will not catch it"
+      ],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100",
+        "PC102"
+      ],
+      "removed": [
+        "verify_reset_password_token: PC100 high: `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 high: `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern",
+        "verify_reset_password_token: PC110 low: `verify_reset_password_token` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `raise UserResetPasswordTokenInvalidException`)"
+      ],
+      "sample": 2,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "added": [
+        "verify_reset_password_token: PC102 medium: `verify_reset_password_token` raises `CTFd.exceptions.email.UserResetPasswordTokenInvalidException` instead of the pattern's `CTFd.exceptions.email.UserConfirmTokenInvalidException` for the check `if addr is None`; callers that catch the pattern's exception will not catch it"
+      ],
+      "app": "ctfd",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 2,
+        "low": 3,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100",
+        "PC102"
+      ],
+      "removed": [
+        "verify_reset_password_token: PC100 high: `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 high: `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern",
+        "verify_reset_password_token: PC110 low: `verify_reset_password_token` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `raise UserResetPasswordTokenInvalidException`)"
+      ],
+      "sample": 3,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 4,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 6,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "add_victorops: PC100 high: `add_victorops` no longer calls `hc.front.views._get_rw_project_for_user`, which the reviewed pattern requires (only users with write access to the project may add channels, and the URL must be validated) [guard must_call]",
+        "add_victorops: PC110 low: `add_victorops` calls a new helper `_get_rw_project_for_user`",
+        "add_victorops: PC110 low: `add_victorops` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `project = _get_rw_project_for_user(request, code)`)"
+      ],
+      "sample": 1,
+      "task": "hc_add_victorops"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 4,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 6,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "add_victorops: PC100 high: `add_victorops` no longer calls `hc.front.views._get_rw_project_for_user`, which the reviewed pattern requires (only users with write access to the project may add channels, and the URL must be validated) [guard must_call]",
+        "add_victorops: PC110 low: `add_victorops` calls a new helper `_get_rw_project_for_user`",
+        "add_victorops: PC110 low: `add_victorops` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `project = _get_rw_project_for_user(request, code)`)"
+      ],
+      "sample": 2,
+      "task": "hc_add_victorops"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 6,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 13,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 18 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `request.json = {}`)"
+      ],
+      "sample": 1,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 7,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_read.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_read.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 12 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if 'X-Api-Key' in request.headers:`)",
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `str`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 15 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `try:`)"
+      ],
+      "sample": 2,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 7,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 15,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `str`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 19 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if len(request.body) > 0:`)"
+      ],
+      "sample": 3,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 7,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_read.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_read.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 12 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if 'X-Api-Key' in request.headers:`)",
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `str`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 19 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `request.json = {}`)"
+      ],
+      "sample": 1,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 7,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 17,
+        "medium": 4
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_read.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_read.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 12 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if 'X-Api-Key' in request.headers:`)",
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `str`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 18 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if request.body:`)"
+      ],
+      "sample": 2,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 6,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 15,
+        "medium": 4
+      },
+      "old_high_codes": [],
+      "removed": [
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_read.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_read.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_read.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 12 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `if 'X-Api-Key' in request.headers:`)",
+        "authorize_write.<locals>.wrapper: PC103 low: `wrapper` changes standard-library modules: adds `json`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "authorize_write.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.decode`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `.get`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `isinstance`",
+        "authorize_write.<locals>.wrapper: PC108 low: `wrapper` adds a call to `json.loads`",
+        "authorize_write.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 18 statement(s) added, 15 pattern statement(s) missing or changed (e.g. `request.json = {}`)"
+      ],
+      "sample": 3,
+      "task": "hc_api_authorize"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 2,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator: PC105 medium: `decorator` no longer calls `HttpResponse` (the pattern does)",
+        "require_setting.<locals>.decorator: PC108 low: `decorator` adds a call to `django.http.HttpResponseNotFound`",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 3 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 1,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwargs`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 2 statement(s) added, 7 pattern statement(s) missing or changed (e.g. `if not getattr(settings, setting_name, None):`)",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 4 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 2,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 4,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 2 statement(s) added, 7 pattern statement(s) missing or changed (e.g. `if not getattr(settings, key, False):`)",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 4 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 3,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 2 statement(s) added, 7 pattern statement(s) missing or changed (e.g. `if not getattr(settings, key):`)",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 4 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 1,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 2 statement(s) added, 7 pattern statement(s) missing or changed (e.g. `if not getattr(settings, key):`)",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 4 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 2,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 0,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 3,
+        "medium": 2
+      },
+      "old_high_codes": [],
+      "removed": [
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `**kwds`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC107 medium: `wrapper` adds `*args`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC108 low: `wrapper` adds a call to `f`",
+        "require_setting.<locals>.decorator.<locals>.wrapper: PC110 low: `wrapper` differs from the pattern's structure: 2 statement(s) added, 7 pattern statement(s) missing or changed (e.g. `if not getattr(settings, key):`)",
+        "require_setting.<locals>.decorator: PC110 low: `decorator` differs from the pattern's structure: 4 statement(s) added, 6 pattern statement(s) missing or changed (e.g. `@wraps(f)`)"
+      ],
+      "sample": 3,
+      "task": "hc_require_setting"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 1,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 2,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 3,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 1,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 2,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "send_verify_link: PC109 low: `send_verify_link`: literal changed ('login' -> 'verify-email') in `send(make_message('verify-email', to, ctx))`"
+      ],
+      "app": "healthchecks",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 16,
+        "medium": 3
+      },
+      "old_high_codes": [],
+      "removed": [
+        "send_verify_link: PC103 medium: `send_verify_link` adds the third-party `django` and no longer uses `hc`",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.make_message` (the pattern does)",
+        "send_verify_link: PC105 medium: `send_verify_link` no longer calls `hc.lib.emails.send` (the pattern does)",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.attach_alternative`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.pop`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.replace`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `.strip`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.conf.settings.DEFAULT_FROM_EMAIL.split`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.core.mail.EmailMultiAlternatives`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `django.template.loader.render_to_string`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `email.utils.make_msgid`",
+        "send_verify_link: PC108 low: `make_message` adds a call to `isinstance`",
+        "send_verify_link: PC108 low: `send` adds a call to `.run`",
+        "send_verify_link: PC108 low: `send` adds a call to `.start`",
+        "send_verify_link: PC108 low: `send` adds a call to `EmailThread`",
+        "send_verify_link: PC108 low: `send` adds a call to `hasattr`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `make_message`",
+        "send_verify_link: PC110 low: `send_verify_link` calls a new helper `send`",
+        "send_verify_link: PC110 low: `send_verify_link` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `send(make_message('verify-email', to, ctx))`)"
+      ],
+      "sample": 3,
+      "task": "hc_verify_email"
+    },
+    {
+      "added": [
+        "require_invoice_key: PC110 low: `require_invoice_key` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `check: KeyChecker = KeyChecker(api_key=api_key_header or ...`)"
+      ],
+      "app": "lnbits",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 1,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "require_invoice_key: PC100 high: `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]",
+        "require_invoice_key: PC108 low: `require_invoice_key` adds a call to `KeyChecker`"
+      ],
+      "sample": 2,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "added": [
+        "require_invoice_key: PC110 low: `require_invoice_key` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `check: KeyChecker = KeyChecker(api_key=api_key_header or ...`)"
+      ],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 1,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "require_invoice_key: PC100 high: `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]",
+        "require_invoice_key: PC108 low: `require_invoice_key` adds a call to `KeyChecker`"
+      ],
+      "sample": 1,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "added": [
+        "require_invoice_key: PC110 low: `require_invoice_key` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `check: KeyChecker = KeyChecker(api_key=api_key_header or ...`)"
+      ],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 1,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "require_invoice_key: PC100 high: `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]",
+        "require_invoice_key: PC108 low: `require_invoice_key` adds a call to `KeyChecker`"
+      ],
+      "sample": 2,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "added": [
+        "require_invoice_key: PC110 low: `require_invoice_key` differs from the pattern's structure: 1 statement(s) added, 1 pattern statement(s) missing or changed (e.g. `check: KeyChecker = KeyChecker(api_key=api_key_header or ...`)"
+      ],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 1,
+        "medium": 0
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 1,
+        "low": 1,
+        "medium": 0
+      },
+      "old_high_codes": [
+        "PC100"
+      ],
+      "removed": [
+        "require_invoice_key: PC100 high: `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]",
+        "require_invoice_key: PC108 low: `require_invoice_key` adds a call to `KeyChecker`"
+      ],
+      "sample": 3,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 36,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 1,
+      "task": "lnbits_super_user"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 36,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 2,
+      "task": "lnbits_super_user"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "baseline",
+      "new": {
+        "high": 0,
+        "low": 36,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 3,
+      "task": "lnbits_super_user"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 35,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 36,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 1,
+      "task": "lnbits_super_user"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 38,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 2,
+      "task": "lnbits_super_user"
+    },
+    {
+      "added": [],
+      "app": "lnbits",
+      "condition": "pcat",
+      "new": {
+        "high": 0,
+        "low": 37,
+        "medium": 1
+      },
+      "new_high_codes": [],
+      "old": {
+        "high": 0,
+        "low": 38,
+        "medium": 1
+      },
+      "old_high_codes": [],
+      "removed": [
+        "check_super_user: PC110 low: `check_super_user` calls a new helper `check_account_exists`"
+      ],
+      "sample": 3,
+      "task": "lnbits_super_user"
+    }
+  ],
+  "flips": [
+    {
+      "app": "ctfd",
+      "condition": "pcat",
+      "new_failed": false,
+      "new_failing": [],
+      "old_failed": true,
+      "old_failing": [
+        "verify_reset_password_token: PC100 `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern"
+      ],
+      "sample": 2,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "app": "ctfd",
+      "condition": "pcat",
+      "new_failed": false,
+      "new_failing": [],
+      "old_failed": true,
+      "old_failing": [
+        "verify_reset_password_token: PC100 `verify_reset_password_token` can no longer raise `CTFd.exceptions.email.UserConfirmTokenInvalidException`; the reviewed pattern raises it for invalid input (unknown or expired tokens are rejected) [guard must_raise]",
+        "verify_reset_password_token: PC102 `verify_reset_password_token` dropped the check `if addr is None: raise CTFd.exceptions.email.UserConfirmTokenInvalidException(...)` from the pattern"
+      ],
+      "sample": 3,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "app": "lnbits",
+      "condition": "pcat",
+      "new_failed": false,
+      "new_failing": [],
+      "old_failed": true,
+      "old_failing": [
+        "require_invoice_key: PC100 `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+      ],
+      "sample": 1,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "app": "lnbits",
+      "condition": "pcat",
+      "new_failed": false,
+      "new_failing": [],
+      "old_failed": true,
+      "old_failing": [
+        "require_invoice_key: PC100 `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+      ],
+      "sample": 2,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "app": "lnbits",
+      "condition": "pcat",
+      "new_failed": false,
+      "new_failing": [],
+      "old_failed": true,
+      "old_failing": [
+        "require_invoice_key: PC100 `require_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+      ],
+      "sample": 3,
+      "task": "lnbits_invoice_key"
+    }
+  ],
+  "new": "v5.1",
+  "old": "v5",
+  "tables": {
+    "new": {
+      "baseline": {
+        "by_code": {
+          "PC100": {
+            "high": 6,
+            "low": 0,
+            "medium": 0
+          },
+          "PC102": {
+            "high": 3,
+            "low": 0,
+            "medium": 3
+          },
+          "PC103": {
+            "high": 0,
+            "low": 3,
+            "medium": 6
+          },
+          "PC104": {
+            "high": 0,
+            "low": 0,
+            "medium": 3
+          },
+          "PC105": {
+            "high": 0,
+            "low": 0,
+            "medium": 15
+          },
+          "PC107": {
+            "high": 0,
+            "low": 0,
+            "medium": 6
+          },
+          "PC108": {
+            "high": 0,
+            "low": 118,
+            "medium": 0
+          },
+          "PC109": {
+            "high": 0,
+            "low": 26,
+            "medium": 0
+          },
+          "PC110": {
+            "high": 0,
+            "low": 73,
+            "medium": 0
+          }
+        },
+        "by_severity": {
+          "high": 9,
+          "low": 220,
+          "medium": 33
+        },
+        "runs": 72,
+        "would_fail_ci": 0
+      },
+      "pcat": {
+        "by_code": {
+          "PC100": {
+            "high": 5,
+            "low": 0,
+            "medium": 0
+          },
+          "PC102": {
+            "high": 2,
+            "low": 0,
+            "medium": 2
+          },
+          "PC103": {
+            "high": 0,
+            "low": 3,
+            "medium": 5
+          },
+          "PC104": {
+            "high": 0,
+            "low": 0,
+            "medium": 2
+          },
+          "PC105": {
+            "high": 0,
+            "low": 0,
+            "medium": 4
+          },
+          "PC107": {
+            "high": 0,
+            "low": 0,
+            "medium": 5
+          },
+          "PC108": {
+            "high": 0,
+            "low": 98,
+            "medium": 0
+          },
+          "PC109": {
+            "high": 0,
+            "low": 35,
+            "medium": 0
+          },
+          "PC110": {
+            "high": 0,
+            "low": 57,
+            "medium": 0
+          }
+        },
+        "by_severity": {
+          "high": 7,
+          "low": 193,
+          "medium": 18
+        },
+        "runs": 72,
+        "would_fail_ci": 0
+      }
+    },
+    "old": {
+      "baseline": {
+        "by_code": {
+          "PC100": {
+            "high": 10,
+            "low": 0,
+            "medium": 0
+          },
+          "PC102": {
+            "high": 6,
+            "low": 0,
+            "medium": 0
+          },
+          "PC103": {
+            "high": 0,
+            "low": 6,
+            "medium": 9
+          },
+          "PC104": {
+            "high": 0,
+            "low": 0,
+            "medium": 3
+          },
+          "PC105": {
+            "high": 0,
+            "low": 0,
+            "medium": 22
+          },
+          "PC107": {
+            "high": 0,
+            "low": 0,
+            "medium": 41
+          },
+          "PC108": {
+            "high": 0,
+            "low": 183,
+            "medium": 0
+          },
+          "PC109": {
+            "high": 0,
+            "low": 23,
+            "medium": 0
+          },
+          "PC110": {
+            "high": 0,
+            "low": 102,
+            "medium": 0
+          }
+        },
+        "by_severity": {
+          "high": 16,
+          "low": 314,
+          "medium": 75
+        },
+        "runs": 72,
+        "would_fail_ci": 0
+      },
+      "pcat": {
+        "by_code": {
+          "PC100": {
+            "high": 12,
+            "low": 0,
+            "medium": 0
+          },
+          "PC102": {
+            "high": 4,
+            "low": 0,
+            "medium": 0
+          },
+          "PC103": {
+            "high": 0,
+            "low": 6,
+            "medium": 8
+          },
+          "PC104": {
+            "high": 0,
+            "low": 0,
+            "medium": 2
+          },
+          "PC105": {
+            "high": 0,
+            "low": 0,
+            "medium": 10
+          },
+          "PC107": {
+            "high": 0,
+            "low": 0,
+            "medium": 62
+          },
+          "PC108": {
+            "high": 0,
+            "low": 169,
+            "medium": 0
+          },
+          "PC109": {
+            "high": 0,
+            "low": 32,
+            "medium": 0
+          },
+          "PC110": {
+            "high": 0,
+            "low": 93,
+            "medium": 0
+          }
+        },
+        "by_severity": {
+          "high": 16,
+          "low": 300,
+          "medium": 82
+        },
+        "runs": 72,
+        "would_fail_ci": 5
+      }
+    }
+  }
+}
