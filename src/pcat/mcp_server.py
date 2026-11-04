@@ -48,7 +48,8 @@ def build_server(service: CatalogService) -> FastMCP:
             raise ToolError(str(exc)) from None
 
     @server.tool()
-    def check_code(code: str, pattern_id: str | None = None) -> dict[str, Any]:
+    def check_code(code: str, pattern_id: str | None = None, context: str | None = None,
+                   file_path: str | None = None) -> dict[str, Any]:
         """Check Python code against the catalog.
 
         For each function: covered (exact match with a reviewed pattern), near
@@ -56,16 +57,20 @@ def build_server(service: CatalogService) -> FastMCP:
         (the pattern you used), or for functions carrying a `# pcat: <id>@vN`
         marker, also returns `deviations` from that pattern: code, severity and a
         message for each change (e.g. an exception no longer caught), plus a diff.
+        When `code` is a snippet (one function), pass the file's import lines (or
+        the whole file) as `context`, or the file's repository-relative
+        `file_path`; otherwise names it cannot resolve are reported as unknown
+        and the rules that depend on them are skipped (`resolution: partial`).
         Fix every high-severity deviation unless the request explicitly requires
-        it; then add `# pcat-allow: PCxxx -- <reason>` above the function.
+        it; then propose `# pcat-allow: PCxxx #<hash> -- <reason>` above the function.
         """
         try:
-            return service.check_code(code, pattern_id)
+            return service.check_code(code, pattern_id, context=context, file_path=file_path)
         except PcatError as exc:
             raise ToolError(str(exc)) from None
 
     return server
 
 
-def serve(root: Path, log_path: Path | None = None) -> None:
-    build_server(CatalogService(root, log_path)).run("stdio")
+def serve(root: Path, log_path: Path | None = None, repo: Path | None = None) -> None:
+    build_server(CatalogService(root, log_path, repo=repo)).run("stdio")

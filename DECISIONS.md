@@ -1018,3 +1018,26 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      (`adds a call to KeyChecker`, not `lnbits.decorators.KeyChecker`).
 207. **Runtime roots include the file's own package** when the module is known, so
      code inside `lnbits/` that uses its own classes does not "drop" `lnbits`.
+208. **Partial code (Part B).** A name the unit uses that nothing binds (no import,
+     no same-file definition, not a builtin) is *unknown*. If the pattern binds the
+     same name it is assumed to mean the same thing (`assumed` in the result, e.g.
+     `requests -> requests` for a snippet without `import requests`); the rest stay
+     unresolved. A rule whose missing item could be an unresolved name with the same
+     last segment (`rq.Session` vs `requests.Session`) is skipped and listed in
+     `skipped_rules`: PC100 must_call/must_catch/must_raise, PC101, PC102, PC105
+     (and the paired PC108). PC103 "dropped/missing library" is skipped whenever
+     unresolved names remain; a library the snippet does import is still compared.
+     A call missing with nothing that could be it is still reported.
+     `resolution` is `partial` when any unknown name exists (assumed or not) and
+     `full` otherwise. PC110 (low) is not skipped: a differing statement is still
+     shown, since it is advisory.
+209. **`context` and `file_path`.** `check_code(code, pattern_id, context=…,
+     file_path=…)`: `context` is the surrounding file or just its import lines; its
+     top-level statements that the snippet does not redefine are merged in front of
+     the snippet, so resolution (helpers, constants, imports, same-file classes) is
+     the same as for the full file. A context that does not parse falls back to its
+     unindented import lines. `file_path` is read only when it resolves (symlinks
+     followed) to a `.py` file inside the served repository: `pcat serve --repo`
+     (default: the server's working directory); it also gives the module path.
+     Otherwise it is ignored with a note in `context_notes`. Full files without
+     either argument behave as in v4.1 apart from Part A's resolution.

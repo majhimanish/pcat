@@ -383,7 +383,7 @@ def _literals(node: ast.AST) -> list:
 
 def _runtime_roots(unit: Unit) -> set[str]:
     roots = set()
-    origins = set(unit.imports.values()) | set(unit.bound.values())
+    origins = set(unit.imports.values()) | {unit.bound[n] for n in unit.bound_imports}
     if unit.module:  # the file's own definitions belong to its package
         origins |= {unit.qualify(n) for n in unit.file_defs}
     for f in unit.functions:
@@ -494,7 +494,7 @@ def _assume(loose: set[str], unit: Unit, other: Unit) -> dict[str, str]:
         by_last.setdefault(codeunit.last_segment(origin), set()).add(origin)
     out = {}
     for name in sorted(loose):
-        if name in origins and origins[name] != name:
+        if name in origins:
             out[name] = origins[name]
         elif len(by_last.get(name, ())) == 1:
             target = next(iter(by_last[name]))
@@ -523,9 +523,11 @@ def bind(pu: Unit, uu: Unit) -> tuple[Unit, Unit, dict[str, str]]:
     p_bound = _assume(_loose(pu), pu, uu)
     u_bound = _assume(_loose(uu), uu, pu)
     if p_bound:
-        pu = dataclasses.replace(pu, bound={**pu.bound, **p_bound})
+        pu = dataclasses.replace(pu, bound={**pu.bound, **p_bound}, bound_imports=pu.bound_imports | {
+            n for n, o in p_bound.items() if o in set(uu.imports.values())})
     if u_bound:
-        uu = dataclasses.replace(uu, bound={**uu.bound, **u_bound})
+        uu = dataclasses.replace(uu, bound={**uu.bound, **u_bound}, bound_imports=uu.bound_imports | {
+            n for n, o in u_bound.items() if o in set(pu.imports.values())})
     return pu, uu, {k: v for k, v in u_bound.items() if k in uu.unknown}
 
 

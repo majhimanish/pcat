@@ -457,6 +457,9 @@ def serve(
         None, "--catalog", help="Repository root containing catalog/ (or the catalog/ folder itself)."
     ),
     log: Optional[Path] = typer.Option(None, "--log", help="Append one JSON line per tool call."),
+    repo: Optional[Path] = typer.Option(
+        None, "--repo", help="Repository whose files check_code may read via file_path (default: cwd)."
+    ),
 ) -> None:
     """Serve the catalog to coding agents over MCP (stdio). Needs the `mcp` extra."""
     if catalog is not None:  # MCP clients start servers from any directory
@@ -470,7 +473,7 @@ def serve(
         from pcat import mcp_server
     except ImportError:
         raise PcatError('the MCP server needs the mcp extra: pip install "pcat[mcp]"') from None
-    mcp_server.serve(root, log)
+    mcp_server.serve(root, log, (repo or Path.cwd()).resolve())
 
 
 def _catalog_root(catalog: Optional[Path]) -> Path:

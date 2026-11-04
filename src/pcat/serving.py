@@ -30,9 +30,10 @@ MATCH_MESSAGE = (
 
 
 class CatalogService:
-    def __init__(self, root: Path, log_path: Path | None = None):
+    def __init__(self, root: Path, log_path: Path | None = None, repo: Path | None = None):
         self.root = Path(root)
         self.log_path = Path(log_path) if log_path else None
+        self.repo = Path(repo).resolve() if repo else None  # check_code may read files under it
         self.index = search.SearchIndex.from_root(self.root)
         self._patterns = {p.meta.key: p for p in cat.load_catalog(self.root) if p.meta}
         self._function_fps = self._catalog_function_fingerprints()
@@ -57,7 +58,9 @@ class CatalogService:
             "comment above each pattern function: it records where the code came from. If "
             "nothing fits, write the code normally. After writing code from a pattern, call "
             "check_code with your final code and the pattern id: it lists deviations from the "
-            "reviewed pattern by severity. Fix every high-severity deviation unless the request "
+            "reviewed pattern by severity. When you check a single function rather than the "
+            "whole file, pass the file's import lines as `context` (or its path as `file_path`), "
+            "so names are resolved as in the file. Fix every high-severity deviation unless the request "
             "explicitly requires it; in that case you may propose an approval: add a "
             "'# pcat-allow: <code> #<hash> -- <reason>' line above the function's marker, using "
             "the hash check_code shows. A proposal approves nothing until a human confirms it in "
@@ -145,10 +148,16 @@ class CatalogService:
                   {"id": meta.key, "status": meta.status})
         return result
 
-    def check_code(self, code: str, pattern_id: str | None = None) -> dict[str, Any]:
+    def check_code(self, code: str, pattern_id: str | None = None, *, context: str | None = None,
+                   file_path: str | None = None) -> dict[str, Any]:
         arguments: dict[str, Any] = {"length": len(code)}
         if pattern_id is not None:
             arguments["pattern_id"] = pattern_id
+        if context is not None:
+            arguments["context_length"] = len(context)
+        if file_path is not None:
+            arguments["file_path"] = file_path
+        context_tree, module, notes = self._context(context, file_path)
         try:
             tree = ast.parse(code)
         except (SyntaxError, ValueError) as exc:
@@ -186,7 +195,9 @@ class CatalogService:
                        "near": "same structure as a reviewed pattern; only literal values differ",
                        "none": "no reviewed pattern"},
         }
-        result.update(self._provenance_and_deviations(code, tree, functions, pattern))
+        result.update(self._provenance_and_deviations(code, tree, functions, pattern, context_tree, module))
+        if notes:
+            result["context_notes"] = notes
         self._log("check_code", arguments, {
             "statuses": [(f["name"], f["status"], f["pattern"]) for f in functions],
             "deviations": [(a["function"], a["pattern"], [(d["code"], d["approved"]) for d in a["deviations"]])
@@ -194,8 +205,52 @@ class CatalogService:
         })
         return result
 
+    def _context(self, context: str | None, file_path: str | None) -> tuple[ast.Module | None, str | None,
+                                                                           list[str]]:
+        """v5.1: the surrounding file for a snippet: `context` text, else the file at
+        `file_path` when it is inside the served repository. Returns (tree, module, notes)."""
+        from pcat import codeunit
+
+        notes: list[str] = []
+        module = None
+        text = context
+        if file_path is not None:
+            path = self._repo_file(file_path)
+            if path is None:
+                notes.append(f"file_path {file_path!r} is not a file inside the served repository; ignored")
+            else:
+                module = codeunit.module_for_path(path)
+                if text is None:
+                    text = path.read_text(encoding="utf-8", errors="replace")
+        if text is None:
+            return None, module, notes
+        try:
+            return ast.parse(text), module, notes
+        except (SyntaxError, ValueError):
+            imports = [ln for ln in text.splitlines() if ln.lstrip().startswith(("import ", "from "))
+                       and not ln.startswith((" ", "\t"))]
+            try:
+                tree = ast.parse("\n".join(imports))
+            except (SyntaxError, ValueError):
+                tree = None
+            notes.append("context does not parse; " + ("used its import lines only" if tree is not None
+                                                       else "ignored"))
+            return tree, module, notes
+
+    def _repo_file(self, file_path: str) -> Path | None:
+        if self.repo is None:
+            return None
+        candidate = Path(file_path)
+        path = (candidate if candidate.is_absolute() else self.repo / candidate).resolve()
+        try:
+            path.relative_to(self.repo)
+        except ValueError:
+            return None
+        return path if path.is_file() and path.suffix == ".py" else None
+
     def _provenance_and_deviations(self, code: str, tree: ast.Module, functions: list[dict],
-                                   pattern) -> dict[str, Any]:
+                                   pattern, context_tree: ast.Module | None = None,
+                                   module: str | None = None) -> dict[str, Any]:
         """v4: markers, advisory inferred provenance and deviations from the source pattern."""
         from pcat import deviation, lint
 
@@ -236,7 +291,8 @@ class CatalogService:
                 targets.append((info, pattern, function, "pattern_id"))
         analyses = []
         for info, pat, function, source in sorted(targets, key=lambda t: (t[0].node.lineno, t[0].qualname)):
-            a = deviation.analyze_function(tree, info.node, pat, function)
+            a = deviation.analyze_function(tree, info.node, pat, function, module=module,
+                                           context=context_tree)
             current_hash = provenance.function_hash(info.node)
             # Agent context: an approval written in the code is only a proposal (base_keys empty).
             devs, stale, _, _ = lint.apply_approvals(info, a.deviations, "<code>",
@@ -247,7 +303,8 @@ class CatalogService:
                 "approval_template": provenance.approval_line("<code>", current_hash),
                 "deviations": devs, "stale_approvals": stale,
                 "invalid_approvals": [{"line": x.line, "problem": x.problem} for x in info.approvals if x.problem],
-                "diff": a.diff,
+                "diff": a.diff, "resolution": a.resolution, "unknown_names": a.unknown_names,
+                "assumed": a.assumed, "skipped_rules": a.skipped,
             })
         refs = catalog.refs
         for item in functions:
@@ -262,6 +319,8 @@ class CatalogService:
         proposed = sum(1 for a in analyses for d in a["deviations"] if d["approval_state"] == "proposed")
         out: dict[str, Any] = {"deviations": analyses, "unapproved_high": high,
                                "awaiting_human_confirmation": proposed}
+        if analyses:
+            out["resolution"] = "partial" if any(a["resolution"] == "partial" for a in analyses) else "full"
         if problems:
             out["problems"] = problems
         if not analyses:
@@ -279,6 +338,11 @@ class CatalogService:
                 "request: say so in your reply.")
         else:
             out["next_step"] = "No unapproved high-severity deviations."
+        if out.get("resolution") == "partial":
+            out["next_step"] += (
+                " Some names could not be resolved (see unknown_names); rules depending on them "
+                "were skipped (skipped_rules). Pass the file's import lines as `context` or its "
+                "path as `file_path` for a full check.")
         return out
 
     def _lint_catalog(self):

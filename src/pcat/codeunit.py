@@ -48,6 +48,7 @@ class Unit:
     file_defs: set[str] = field(default_factory=set)  # top-level names that are not imports/literal constants
     unknown: set[str] = field(default_factory=set)  # names the unit uses that nothing binds
     bound: dict[str, str] = field(default_factory=dict)  # assumed bindings (deviation.bind): name -> origin
+    bound_imports: set[str] = field(default_factory=set)  # those of `bound` that are imports on the other side
     _locals: dict[int, set[str]] = field(default_factory=dict, repr=False)
 
     @property
@@ -288,20 +289,18 @@ def build_unit(tree: ast.Module, func: ast.FunctionDef, module: str | None = Non
     `module`: the file's dotted module path, when known. `context`: the
     surrounding file (or just its imports) when `tree` is a fragment of it; its
     imports and top-level definitions are added to the symbol table."""
+    if context is not None:  # the surrounding file: its definitions, minus those `tree` redefines
+        own = set().union(*(_bound_names(s) for s in tree.body)) if tree.body else set()
+        tree = ast.Module(body=[s for s in context.body if not (_bound_names(s) & own)] + tree.body,
+                          type_ignores=[])
     top_funcs = {s.name: s for s in tree.body if isinstance(s, FUNC_TYPES)}
     const_nodes, const_values = _literal_constants(tree)
-    statements = _module_level_statements(tree)
-    context_statements = _module_level_statements(context) if context is not None else []
     module_imports = import_bindings(
-        [s for s in [*context_statements, *statements] if isinstance(s, (ast.Import, ast.ImportFrom))])
+        [s for s in _module_level_statements(tree) if isinstance(s, (ast.Import, ast.ImportFrom))])
     top_level_names = set()
     for stmt in tree.body:
         top_level_names |= _bound_names(stmt)
-    context_names: set[str] = set()
-    for stmt in context.body if context is not None else []:
-        context_names |= _bound_names(stmt)
-    imported_names = set(module_imports)
-    file_defs = (top_level_names | context_names) - imported_names - set(const_nodes)
+    file_defs = top_level_names - set(module_imports) - set(const_nodes)
 
     selected = [func]
     todo = [func]
@@ -333,11 +332,11 @@ def build_unit(tree: ast.Module, func: ast.FunctionDef, module: str | None = Non
         constant_nodes={k: const_nodes[k] for k in constants},
         file_constants=const_values,
         imports=imports,
-        file_names=top_level_names | context_names,
+        file_names=top_level_names,
         module=module,
         file_defs=file_defs,
     )
-    defined = top_level_names | context_names | set(dir(builtins)) | set(imports)
+    defined = top_level_names | set(dir(builtins)) | set(imports)
     for f in unit.functions:
         for node in ast.walk(f):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
