@@ -9,6 +9,7 @@ Later parts add subcommands. Logic lives in src/pcat/v5.py.
 from __future__ import annotations
 
 import argparse
+import json
 import subprocess
 import sys
 from pathlib import Path
@@ -72,6 +73,63 @@ def write_mining_summary() -> None:
     (V5 / "mining" / "summary.md").write_text("\n".join(lines + tops) + "\n")
 
 
+def cmd_references(args) -> int:
+    from pcat import v5
+
+    out = V5 / "references"
+    for task in v5.load_tasks(V5 / "tasks.yaml"):
+        source = (APPS_DIR / task.app / task.file).read_text(encoding="utf-8")
+        new, refs = v5.remove_functions(source, task.remove)
+        ref = v5.reference_source(source, task.remove)
+        dest = out / task.app / f"{task.id}.py"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(ref, encoding="utf-8")
+        print(f"{task.app}/{task.id}: removed {', '.join(task.remove)} from {task.file} "
+              f"({len(source.splitlines()) - len(new.splitlines())} lines)")
+    return 0
+
+
+def cmd_requests(args) -> int:
+    import datetime as dt
+    import shutil
+    import tempfile
+    from concurrent.futures import ThreadPoolExecutor
+
+    from pcat import evaluation, v5, variance
+
+    target = V5 / "requests.json"
+    previous = {}
+    if target.exists():
+        if not args.resume:
+            sys.exit("experiments/v5/requests.json exists; it must not be regenerated (--resume fills gaps)")
+        previous = {r["id"]: r for r in json.loads(target.read_text())["items"] if r["request"]}
+    jobs = v5.request_jobs(v5.load_tasks(V5 / "tasks.yaml"),
+                           yaml.safe_load((V5 / "retrieval_needs.yaml").read_text()))
+    todo = [j for j in jobs if j["id"] not in previous]
+
+    def run(job):
+        workdir = Path(tempfile.mkdtemp(prefix="pcat-v5-req-"))
+        try:
+            gen, attempts, error = variance.generate_with_retries(variance.CliGenerator(args.model, workdir),
+                                                                  job["prompt"])
+        finally:
+            shutil.rmtree(workdir, ignore_errors=True)
+        text = evaluation.clean_request(gen.text) if gen else None
+        return {**job, "request": text, "words": v5.word_count(text) if text else None,
+                "raw_response": gen.text if gen else None, "model": gen.model if gen else None,
+                "attempts": attempts, "error": error,
+                "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
+
+    print(f"generating {len(todo)} of {len(jobs)} brief requests ({args.model})")
+    with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+        fresh = {r["id"]: r for r in pool.map(run, todo)}
+    items = [previous.get(j["id"]) or fresh[j["id"]] for j in jobs]
+    v5.write_json(target, {"model": args.model, "prompt_template": v5.REQUEST_PROMPT, "items": items})
+    failed = [r["id"] for r in items if not r["request"]]
+    print(f"wrote {target.relative_to(ROOT)}: {len(items) - len(failed)} ok, {len(failed)} failed {failed[:5]}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="v5 evaluation")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -79,9 +137,15 @@ def main() -> int:
     m = sub.add_parser("mine")
     m.add_argument("--jobs", type=int, default=6)
     sub.add_parser("mining-summary")
+    sub.add_parser("references")
+    rq = sub.add_parser("requests")
+    rq.add_argument("--resume", action="store_true")
+    rq.add_argument("--jobs", type=int, default=8)
+    rq.add_argument("--model", default="claude-sonnet-5-5")
     args = parser.parse_args()
     return {"clone": cmd_clone, "mine": cmd_mine,
-            "mining-summary": lambda a: write_mining_summary() or 0}[args.command](args)
+            "mining-summary": lambda a: write_mining_summary() or 0, "references": cmd_references,
+            "requests": cmd_requests}[args.command](args)
 
 
 if __name__ == "__main__":

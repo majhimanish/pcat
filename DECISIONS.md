@@ -922,3 +922,18 @@ bottom; add to this file whenever you make a call the spec does not dictate.
 193. **Skipped candidates:** class methods and classes (model methods, Pydantic
      validators, `KeyChecker`, Flask-RESTX resources, `TokenBucket.authorize_*`),
      and `checks.post_action`, whose extraction pulled in a v5 task's target.
+194. **Tasks** (`experiments/v5/tasks.yaml`): per app 6 pattern tasks (4 *sibling*:
+     the pattern was promoted from another occurrence that stays in the repo; 2
+     *same*: the pattern is the removed function, its only occurrence, so the pcat
+     condition can recover it verbatim) and 2 negatives no pattern covers. Removal
+     deletes the top-level function(s) with their decorators, the comment block
+     directly above and the following blank lines; callers and now-unused imports
+     stay (an import of a removed name fails, as it would for a developer).
+     References are the removed text (`experiments/v5/references/`).
+195. **Requests** (`experiments/v5/requests.json`): one fresh no-tools `claude -p`
+     (claude-sonnet-5-5) per need, prompt `pcat.v5.REQUEST_PROMPT` (brief, "usually
+     under 15 words"), first paragraph cleaned as in v3. Generated once and kept as
+     is: median 15 words, max 23, 38 of 84 above 15; they invent names and
+     locations (e.g. `authorize_write`, a VictorOps view "in hc/front/views.py"), as
+     real requests do. 20 extra retrieval needs per app (12 with an expected
+     pattern, 8 negative) in `retrieval_needs.yaml`, written before generation.

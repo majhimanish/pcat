@@ -1,0 +1,67 @@
+# v5 Part E: 20 extra needs per app for retrieval (brief requests are generated from
+# these the same way as the task requests). `expected` is the pattern that should rank
+# first in that app's catalog, or null when no pattern fits. Written from the patterns'
+# purpose and the apps' code, before any request was generated.
+healthchecks:
+  - {need: "A developer adding a Discord-style integration that only needs a webhook URL wants the view that lets users paste the URL and save the channel.", expected: integrations.add_url_channel}
+  - {need: "A developer needs to load a project by its UUID in a view and make sure the logged-in user is the owner or a team member.", expected: access.channel_for_user}
+  - {need: "A developer is adding a read-only API endpoint that must authenticate requests with a project's API key header.", expected: api.authorize_read}
+  - {need: "A developer wants a new integration's pages to return 404 unless the integration is switched on in settings.", expected: views.require_setting}
+  - {need: "A developer must stop the login page's next parameter from redirecting users to other websites.", expected: accounts.allow_redirect}
+  - {need: "A developer needs the public help page for a new integration, shown before the user adds it.", expected: integrations.help_page}
+  - {need: "A developer has to verify the signature in a status badge URL before serving the badge.", expected: badges.check_signature}
+  - {need: "A developer needs a new transactional email, sent when a user requests a team invite, built from templates.", expected: emails.templated_send}
+  - {need: "A developer wants to send the monthly summary email with unsubscribe headers and wait until it is sent.", expected: emails.templated_send_blocking}
+  - {need: "A developer needs to retry calls to a flaky third-party HTTP API with backoff when sending notifications.", expected: http.get_with_retry.requests}
+  - {need: "A developer wants to limit how often one client can trigger SMS notifications, telling them when to retry.", expected: ratelimit.token_bucket.check}
+  - {need: "A developer needs to read the app's settings such as the database URL and debug flag from environment variables with defaults.", expected: config.env.load_settings}
+  - {need: "A developer needs to parse a monthly cron schedule string and compute the next run time.", expected: null}
+  - {need: "A developer wants to render a check's ping history as a small sparkline SVG.", expected: null}
+  - {need: "A developer needs to send a Telegram message through the bot API when a check goes down.", expected: null}
+  - {need: "A developer wants to export all checks of a project as a CSV download.", expected: null}
+  - {need: "A developer needs to convert a timestamp to the user's selected time zone for display.", expected: null}
+  - {need: "A developer wants to purge ping bodies older than 90 days from object storage in a nightly job.", expected: null}
+  - {need: "A developer needs to generate a QR code for setting up two-factor authentication.", expected: null}
+  - {need: "A developer wants to parse an incoming email's body to extract a check's ping code.", expected: null}
+ctfd:
+  - {need: "A developer needs a decorator so only logged-in users can open the team settings page.", expected: decorators.authed_only}
+  - {need: "A developer must restrict a new admin statistics page to administrators.", expected: decorators.admins_only}
+  - {need: "A developer wants to throttle repeated flag submissions from one IP address.", expected: decorators.ratelimit}
+  - {need: "A developer needs a link token emailed to users to confirm their address, expiring after half an hour.", expected: security.email_confirm_token}
+  - {need: "A developer needs to know whether email sending is configured before showing the forgot-password link.", expected: config.mail_provider_configured}
+  - {need: "A developer wants a cached helper that returns a user's place on the scoreboard by user id.", expected: user.cached_lookup}
+  - {need: "A developer wants to show a one-time success message on the settings page after saving.", expected: helpers.flash_for}
+  - {need: "A developer needs to recompute a dynamic challenge's points as more teams solve it.", expected: challenges.decay_linear}
+  - {need: "A developer wants to block users with unconfirmed email addresses from submitting flags.", expected: decorators.require_verified_emails}
+  - {need: "A developer needs to hash participants' passwords for storage and check them at login.", expected: auth.password.pbkdf2}
+  - {need: "A developer wants the admin user list API to return results one page at a time with a total count.", expected: db.pagination.select_page}
+  - {need: "A developer needs to import a CSV of users uploaded by an admin and report bad rows.", expected: importers.users_csv.parse}
+  - {need: "A developer needs to award first-blood bonus points to the first team that solves a challenge.", expected: null}
+  - {need: "A developer wants to export the scoreboard as JSON for CTFtime.", expected: null}
+  - {need: "A developer needs to upload challenge files to S3 instead of the local disk.", expected: null}
+  - {need: "A developer wants to render challenge descriptions written in Markdown safely as HTML.", expected: null}
+  - {need: "A developer needs to freeze the scoreboard at a configured time.", expected: null}
+  - {need: "A developer wants to send a notification to all connected browsers when a new challenge is released.", expected: null}
+  - {need: "A developer needs to generate a unique invite code for joining a team.", expected: null}
+  - {need: "A developer wants to compute each team's solve count per challenge category for a chart.", expected: null}
+lnbits:
+  - {need: "A developer needs to check that a wallet name entered by the user only contains allowed characters.", expected: validators.regex_match}
+  - {need: "A developer needs an async query that finds an account by its username, case-insensitively.", expected: crud.get_account_by_field}
+  - {need: "A developer wants the admin dashboard to show the total number of wallets.", expected: crud.count_rows}
+  - {need: "A developer must delete an extension's stored settings when the extension is uninstalled.", expected: crud.delete_by_ext_id}
+  - {need: "A developer needs a FastAPI dependency that requires a wallet's admin key on payment endpoints.", expected: auth.require_api_key}
+  - {need: "A developer wants an endpoint that only LNbits admins can call.", expected: auth.check_admin}
+  - {need: "A developer must validate a user-supplied webhook URL against the admin's allowed origins before calling it.", expected: security.check_callback_url}
+  - {need: "A developer needs to issue the session token after a user logs in with username and password.", expected: auth.lnbits_access_token}
+  - {need: "A developer wants to hash account passwords and verify them at login.", expected: auth.password.pbkdf2}
+  - {need: "A developer needs to retry requests to an external exchange-rate API when it times out.", expected: http.get_with_retry.requests}
+  - {need: "A developer wants to rate limit invoice creation per API key.", expected: ratelimit.token_bucket.check}
+  - {need: "A developer needs to load server settings such as the port and data folder from environment variables.", expected: config.env.load_settings}
+  - {need: "A developer needs to decode a BOLT11 Lightning invoice to read its amount.", expected: null}
+  - {need: "A developer wants to convert between satoshis and fiat using the current exchange rate.", expected: null}
+  - {need: "A developer needs to generate an LNURL-pay link for a wallet.", expected: null}
+  - {need: "A developer wants to stream payment updates to the browser over a WebSocket.", expected: null}
+  - {need: "A developer needs to back up the SQLite database to a file every night.", expected: null}
+  - {need: "A developer wants to show a QR code for an invoice.", expected: null}
+  - {need: "A developer needs to verify a Nostr event signature.", expected: null}
+  - {need: "A developer wants to install an extension from a zip file uploaded by the admin.", expected: null}
