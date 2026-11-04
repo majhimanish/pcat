@@ -48,5 +48,7 @@ guards:
 - kind: must_raise
   names:
   - CTFd.exceptions.email.UserConfirmTokenInvalidException
+  - CTFd.exceptions.email.UserResetPasswordTokenInvalidException
+  match: any
   function: verify_email_confirm_token
-  reason: unknown or expired tokens are rejected
+  reason: unknown or expired tokens are rejected with one of CTFd's token exceptions

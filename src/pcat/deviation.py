@@ -11,7 +11,7 @@ against the user's code is attached for display.
 
 Codes (default severity): PC100 guard violated (high), PC101 exception removed
 or narrowed (high), PC102 raise/validation removed (high), PC103 library swapped
-(high), PC104 broad except added (medium), PC105 call removed (medium), PC106
+(high; v5.1: medium when the same check raises a different exception), PC104 broad except added (medium), PC105 call removed (medium), PC106
 private access added (medium), PC107 signature changed (medium), PC108 call
 added (low), PC109 literal changed (low), PC110 other structural change (low).
 """
@@ -552,7 +552,8 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
                 suppressed["value"].add(r.item)
             if r.skipped:
                 skipped.append(f"PC100 guard {r.kind} `{r.item}`")
-                suppressed["call" if r.kind == "must_call" else "catch"].add(name_key(r.item))
+                suppressed["call" if r.kind == "must_call" else "catch"].update(
+                    name_key(i) for i in r.item.split(" | "))
                 continue
             if r.ok:
                 continue
@@ -560,9 +561,9 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
             if r.kind == "must_catch":
                 attributed_lines.add(r.line)
             if r.kind == "must_catch":
-                suppressed["catch"].add(name_key(r.item))
+                suppressed["catch"].update(name_key(i) for i in r.item.split(" | "))
             elif r.kind == "must_call":
-                suppressed["call"].add(name_key(r.item))
+                suppressed["call"].update(name_key(i) for i in r.item.split(" | "))
             elif r.kind == "must_not_call":
                 suppressed["nocall"].add(name_key(r.item))
             elif r.kind == "must_not_import":
@@ -661,6 +662,18 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
             free.remove(hit)
             continue
         mapping = al.rename_map(r["func"])
+        # v5.1: the same check still raises, but a different exception: changed, not removed
+        swap = next((u for u in free if u["cond"] == r["cond"] and "<" not in u["kind"] + r["kind"]), None)
+        if swap is not None:
+            free.remove(swap)
+            attributed_p.add(id(r["node"]))
+            attributed_lines.add(swap["node"].lineno)
+            where = (f" for the check `if {_short(in_user_names(r['if'].test, mapping), 70)}`"
+                     if r["if"] is not None else "")
+            emit("PC102", f"`{swap['func'].name}` raises `{swap['display']}` instead of the pattern's "
+                 f"`{user_spelling(r['dotted'], uu)}`{where}; callers that catch the pattern's exception "
+                 f"will not catch it", swap["node"].lineno, swap["func"].name, severity="medium")
+            continue
         attributed_p.add(id(r["node"]))
         if r["if"] is not None:
             attributed_p.add(id(r["if"]))

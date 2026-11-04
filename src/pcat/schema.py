@@ -22,6 +22,7 @@ BehaviorValue = Union[StrictBool, StrictInt, float, str, None]
 
 GUARD_NAME_KINDS = ("must_catch", "must_call", "must_not_call", "must_not_import", "must_raise")
 GUARD_VALUE_KINDS = ("min_value", "max_value")
+GUARD_ANY_KINDS = ("must_catch", "must_call", "must_raise")
 # A dotted name (`requests.Timeout`, `eval`) or a method on any value (`.raise_for_status`).
 GUARD_NAME_PATTERN = r"^\.?[A-Za-z_][A-Za-z0-9_]*(\.[A-Za-z_][A-Za-z0-9_]*)*$"
 
@@ -34,7 +35,8 @@ class Guard(BaseModel):
     module constant or a parameter (its default) of `function`, by its name in
     the pattern. target/values (v4.1 must_include): a collection constant or
     default that must still contain every value. `function` defaults to the
-    entry point.
+    entry point. match (v5.1): "any" makes a must_catch/must_call/must_raise guard
+    hold when one of its names is present (house exceptions for sibling flows).
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -47,6 +49,8 @@ class Guard(BaseModel):
     values: list[Union[StrictInt, float, str]] = Field(default_factory=list)
     function: Optional[str] = None
     reason: Optional[str] = Field(default=None, min_length=1)
+    # v5.1: for must_catch/must_call/must_raise, "any" = one of `names` is enough (default: each)
+    match: Literal["all", "any"] = "all"
 
     @model_validator(mode="after")
     def _shape(self) -> "Guard":
@@ -62,7 +66,14 @@ class Guard(BaseModel):
                     raise ValueError(f"{name!r}: modules cannot start with '.'")
             if len(set(self.names)) != len(self.names):
                 raise ValueError("guard names must be unique")
-        elif self.kind == "must_include":
+            if self.match == "any" and self.kind not in GUARD_ANY_KINDS:
+                raise ValueError(f"match: any applies to {', '.join(GUARD_ANY_KINDS)} only")
+            if self.match == "any" and len(self.names) < 2:
+                raise ValueError("match: any needs at least two names")
+            return self
+        if self.match != "all":
+            raise ValueError(f"match applies to {', '.join(GUARD_ANY_KINDS)} only")
+        if self.kind == "must_include":
             if self.names or self.value is not None:
                 raise ValueError("must_include guard takes target and values, not names/value")
             if not self.target or not self.target.isidentifier() or not self.values:

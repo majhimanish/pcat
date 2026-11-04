@@ -10,6 +10,7 @@ Messages use the user's names; `names` maps pattern names to them.
 from __future__ import annotations
 
 import ast
+import dataclasses
 from collections.abc import Mapping
 from dataclasses import dataclass
 
@@ -41,6 +42,7 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
     fname = unit.func.name
     for index, guard in guards:
         why = f" ({guard.reason})" if guard.reason else ""
+        start = len(out)
         if guard.kind == "must_catch":
             hs = codeunit.handlers(unit)
             for exc in guard.names:
@@ -119,7 +121,27 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
             word = "below the reviewed minimum" if low else "above the reviewed maximum"
             out.append(GuardResult(index, guard.kind, guard.target, ok,
                                    f"{label} is {_fmt(value)}, {word} {_fmt(guard.value)}{why}", line))
+        if guard.match == "any":
+            out[start:] = [_any(out[start:], guard, fname, why)]
     return out
+
+
+ANY_VERBS = {"must_catch": "handles", "must_call": "calls", "must_raise": "can raise"}
+
+
+def _any(results: list[GuardResult], guard: Guard, fname: str, why: str) -> GuardResult:
+    """One result for a `match: any` guard: it holds when one of its names does."""
+    item = " | ".join(guard.names)
+    hit = next((r for r in results if r.ok and not r.skipped), None)
+    if hit is not None:
+        return GuardResult(hit.index, guard.kind, item, True, hit.message, hit.line)
+    skipped = next((r for r in results if r.skipped), None)
+    if skipped is not None:
+        return dataclasses.replace(skipped, item=item)
+    shown = ", ".join(f"`{n}`" for n in guard.names)
+    return GuardResult(results[0].index, guard.kind, item, False,
+                       f"`{fname}` no longer {ANY_VERBS[guard.kind]} any of {shown}; the reviewed pattern "
+                       f"requires one of them{why}", results[0].line)
 
 
 def violations(results: list[GuardResult]) -> list[GuardResult]:

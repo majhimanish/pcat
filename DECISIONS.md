@@ -1069,3 +1069,37 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      not count, as before for user code); dropping a module that is neither
      standard library nor required (e.g. first-party) is low with its own message
      instead of the mislabelled "changes standard-library modules".
+214. **Guard review (Part D).** Rebuilt from the saved diffs and linted with the v5
+     linter (exact reproduction: 144/144 runs, 0 differ from the saved scores),
+     five guards fired in v5 (baseline and pcat, marked and inferred):
+     - `auth.require_api_key` must_call `lnbits.decorators.KeyChecker` (4 functions,
+       3 failing CI): **keep**. The guard is right; the code used the shared class.
+       The firing was the same-module resolution bug fixed in Part A.
+     - `integrations.add_url_channel` must_call `hc.front.views._get_rw_project_
+       for_user` (2, advisory: the marker sat between the decorators and `def`, so
+       the function was only inferred): **keep**. Same Part A bug: the helper is
+       defined in the file the agent edited.
+     - `security.email_confirm_token` must_raise `UserConfirmTokenInvalidException`
+       (5, 2 failing CI): **fixed**. The reset-password sibling raises
+       `UserResetPasswordTokenInvalidException`, which CTFd's reset view catches;
+       raising the confirm exception there would be a bug. Both are CTFd's token
+       exceptions, the check (`if addr is None: raise`) is identical, so the flagged
+       code is as safe as the pattern. Guard now lists both with `match: any`
+       (new guard option, 216); raising anything else, or nothing, still violates it.
+     - `config.env.load_settings` must_raise `ValueError` on LNbits'
+       `is_lnbits_version_ok` (5, advisory) and `validators.regex_match` must_call
+       `re.fullmatch` on `camel_to_snake` (6, advisory): **keep**. Neither function
+       derives from the pattern; inference (similarity >= 0.56) attached them. The
+       guards are right for derived code; the noise is inference, recorded for Part E.
+215. **No other guard changed.** No guard was loosened for any other reason.
+216. **`match: any`** (schema `Guard.match`, default `all`): for must_catch,
+     must_call and must_raise, the guard holds when one of its names is present; it
+     reports one result (`A | B`). Validation rejects it on other kinds or with one
+     name. Metadata only; not in the fingerprint or the index.
+217. **PC102 for a changed exception.** When a pattern raise has no same-type raise
+     in the code but the same condition (or the same unconditional position) raises
+     a different exception, PC102 is reported as medium ("raises B instead of the
+     pattern's A for the check `if ...`; callers that catch A will not catch it")
+     instead of high "dropped". Removing the raise is still high. This is the CTFd
+     reset-token case: the agent's own proposed approval said "same check kept,
+     only the exception type differs".
