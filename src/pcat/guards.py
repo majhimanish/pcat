@@ -14,7 +14,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 
 from pcat import codeunit
-from pcat.codeunit import Unit, name_key
+from pcat.codeunit import Unit, last_segment, target_matches
 from pcat.schema import Guard, PatternMeta
 
 
@@ -27,6 +27,7 @@ class GuardResult:
     message: str
     line: int
     found: bool = True  # min/max_value: False when the target does not exist in the code
+    skipped: bool = False  # v5.1: not checked because the code uses an unresolved name that may be it
 
 
 def applicable(meta: PatternMeta, function: str) -> list[tuple[int, Guard]]:
@@ -43,23 +44,29 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
         if guard.kind == "must_catch":
             hs = codeunit.handlers(unit)
             for exc in guard.names:
-                ok = any(codeunit.catches(types, h, exc) for h, types, _ in hs)
+                ok = any(codeunit.catches(types, h, exc, guard=True) for h, types, _ in hs)
                 line = _related_handler_line(hs, exc) or unit.func.lineno
-                now = _handler_summary(hs)
+                if not ok and _maybe(unit, exc, [t for _, types, _ in hs for t in types]):
+                    out.append(_skip(index, guard.kind, exc, fname, line))
+                    continue
+                now = _handler_summary(hs, unit)
                 out.append(GuardResult(index, guard.kind, exc, ok,
                                        f"`{fname}` no longer handles `{exc}`{now}; the reviewed "
                                        f"pattern must catch it{why}", line))
         elif guard.kind == "must_call":
             facts = codeunit.calls(unit)
             for call in guard.names:
-                ok = any(f.key == name_key(call) for f in facts)
+                ok = any(target_matches(call, f.dotted, unit) for f in facts)
+                if not ok and _maybe(unit, call, [f.dotted for f in facts]):
+                    out.append(_skip(index, guard.kind, call, fname, unit.func.lineno))
+                    continue
                 out.append(GuardResult(index, guard.kind, call, ok,
                                        f"`{fname}` no longer calls `{call}`, which the reviewed "
                                        f"pattern requires{why}", unit.func.lineno))
         elif guard.kind == "must_not_call":
             facts = codeunit.calls(unit)
             for call in guard.names:
-                bad = [f for f in facts if f.key == name_key(call)]
+                bad = [f for f in facts if target_matches(call, f.dotted, unit, strict=True)]
                 out.append(GuardResult(index, guard.kind, call, not bad,
                                        f"`{bad[0].func if bad else fname}` calls `{bad[0].display if bad else call}`, "
                                        f"which the reviewed pattern forbids{why}",
@@ -73,9 +80,12 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
                                        f"`{fname}` uses {shown or module}, an import the reviewed "
                                        f"pattern forbids{why}", unit.func.lineno))
         elif guard.kind == "must_raise":
-            raised = {name_key(kind) for _, kind, _ in codeunit.raises(unit)}
+            raised = [kind for _, kind, _ in codeunit.raises(unit)]
             for exc in guard.names:
-                ok = name_key(exc) in raised
+                ok = any(target_matches(exc, kind, unit) for kind in raised)
+                if not ok and _maybe(unit, exc, raised):
+                    out.append(_skip(index, guard.kind, exc, fname, unit.func.lineno))
+                    continue
                 out.append(GuardResult(index, guard.kind, exc, ok,
                                        f"`{fname}` can no longer raise `{exc}`; the reviewed "
                                        f"pattern raises it for invalid input{why}", unit.func.lineno))
@@ -114,6 +124,18 @@ def check(unit: Unit, guards: list[tuple[int, Guard]], names: Mapping[str, str] 
 
 def violations(results: list[GuardResult]) -> list[GuardResult]:
     return [r for r in results if not r.ok]
+
+
+def _maybe(unit: Unit, target: str, resolved: list[str]) -> bool:
+    """True if one of `resolved` is an unresolved name that may be `target` (same last segment)."""
+    return any(unit.is_unresolved(r) and last_segment(r) == last_segment(target) for r in resolved)
+
+
+def _skip(index: int, kind: str, item: str, fname: str, line: int) -> GuardResult:
+    return GuardResult(index, kind, item, True,
+                       f"`{fname}`: guard {kind} `{item}` not checked: the code uses a name that is "
+                       f"not imported and may be it (pass the file's imports as context)",
+                       line, True, True)
 
 
 def _items(values) -> str:
@@ -171,12 +193,12 @@ def _related_handler_line(hs, exc: str) -> int | None:
     return hs[0][0].lineno if hs else None
 
 
-def _handler_summary(hs) -> str:
+def _handler_summary(hs, unit: Unit | None = None) -> str:
     if not hs:
         return " (it has no `except`)"
     shown = []
     for h, types, _ in hs:
-        text = "bare except" if h.type is None else ", ".join(types)
+        text = "bare except" if h.type is None else ", ".join(unit.spell(t) if unit else t for t in types)
         if text not in shown:
             shown.append(text)
     return f" (it catches {'; '.join(shown)})"

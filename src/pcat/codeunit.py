@@ -10,6 +10,15 @@ Names are resolved so that comparisons never depend on what the user called
 things: locals are anonymous, import-bound names become their dotted origin
 (`from hmac import compare_digest` -> `hmac.compare_digest`), and method calls
 on values become `.name`.
+
+v5.1: every unit has a symbol table. Besides imports (any alias) it knows the
+file's own top-level definitions (classes, functions, non-literal assignments),
+which resolve to `<module>.<name>` when the file's module path is known
+(`lnbits/decorators.py` -> `lnbits.decorators.KeyChecker`), so a class defined
+in the same file and the same class imported elsewhere resolve identically.
+Names the unit uses that nothing binds (a snippet without its imports) are
+*unknown*; `deviation.bind` may assume them to be what the pattern means by the
+same name, and rules that would depend on the rest are skipped, never reported.
 """
 
 from __future__ import annotations
@@ -35,6 +44,10 @@ class Unit:
     imports: dict[str, str]  # bound name -> dotted origin (module level + inside the unit)
     undefined_calls: set[str] = field(default_factory=set)  # free names called, defined nowhere
     file_names: set[str] = field(default_factory=set)  # every name bound at the file's top level
+    module: str | None = None  # dotted module path of the file, when known
+    file_defs: set[str] = field(default_factory=set)  # top-level names that are not imports/literal constants
+    unknown: set[str] = field(default_factory=set)  # names the unit uses that nothing binds
+    bound: dict[str, str] = field(default_factory=dict)  # assumed bindings (deviation.bind): name -> origin
     _locals: dict[int, set[str]] = field(default_factory=dict, repr=False)
 
     @property
@@ -66,8 +79,9 @@ class Unit:
         """Dotted name of `expr` for comparison, or None when it is not a plain name.
 
         Locals -> None; unit helpers -> "fn:<name>"; constants -> "const:<name>";
-        import-bound names -> their origin; other free names stay as they are;
-        attribute chains on anything else -> ".attr".
+        assumed bindings and import-bound names -> their origin; other same-file
+        definitions -> `<module>.<name>` (bare without a module path); builtins and
+        unknown names stay as they are; attribute chains on anything else -> ".attr".
         """
         if isinstance(expr, ast.Name):
             name = expr.id
@@ -77,13 +91,70 @@ class Unit:
                 return f"fn:{name}"
             if name in self.constant_nodes:
                 return f"const:{name}"
-            return self.imports.get(name, name)
+            return self.global_name(name)
         if isinstance(expr, ast.Attribute):
             base = self.resolve(expr.value, func) if isinstance(expr.value, (ast.Name, ast.Attribute)) else None
             if base is None or base.startswith((".", "fn:", "const:")):
                 return f".{expr.attr}"
             return f"{base}.{expr.attr}"
         return None
+
+    def global_name(self, name: str) -> str:
+        """Resolution of a module-level name (not a local, helper or literal constant)."""
+        if name in self.bound:
+            return self.bound[name]
+        if name in self.imports:
+            return self.imports[name]
+        if name in self.file_defs:
+            return self.qualify(name)
+        return name
+
+    def qualify(self, name: str) -> str:
+        return f"{self.module}.{name}" if self.module else name
+
+    def spell(self, dotted: str) -> str:
+        """`dotted` as written in this file: same-file definitions lose the module prefix."""
+        if self.module and dotted.startswith(self.module + "."):
+            rest = dotted[len(self.module) + 1:]
+            if rest.split(".")[0] in self.file_defs:
+                return rest
+        return dotted
+
+    @property
+    def unresolved(self) -> set[str]:
+        """Unknown names that no assumed binding covers."""
+        return self.unknown - set(self.bound)
+
+    def is_unresolved(self, dotted: str | None) -> bool:
+        return bool(dotted) and dotted.split(".")[0] in self.unresolved
+
+    @property
+    def resolution(self) -> str:
+        return "partial" if self.unknown else "full"
+
+
+def last_segment(dotted: str) -> str:
+    return dotted.rsplit(".", 1)[-1]
+
+
+def target_matches(target: str, dotted: str | None, unit: Unit | None = None, *, strict: bool = False) -> bool:
+    """Does resolved name `dotted` refer to guard/pattern name `target`?
+
+    Qualified targets compare by `name_key` (any alias of the import, or the
+    same-file definition in that module). An unqualified target (`KeyChecker`)
+    matches a same-file definition or builtin of that name and, unless `strict`
+    (used for `must_not_call`), any import whose last segment it is."""
+    if not dotted or dotted.startswith(("fn:", "const:")):
+        return False
+    if name_key(target) == name_key(dotted):
+        return True
+    if "." in target or dotted.startswith("."):
+        return False
+    if last_segment(dotted) != target:
+        return False
+    if not strict:
+        return True
+    return unit is not None and unit.spell(dotted) == target
 
 
 def name_key(dotted: str) -> str:
@@ -111,6 +182,49 @@ def import_bindings(nodes: list[ast.stmt]) -> dict[str, str]:
                     continue
                 out[alias.asname or alias.name] = f"{module}.{alias.name}" if module else alias.name
     return out
+
+
+def _module_level_statements(tree: ast.Module) -> list[ast.stmt]:
+    """Top-level statements plus those nested in top-level `if`/`try`/`with` blocks
+    (`if TYPE_CHECKING:` and `try: import x except ImportError:` imports)."""
+    out: list[ast.stmt] = []
+
+    def walk(body: list[ast.stmt]) -> None:
+        for stmt in body:
+            out.append(stmt)
+            if isinstance(stmt, ast.If):
+                walk(stmt.body)
+                walk(stmt.orelse)
+            elif isinstance(stmt, (ast.Try, getattr(ast, "TryStar", ast.Try))):
+                walk(stmt.body)
+                for h in stmt.handlers:
+                    walk(h.body)
+                walk(stmt.orelse)
+                walk(stmt.finalbody)
+            elif isinstance(stmt, (ast.With, ast.AsyncWith)):
+                walk(stmt.body)
+
+    walk(tree.body)
+    return out
+
+
+def module_for_path(path) -> str | None:
+    """Dotted module path of a `.py` file: its name plus every enclosing folder that
+    has an `__init__.py` (`lnbits/decorators.py` -> `lnbits.decorators`)."""
+    from pathlib import Path
+
+    path = Path(path)
+    if path.suffix != ".py":
+        return None
+    parts = [] if path.stem == "__init__" else [path.stem]
+    folder = path.parent
+    while (folder / "__init__.py").is_file() and folder.name:
+        parts.insert(0, folder.name)
+        if folder.parent == folder:
+            break
+        folder = folder.parent
+    name = ".".join(parts)
+    return name if name and all(p.isidentifier() for p in parts) else None
 
 
 def _literal_constants(tree: ast.Module) -> tuple[dict[str, ast.stmt], dict[str, object]]:
@@ -167,14 +281,27 @@ def _referenced_names(func: ast.FunctionDef) -> set[str]:
     return {n.id for n in ast.walk(func) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)}
 
 
-def build_unit(tree: ast.Module, func: ast.FunctionDef) -> Unit:
-    """The unit of `func`, a function node somewhere in `tree`."""
+def build_unit(tree: ast.Module, func: ast.FunctionDef, module: str | None = None,
+               context: ast.Module | None = None) -> Unit:
+    """The unit of `func`, a function node somewhere in `tree`.
+
+    `module`: the file's dotted module path, when known. `context`: the
+    surrounding file (or just its imports) when `tree` is a fragment of it; its
+    imports and top-level definitions are added to the symbol table."""
     top_funcs = {s.name: s for s in tree.body if isinstance(s, FUNC_TYPES)}
     const_nodes, const_values = _literal_constants(tree)
-    module_imports = import_bindings([s for s in tree.body if isinstance(s, (ast.Import, ast.ImportFrom))])
+    statements = _module_level_statements(tree)
+    context_statements = _module_level_statements(context) if context is not None else []
+    module_imports = import_bindings(
+        [s for s in [*context_statements, *statements] if isinstance(s, (ast.Import, ast.ImportFrom))])
     top_level_names = set()
     for stmt in tree.body:
         top_level_names |= _bound_names(stmt)
+    context_names: set[str] = set()
+    for stmt in context.body if context is not None else []:
+        context_names |= _bound_names(stmt)
+    imported_names = set(module_imports)
+    file_defs = (top_level_names | context_names) - imported_names - set(const_nodes)
 
     selected = [func]
     todo = [func]
@@ -206,24 +333,31 @@ def build_unit(tree: ast.Module, func: ast.FunctionDef) -> Unit:
         constant_nodes={k: const_nodes[k] for k in constants},
         file_constants=const_values,
         imports=imports,
-        file_names=top_level_names,
+        file_names=top_level_names | context_names,
+        module=module,
+        file_defs=file_defs,
     )
-    defined = top_level_names | set(dir(builtins)) | set(imports)
+    defined = top_level_names | context_names | set(dir(builtins)) | set(imports)
     for f in unit.functions:
         for node in ast.walk(f):
             if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
                 name = node.func.id
                 if name not in unit.locals_of(f) and name not in defined:
                     unit.undefined_calls.add(name)
+    known = defined | unit.helper_names | {func.name} | set(const_nodes)
+    for f in unit.functions:
+        for name in _referenced_names(f) - unit.locals_of(f):
+            if name not in known and not canonical._is_dunder(name):
+                unit.unknown.add(name)
     return unit
 
 
-def build_unit_from_source(source: str, name: str) -> Unit:
+def build_unit_from_source(source: str, name: str, module: str | None = None) -> Unit:
     """Unit of the top-level function `name` in `source` (used for patterns)."""
     tree = ast.parse(source)
     for stmt in tree.body:
         if isinstance(stmt, FUNC_TYPES) and stmt.name == name:
-            return build_unit(tree, stmt)
+            return build_unit(tree, stmt, module)
     raise KeyError(name)
 
 
@@ -235,9 +369,10 @@ def build_unit_from_source(source: str, name: str) -> Unit:
 @dataclass(frozen=True)
 class Fact:
     key: str  # comparison key (see name_key)
-    display: str  # as written (resolved spelling)
+    display: str  # as written (resolved spelling; same-file definitions without the module)
     line: int
     func: str  # owning function's real name
+    dotted: str = ""  # full resolution
 
 
 def calls(unit: Unit) -> list[Fact]:
@@ -252,7 +387,7 @@ def calls(unit: Unit) -> list[Fact]:
                 dotted = unit.resolve(node.func, f)
                 if dotted is None or dotted.startswith(("fn:", "const:")):
                     continue
-                out.append(Fact(name_key(dotted), dotted, node.lineno, f.name))
+                out.append(Fact(name_key(dotted), unit.spell(dotted), node.lineno, f.name, dotted))
     return sorted(out, key=lambda x: (x.line, x.key))
 
 
@@ -286,13 +421,14 @@ def _builtin_exception(name: str):
     return obj if isinstance(obj, type) and issubclass(obj, BaseException) else None
 
 
-def catches(types: list[str], handler: ast.ExceptHandler, wanted: str) -> bool:
-    """True if a handler with `types` catches exception `wanted` (by name)."""
+def catches(types: list[str], handler: ast.ExceptHandler, wanted: str, guard: bool = False) -> bool:
+    """True if a handler with `types` catches exception `wanted` (by name). `guard`:
+    `wanted` is a guard target (an unqualified one matches by last segment, see
+    `target_matches`); otherwise both sides are resolved names (`name_key`)."""
     if is_broad(handler, types):
         return True
-    want_key = name_key(wanted)
     for t in types:
-        if name_key(t) == want_key:
+        if target_matches(wanted, t) if guard else name_key(t) == name_key(wanted):
             return True
         sub, sup = _builtin_exception(wanted), _builtin_exception(t)
         if sub is not None and sup is not None and issubclass(sub, sup):
@@ -335,8 +471,8 @@ def anonymize(node: ast.AST, unit: Unit, func: ast.FunctionDef) -> ast.AST:
                 n.id = "_f"
             elif n.id in unit.constant_nodes:
                 n.id = "_c"
-            elif n.id in unit.imports:
-                n.id = unit.imports[n.id]
+            else:
+                n.id = unit.global_name(n.id)
             return n
 
         def visit_arg(self, n: ast.arg):  # noqa: N802

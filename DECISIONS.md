@@ -986,3 +986,35 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      ("inferred similar") is reported separately, since small helpers (regex or
      boolean parsers) score above 0.56 against `regex_match` / `parse_bool`.
 
+
+## v5.1 — linter fixes for real codebases
+
+203. **One symbol table per unit (Part A).** `codeunit.Unit` now knows the file's
+     module path (`module_for_path`: the file name plus every enclosing folder with
+     an `__init__.py`; a namespace package without one yields a shorter path) and
+     its own top-level definitions (classes, functions, non-literal assignments).
+     A same-file definition resolves to `<module>.<name>` (`lnbits.decorators.
+     KeyChecker`), the same string an import of it resolves to, so the pattern side
+     (which imports the class) and the code side (which defines it) agree. Without a
+     module path a same-file definition stays a bare name. Imports nested in
+     top-level `if`/`try`/`with` blocks (`if TYPE_CHECKING:`, `try: import ujson as
+     json`) are now in the table too (before, those names were free names).
+204. **Binding loose names (`deviation.bind`).** Names whose resolution is a guess
+     (unknown names; same-file definitions when the module is unknown) are assumed
+     to be what the other side means by the same name, or the only origin on the
+     other side with that last segment. A helper one side defines and the other
+     imports is compared as the imported name, not as a helper. Binding never
+     touches names both sides resolve; a genuinely different class with the same
+     name in another package still violates a qualified guard.
+205. **Guard target matching (`codeunit.target_matches`).** Qualified targets
+     compare by `name_key` as before (any alias; the defining module). An
+     unqualified target (`KeyChecker`) matches a same-file definition, a builtin, or
+     any import whose last segment it is (so check 11 on a pattern that imports the
+     class still passes); for `must_not_call` it is strict: only the bare name or a
+     same-file definition (`must_not_call: [eval]` does not match `x.eval`).
+     Pattern-vs-code comparisons (PC101/PC105/PC108) keep plain `name_key`
+     equality: both sides are resolved names.
+206. **Display.** Messages spell same-file definitions without the module prefix
+     (`adds a call to KeyChecker`, not `lnbits.decorators.KeyChecker`).
+207. **Runtime roots include the file's own package** when the module is known, so
+     code inside `lnbits/` that uses its own classes does not "drop" `lnbits`.

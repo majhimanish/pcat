@@ -17,7 +17,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from pcat import catalog as cat
-from pcat import deviation, miner, provenance
+from pcat import codeunit, deviation, miner, provenance
 from pcat.errors import PcatError
 
 FAIL_LEVELS = ("high", "medium", "low", "never")
@@ -239,8 +239,10 @@ def approval_keys(source: str) -> set[tuple]:
 
 def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool,
                 lines: set[int] | None = None, base_keys: set[tuple] | None = None,
-                confirmed_proposals=False, base_source: str | None = None) -> tuple[list[Finding], list[Message]]:
-    """Findings for one file's source. `lines`: only functions touching these lines."""
+                confirmed_proposals=False, base_source: str | None = None,
+                module: str | None = None) -> tuple[list[Finding], list[Message]]:
+    """Findings for one file's source. `lines`: only functions touching these lines.
+    `module`: the file's dotted module path (same-file names resolve to it)."""
     try:
         tree = ast.parse(source)
     except (SyntaxError, ValueError) as exc:
@@ -252,7 +254,7 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
     for info in provenance.functions(source, tree):
         if info.marker is None and info.qualname in removed:
             got = _marker_removed(info, removed[info.qualname], tree, path, catalog, base_keys,
-                                  confirmed_proposals)
+                                  confirmed_proposals, module)
             if got is not None:
                 findings.append(got[0])
                 messages.extend(got[1])
@@ -280,7 +282,7 @@ def lint_source(source: str, path: str, catalog: Catalog, include_inferred: bool
         else:
             continue
         try:
-            analysis = deviation.analyze_function(tree, info.node, pattern, function)
+            analysis = deviation.analyze_function(tree, info.node, pattern, function, module=module)
         except (PcatError, KeyError, RecursionError, ValueError) as exc:
             messages.append(Message(path, info.node.lineno, "warning",
                                     f"cannot analyze `{info.qualname}`: {exc}"))
@@ -314,7 +316,7 @@ def _removed_markers(base: str | None) -> dict[str, provenance.Marker]:
 
 
 def _marker_removed(info: provenance.FunctionInfo, old: provenance.Marker, tree: ast.Module, path: str,
-                    catalog: Catalog, base_keys, confirmed_proposals):
+                    catalog: Catalog, base_keys, confirmed_proposals, module: str | None = None):
     """PC111 when a function lost its marker but still infers as derived from the same pattern."""
     inf = provenance.infer(info.node, catalog.refs)
     if inf is None or not inf.derived or inf.pattern_id != old.pattern_id:
@@ -322,7 +324,7 @@ def _marker_removed(info: provenance.FunctionInfo, old: provenance.Marker, tree:
     pattern = catalog.by_key(inf.pattern_id, inf.version)
     if pattern is None:
         return None
-    analysis = deviation.analyze_function(tree, info.node, pattern, inf.function)
+    analysis = deviation.analyze_function(tree, info.node, pattern, inf.function, module=module)
     pc111 = deviation.Deviation(
         "PC111", deviation.SEVERITY["PC111"],
         f"`{info.qualname}` had the marker `# pcat: {old.ref}` at the base ref and still looks derived "
@@ -456,7 +458,7 @@ def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on:
             base_keys = approval_keys(old) if old is not None else set()
         source = data.decode("utf-8", errors="replace")
         got, msgs = lint_source(source, shown, catalog, include_inferred, lines, base_keys,
-                                confirmed_proposals, old)
+                                confirmed_proposals, old, codeunit.module_for_path(Path(f.abs_path)))
         findings.extend(got)
         messages.extend(msgs)
     if changed is not None:

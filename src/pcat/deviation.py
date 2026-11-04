@@ -75,6 +75,10 @@ class Analysis:
     diff: str
     shape_match: bool
     guards_checked: int = 0
+    resolution: str = "full"  # v5.1: "partial" when the code uses names nothing binds
+    unknown_names: list[str] = field(default_factory=list)  # those names
+    assumed: dict[str, str] = field(default_factory=dict)  # unknown name -> pattern origin assumed
+    skipped: list[str] = field(default_factory=list)  # rules not checked because of unknown names
 
     def to_dict(self) -> dict:
         return {
@@ -82,6 +86,8 @@ class Analysis:
             "function": self.function, "line": self.line, "shape_match": self.shape_match,
             "guards_checked": self.guards_checked,
             "deviations": [d.to_dict() for d in self.deviations], "diff": self.diff,
+            "resolution": self.resolution, "unknown_names": self.unknown_names,
+            "assumed": self.assumed, "skipped_rules": self.skipped,
         }
 
 
@@ -244,7 +250,11 @@ def _strip_docstrings(node: ast.AST) -> ast.AST:
 
 def user_spelling(dotted: str, unit: Unit) -> str:
     """`requests.ConnectionError` as the user would write it (`rq.ConnectionError` after
-    `import requests as rq`); unchanged when the user has no matching import."""
+    `import requests as rq`, `KeyChecker` for a class defined in the user's file);
+    unchanged when the user has no matching import."""
+    spelled = unit.spell(dotted)
+    if spelled != dotted:
+        return spelled
     best = None
     for binding, origin in unit.imports.items():
         if dotted == origin or dotted.startswith(origin + "."):
@@ -373,10 +383,13 @@ def _literals(node: ast.AST) -> list:
 
 def _runtime_roots(unit: Unit) -> set[str]:
     roots = set()
+    origins = set(unit.imports.values()) | set(unit.bound.values())
+    if unit.module:  # the file's own definitions belong to its package
+        origins |= {unit.qualify(n) for n in unit.file_defs}
     for f in unit.functions:
         anon = codeunit.anonymize(f, unit, f)
         for n in ast.walk(anon):
-            if isinstance(n, ast.Name) and n.id in set(unit.imports.values()):
+            if isinstance(n, ast.Name) and n.id in origins:
                 if not n.id.startswith("."):
                     roots.add(n.id.split(".")[0])
     return roots
@@ -410,7 +423,8 @@ def _raise_records(unit: Unit) -> list[dict]:
         cond = None
         if isinstance(parent, ast.If) and any(s is node for s in parent.body):
             cond = _key(parent.test, unit, f)[0]
-        out.append({"node": node, "kind": name_key(kind), "display": kind, "cond": cond,
+        out.append({"node": node, "kind": name_key(kind), "display": unit.spell(kind), "cond": cond,
+                    "dotted": kind,
                     "if": parent if cond is not None else None, "func": f})
     return out
 
@@ -452,13 +466,74 @@ def _default_key(func: ast.FunctionDef, unit: Unit) -> dict[str, tuple[str, str,
     return out
 
 
+def _origins(unit: Unit) -> dict[str, str]:
+    """name -> resolution for every module-level name the unit refers to by a binding
+    it knows (imports and same-file definitions)."""
+    out = {name: unit.global_name(name) for name in unit.file_defs | set(unit.imports)}
+    return {k: v for k, v in out.items() if k not in unit.unknown}
+
+
+def _loose(unit: Unit) -> set[str]:
+    """Names whose resolution is a guess: unknown names, and same-file definitions
+    when the file's module path is unknown (they resolve to a bare name)."""
+    used = set()
+    for f in unit.functions:
+        used |= codeunit._referenced_names(f) - unit.locals_of(f)
+    loose = set(unit.unknown)
+    if unit.module is None:
+        loose |= (unit.file_defs - unit.helper_names - {unit.func.name}) & used
+    return loose
+
+
+def _assume(loose: set[str], unit: Unit, other: Unit) -> dict[str, str]:
+    """For each loose name of `unit`, what `other` means by it: the same name bound in
+    `other`, else the only origin in `other` whose last segment is that name."""
+    origins = _origins(other)
+    by_last: dict[str, set[str]] = {}
+    for origin in origins.values():
+        by_last.setdefault(codeunit.last_segment(origin), set()).add(origin)
+    out = {}
+    for name in sorted(loose):
+        if name in origins and origins[name] != name:
+            out[name] = origins[name]
+        elif len(by_last.get(name, ())) == 1:
+            target = next(iter(by_last[name]))
+            if target != name:
+                out[name] = target
+    return out
+
+
+def bind(pu: Unit, uu: Unit) -> tuple[Unit, Unit, dict[str, str]]:
+    """Resolve both units through one symbol table (v5.1 Part A).
+
+    - Helpers one side defines and the other imports (or calls, defined elsewhere)
+      are compared as the imported name, not as helpers.
+    - Loose names on either side (unknown names; same-file definitions of a file
+      whose module path is unknown) are assumed to be what the other side means by
+      that name. Returns (pattern unit, user unit, assumptions on the user side)."""
+    external = [h for h in pu.helpers if h.name not in uu.helper_names
+                and (h.name in uu.undefined_calls or h.name in uu.imports)]
+    if external:  # helpers the user calls but defines elsewhere: compare without them
+        pu = dataclasses.replace(pu, helpers=[h for h in pu.helpers if h not in external], _locals={})
+    p_origins = _origins(pu)
+    imported = [h for h in uu.helpers if h.name not in pu.helper_names and h.name in p_origins
+                and (uu.module is None or name_key(p_origins[h.name]) == name_key(uu.qualify(h.name)))]
+    if imported:  # the pattern imports what the user's file defines: compare as that name
+        uu = dataclasses.replace(uu, helpers=[h for h in uu.helpers if h not in imported], _locals={})
+    p_bound = _assume(_loose(pu), pu, uu)
+    u_bound = _assume(_loose(uu), uu, pu)
+    if p_bound:
+        pu = dataclasses.replace(pu, bound={**pu.bound, **p_bound})
+    if u_bound:
+        uu = dataclasses.replace(uu, bound={**uu.bound, **u_bound})
+    return pu, uu, {k: v for k, v in u_bound.items() if k in uu.unknown}
+
+
 def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_function: str,
             meta=None) -> Analysis:
     """Deviations of `user_unit` from `pattern_unit` (meta: PatternMeta for guards/requires)."""
-    pu, uu = pattern_unit, user_unit
-    external = [h for h in pu.helpers if h.name in uu.undefined_calls and h.name not in uu.helper_names]
-    if external:  # helpers the user calls but defines elsewhere: compare without them
-        pu = dataclasses.replace(pu, helpers=[h for h in pu.helpers if h not in external], _locals={})
+    pu, uu, assumed = bind(pattern_unit, user_unit)
+    skipped: list[str] = []
     al = align(pu, uu)
     devs: list[Deviation] = []
     uname = uu.func.name
@@ -479,6 +554,10 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
         for r in guard_results:
             if r.kind in ("min_value", "max_value", "must_include"):
                 suppressed["value"].add(r.item)
+            if r.skipped:
+                skipped.append(f"PC100 guard {r.kind} `{r.item}`")
+                suppressed["call" if r.kind == "must_call" else "catch"].add(name_key(r.item))
+                continue
             if r.ok:
                 continue
             emit("PC100", f"{r.message} [guard {r.kind}]", r.line)
@@ -498,6 +577,10 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     required = _required_roots(meta.requires) if meta is not None else set()
     missing_required = sorted(required - u_roots)
     dropped = sorted(p_roots - u_roots)
+    if uu.unresolved and (missing_required or dropped):  # may be among the unknown names
+        skipped.append("PC103 " + ", ".join(f"`{r}`" for r in sorted(set(missing_required) | set(dropped)))
+                       + " not seen (imports missing)")
+        missing_required, dropped = [], []
     added_third = sorted(r for r in u_roots - p_roots
                          if r not in sys.stdlib_module_names and r not in suppressed["import"])
     added_std = sorted(r for r in u_roots - p_roots if r in sys.stdlib_module_names)
@@ -532,6 +615,12 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
                     attributed_p.add(id(h))
                 continue
             if not any(codeunit.catches(ut, uh, t) for uh, ut, _ in u_handlers):
+                if any(uu.is_unresolved(x) and codeunit.last_segment(x) == codeunit.last_segment(t)
+                       for _, ut, _ in u_handlers for x in ut):
+                    skipped.append(f"PC101 `{t}`")
+                    reported.add(key)
+                    attributed_p.add(id(h))
+                    continue
                 reported.add(key)
                 attributed_p.add(id(h))
                 line = guards._related_handler_line(u_handlers, t) or uu.func.lineno
@@ -560,6 +649,11 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
             free.remove(hit)
     for r in leftover:
         hit = next((u for u in free if u["kind"] == r["kind"]), None)
+        if hit is None:
+            hit = next((u for u in free if uu.is_unresolved(u["dotted"]) and codeunit.last_segment(u["dotted"])
+                        == codeunit.last_segment(r["dotted"])), None)
+            if hit is not None:
+                skipped.append(f"PC102 `raise {r['display']}`")
         if hit is not None:
             free.remove(hit)
             continue
@@ -581,13 +675,20 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
     p_keys = {c.key: c for c in reversed(p_calls)}
     u_keys = {c.key: c for c in reversed(u_calls)}
     helper_names = {h.name for h in pu.helpers}
+    maybe_added: set[str] = set()
     for key in sorted(set(p_keys) - set(u_keys)):
         if key in suppressed["call"]:
+            continue
+        maybe = [k for k, c in u_keys.items() if k not in p_keys and uu.is_unresolved(c.dotted)
+                 and codeunit.last_segment(c.dotted) == codeunit.last_segment(p_keys[key].dotted)]
+        if maybe:
+            skipped.append(f"PC105 `{p_keys[key].display}`")
+            maybe_added.update(maybe)
             continue
         emit("PC105", f"`{uname}` no longer calls `{user_spelling(p_keys[key].display, uu)}` (the pattern does)",
              uu.func.lineno)
     for key in sorted(set(u_keys) - set(p_keys), key=lambda k: (u_keys[k].line, k)):
-        if key in suppressed["nocall"] or key in helper_names:
+        if key in suppressed["nocall"] or key in helper_names or key in maybe_added:
             continue
         c = u_keys[key]
         attributed_lines.add(c.line)
@@ -701,7 +802,8 @@ def analyze(pattern_unit: Unit, user_unit: Unit, *, pattern_key: str, pattern_fu
 
     devs = _dedupe(devs)
     return Analysis(pattern_key, pattern_function, uname, uu.func.lineno, devs,
-                    unified_diff(pu, uu, al, pattern_key), shape_match, len(guard_results))
+                    unified_diff(pu, uu, al, pattern_key), shape_match, len(guard_results),
+                    uu.resolution, sorted(uu.unknown), assumed, sorted(set(skipped)))
 
 
 def _dedupe(devs: list[Deviation]) -> list[Deviation]:
@@ -771,8 +873,11 @@ def choose_pattern_function(node: ast.FunctionDef, pattern) -> str:
 
 
 def analyze_function(tree: ast.Module, node: ast.FunctionDef, pattern,
-                     pattern_function: str | None = None) -> Analysis:
-    """Deviations of function `node` (in module `tree`) from catalog `pattern`."""
+                     pattern_function: str | None = None, *, module: str | None = None,
+                     context: ast.Module | None = None) -> Analysis:
+    """Deviations of function `node` (in module `tree`) from catalog `pattern`.
+    `module`: the file's dotted module path; `context`: the surrounding file when
+    `tree` is a fragment (see `codeunit.build_unit`)."""
     function = pattern_function or choose_pattern_function(node, pattern)
-    return analyze(pattern_unit(pattern, function), codeunit.build_unit(tree, node),
+    return analyze(pattern_unit(pattern, function), codeunit.build_unit(tree, node, module, context),
                    pattern_key=pattern.meta.key, pattern_function=function, meta=pattern.meta)
