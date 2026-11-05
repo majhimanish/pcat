@@ -190,3 +190,37 @@ def test_report_is_deterministic(tmp_path, http_code):
     write(tmp_path, http_code, "a.py")
     first, second = as_json(str(tmp_path)), as_json(str(tmp_path))
     assert first == second and [f["path"].split("/")[-1] for f in first["findings"]] == ["a.py", "b.py"]
+
+
+def test_fail_on_inferred_guards_is_opt_in(tmp_path, http_code):
+    """v5.2: unmarked code that copies a pattern but breaks a guard fails only with the flag,
+    only above the confidence threshold, and only on PC100."""
+    unmarked = http_code.replace("# pcat: http.get_with_retry.requests@v1\n", "").replace(*NARROW)
+    path = write(tmp_path, unmarked)
+    default = lint.lint_paths([str(path)], REPO_ROOT, include_inferred=True)
+    [f] = default.findings
+    assert f.provenance == "inferred" and not default.failed and f.similarity >= lint.INFERRED_GUARD_SIMILARITY
+    opted = lint.lint_paths([str(path)], REPO_ROOT, include_inferred=False, fail_on_inferred_guards=True)
+    [g] = opted.findings
+    assert opted.failed and {d["code"] for d in g.failing("high")} == {"PC100"}
+    assert opted.to_dict()["fail_on_inferred_guards"] == lint.INFERRED_GUARD_SIMILARITY
+    assert "guard violations fail (--fail-on-inferred-guards)" in lint.format_text(opted)
+    assert "::error" in lint.format_github(opted) and "high confidence" in lint.format_github(opted)
+    g.similarity = lint.INFERRED_GUARD_SIMILARITY - 0.01  # below the threshold: advisory again
+    assert g.failing("high") == []
+    clean = write(tmp_path, http_code.replace("# pcat: http.get_with_retry.requests@v1\n", ""), "clean.py")
+    assert not lint.lint_paths([str(clean)], REPO_ROOT, include_inferred=False, fail_on_inferred_guards=True).failed
+
+
+def test_cli_fail_on_inferred_guards(tmp_path, http_code):
+    from typer.testing import CliRunner
+
+    from pcat.cli import app
+
+    unmarked = http_code.replace("# pcat: http.get_with_retry.requests@v1\n", "").replace(*NARROW)
+    path = write(tmp_path, unmarked)
+    runner = CliRunner()
+    assert runner.invoke(app, ["lint", str(path), "--catalog", str(REPO_ROOT), "--format", "json"]).exit_code == 0
+    r = runner.invoke(app, ["lint", str(path), "--catalog", str(REPO_ROOT), "--format", "json",
+                            "--fail-on-inferred-guards"])
+    assert r.exit_code == 1 and '"fails_as_inferred": true' in r.output

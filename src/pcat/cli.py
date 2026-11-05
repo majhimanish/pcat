@@ -506,6 +506,11 @@ def lint(
         None, "--catalog", help="Repository root containing catalog/ (default: --root or nearest parent)."
     ),
     diff: bool = typer.Option(True, "--diff/--no-diff", help="Show diffs in text output."),
+    fail_on_inferred_guards: bool = typer.Option(
+        False, "--fail-on-inferred-guards",
+        help="Opt-in: also fail on guard violations (PC100) of unmarked code inferred with high "
+        "confidence (similarity >= 0.75). Implies --include-inferred.",
+    ),
 ) -> None:
     """Report how code derived from catalog patterns deviates from them (PC100-PC110)."""
     from pcat import lint as lint_mod
@@ -514,7 +519,8 @@ def lint(
         raise PcatError(f"--format must be one of {', '.join(lint_mod.FORMATS)}")
     inferred = (output_format == "text") if include_inferred is None else include_inferred
     report = lint_mod.lint_paths([str(p) for p in paths], _catalog_root(catalog),
-                                 include_inferred=inferred, fail_on=fail_on, changed_since=changed_since)
+                                 include_inferred=inferred, fail_on=fail_on, changed_since=changed_since,
+                                 fail_on_inferred_guards=fail_on_inferred_guards)
     if output_format == "json":
         typer.echo(json.dumps(report.to_dict(), indent=2, sort_keys=True))
     elif output_format == "github":

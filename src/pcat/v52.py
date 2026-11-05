@@ -487,6 +487,10 @@ def summarize(rows: list[dict]) -> dict:
         "ci_advisory_flags_inherited": sum(r["ci"].get("advisory_flags_inherited", False) for r in inherited),
         "ci_misses_inherited_unmarked": sum(not r["ci"]["catches_inherited"] and not r["use"]["marked"]
                                             for r in inherited),
+        "mode_fails": sum(r.get("ci_inferred_guards", {}).get("failed", False) for r in ok),
+        "mode_catches_inherited": sum(r.get("ci_inferred_guards", {}).get("catches_inherited", False) for r in inherited),
+        "mode_fails_without_inherited_flaw": sum(r.get("ci_inferred_guards", {}).get("failed", False)
+                                                 and not r["guards"]["flaw_inherited"] for r in ok),
         "total_cost_usd": round(sum(cost), 4), "median_cost_usd": v5._median(cost),
         "median_seconds": v5._median([r["wall_seconds"] for r in ok]),
         "median_files_touched": v5._median([len(r["files_changed"]) for r in ok]),

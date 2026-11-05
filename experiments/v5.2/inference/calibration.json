@@ -1,0 +1,417 @@
+{
+  "bar": {
+    "precision": 0.9,
+    "recall": 0.5
+  },
+  "calibration": {
+    "sim>=0.56": {
+      "fn": 0,
+      "fp": 74,
+      "precision": 0.737,
+      "recall": 1.0,
+      "tn": 68,
+      "tp": 207
+    },
+    "sim>=0.56+calls>=0.5": {
+      "fn": 2,
+      "fp": 30,
+      "precision": 0.872,
+      "recall": 0.99,
+      "tn": 112,
+      "tp": 205
+    },
+    "sim>=0.56+calls>=0.8": {
+      "fn": 5,
+      "fp": 17,
+      "precision": 0.922,
+      "recall": 0.976,
+      "tn": 125,
+      "tp": 202
+    },
+    "sim>=0.56+guarded": {
+      "fn": 45,
+      "fp": 11,
+      "precision": 0.936,
+      "recall": 0.783,
+      "tn": 131,
+      "tp": 162
+    },
+    "sim>=0.56+imports": {
+      "fn": 2,
+      "fp": 40,
+      "precision": 0.837,
+      "recall": 0.99,
+      "tn": 102,
+      "tp": 205
+    },
+    "sim>=0.56+imports+calls>=0.5": {
+      "fn": 3,
+      "fp": 22,
+      "precision": 0.903,
+      "recall": 0.986,
+      "tn": 120,
+      "tp": 204
+    },
+    "sim>=0.65": {
+      "fn": 5,
+      "fp": 13,
+      "precision": 0.94,
+      "recall": 0.976,
+      "tn": 129,
+      "tp": 202
+    },
+    "sim>=0.75": {
+      "fn": 22,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.894,
+      "tn": 142,
+      "tp": 185
+    },
+    "sim>=0.75+calls>=0.5": {
+      "fn": 23,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.889,
+      "tn": 142,
+      "tp": 184
+    },
+    "sim>=0.75+calls>=0.8": {
+      "fn": 26,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.874,
+      "tn": 142,
+      "tp": 181
+    },
+    "sim>=0.75+guarded": {
+      "fn": 61,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.705,
+      "tn": 142,
+      "tp": 146
+    },
+    "sim>=0.75+imports": {
+      "fn": 23,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.889,
+      "tn": 142,
+      "tp": 184
+    },
+    "sim>=0.75+imports+calls>=0.5": {
+      "fn": 24,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.884,
+      "tn": 142,
+      "tp": 183
+    },
+    "sim>=0.85": {
+      "fn": 41,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.802,
+      "tn": 142,
+      "tp": 166
+    },
+    "sim>=0.85+calls>=0.5": {
+      "fn": 41,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.802,
+      "tn": 142,
+      "tp": 166
+    },
+    "sim>=0.85+calls>=0.8": {
+      "fn": 43,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.792,
+      "tn": 142,
+      "tp": 164
+    },
+    "sim>=0.85+guarded": {
+      "fn": 75,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.638,
+      "tn": 142,
+      "tp": 132
+    },
+    "sim>=0.85+imports": {
+      "fn": 42,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.797,
+      "tn": 142,
+      "tp": 165
+    },
+    "sim>=0.85+imports+calls>=0.5": {
+      "fn": 42,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.797,
+      "tn": 142,
+      "tp": 165
+    },
+    "sim>=0.9": {
+      "fn": 45,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.783,
+      "tn": 142,
+      "tp": 162
+    },
+    "sim>=0.95": {
+      "fn": 56,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.729,
+      "tn": 142,
+      "tp": 151
+    }
+  },
+  "chosen": "sim>=0.75",
+  "chosen_held_out": {
+    "fn": 10,
+    "fp": 3,
+    "precision": 0.962,
+    "recall": 0.884,
+    "tn": 81,
+    "tp": 76
+  },
+  "default_held_out": {
+    "fn": 2,
+    "fp": 16,
+    "precision": 0.84,
+    "recall": 0.977,
+    "tn": 68,
+    "tp": 84
+  },
+  "held_out": {
+    "sim>=0.56": {
+      "fn": 2,
+      "fp": 16,
+      "precision": 0.84,
+      "recall": 0.977,
+      "tn": 68,
+      "tp": 84
+    },
+    "sim>=0.56+calls>=0.5": {
+      "fn": 3,
+      "fp": 5,
+      "precision": 0.943,
+      "recall": 0.965,
+      "tn": 79,
+      "tp": 83
+    },
+    "sim>=0.56+calls>=0.8": {
+      "fn": 7,
+      "fp": 5,
+      "precision": 0.94,
+      "recall": 0.919,
+      "tn": 79,
+      "tp": 79
+    },
+    "sim>=0.56+guarded": {
+      "fn": 31,
+      "fp": 2,
+      "precision": 0.965,
+      "recall": 0.64,
+      "tn": 80,
+      "tp": 55
+    },
+    "sim>=0.56+imports": {
+      "fn": 12,
+      "fp": 6,
+      "precision": 0.925,
+      "recall": 0.86,
+      "tn": 78,
+      "tp": 74
+    },
+    "sim>=0.56+imports+calls>=0.5": {
+      "fn": 13,
+      "fp": 4,
+      "precision": 0.948,
+      "recall": 0.849,
+      "tn": 80,
+      "tp": 73
+    },
+    "sim>=0.65": {
+      "fn": 3,
+      "fp": 4,
+      "precision": 0.954,
+      "recall": 0.965,
+      "tn": 80,
+      "tp": 83
+    },
+    "sim>=0.75": {
+      "fn": 10,
+      "fp": 3,
+      "precision": 0.962,
+      "recall": 0.884,
+      "tn": 81,
+      "tp": 76
+    },
+    "sim>=0.75+calls>=0.5": {
+      "fn": 10,
+      "fp": 3,
+      "precision": 0.962,
+      "recall": 0.884,
+      "tn": 81,
+      "tp": 76
+    },
+    "sim>=0.75+calls>=0.8": {
+      "fn": 12,
+      "fp": 3,
+      "precision": 0.961,
+      "recall": 0.86,
+      "tn": 81,
+      "tp": 74
+    },
+    "sim>=0.75+guarded": {
+      "fn": 38,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.558,
+      "tn": 82,
+      "tp": 48
+    },
+    "sim>=0.75+imports": {
+      "fn": 18,
+      "fp": 2,
+      "precision": 0.971,
+      "recall": 0.791,
+      "tn": 82,
+      "tp": 68
+    },
+    "sim>=0.75+imports+calls>=0.5": {
+      "fn": 18,
+      "fp": 2,
+      "precision": 0.971,
+      "recall": 0.791,
+      "tn": 82,
+      "tp": 68
+    },
+    "sim>=0.85": {
+      "fn": 12,
+      "fp": 2,
+      "precision": 0.974,
+      "recall": 0.86,
+      "tn": 82,
+      "tp": 74
+    },
+    "sim>=0.85+calls>=0.5": {
+      "fn": 12,
+      "fp": 2,
+      "precision": 0.974,
+      "recall": 0.86,
+      "tn": 82,
+      "tp": 74
+    },
+    "sim>=0.85+calls>=0.8": {
+      "fn": 13,
+      "fp": 2,
+      "precision": 0.973,
+      "recall": 0.849,
+      "tn": 82,
+      "tp": 73
+    },
+    "sim>=0.85+guarded": {
+      "fn": 40,
+      "fp": 0,
+      "precision": 1.0,
+      "recall": 0.535,
+      "tn": 82,
+      "tp": 46
+    },
+    "sim>=0.85+imports": {
+      "fn": 19,
+      "fp": 2,
+      "precision": 0.971,
+      "recall": 0.779,
+      "tn": 82,
+      "tp": 67
+    },
+    "sim>=0.85+imports+calls>=0.5": {
+      "fn": 19,
+      "fp": 2,
+      "precision": 0.971,
+      "recall": 0.779,
+      "tn": 82,
+      "tp": 67
+    },
+    "sim>=0.9": {
+      "fn": 16,
+      "fp": 2,
+      "precision": 0.972,
+      "recall": 0.814,
+      "tn": 82,
+      "tp": 70
+    },
+    "sim>=0.95": {
+      "fn": 21,
+      "fp": 2,
+      "precision": 0.97,
+      "recall": 0.756,
+      "tn": 82,
+      "tp": 65
+    }
+  },
+  "meets_bar": true,
+  "split": {
+    "calibration": {
+      "groups": [
+        "ctfd/auth.password.pbkdf2",
+        "ctfd/db.pagination.select_page",
+        "ctfd/decorators.authed_only",
+        "ctfd/decorators.require_verified_emails",
+        "ctfd/importers.users_csv.parse",
+        "ctfd/security.email_confirm_token",
+        "ctfd/user.cached_lookup",
+        "healthchecks/access.channel_for_user",
+        "healthchecks/accounts.allow_redirect",
+        "healthchecks/api.authorize_read",
+        "healthchecks/badges.check_signature",
+        "healthchecks/emails.templated_send_blocking",
+        "healthchecks/integrations.add_url_channel",
+        "healthchecks/integrations.help_page",
+        "lnbits/auth.jwt.create_access_token",
+        "lnbits/config.env.load_settings",
+        "lnbits/crud.count_rows",
+        "lnbits/crud.delete_by_ext_id",
+        "lnbits/crud.get_account_by_field",
+        "lnbits/http.get_with_retry.requests",
+        "lnbits/importers.users_csv.parse",
+        "lnbits/validators.regex_match"
+      ],
+      "items": 349,
+      "positives": 207
+    },
+    "held_out": {
+      "groups": [
+        "ctfd/challenges.decay_linear",
+        "ctfd/config.env.load_settings",
+        "ctfd/config.mail_provider_configured",
+        "ctfd/decorators.admins_only",
+        "ctfd/decorators.ratelimit",
+        "ctfd/helpers.flash_for",
+        "ctfd/http.get_with_retry.requests",
+        "healthchecks/auth.password.pbkdf2",
+        "healthchecks/config.env.load_settings",
+        "healthchecks/emails.templated_send",
+        "healthchecks/ratelimit.token_bucket.check",
+        "healthchecks/views.require_setting",
+        "lnbits/auth.check_admin",
+        "lnbits/auth.lnbits_access_token",
+        "lnbits/auth.password.pbkdf2",
+        "lnbits/auth.require_api_key",
+        "lnbits/security.check_callback_url"
+      ],
+      "items": 168,
+      "positives": 86
+    }
+  }
+}

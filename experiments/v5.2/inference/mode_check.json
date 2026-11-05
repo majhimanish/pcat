@@ -1,0 +1,132 @@
+{
+  "mode": "pcat lint --changed-since <base> --fail-on-inferred-guards (similarity >= 0.75)",
+  "post_hoc_note": "Not chosen, not used: in both false run failures the right pattern (admins_only) is second at 0.93 behind authed_only at 0.98 (margin 0.05); the two decorators differ only in which check they call. A margin requirement (e.g. >= 0.1) would remove them, but it was found after looking at these results, so it is a next step to test on new data.",
+  "untouched_app_code": {
+    "failures": [
+      {
+        "app": "lnbits",
+        "function": "lnbits/core/crud/users.py::get_account",
+        "guard": [
+          "`get_account` no longer calls `.lower`, which the reviewed pattern requires (comparison is case-insensitive and goes through a parameterized query) [guard must_call]"
+        ],
+        "pattern": "crud.get_account_by_field@v1",
+        "reason": "looks an account up by id; ids are not case-insensitive, so .lower does not apply",
+        "similarity": 0.9797,
+        "verdict": "false positive"
+      },
+      {
+        "app": "lnbits",
+        "function": "lnbits/decorators.py::require_base_admin_key",
+        "guard": [
+          "`require_base_admin_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+        ],
+        "pattern": "auth.require_api_key@v1",
+        "reason": "uses LightKeyChecker on purpose (the base wallet variant); the guard names only KeyChecker",
+        "similarity": 0.969,
+        "verdict": "false positive"
+      },
+      {
+        "app": "lnbits",
+        "function": "lnbits/decorators.py::require_base_invoice_key",
+        "guard": [
+          "`require_base_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+        ],
+        "pattern": "auth.require_api_key@v1",
+        "reason": "same: LightKeyChecker by design",
+        "similarity": 0.9515,
+        "verdict": "false positive"
+      },
+      {
+        "app": "lnbits",
+        "function": "lnbits/helpers.py::is_camel_case",
+        "guard": [
+          "`is_camel_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]"
+        ],
+        "pattern": "validators.regex_match@v1",
+        "reason": "re.match with ^...$ still accepts a trailing newline; a real but tiny gap",
+        "similarity": 0.863,
+        "verdict": "debatable"
+      },
+      {
+        "app": "lnbits",
+        "function": "lnbits/helpers.py::is_snake_case",
+        "guard": [
+          "`is_snake_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]"
+        ],
+        "pattern": "validators.regex_match@v1",
+        "reason": "same as is_camel_case",
+        "similarity": 0.863,
+        "verdict": "debatable"
+      }
+    ],
+    "functions": 4031,
+    "would_fail": 5
+  },
+  "v52_runs": {
+    "failed": 5,
+    "failures": [
+      {
+        "condition": "baseline",
+        "failing": [
+          "admins_only: PC100 (inferred)"
+        ],
+        "flaw_inherited": false,
+        "reason": "correct admins_only (calls is_admin) attributed to the near-identical authed_only pattern (0.98)",
+        "sample": 1,
+        "task": "ctfd_admins_only",
+        "verdict": "false positive"
+      },
+      {
+        "condition": "baseline",
+        "failing": [
+          "admins_only: PC100 (inferred)"
+        ],
+        "flaw_inherited": false,
+        "reason": "correct admins_only (calls is_admin) attributed to the near-identical authed_only pattern (0.98)",
+        "sample": 2,
+        "task": "ctfd_admins_only",
+        "verdict": "false positive"
+      },
+      {
+        "condition": "baseline",
+        "failing": [
+          "ratelimit: PC100 (inferred)"
+        ],
+        "flaw_inherited": true,
+        "reason": "copied the neighbour's flaw",
+        "sample": 1,
+        "task": "ctfd_ratelimit",
+        "verdict": "true (inherited flaw)"
+      },
+      {
+        "condition": "baseline",
+        "failing": [
+          "ratelimit: PC100 (inferred)"
+        ],
+        "flaw_inherited": true,
+        "reason": "copied the neighbour's flaw",
+        "sample": 2,
+        "task": "ctfd_ratelimit",
+        "verdict": "true (inherited flaw)"
+      },
+      {
+        "condition": "baseline",
+        "failing": [
+          "add: PC100 (inferred)"
+        ],
+        "flaw_inherited": true,
+        "reason": "copied the neighbour's flaw",
+        "sample": 2,
+        "task": "hc_add_victorops",
+        "verdict": "true (inherited flaw)"
+      }
+    ],
+    "inherited_caught": 3,
+    "inherited_flaws": 3,
+    "runs": 108
+  },
+  "v5_runs": {
+    "failed": 0,
+    "runs": 66
+  }
+}

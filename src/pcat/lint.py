@@ -24,6 +24,11 @@ FAIL_LEVELS = ("high", "medium", "low", "never")
 FORMATS = ("text", "json", "github")
 
 
+# v5.2 Part E: with --fail-on-inferred-guards, inferred code at or above this similarity fails
+# on guard violations. Chosen by precision on the calibration half of a labeled set (held-out
+# precision 0.962, recall 0.884); the default inference threshold is unchanged.
+INFERRED_GUARD_SIMILARITY = 0.75
+
 @dataclass
 class Finding:
     path: str
@@ -39,9 +44,18 @@ class Finding:
     deprecated: str | None = None  # replaced_by when the marked pattern is deprecated
     hash: str | None = None  # v4.1: the function's current hash, for approvals
     approvals: list[dict] = field(default_factory=list)  # every approval with its state
+    fail_inferred_guards: bool = False  # v5.2 opt-in: PC100 on high-confidence inferred code fails
 
     def failing(self, fail_on: str) -> list[dict]:
-        if self.provenance not in ("marked", "marker-removed") or fail_on == "never":
+        if fail_on == "never":
+            return []
+        if self.provenance == "inferred":
+            if not (self.fail_inferred_guards and (self.similarity or 0) >= INFERRED_GUARD_SIMILARITY):
+                return []
+            bar = deviation.SEVERITY_RANK[fail_on]
+            return [d for d in self.deviations if d["code"] == "PC100" and not d["approved"]
+                    and deviation.SEVERITY_RANK[d["severity"]] >= bar]
+        if self.provenance not in ("marked", "marker-removed"):
             return []
         bar = deviation.SEVERITY_RANK[fail_on]
         # Code whose marker was removed fails on PC111 only; its other deviations are advisory.
@@ -51,6 +65,7 @@ class Finding:
 
     def to_dict(self) -> dict:
         return {
+            **({"fails_as_inferred": True} if self.provenance == "inferred" and self.failing("high") else {}),
             "path": self.path, "function": self.function, "line": self.line,
             "provenance": self.provenance, "pattern": self.pattern,
             "pattern_function": self.pattern_function, "similarity": self.similarity,
@@ -76,6 +91,7 @@ class Report:
     fail_on: str
     include_inferred: bool
     base_ref: str | None = None
+    fail_on_inferred_guards: bool = False
 
     @property
     def approvals(self) -> list[dict]:
@@ -105,6 +121,7 @@ class Report:
                 counts[d["severity"]] += 1
         return {
             "files": self.files, "fail_on": self.fail_on, "include_inferred": self.include_inferred,
+            **({"fail_on_inferred_guards": INFERRED_GUARD_SIMILARITY} if self.fail_on_inferred_guards else {}),
             "failed": self.failed, "base_ref": self.base_ref,
             "approval_states": "confirmed/proposed relative to base_ref" if self.base_ref
             else "no base ref: approvals treated as confirmed",
@@ -441,7 +458,12 @@ class ChangedFiles:
 
 
 def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on: str = "high",
-               changed_since: str | None = None, confirmed_proposals=False) -> Report:
+               changed_since: str | None = None, confirmed_proposals=False,
+               fail_on_inferred_guards: bool = False) -> Report:
+    """`fail_on_inferred_guards` (opt-in, v5.2): unapproved guard violations (PC100) of
+    inferred code also fail, when its similarity is at least INFERRED_GUARD_SIMILARITY;
+    implies include_inferred."""
+    include_inferred = include_inferred or fail_on_inferred_guards
     if fail_on not in FAIL_LEVELS:
         raise PcatError(f"--fail-on must be one of {', '.join(FAIL_LEVELS)}")
     catalog = Catalog(root)
@@ -477,9 +499,12 @@ def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on:
         for top in changed.missing_ref:
             messages.append(Message(top, 1, "warning",
                                     f"skipped: {changed_since!r} is not a commit in this repository"))
+    for f in findings:
+        f.fail_inferred_guards = fail_on_inferred_guards
     findings.sort(key=lambda x: (x.path, x.line, x.function))
     messages.sort(key=lambda m: (m.path, m.line, m.level, m.text))
-    return Report(findings, messages, len(files), fail_on, include_inferred, changed_since)
+    return Report(findings, messages, len(files), fail_on, include_inferred, changed_since,
+                  fail_on_inferred_guards)
 
 
 # --------------------------------------------------------------------------- #
@@ -495,7 +520,9 @@ def format_text(report: Report, show_diff: bool = True) -> str:
         elif f.provenance == "marker-removed":
             how = f"marker removed, similarity {f.similarity:.2f}; fails on PC111"
         else:
-            how = f"inferred, similarity {f.similarity:.2f}, advisory"
+            confident = f.fail_inferred_guards and (f.similarity or 0) >= INFERRED_GUARD_SIMILARITY
+            how = f"inferred, similarity {f.similarity:.2f}, " + (
+                "guard violations fail (--fail-on-inferred-guards)" if confident else "advisory")
         out.append(f"{f.path}:{f.line}: {f.function} <- {f.pattern} {f.pattern_function} ({how})")
         if not f.deviations:
             out.append("  no deviations")
@@ -546,7 +573,8 @@ def format_github(report: Report) -> str:
                 text = f"{d['message']} (approved, {d['approval_state']}: {d['approval']})"
             else:
                 level = "error" if id(d) in failing else "warning"
-                text = d["message"] + ("" if f.provenance != "inferred" else " (inferred provenance; advisory)")
+                text = d["message"] + ("" if f.provenance != "inferred" else (
+                    " (inferred provenance, high confidence)" if id(d) in failing else " (inferred provenance; advisory)"))
                 if d.get("approval_state") == "proposed":
                     text += f" (proposed approval awaiting confirmation: {d['approval']})"
             text += f" [hash #{d.get('hash') or '????????'}]"

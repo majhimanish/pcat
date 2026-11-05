@@ -316,7 +316,19 @@ def score_run(task, record: dict, plant: bool = True) -> dict:
         base = subprocess.run(["git", "-C", str(dest), "rev-parse", "HEAD"], capture_output=True,
                               text=True).stdout.strip()
         ci = {"failed": False, "catches_inherited": False, "advisory_flags_inherited": False, "failing": []}
+        mode = {"failed": False, "catches_inherited": False, "failing": []}
         if py:
+            opted = lint.lint_paths(py, catalog_root, include_inferred=True, changed_since=base,
+                                    fail_on_inferred_guards=True)
+            mode["failed"] = opted.failed
+            wanted_m = {(m["path"], m["function"]) for fn, m in matched.items()
+                        if task.target_map[fn] == task.neighbour.pattern_function}
+            for f in opted.findings:
+                rel = Path(f.path).resolve().relative_to(dest.resolve()).as_posix()
+                failing = f.failing("high")
+                mode["failing"] += [f"{f.function}: {d['code']} ({f.provenance})" for d in failing]
+                if (rel, f.function) in wanted_m and g["flaw_inherited"] and any(d["code"] == "PC100" for d in failing):
+                    mode["catches_inherited"] = True
             report = lint.lint_paths(py, catalog_root, include_inferred=True, changed_since=base)
             ci["failed"] = report.failed
             wanted = {(m["path"], m["function"]) for fn, m in matched.items()
@@ -346,7 +358,7 @@ def score_run(task, record: dict, plant: bool = True) -> dict:
         return {"app": task.app, "task": task.id, "condition": record["condition"], "sample": record["sample"],
                 "status": record["status"], "cost_usd": record["summary"].get("cost_usd"),
                 "wall_seconds": record["wall_seconds"], "files_changed": files, "guards": g, "use": use,
-                "neighbour": nb, "ci": ci,
+                "neighbour": nb, "ci": ci, "ci_inferred_guards": mode,
                 "new_functions": {fn: {k: v for k, v in m.items() if k != "node"} for fn, m in matched.items()}}
     finally:
         shutil.rmtree(dest, ignore_errors=True)

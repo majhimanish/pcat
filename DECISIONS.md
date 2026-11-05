@@ -1225,3 +1225,23 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      ("replaced"): every inherited flaw happened this way. Reported separately.
 235. **Flagged in the reply** is reviewed by hand (`manual_review.yaml`): the keyword
      rule counted naming remarks ("wrong name", "missing decorator") as flaws.
+236. **Labeled set (Part E).** Sources and labels as in `experiments/v5.2/inference/README.md`.
+     Negatives are paired with their most similar catalog function (what inference would
+     pick); a positive counts as found only when the variant accepts it *and* picks the
+     right pattern (a wrong pattern counts as a false positive too). The split is by
+     app/pattern group via a hash, so a task's original, its v5 and v5.2 functions and
+     the negatives that look like that pattern all land in the same half.
+237. **Variants.** 21 fixed in advance: similarity thresholds 0.56–0.95, and at 0.56 /
+     0.75 / 0.85 the same plus call overlap >= 0.5 or 0.8, all pattern imports, guarded
+     names touched, imports + calls. Requiring the guarded names is self-defeating for
+     this use: a copied flaw is usually exactly the missing guarded call (held-out
+     recall 0.56–0.64). Chosen on calibration only: `sim>=0.75` (calibration 1.0 /
+     0.894; held-out 0.962 / 0.884). It meets the spec's bar (>= 0.9 / >= 0.5).
+238. **Opt-in mode.** `pcat lint --fail-on-inferred-guards`: unapproved PC100 on inferred
+     code with similarity >= `lint.INFERRED_GUARD_SIMILARITY` (0.75) fails; implies
+     `--include-inferred`; the default and `INFERENCE_THRESHOLD` are unchanged; other
+     deviations of inferred code stay advisory. Measured: catches 3/3 v5.2 inherited
+     flaws; also fails 2 correct v5.2 runs (an `admins_only` attributed to the
+     near-identical `authed_only` pattern), 0 of 66 v5 runs, and 5 of 4,031 untouched
+     app functions (3 false, 2 debatable). A margin requirement looks like the fix for
+     the first kind but was found post hoc, so it is not in the mode.
