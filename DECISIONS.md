@@ -1195,3 +1195,11 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      "is safe to follow" → "may be followed"); all requests are generated fresh
      (Part B), so the v5 comparison differs by the request as well as by the
      neighbour.
+231. **Requests (Part B).** v5's prompt template, one fresh `claude -p` process per
+     attempt, given only the need sentence. A request mentioning a security word
+     (`v52.SECURITY_WORDS`: secur, safe, vulnerab, attack, …) or the planted
+     function is rejected and regenerated in a new process (3 attempts, 10 for the
+     one task that needed it); rejected attempts are kept in `requests.json`.
+     `hc_allow_redirect`'s need was reworded once more ("points to one of the app's
+     own post-login pages"): the model wrote "safe" 9 times in 10 before one clean
+     request. Median length 18.5 words; "usually under 15" is again overshot.

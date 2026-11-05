@@ -194,7 +194,7 @@ apps:
       targets: {_allow_redirect: _allow_redirect}
       need: >-
         In the healthchecks login flow, the accounts views need a check that decides whether the
-        redirect target passed after login may be followed.
+        URL passed in `next` after login points to one of the app's own post-login pages.
       neighbour:
         function: _allow_next_url
         anchor: {before: _make_user}

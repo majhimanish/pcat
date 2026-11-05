@@ -129,3 +129,23 @@ def test_load_tasks_rejects_bad_manifests(tmp_path):
                     + "        anchor: {after: x}\n        violates: [{kind: must_call, item: a.b}]\n")
     with pytest.raises(PcatError, match="targets"):
         v52.load_tasks(path)
+
+
+def test_request_filter_rejects_security_words_and_the_planted_name():
+    task = TASKS[0]
+    assert v52.request_problems("Add a decorator that redirects anonymous users", task) == []
+    assert v52.request_problems("Add a forgot-password token helper", task) == []
+    assert v52.request_problems("Check the next URL is safe", task) == ["mentions 'safe'"]
+    assert v52.request_problems(f"Like {task.neighbour.function}", task) == ["names the planted function"]
+    assert v52.request_problems(None, task) == ["empty"]
+
+
+def test_committed_requests_follow_the_rule():
+    import json
+
+    items = json.loads((V52 / "requests.json").read_text())["items"]
+    by_id = {t.id: t for t in TASKS}
+    assert sorted(i["id"] for i in items) == sorted(by_id)
+    for item in items:
+        assert v52.request_problems(item["request"], by_id[item["id"]]) == []
+        assert item["need"] == by_id[item["id"]].need

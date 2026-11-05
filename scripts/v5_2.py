@@ -99,14 +99,75 @@ def cmd_verify(args) -> int:
     return 1 if bad else 0
 
 
+REQUEST_ATTEMPTS = 3  # fresh processes per task when a request mentions security or the neighbour
+
+
+def cmd_requests(args) -> int:
+    import datetime as dt
+    import shutil
+    import tempfile
+    from concurrent.futures import ThreadPoolExecutor
+
+    from pcat import evaluation, v5, v52, variance
+
+    target = V52 / "requests.json"
+    previous = {}
+    if target.exists():
+        if not args.resume:
+            sys.exit("experiments/v5.2/requests.json exists; it must not be regenerated (--resume fills gaps)")
+        previous = {r["id"]: r for r in json.loads(target.read_text())["items"] if r["request"]}
+    todo = [t for t in tasks() if t.id not in previous]
+
+    def one(prompt):
+        workdir = Path(tempfile.mkdtemp(prefix="pcat-v52-req-"))
+        try:
+            gen, attempts, error = variance.generate_with_retries(variance.CliGenerator(args.model, workdir), prompt)
+        finally:
+            shutil.rmtree(workdir, ignore_errors=True)
+        return (evaluation.clean_request(gen.text) if gen else None), gen, attempts, error
+
+    def run(task):
+        prompt = v5.REQUEST_PROMPT.format(need=task.need)
+        rejected = []
+        for _ in range(args.attempts):
+            text, gen, attempts, error = one(prompt)
+            problems = v52.request_problems(text, task)
+            if not problems:
+                break
+            rejected.append({"request": text, "problems": problems, "error": error})
+            text = None
+        return {"id": task.id, "app": task.app, "need": task.need, "prompt": prompt, "request": text,
+                "words": v5.word_count(text) if text else None, "rejected": rejected,
+                "model": gen.model if gen else None, "attempts": attempts,
+                "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")}
+
+    print(f"generating {len(todo)} brief requests ({args.model})")
+    with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+        fresh = {r["id"]: r for r in pool.map(run, todo)}
+    items = [previous.get(t.id) or fresh[t.id] for t in tasks()]
+    v5.write_json(target, {"model": args.model, "prompt_template": v5.REQUEST_PROMPT,
+                           "rule": "regenerated (fresh process) when it mentions security words or the "
+                                   "planted function; see src/pcat/v52.py SECURITY_WORDS", "items": items})
+    for r in items:
+        print(f"{r['id']}: {r['request']!r} ({r['words']} words; rejected {len(r['rejected'])})")
+    failed = [r["id"] for r in items if not r["request"]]
+    print(f"{len(items) - len(failed)} ok, {len(failed)} failed {failed}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="v5.2 unsafe neighbour")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("prepare")
     vp = sub.add_parser("verify")
     vp.add_argument("--write", action="store_true", help="write experiments/v5.2/verify.json")
+    rq = sub.add_parser("requests")
+    rq.add_argument("--model", default="claude-sonnet-5-5")
+    rq.add_argument("--jobs", type=int, default=4)
+    rq.add_argument("--resume", action="store_true")
+    rq.add_argument("--attempts", type=int, default=REQUEST_ATTEMPTS)
     args = parser.parse_args()
-    return {"prepare": cmd_prepare, "verify": cmd_verify}[args.command](args)
+    return {"prepare": cmd_prepare, "verify": cmd_verify, "requests": cmd_requests}[args.command](args)
 
 
 if __name__ == "__main__":
