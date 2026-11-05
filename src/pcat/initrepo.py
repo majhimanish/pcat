@@ -33,6 +33,7 @@ from pcat.errors import PcatError
 CONFIG = Path(".pcat") / "config.yaml"
 APPROVERS = Path(".pcat") / "approvers.yaml"
 DEFAULT_CATALOG = "pcat-catalog"
+PCAT_TOOLS = ("mcp__pcat__search_patterns", "mcp__pcat__get_pattern", "mcp__pcat__check_code")
 CLAUDE_NOTE = "This repo uses the organization's pattern catalog via the pcat tools."  # tested in v5
 PCAT_INSTALL = 'pip install "pcat[mcp] @ git+https://github.com/majhimanish/pcat"'
 FRAMEWORKS = ("fastapi", "django", "flask")
@@ -136,6 +137,24 @@ def _want(plan: Plan, rel: str, content: str, reason: str) -> None:
         plan.changes.append(Change(rel, "create", reason, content))
 
 
+def first_party_packages(repo: Path) -> list[str]:
+    """Top-level packages of the repository (folders with __init__.py, at the root or in src/)."""
+    out = set()
+    for base in (repo, repo / "src"):
+        if base.is_dir():
+            for d in base.iterdir():
+                if d.is_dir() and (d / "__init__.py").is_file() and d.name.isidentifier() \
+                        and d.name not in ("tests", "test", "docs") and d.name not in SKIP_DIRS:
+                    out.add(d.name)
+    return sorted(out)
+
+
+def catalog_settings_text(first_party: list[str]) -> str:
+    return ("# Catalog-wide settings (written by `pcat init`): modules of this repository itself are\n"
+            "# first-party, so patterns importing them do not need them in `requires`.\n"
+            f"first_party: [{', '.join(first_party)}]\n")
+
+
 def config_text(catalog_rel: str, branch: str) -> str:
     return (f"# pcat settings for this repository (written by `pcat init`).\n"
             f"# catalog: the folder that holds catalog/ (relative to the repository root).\n"
@@ -176,6 +195,13 @@ def claude_settings_text(existing: str | None) -> str:
     enabled = data.setdefault("enabledMcpjsonServers", [])
     if "pcat" not in enabled:
         enabled.append("pcat")
+    # The three pcat tools only read the catalog; allowing them avoids a permission prompt
+    # per call (and is required in `claude -p`, which cannot prompt).
+    perms = data.setdefault("permissions", {})
+    allow = perms.setdefault("allow", [])
+    for tool in PCAT_TOOLS:
+        if tool not in allow:
+            allow.append(tool)
     return json.dumps(data, indent=2, sort_keys=True) + "\n"
 
 
@@ -320,6 +346,11 @@ def plan(repo: Path, catalog: Path | None = None, starter_catalog: bool = False)
         else:
             p.changes.append(Change(f"{p.catalog_rel}/{cat.CATALOG_DIR}", "create",
                                     "an empty catalog (promote patterns into it, or rerun with --starter)"))
+    if p.seed != "existing":
+        first = first_party_packages(repo)
+        if first:
+            _want(p, f"{p.catalog_rel}/{cat.CATALOG_DIR}/catalog.yaml", catalog_settings_text(first),
+                  f"your own packages ({', '.join(first)}) are first-party, not `requires` (check 12)")
     _want(p, CONFIG.as_posix(), config_text(p.catalog_rel, facts["default_branch"]),
           "catalog location, approvers file and lint settings")
     if not (repo / APPROVERS).exists():
@@ -330,7 +361,7 @@ def plan(repo: Path, catalog: Path | None = None, starter_catalog: bool = False)
     settings = repo / ".claude" / "settings.json"
     _want(p, ".claude/settings.json",
           claude_settings_text(settings.read_text(encoding="utf-8") if settings.exists() else None),
-          "approve the project's pcat MCP server in Claude Code (trusted folders)")
+          "approve the project's pcat MCP server and allow its three read-only tools in Claude Code")
     md = repo / "CLAUDE.md"
     _want(p, "CLAUDE.md", claude_md_text(md.read_text(encoding="utf-8") if md.exists() else None),
           "one line telling coding agents to use the pcat tools")

@@ -1,0 +1,140 @@
+diff --git a/hc/integrations/rootly/__init__.py b/hc/integrations/rootly/__init__.py
+new file mode 100644
+index 0000000..e69de29
+diff --git a/hc/integrations/rootly/templates/add_rootly.html b/hc/integrations/rootly/templates/add_rootly.html
+new file mode 100644
+index 0000000..a42d02f
+--- /dev/null
++++ b/hc/integrations/rootly/templates/add_rootly.html
+@@ -0,0 +1,41 @@
++{% extends "base_project.html" %}
++{% load humanize static hc_extras %}
++
++{% block title %}Rootly Integration for {{ site_name }}{% endblock %}
++
++
++{% block content %}
++<div class="row">
++    <div class="col-sm-12">
++        <h1>Rootly</h1>
++
++        <p>If you are using <a href="https://rootly.com">Rootly</a>,
++            you can set up {{ site_name }} to send alerts to Rootly when a check
++            goes down, and resolve them when a check goes back up.</p>
++
++        <h2>Integration Settings</h2>
++
++        <form method="post" class="form-horizontal">
++            {% csrf_token %}
++            <div class="form-group {{ form.value.css_classes }}">
++                <label for="post-url" class="col-sm-2 control-label">Webhook URL</label>
++                <div class="col-sm-10">
++                    <input id="post-url" type="text" class="form-control" name="value" placeholder="https://"
++                        value="{{ form.value.value|default:"" }}">
++
++                    {% if form.value.errors %}
++                    <div class="help-block">
++                        {{ form.value.errors|join:"" }}
++                    </div>
++                    {% endif %}
++                </div>
++            </div>
++            <div class="form-group">
++                <div class="col-sm-offset-2 col-sm-10">
++                    <button type="submit" class="btn btn-primary">Save Integration</button>
++                </div>
++            </div>
++        </form>
++    </div>
++</div>
++{% endblock %}
+diff --git a/hc/integrations/rootly/urls.py b/hc/integrations/rootly/urls.py
+new file mode 100644
+index 0000000..7f45bc3
+--- /dev/null
++++ b/hc/integrations/rootly/urls.py
+@@ -0,0 +1,9 @@
++from __future__ import annotations
++
++from django.urls import path
++
++from hc.integrations.rootly import views
++
++urlpatterns = [
++    path("projects/<uuid:code>/add_rootly/", views.add_rootly, name="hc-add-rootly"),
++]
+diff --git a/hc/integrations/rootly/views.py b/hc/integrations/rootly/views.py
+new file mode 100644
+index 0000000..c3bf967
+--- /dev/null
++++ b/hc/integrations/rootly/views.py
+@@ -0,0 +1,35 @@
++from __future__ import annotations
++
++from uuid import UUID
++
++from django.contrib.auth.decorators import login_required
++from django.http import HttpResponse
++from django.shortcuts import redirect, render
++
++from hc.accounts.http import AuthenticatedHttpRequest
++from hc.api.models import Channel
++from hc.front import forms
++from hc.front.decorators import require_setting
++from hc.front.views import _get_rw_project_for_user
++
++
++@require_setting("ROOTLY_ENABLED")
++@login_required
++# pcat: integrations.add_url_channel@v1
++def add_rootly(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:
++    project = _get_rw_project_for_user(request, code)
++
++    if request.method == "POST":
++        form = forms.AddUrlForm(request.POST)
++        if form.is_valid():
++            channel = Channel(project=project, kind="rootly")
++            channel.value = form.cleaned_data["value"]
++            channel.save()
++
++            channel.assign_all_checks()
++            return redirect("hc-channels", project.code)
++    else:
++        form = forms.AddUrlForm()
++
++    ctx = {"page": "channels", "project": project, "form": form}
++    return render(request, "add_rootly.html", ctx)
+diff --git a/hc/settings.py b/hc/settings.py
+index fad6079..f195c95 100644
+--- a/hc/settings.py
++++ b/hc/settings.py
+@@ -122,6 +122,7 @@ INSTALLED_APPS = (
+     "hc.integrations.prometheus",
+     "hc.integrations.pushbullet",
+     "hc.integrations.rocketchat",
++    "hc.integrations.rootly",
+     "hc.integrations.shell",
+     "hc.integrations.signal",
+     "hc.integrations.slack",
+@@ -418,6 +419,9 @@ SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID")
+ SLACK_CLIENT_SECRET = envsecret("SLACK_CLIENT_SECRET")
+ SLACK_ENABLED = envbool("SLACK_ENABLED", "True")
+ 
++# Rootly
++ROOTLY_ENABLED = envbool("ROOTLY_ENABLED", "True")
++
+ # Spike.sh
+ SPIKE_ENABLED = envbool("SPIKE_ENABLED", "True")
+ 
+diff --git a/hc/urls.py b/hc/urls.py
+index 3f08e69..6d1a437 100644
+--- a/hc/urls.py
++++ b/hc/urls.py
+@@ -38,6 +38,7 @@ urlpatterns = [
+     path(prefix, include("hc.integrations.prometheus.urls")),
+     path(prefix, include("hc.integrations.pushbullet.urls")),
+     path(prefix, include("hc.integrations.rocketchat.urls")),
++    path(prefix, include("hc.integrations.rootly.urls")),
+     path(prefix, include("hc.integrations.shell.urls")),
+     path(prefix, include("hc.integrations.signal.urls")),
+     path(prefix, include("hc.integrations.slack.urls")),

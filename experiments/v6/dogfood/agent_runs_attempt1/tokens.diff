@@ -1,0 +1,65 @@
+diff --git a/hc/lib/tests/test_tokens.py b/hc/lib/tests/test_tokens.py
+new file mode 100644
+index 0000000..fc42f57
+--- /dev/null
++++ b/hc/lib/tests/test_tokens.py
+@@ -0,0 +1,29 @@
++from __future__ import annotations
++
++from django.test import TestCase
++
++from hc.lib.tokens import generate_token_secret, hash_token_secret, verify_token_secret
++
++
++class TokensTestCase(TestCase):
++    def test_roundtrip(self) -> None:
++        secret = generate_token_secret()
++        hashed = hash_token_secret(secret)
++        self.assertNotIn(secret, hashed)
++        self.assertTrue(verify_token_secret(secret, hashed))
++
++    def test_wrong_secret_fails(self) -> None:
++        hashed = hash_token_secret("correct")
++        self.assertFalse(verify_token_secret("wrong", hashed))
++
++    def test_hashes_are_salted(self) -> None:
++        self.assertNotEqual(hash_token_secret("x"), hash_token_secret("x"))
++
++    def test_empty_inputs(self) -> None:
++        with self.assertRaises(ValueError):
++            hash_token_secret("")
++        self.assertFalse(verify_token_secret("", hash_token_secret("x")))
++        self.assertFalse(verify_token_secret("x", ""))
++
++    def test_secrets_are_unique(self) -> None:
++        self.assertNotEqual(generate_token_secret(), generate_token_secret())
+diff --git a/hc/lib/tokens.py b/hc/lib/tokens.py
+new file mode 100644
+index 0000000..6a8c4d3
+--- /dev/null
++++ b/hc/lib/tokens.py
+@@ -0,0 +1,24 @@
++from __future__ import annotations
++
++from secrets import token_urlsafe
++
++from django.contrib.auth.hashers import check_password, make_password
++
++
++def generate_token_secret() -> str:
++    """Return a new random API token secret (shown to the user once)."""
++    return token_urlsafe(32)
++
++
++def hash_token_secret(secret: str) -> str:
++    """Hash an API token secret for storage. Never store the plain secret."""
++    if not secret:
++        raise ValueError("secret must not be empty")
++    return make_password(secret)
++
++
++def verify_token_secret(secret: str, hashed: str) -> bool:
++    """Check a presented secret against a stored hash (constant-time)."""
++    if not secret or not hashed:
++        return False
++    return check_password(secret, hashed)

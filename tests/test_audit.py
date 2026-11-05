@@ -65,3 +65,20 @@ def test_cli_exits_zero_with_findings(tmp_path):
     r = CliRunner().invoke(app, ["audit", str(repo), "--catalog", str(REPO_ROOT), "--out", str(out)])
     assert r.exit_code == 0, r.output
     assert "1 finding(s)" in r.output and (out / "audit.html").exists() and (out / "audit.json").exists()
+
+
+def test_a_catalog_inside_the_repo_is_not_audited_or_linted(tmp_path):
+    """Dogfood (v6): with pcat-catalog/ inside the repository, `pcat audit .` and `pcat lint .`
+    reported the catalog's own impl.py files as code resembling a pattern."""
+    import shutil
+
+    repo = make_repo(tmp_path)
+    shutil.copytree(REPO_ROOT / "catalog", repo / "pcat-catalog" / "catalog")
+    report = audit.audit([str(repo)], repo / "pcat-catalog")
+    assert not [f for f in report["findings"] if f["path"].startswith("pcat-catalog/")]
+    assert report["summary"]["functions_scanned"] == audit.audit([str(make_repo(tmp_path / "b"))],
+                                                                  REPO_ROOT)["summary"]["functions_scanned"]
+    lint_report = lint.lint_paths([str(repo)], repo / "pcat-catalog", include_inferred=True)
+    assert not [f for f in lint_report.findings if f.path.startswith(str(repo / "pcat-catalog"))]
+    direct = lint.lint_paths([str(repo / "pcat-catalog")], repo / "pcat-catalog", include_inferred=True)
+    assert direct.findings  # pointing at the catalog itself still lints it

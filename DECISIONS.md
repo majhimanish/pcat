@@ -1334,3 +1334,18 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      its `src/`) is used when it extends the walked name: `src/ns/inner/views.py` with
      `ns` a namespace package → `ns.inner.views`. Side effect: plain folders (e.g.
      `scripts/`) inside a project now get their folder prefix (`scripts.tool`).
+251. **Dogfood fixes (Part F).** From following the guide on healthchecks
+     (`experiments/v6/dogfood/notes.md`): `init` writes `catalog/catalog.yaml` with the
+     repo's top-level packages (folders with `__init__.py` at the root or in `src/`,
+     except tests/docs) as `first_party`; `promote`/`add` append `requires` with the
+     impl's third-party imports (distribution names from the import-name table, no
+     versions: the reviewer pins them); `init` allows the three read-only pcat tools in
+     `.claude/settings.json` (`permissions.allow`); `pcat lint` and `pcat audit` skip
+     files inside the catalog when the scanned path is not inside the catalog root
+     (`lint.in_catalog`; this repository, whose catalog root is the repo, is unaffected).
+252. **Dogfood agent runs.** Claude Code ignores a project's `permissions.allow` until
+     the folder is trusted, and `claude -p` cannot prompt, so the first two runs had
+     every pcat call refused (kept in `agent_runs_attempt1/`). Marking the folder
+     trusted means editing Claude Code's own `~/.claude.json`, which this session must
+     not do; the recorded runs pass `--allowedTools mcp__pcat__…` instead, as headless
+     users must, and still find the server only through the `.mcp.json` `init` wrote.

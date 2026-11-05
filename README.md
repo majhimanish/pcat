@@ -1,4 +1,27 @@
-# Pattern Catalog (`pcat`)
+# pcat
+
+Reviewed code patterns for AI coding agents. Your team keeps a catalog of approved
+versions of the code it writes again and again (auth checks, tokens, password hashing,
+retries, pagination, settings, rate limits); coding agents fetch them through an MCP
+server instead of improvising, and a CI linter explains, on the pull request, how new
+code deviates from its pattern. Legitimate deviations need a human's confirmation.
+
+## Quickstart
+
+```bash
+pipx install "pcat[mcp] @ git+https://github.com/majhimanish/pcat"   # or pip install, Python 3.11+
+cd your-repo
+pcat init --starter            # shows what it would set up; changes nothing
+pcat init --starter --apply    # catalog, Claude Code MCP config, CI workflows, candidates
+pcat audit .                   # one-time report: code that looks like a pattern but breaks it
+pcat lint . --changed-since origin/main   # what the pull-request check reports
+```
+
+Then follow **[docs/getting-started.md](docs/getting-started.md)** (about 30 minutes):
+promote a first pattern, connect Claude Code, see a deviation flagged on a pull request.
+Measured results and what is safe to claim: [docs/benchmarks/summary.md](docs/benchmarks/summary.md).
+
+## About this repository
 
 An organization-specific catalog of **verified Python code patterns**.
 
@@ -22,7 +45,9 @@ code repeats and promotes repeated functions into patterns (see
 the catalog to coding agents (see [Serving the catalog](#serving-the-catalog-to-coding-agents-mcp)).
 A **deviation linter** reports how derived code differs from its pattern (see [Deviation linter](#deviation-linter-pcat-lint)).
 
-## Quick start
+## Developing pcat
+
+This repository holds the tool, its own catalog and the research behind it.
 
 ```bash
 python -m venv .venv && . .venv/bin/activate     # Python 3.11+
@@ -239,47 +264,6 @@ Run it from the directory where you ran `pcat mine`.
 `scripts/benchmark.py` mines requests, Flask and FastAPI at pinned tags; see
 [`docs/benchmarks/v2-results.md`](docs/benchmarks/v2-results.md) for what it found.
 
-## Variance experiment: how differently does an LLM write the same thing?
-
-`experiments/variance/` measures the problem the catalog exists to solve. For 8
-everyday tasks (JWT creation, password hashing, pagination, HTTP retry, env
-config, token bucket, CSV import, FastAPI create-user) it generates 20 samples
-per condition, each in a fresh context, and counts structurally different
-answers with the canonicalizer and shape fingerprints:
-
-- **A** — the same prompt 20 times; **B** — 5 paraphrases × 4;
-  **C** — paraphrases plus a reference implementation (simulating a catalog lookup)
-
-```bash
-python scripts/variance.py generate --run-id main --conditions A,B   # needs ANTHROPIC_API_KEY or `claude`
-python scripts/variance.py analyze --run-id main
-python scripts/variance.py reference --run-id main                   # pick C references from B
-python scripts/variance.py generate --run-id main --conditions C
-python scripts/variance.py analyze --run-id main
-```
-
-Results and the write-up: [`docs/benchmarks/v2.1-variance.md`](docs/benchmarks/v2.1-variance.md).
-
-## Application catalog review (v2.2)
-
-The variance experiment showed the model follows whatever reference it is given,
-so application patterns are chosen by a person, not taken from samples.
-[`docs/catalog-review/v2.2-comparison.md`](docs/catalog-review/v2.2-comparison.md)
-compares cleaned, tested variants for each of the 8 experiment tasks (JWT,
-password hashing, pagination, HTTP retry, env config, token bucket, CSV import,
-FastAPI create-user) with security notes and a recommendation. The owner records
-decisions in `docs/catalog-review/choices.yaml` (now `status: final`), and Part 2
-turned seven of them into catalog patterns (FastAPI create-user is deferred until
-patterns can contain classes). The comparison ends with a coverage check: none
-of the 135 v2.1 condition-B samples already matched its chosen pattern.
-
-```bash
-pip install -r docs/catalog-review/requirements.txt   # PyJWT, requests, SQLAlchemy, FastAPI
-pytest docs/catalog-review/variants                   # skips modules whose library is missing
-python scripts/catalog_review_doc.py                  # regenerate the comparison from the code
-python scripts/catalog_coverage.py --condition B      # v2.1 samples vs the catalog patterns
-```
-
 ## Serving the catalog to coding agents (MCP)
 
 `pcat serve` runs an [MCP](https://modelcontextprotocol.io) server over stdio
@@ -430,7 +414,53 @@ Replaying the v4 agent samples with the v4.1 rules (addendum in
 dropping 429 from the retry statuses (v4: low), and 25 of 140 would fail CI
 (v4: 12).
 
-## Realistic simulation (v5)
+## Research history
+
+How the design was tested, phase by phase (specs in `docs/specs/`, results in
+`docs/benchmarks/`). Research harnesses live in `experiments/lib/pcatlab`, driven by `scripts/`.
+
+### Variance experiment: how differently does an LLM write the same thing?
+
+`experiments/variance/` measures the problem the catalog exists to solve. For 8
+everyday tasks (JWT creation, password hashing, pagination, HTTP retry, env
+config, token bucket, CSV import, FastAPI create-user) it generates 20 samples
+per condition, each in a fresh context, and counts structurally different
+answers with the canonicalizer and shape fingerprints:
+
+- **A** — the same prompt 20 times; **B** — 5 paraphrases × 4;
+  **C** — paraphrases plus a reference implementation (simulating a catalog lookup)
+
+```bash
+python scripts/variance.py generate --run-id main --conditions A,B   # needs ANTHROPIC_API_KEY or `claude`
+python scripts/variance.py analyze --run-id main
+python scripts/variance.py reference --run-id main                   # pick C references from B
+python scripts/variance.py generate --run-id main --conditions C
+python scripts/variance.py analyze --run-id main
+```
+
+Results and the write-up: [`docs/benchmarks/v2.1-variance.md`](docs/benchmarks/v2.1-variance.md).
+
+### Application catalog review (v2.2)
+
+The variance experiment showed the model follows whatever reference it is given,
+so application patterns are chosen by a person, not taken from samples.
+[`docs/catalog-review/v2.2-comparison.md`](docs/catalog-review/v2.2-comparison.md)
+compares cleaned, tested variants for each of the 8 experiment tasks (JWT,
+password hashing, pagination, HTTP retry, env config, token bucket, CSV import,
+FastAPI create-user) with security notes and a recommendation. The owner records
+decisions in `docs/catalog-review/choices.yaml` (now `status: final`), and Part 2
+turned seven of them into catalog patterns (FastAPI create-user is deferred until
+patterns can contain classes). The comparison ends with a coverage check: none
+of the 135 v2.1 condition-B samples already matched its chosen pattern.
+
+```bash
+pip install -r docs/catalog-review/requirements.txt   # PyJWT, requests, SQLAlchemy, FastAPI
+pytest docs/catalog-review/variants                   # skips modules whose library is missing
+python scripts/catalog_review_doc.py                  # regenerate the comparison from the code
+python scripts/catalog_coverage.py --condition B      # v2.1 samples vs the catalog patterns
+```
+
+### Realistic simulation (v5)
 
 `docs/benchmarks/v5-open-source.md` repeats the experiment on three open-source
 applications (CTFd, healthchecks, LNbits), each with its own catalog under
@@ -497,7 +527,7 @@ fixed). Make `pcat lint --changed-since <base> --fail-on high` (marked code only
 required check; keep `--include-inferred` advisory: on untouched app code 75 of 90
 sampled medium/high inferred findings were false positives.
 
-## Unsafe neighbour (v5.2)
+### Unsafe neighbour (v5.2)
 
 `docs/benchmarks/v5.2-unsafe-neighbour.md` plants a flawed sibling (a guard violation such
 as `==` instead of `fullmatch`, a 7-day token, `remote_addr` instead of `get_ip()`) next to

@@ -58,6 +58,8 @@ def audit(paths: list[str], catalog_root: Path, threshold: float | None = None) 
     problems: list[str] = []
     for f in files:
         base = Path(paths[f.input_index])
+        if lint.in_catalog(Path(f.abs_path), Path(catalog_root), base):
+            continue
         shown = f.rel if base.is_dir() else base.name
         if len(paths) > 1:
             shown = f"{base.resolve().name}/{shown}" if base.is_dir() else shown

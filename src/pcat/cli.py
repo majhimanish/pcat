@@ -222,6 +222,24 @@ def add(
     _add_pattern(file, function, pattern_id)
 
 
+def _requires_block(root: Path, impl: str) -> str:
+    """v6: `requires` pre-filled with the impl's third-party imports (validation check 12),
+    leaving out the catalog's first-party packages; versions are for the reviewer to pin."""
+    from pcat import requirements
+
+    settings, _ = requirements.load_settings(root)
+    first = set(settings["first_party"])
+    dist_of = {}
+    for dist, module in sorted(requirements.KNOWN_IMPORT_NAMES.items()):
+        dist_of.setdefault(module, dist)
+    roots = [r for r in requirements.imported_roots(impl) if not requirements.is_stdlib(r) and r not in first]
+    if not roots:
+        return ""
+    lines = ["requires:                 # third-party distributions the impl imports; pin version ranges"]
+    lines += [f"- {dist_of.get(r, r.replace('_', '-'))}" for r in sorted(roots)]
+    return "\n".join(lines) + "\n"
+
+
 def _add_pattern(file: Path, functions: str | List[str], pattern_id: str) -> None:
     """Shared by `add` and `promote`: create a pattern folder from source functions.
 
@@ -259,6 +277,7 @@ def _add_pattern(file: Path, functions: str | List[str], pattern_id: str) -> Non
         cat.IMPL_FILE: impl,
         cat.TEST_FILE: TEST_TEMPLATE.format(entry_point=function),
     }
+    files[cat.YAML_FILE] += _requires_block(root, impl)
     _write_pattern(folder, files)
     exported = names[1:]
     helpers = [f for f in canonical.list_functions(impl) if f not in names]

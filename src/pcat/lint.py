@@ -461,6 +461,21 @@ class ChangedFiles:
         return any(names is not None for names in self._repos.values())
 
 
+def in_catalog(path: Path, catalog_root: Path, given: Path) -> bool:
+    """True for a file inside the catalog reached by scanning a folder that contains it
+    (v6: `pcat lint .` / `pcat audit .` in a repo whose catalog is `pcat-catalog/`)."""
+    root = Path(catalog_root).resolve()
+    try:
+        path.resolve().relative_to(root / cat.CATALOG_DIR)
+    except ValueError:
+        return False
+    try:
+        given.resolve().relative_to(root)
+        return False  # the user pointed at the catalog (or this is the catalog's own repository)
+    except ValueError:
+        return True
+
+
 def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on: str = "high",
                changed_since: str | None = None, confirmed_proposals=False,
                fail_on_inferred_guards: bool = False) -> Report:
@@ -476,6 +491,8 @@ def lint_paths(paths: list[str], root: Path, *, include_inferred: bool, fail_on:
     messages: list[Message] = []
     changed = ChangedFiles(changed_since) if changed_since else None
     for f in files:
+        if in_catalog(Path(f.abs_path), root, Path(paths[f.input_index])):
+            continue  # the catalog's own impl.py files (pcat init keeps it inside the repo)
         if changed is not None and not changed.maybe_changed(Path(f.abs_path)):
             continue
         base = Path(paths[f.input_index])

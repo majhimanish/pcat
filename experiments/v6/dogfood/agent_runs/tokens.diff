@@ -1,0 +1,58 @@
+diff --git a/hc/lib/tests/test_tokens.py b/hc/lib/tests/test_tokens.py
+new file mode 100644
+index 0000000..fbf375f
+--- /dev/null
++++ b/hc/lib/tests/test_tokens.py
+@@ -0,0 +1,22 @@
++from __future__ import annotations
++
++from unittest import TestCase
++
++from hc.lib.tokens import generate_token_secret, hash_token_secret, verify_token_secret
++
++
++class TokensTestCase(TestCase):
++    def test_roundtrip(self) -> None:
++        secret = generate_token_secret()
++        h = hash_token_secret(secret)
++        self.assertNotIn(secret, h)
++        self.assertEqual(len(h), 64)
++        self.assertTrue(verify_token_secret(secret, h))
++
++    def test_wrong_secret_fails(self) -> None:
++        h = hash_token_secret("abc")
++        self.assertFalse(verify_token_secret("abd", h))
++        self.assertFalse(verify_token_secret("abc", "garbage"))
++
++    def test_secrets_are_unique(self) -> None:
++        self.assertNotEqual(generate_token_secret(), generate_token_secret())
+diff --git a/hc/lib/tokens.py b/hc/lib/tokens.py
+new file mode 100644
+index 0000000..47170f8
+--- /dev/null
++++ b/hc/lib/tokens.py
+@@ -0,0 +1,24 @@
++from __future__ import annotations
++
++import hashlib
++import hmac
++from secrets import token_urlsafe
++
++
++def generate_token_secret() -> str:
++    """Return a new random token secret (256 bits of entropy)."""
++    return token_urlsafe(32)
++
++
++def hash_token_secret(secret: str) -> str:
++    """Return the hex SHA-256 digest of a token secret, suitable for storage.
++
++    API token secrets are long random values, not user-chosen passwords, so a
++    fast unsalted hash is appropriate (and allows lookup by digest).
++    """
++    return hashlib.sha256(secret.encode()).hexdigest()
++
++
++def verify_token_secret(secret: str, stored_hash: str) -> bool:
++    """Check a presented secret against a stored digest in constant time."""
++    return hmac.compare_digest(hash_token_secret(secret), stored_hash)

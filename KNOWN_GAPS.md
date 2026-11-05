@@ -362,3 +362,22 @@ when you fix it; add one whenever you take a shortcut.
   functions are assumed, and one was wrong.
 - **Requests drift towards security words** for security-shaped needs (9/10 for the
   redirect check said "safe"); filtering keeps them neutral but makes them less natural.
+
+## Productize (v6)
+
+- **Pattern tests for app code need the app.** A pattern promoted from an application
+  imports that application and its framework, so `test_impl.py` can only run inside the
+  app's environment (`pcat validate` runs it in isolation). The v5 catalogs stubbed them;
+  pcat offers no harness for this yet.
+- **Headless Claude Code needs the tools allowed explicitly** until someone has opened the
+  folder in Claude Code and trusted it (project `permissions.allow` is ignored before
+  that). `pcat init` cannot set trust; the guide says so.
+- **The GitHub workflows `pcat init` writes were not run in the dogfood** (no remote).
+  They follow the workflows that ran on this repository's pull request #1, but install
+  pcat from `main` unpinned; pin a tag once releases exist.
+- **The audit misses flawed copies that no longer look like the pattern**: 8 of 18
+  planted neighbours were below the 0.75 similarity (the flaw itself changes the shape).
+- **`pcat init` detects one framework and does nothing with it** beyond reporting it;
+  framework-specific starter patterns (FastAPI, Django, Flask) do not exist yet.
+- **Mining output for a whole repo is heavy to review**: `.pcat/candidates.md` lists the
+  top 10 clusters only; picking a good candidate still needs reading the HTML report.

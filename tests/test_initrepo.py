@@ -130,3 +130,42 @@ def test_empty_catalog_by_default_and_errors(tmp_path):
     assert json.loads((repo / "pcat-catalog/catalog/index.json").read_text())["patterns"] == []
     r = run(["init", "--path", str(repo), "--catalog", str(repo), "--starter"])
     assert r.exit_code == 1 and "alternatives" in r.output
+
+
+def test_first_party_packages_go_into_the_catalog_settings(tmp_path):
+    """Dogfood (v6): a pattern promoted from the app imports the app's own package, which
+    check 12 rejected until the catalog listed it as first-party."""
+    repo = make_repo(tmp_path)
+    (repo / "hc").mkdir()
+    (repo / "hc" / "__init__.py").write_text("")
+    (repo / "tests").mkdir()
+    (repo / "tests" / "__init__.py").write_text("")
+    initrepo.apply(initrepo.plan(repo, starter_catalog=True))
+    text = (repo / "pcat-catalog" / "catalog" / "catalog.yaml").read_text()
+    assert "first_party: [hc]" in text
+    assert initrepo.plan(repo, starter_catalog=True).changes == []
+
+
+def test_promote_prefills_requires(tmp_path):
+    repo = make_repo(tmp_path)
+    (repo / "hc").mkdir()
+    (repo / "hc" / "__init__.py").write_text("")
+    (repo / "hc" / "views.py").write_text(
+        "import jwt\nfrom django.http import HttpResponse\nfrom hc.lib import x\nimport json\n\n\n"
+        "def view(request):\n    return HttpResponse(json.dumps(jwt.decode(x(request))))\n")
+    initrepo.apply(initrepo.plan(repo))
+    r = run(["add", "hc/views.py", "--function", "view", "--id", "views.json_view"], cwd=repo)
+    assert r.exit_code == 0, r.output
+    text = (repo / "pcat-catalog/catalog/views/json_view/pattern.yaml").read_text()
+    assert "requires:" in text and "- django" in text and "- pyjwt" in text and "- hc" not in text
+    assert "- json" not in text
+
+
+def test_claude_settings_allow_the_read_only_pcat_tools(tmp_path):
+    repo = make_repo(tmp_path)
+    (repo / ".claude").mkdir()
+    (repo / ".claude" / "settings.json").write_text(json.dumps({"permissions": {"allow": ["Bash(ls:*)"]}}))
+    initrepo.apply(initrepo.plan(repo))
+    data = json.loads((repo / ".claude" / "settings.json").read_text())
+    assert data["enabledMcpjsonServers"] == ["pcat"]
+    assert data["permissions"]["allow"] == ["Bash(ls:*)", *initrepo.PCAT_TOOLS]
