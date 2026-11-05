@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -99,6 +100,125 @@ def cmd_verify(args) -> int:
     return 1 if bad else 0
 
 
+# --------------------------------------------------------------------------- #
+# Part C: runs (the v5 harness, plus the planted neighbour)
+# --------------------------------------------------------------------------- #
+
+E2E = V52 / "e2e"
+RUNS = Path(os.environ.get("PCAT_V52_RUNS", "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs"))
+# Paths a run must not touch: the original apps, this repo (references, neighbours, manifests).
+FORBIDDEN = (str(ROOT), ".bench/apps", "experiments/v5/references", "experiments/v5.2")
+TIME_LIMIT = 600
+
+
+def jobs(samples: int, conditions: list[str], apps: list[str], task_ids: list[str]) -> list[dict]:
+    requests = {r["id"]: r["request"] for r in json.loads((V52 / "requests.json").read_text())["items"]}
+    out = []
+    for t in tasks():
+        if (apps and t.app not in apps) or (task_ids and t.id not in task_ids):
+            continue
+        for condition in conditions:
+            for n in range(1, samples + 1):
+                out.append({"task": t, "condition": condition, "sample": n, "request": requests[t.id]})
+    return out
+
+
+def out_stem(job: dict) -> Path:
+    t = job["task"]
+    return E2E / t.app / t.id / job["condition"] / f"sample_{job['sample']:02d}"
+
+
+def run_job(job: dict, model: str) -> dict:
+    import gzip
+    import secrets
+    import shutil
+    import subprocess
+    import time
+
+    from pcat import v5, v52
+
+    task, condition = job["task"], job["condition"]
+    stem = out_stem(job)
+    stem.parent.mkdir(parents=True, exist_ok=True)
+    box = RUNS / f"run-{secrets.token_hex(6)}"
+    workdir = box / "repo"
+    info = v52.prepare_workdir(APPS_DIR / task.app, workdir, task, condition, v52.neighbour_code(ROOT, task))
+    log = stem.with_suffix(".pcat.jsonl")
+    log.unlink(missing_ok=True)
+    mcp = None
+    if condition == "pcat":
+        mcp = box / "mcp.json"
+        pcat = str(Path(sys.executable).parent / "pcat")
+        mcp.write_text(json.dumps({"mcpServers": {"pcat": {"command": pcat, "args": [
+            "serve", "--catalog", str(V5 / "catalogs" / task.app), "--log", str(log)]}}}))
+    env = {k: v for k, v in os.environ.items() if k not in v5.STRIPPED_ENV}
+    transcript = box / "transcript.jsonl"
+    start = time.monotonic()
+    with open(transcript, "w") as fh:
+        proc = subprocess.Popen(v5.run_command(job["request"], model, mcp), cwd=workdir, env=env,
+                                stdin=subprocess.DEVNULL, stdout=fh, stderr=subprocess.PIPE, text=True)
+        try:
+            _, stderr = proc.communicate(timeout=TIME_LIMIT)
+            timed_out = False
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            _, stderr = proc.communicate()
+            timed_out = True
+    lines = transcript.read_text().splitlines()
+    summary = v5.parse_stream(lines)
+    diff, files = v5.final_diff(workdir)
+    with gzip.open(stem.with_suffix(".transcript.jsonl.gz"), "wt") as gz:
+        gz.write("\n".join(lines) + "\n")
+    stem.with_suffix(".diff").write_text(diff)
+    record = {
+        "app": task.app, "task": task.id, "pattern": task.pattern, "relation": task.relation,
+        "condition": condition, "sample": job["sample"], "request": job["request"], "model": model,
+        "returncode": proc.returncode, "timed_out": timed_out, "wall_seconds": round(time.monotonic() - start, 1),
+        "stderr_tail": (stderr or "")[-400:], "files_changed": files, "baseline": info["baseline"],
+        "summary": {k: v for k, v in summary.items() if k != "tool_calls"},
+        "tool_calls": summary["tool_calls"],
+        "tool_order": v5.tool_order(summary["tool_calls"]),
+        "leaks": v5.leaks(summary["tool_calls"], workdir, FORBIDDEN),
+        "pcat_calls": [json.loads(x) for x in log.read_text().splitlines()] if log.exists() else [],
+        "status": "ok" if summary["finished"] and not summary["is_error"] else (
+            "timeout" if timed_out else "error"),
+    }
+    v5.write_json(stem.with_suffix(".json"), record)
+    shutil.rmtree(box, ignore_errors=True)
+    return record
+
+
+def cmd_run(args) -> int:
+    from concurrent.futures import ThreadPoolExecutor
+
+    todo, done, spent = [], 0, 0.0
+    for job in jobs(args.samples, args.conditions.split(","), [a for a in args.apps.split(",") if a],
+                    [t for t in args.tasks.split(",") if t]):
+        path = out_stem(job).with_suffix(".json")
+        if path.exists():
+            rec = json.loads(path.read_text())
+            if rec["status"] == "ok":
+                done += 1
+                spent += rec["summary"].get("cost_usd") or 0
+                continue
+        todo.append(job)
+    print(f"running {len(todo)} runs ({done} already done, ${spent:.2f} so far)", flush=True)
+    RUNS.mkdir(parents=True, exist_ok=True)
+    total = spent
+    with ThreadPoolExecutor(max_workers=args.jobs) as pool:
+        for n, r in enumerate(pool.map(lambda j: run_job(j, args.model), todo), 1):
+            cost = r["summary"].get("cost_usd") or 0
+            total += cost
+            print(f"[{n}/{len(todo)}] {r['app']}/{r['task']} {r['condition']} #{r['sample']:02d} {r['status']} "
+                  f"${cost:.2f} {r['wall_seconds']}s searched={r['tool_order']['searched']} "
+                  f"fetched={r['tool_order']['fetched']} files={r['files_changed']} leaks={len(r['leaks'])} "
+                  f"total=${total:.2f}", flush=True)
+            if total > args.cap:
+                print(f"cost cap ${args.cap} reached; stopping (rerun to resume)", flush=True)
+                os._exit(3)
+    return 0
+
+
 REQUEST_ATTEMPTS = 3  # fresh processes per task when a request mentions security or the neighbour
 
 
@@ -166,8 +286,17 @@ def main() -> int:
     rq.add_argument("--jobs", type=int, default=4)
     rq.add_argument("--resume", action="store_true")
     rq.add_argument("--attempts", type=int, default=REQUEST_ATTEMPTS)
+    r = sub.add_parser("run")
+    r.add_argument("--samples", type=int, default=3)
+    r.add_argument("--conditions", default="baseline,pcat")
+    r.add_argument("--apps", default="")
+    r.add_argument("--tasks", default="")
+    r.add_argument("--jobs", type=int, default=4)
+    r.add_argument("--model", default="claude-sonnet-5-5")
+    r.add_argument("--cap", type=float, default=40.0, help="stop when the CLI cost estimate exceeds this")
     args = parser.parse_args()
-    return {"prepare": cmd_prepare, "verify": cmd_verify, "requests": cmd_requests}[args.command](args)
+    return {"prepare": cmd_prepare, "verify": cmd_verify, "requests": cmd_requests,
+            "run": cmd_run}[args.command](args)
 
 
 if __name__ == "__main__":
