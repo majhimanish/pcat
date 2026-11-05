@@ -1,0 +1,95 @@
+{
+  "findings": [
+    {
+      "function": "get_account",
+      "guards": [
+        {
+          "kind": "must_call",
+          "message": "`get_account` no longer calls `.lower`, which the reviewed pattern requires (comparison is case-insensitive and goes through a parameterized query) [guard must_call]"
+        }
+      ],
+      "line": 117,
+      "margin": 0.3287,
+      "path": "lnbits/core/crud/users.py",
+      "pattern": "crud.get_account_by_field@v1",
+      "pattern_function": "get_account_by_username",
+      "second_pattern": "crud.delete_by_ext_id@v1",
+      "similarity": 0.9797
+    },
+    {
+      "function": "require_base_admin_key",
+      "guards": [
+        {
+          "kind": "must_call",
+          "message": "`require_base_admin_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+        }
+      ],
+      "line": 192,
+      "margin": 0.5798,
+      "path": "lnbits/decorators.py",
+      "pattern": "auth.require_api_key@v1",
+      "pattern_function": "require_admin_key",
+      "second_pattern": "crud.count_rows@v1",
+      "similarity": 0.969
+    },
+    {
+      "function": "require_base_invoice_key",
+      "guards": [
+        {
+          "kind": "must_call",
+          "message": "`require_base_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]"
+        }
+      ],
+      "line": 216,
+      "margin": 0.5644,
+      "path": "lnbits/decorators.py",
+      "pattern": "auth.require_api_key@v1",
+      "pattern_function": "require_admin_key",
+      "second_pattern": "crud.count_rows@v1",
+      "similarity": 0.9515
+    },
+    {
+      "function": "is_camel_case",
+      "guards": [
+        {
+          "kind": "must_call",
+          "message": "`is_camel_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]"
+        }
+      ],
+      "line": 376,
+      "margin": 0.4042,
+      "path": "lnbits/helpers.py",
+      "pattern": "validators.regex_match@v1",
+      "pattern_function": "is_valid_username",
+      "second_pattern": "crud.delete_by_ext_id@v1",
+      "similarity": 0.863
+    },
+    {
+      "function": "is_snake_case",
+      "guards": [
+        {
+          "kind": "must_call",
+          "message": "`is_snake_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]"
+        }
+      ],
+      "line": 380,
+      "margin": 0.4042,
+      "path": "lnbits/helpers.py",
+      "pattern": "validators.regex_match@v1",
+      "pattern_function": "is_valid_username",
+      "second_pattern": "crud.delete_by_ext_id@v1",
+      "similarity": 0.863
+    }
+  ],
+  "note": "Findings are candidates for human review, not confirmed bugs: each function looks like a reviewed pattern (similarity >= 0.75) and breaks one of that pattern's guards. Some resemble a pattern without being meant as one; the margin to the second-best pattern is shown to help judge that. Nothing here fails a build.",
+  "problems": [],
+  "summary": {
+    "catalog_patterns": 15,
+    "files": 176,
+    "findings": 5,
+    "functions_resembling_a_pattern": 48,
+    "functions_scanned": 2509,
+    "marked_functions_skipped": 0,
+    "similarity_threshold": 0.75
+  }
+}

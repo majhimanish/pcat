@@ -1,0 +1,330 @@
+{
+  "apps": {
+    "ctfd": {
+      "catalog_patterns": 16,
+      "files": 179,
+      "findings": 0,
+      "functions_resembling_a_pattern": 28,
+      "functions_scanned": 810,
+      "marked_functions_skipped": 0,
+      "similarity_threshold": 0.75
+    },
+    "healthchecks": {
+      "catalog_patterns": 16,
+      "files": 228,
+      "findings": 0,
+      "functions_resembling_a_pattern": 51,
+      "functions_scanned": 767,
+      "marked_functions_skipped": 0,
+      "similarity_threshold": 0.75
+    },
+    "lnbits": {
+      "catalog_patterns": 15,
+      "files": 176,
+      "findings": 5,
+      "functions_resembling_a_pattern": 48,
+      "functions_scanned": 2509,
+      "marked_functions_skipped": 0,
+      "similarity_threshold": 0.75
+    }
+  },
+  "note": "pcat audit on the task file of each v5.2 working copy (target removed, neighbour planted)",
+  "planted": 18,
+  "rows": [
+    {
+      "app": "ctfd",
+      "guards": [],
+      "intended_guards": [
+        "must_call:CTFd.utils.user.is_admin"
+      ],
+      "margin": null,
+      "neighbour": "admins_only_api",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "ctfd_admins_only"
+    },
+    {
+      "app": "ctfd",
+      "guards": [],
+      "intended_guards": [
+        "must_call:CTFd.utils.user.authed"
+      ],
+      "margin": null,
+      "neighbour": "api_authed_only",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "ctfd_authed_only"
+    },
+    {
+      "app": "ctfd",
+      "guards": [],
+      "intended_guards": [
+        "must_raise:CTFd.exceptions.email.UserConfirmTokenInvalidException | CTFd.exceptions.email.UserResetPasswordTokenInvalidException"
+      ],
+      "margin": null,
+      "neighbour": "verify_invite_token",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "ctfd_confirm_token"
+    },
+    {
+      "app": "ctfd",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:CTFd.utils.user.get_ip"
+      ],
+      "margin": 0.4908,
+      "neighbour": "throttle",
+      "other_findings_in_file": [
+        "throttle.<locals>.throttle_decorator"
+      ],
+      "pattern": "decorators.ratelimit@v1",
+      "similarity": 0.9357,
+      "surfaced": true,
+      "task": "ctfd_ratelimit"
+    },
+    {
+      "app": "ctfd",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:CTFd.utils.user.authed"
+      ],
+      "margin": 0.0652,
+      "neighbour": "members_only",
+      "other_findings_in_file": [],
+      "pattern": "decorators.admins_only@v1",
+      "similarity": 0.9533,
+      "surfaced": true,
+      "task": "ctfd_registered_only"
+    },
+    {
+      "app": "ctfd",
+      "guards": [
+        "max_value"
+      ],
+      "intended_guards": [
+        "max_value:timeout"
+      ],
+      "margin": 0.5327,
+      "neighbour": "generate_invite_token",
+      "other_findings_in_file": [],
+      "pattern": "security.email_confirm_token@v1",
+      "similarity": 1.0,
+      "surfaced": true,
+      "task": "ctfd_reset_token"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:.is_valid"
+      ],
+      "margin": 0.3359,
+      "neighbour": "add_splunk_oncall",
+      "other_findings_in_file": [],
+      "pattern": "integrations.add_url_channel@v1",
+      "similarity": 0.7884,
+      "surfaced": true,
+      "task": "hc_add_victorops"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [],
+      "intended_guards": [
+        "must_call:urllib.parse.urlparse",
+        "must_call:django.urls.resolve",
+        "must_catch:django.urls.Resolver404"
+      ],
+      "margin": null,
+      "neighbour": "_allow_next_url",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "hc_allow_redirect"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:hc.accounts.models.Project.objects.for_api_key"
+      ],
+      "margin": 0.2053,
+      "neighbour": "authorize_ping_key",
+      "other_findings_in_file": [],
+      "pattern": "api.authorize_read@v1",
+      "similarity": 0.7686,
+      "surfaced": true,
+      "task": "hc_api_authorize"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:hc.accounts.models.Project.objects.for_api_key"
+      ],
+      "margin": 0.2133,
+      "neighbour": "authorize_metrics",
+      "other_findings_in_file": [],
+      "pattern": "api.authorize_read@v1",
+      "similarity": 0.7713,
+      "surfaced": true,
+      "task": "hc_api_authorize_read"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [],
+      "intended_guards": [
+        "must_raise:django.core.exceptions.PermissionDenied"
+      ],
+      "margin": null,
+      "neighbour": "_get_rw_notification_for_user",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "hc_channel_for_user"
+    },
+    {
+      "app": "healthchecks",
+      "guards": [],
+      "intended_guards": [
+        "must_call:django.shortcuts.get_object_or_404"
+      ],
+      "margin": null,
+      "neighbour": "_get_notification_for_user",
+      "other_findings_in_file": [],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "hc_check_for_user"
+    },
+    {
+      "app": "lnbits",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:jwt.encode"
+      ],
+      "margin": 0.4338,
+      "neighbour": "create_share_token",
+      "other_findings_in_file": [
+        "is_camel_case",
+        "is_snake_case"
+      ],
+      "pattern": "auth.lnbits_access_token@v1",
+      "similarity": 0.7821,
+      "surfaced": true,
+      "task": "lnbits_access_token"
+    },
+    {
+      "app": "lnbits",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:.lower"
+      ],
+      "margin": 0.3287,
+      "neighbour": "get_account_by_login",
+      "other_findings_in_file": [
+        "get_account"
+      ],
+      "pattern": "crud.get_account_by_field@v1",
+      "similarity": 0.9797,
+      "surfaced": true,
+      "task": "lnbits_account_by_email"
+    },
+    {
+      "app": "lnbits",
+      "guards": [],
+      "intended_guards": [
+        "must_call:urllib.parse.urlparse",
+        "must_call:re.fullmatch"
+      ],
+      "margin": null,
+      "neighbour": "check_webhook_url",
+      "other_findings_in_file": [
+        "is_camel_case",
+        "is_snake_case"
+      ],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "lnbits_callback_url"
+    },
+    {
+      "app": "lnbits",
+      "guards": [],
+      "intended_guards": [
+        "must_call:lnbits.decorators.KeyChecker"
+      ],
+      "margin": null,
+      "neighbour": "require_wallet_key",
+      "other_findings_in_file": [
+        "require_base_admin_key",
+        "require_base_invoice_key"
+      ],
+      "pattern": null,
+      "similarity": null,
+      "surfaced": false,
+      "task": "lnbits_invoice_key"
+    },
+    {
+      "app": "lnbits",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:re.fullmatch"
+      ],
+      "margin": 0.4887,
+      "neighbour": "is_valid_wallet_name",
+      "other_findings_in_file": [
+        "is_camel_case",
+        "is_snake_case"
+      ],
+      "pattern": "validators.regex_match@v1",
+      "similarity": 0.9747,
+      "surfaced": true,
+      "task": "lnbits_valid_email"
+    },
+    {
+      "app": "lnbits",
+      "guards": [
+        "must_call"
+      ],
+      "intended_guards": [
+        "must_call:re.fullmatch"
+      ],
+      "margin": 0.469,
+      "neighbour": "is_valid_tag",
+      "other_findings_in_file": [
+        "is_camel_case",
+        "is_snake_case"
+      ],
+      "pattern": "validators.regex_match@v1",
+      "similarity": 0.9434,
+      "surfaced": true,
+      "task": "lnbits_valid_username"
+    }
+  ],
+  "surfaced": 10
+}

@@ -1,0 +1,57 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>pcat audit</title><style>
+body{font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#f6f7f9;color:#1d232b}
+main{max-width:860px;margin:0 auto;padding:16px}
+h1{font-size:1.4rem;margin:.2em 0 .4em}
+.note{background:#fff7e0;border-left:4px solid #e0a800;padding:10px 12px;border-radius:6px}
+.stats{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.stat{background:#fff;border-radius:8px;padding:8px 12px;box-shadow:0 1px 2px #0001}
+.stat b{display:block;font-size:1.3rem}
+.card{background:#fff;border-radius:10px;padding:12px 14px;margin:12px 0;box-shadow:0 1px 3px #0002}
+.card h2{font-size:1rem;margin:0 0 4px;word-break:break-word}
+.meta{color:#56606d;font-size:.9rem;word-break:break-word}
+.guard{margin:8px 0 0;padding:8px 10px;background:#fdecec;border-radius:6px;font-size:.95rem}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+@media (prefers-color-scheme:dark){body{background:#14171c;color:#e4e7eb}.stat,.card{background:#1f242b}
+.note{background:#3a3115}.guard{background:#3d2224}.meta{color:#9aa4b1}}
+</style></head><body><main>
+<h1>pcat audit</h1>
+<p class="note">Findings are candidates for human review, not confirmed bugs: each function looks like a reviewed pattern (similarity &gt;= 0.75) and breaks one of that pattern&#x27;s guards. Some resemble a pattern without being meant as one; the margin to the second-best pattern is shown to help judge that. Nothing here fails a build.</p>
+<div class="stats">
+<div class="stat"><b>2509</b>Functions scanned</div>
+<div class="stat"><b>48</b>Resemble a pattern</div>
+<div class="stat"><b>5</b>Findings</div>
+<div class="stat"><b>0</b>Marked (left to pcat lint)</div>
+</div>
+<section class="card">
+<h2><code>get_account</code></h2>
+<div class="meta"><code>lnbits/core/crud/users.py:117</code></div>
+<div class="meta">resembles <code>crud.get_account_by_field@v1</code> (<code>get_account_by_username</code>), similarity 0.98, margin 0.33 · second: <code>crud.delete_by_ext_id@v1</code></div>
+<p class="guard">`get_account` no longer calls `.lower`, which the reviewed pattern requires (comparison is case-insensitive and goes through a parameterized query) [guard must_call]</p>
+</section>
+<section class="card">
+<h2><code>require_base_admin_key</code></h2>
+<div class="meta"><code>lnbits/decorators.py:192</code></div>
+<div class="meta">resembles <code>auth.require_api_key@v1</code> (<code>require_admin_key</code>), similarity 0.97, margin 0.58 · second: <code>crud.count_rows@v1</code></div>
+<p class="guard">`require_base_admin_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]</p>
+</section>
+<section class="card">
+<h2><code>require_base_invoice_key</code></h2>
+<div class="meta"><code>lnbits/decorators.py:216</code></div>
+<div class="meta">resembles <code>auth.require_api_key@v1</code> (<code>require_admin_key</code>), similarity 0.95, margin 0.56 · second: <code>crud.count_rows@v1</code></div>
+<p class="guard">`require_base_invoice_key` no longer calls `lnbits.decorators.KeyChecker`, which the reviewed pattern requires (keys are checked by the shared KeyChecker) [guard must_call]</p>
+</section>
+<section class="card">
+<h2><code>is_camel_case</code></h2>
+<div class="meta"><code>lnbits/helpers.py:376</code></div>
+<div class="meta">resembles <code>validators.regex_match@v1</code> (<code>is_valid_username</code>), similarity 0.86, margin 0.40 · second: <code>crud.delete_by_ext_id@v1</code></div>
+<p class="guard">`is_camel_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]</p>
+</section>
+<section class="card">
+<h2><code>is_snake_case</code></h2>
+<div class="meta"><code>lnbits/helpers.py:380</code></div>
+<div class="meta">resembles <code>validators.regex_match@v1</code> (<code>is_valid_username</code>), similarity 0.86, margin 0.40 · second: <code>crud.delete_by_ext_id@v1</code></div>
+<p class="guard">`is_snake_case` no longer calls `re.fullmatch`, which the reviewed pattern requires (the whole value must match, not a prefix) [guard must_call]</p>
+</section>
+</main></body></html>

@@ -1283,3 +1283,10 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      Python 3.11 and 3.13 virtualenvs, `pcat --version` prints `pcat 0.1.0`, the wheel
      contains no research module, `pcat init --starter --apply`, `validate`, `search`
      and the MCP server import work from the wheel alone.
+244. **`pcat audit` (Part C).** Scans every function (tests skipped, as `pcat mine` does);
+     marked functions are left to `pcat lint`. A function whose most similar catalog
+     function has similarity >= `lint.INFERRED_GUARD_SIMILARITY` (0.75) is analyzed
+     against it like `pcat lint` (module path, binding), and reported when a guard
+     (PC100) fails, with the margin to the best function of a *different* pattern
+     (displayed only). Paths are relative to the scanned folder; no timestamps; exit 0.
+     Measured on the v5 apps and the planted v5.2 copies: `experiments/v6/audit/`.

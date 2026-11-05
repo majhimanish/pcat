@@ -1,0 +1,14 @@
+{
+  "findings": [],
+  "note": "Findings are candidates for human review, not confirmed bugs: each function looks like a reviewed pattern (similarity >= 0.75) and breaks one of that pattern's guards. Some resemble a pattern without being meant as one; the margin to the second-best pattern is shown to help judge that. Nothing here fails a build.",
+  "problems": [],
+  "summary": {
+    "catalog_patterns": 16,
+    "files": 228,
+    "findings": 0,
+    "functions_resembling_a_pattern": 51,
+    "functions_scanned": 767,
+    "marked_functions_skipped": 0,
+    "similarity_threshold": 0.75
+  }
+}

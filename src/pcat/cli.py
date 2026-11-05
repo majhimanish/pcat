@@ -542,6 +542,24 @@ def lint(
         raise typer.Exit(1)
 
 
+@app.command()
+@_guard
+def audit(
+    paths: List[Path] = typer.Argument(..., help="Files or directories to audit."),
+    catalog: Optional[Path] = typer.Option(
+        None, "--catalog", help="Repository root containing catalog/ (default: --root, .pcat/config.yaml or nearest parent)."
+    ),
+    out: Path = typer.Option(Path("pcat-audit"), "--out", help="Directory for audit.html and audit.json."),
+) -> None:
+    """One-time report: existing code that looks like a pattern but breaks its guards (never fails)."""
+    from pcat import audit as audit_mod
+
+    report = audit_mod.audit([str(p) for p in paths], _catalog_root(catalog))
+    json_path, html_path = audit_mod.write(report, out)
+    typer.echo(audit_mod.format_summary(report), nl=False)
+    typer.echo(f"wrote {json_path} and {html_path}")
+
+
 approvals_app = typer.Typer(no_args_is_help=True, help="Human confirmation of proposed approvals.")
 app.add_typer(approvals_app, name="approvals")
 
