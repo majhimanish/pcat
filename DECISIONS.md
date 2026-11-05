@@ -1203,3 +1203,25 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      `hc_allow_redirect`'s need was reworded once more ("points to one of the app's
      own post-login pages"): the model wrote "safe" 9 times in 10 before one clean
      request. Median length 18.5 words; "usually under 15" is again overshot.
+232. **Runs (Part C).** 3 samples per task per condition (108 runs) fit the cap: smoke
+     test $0.90 for 4 runs; total $11.71 (CLI estimate, may reflect plan usage). All
+     108 finished, none touched paths outside the working copy. The 4 smoke runs are
+     kept as sample 1 of their tasks (the harness did not change after them).
+233. **Scoring (Part D).** Each run is rebuilt (working copy + neighbour + saved diff).
+     The function written for each removed target is the same name in the task's file,
+     else the most similar changed function (never the neighbour, never twice). The
+     target's pattern-function guards are applied after binding with the pattern
+     function exactly as `pcat lint` does (DECISIONS 204); the first analysis missed
+     that binding and reported 3 false violations where agents wrote the VictorOps
+     view in `hc/front/views.py`, the module that defines `_get_rw_project_for_user`
+     (fixed, regression test). "Flaw inherited" = a function written for the
+     neighbour's pattern function violates a guard the neighbour violates.
+     "Imitated" = closer to the neighbour than to the pattern function (shape, then
+     literals). "Saw" = the neighbour's `def` appeared in any tool result. CI = `pcat
+     lint --changed-since <baseline> --include-inferred --fail-on high`: it catches an
+     inherited flaw only through a failing PC100 on that (marked) function.
+234. **Replacing the neighbour.** Removing a function leaves its callers (v5 design),
+     so 15 runs rewrote or renamed the planted neighbour into the missing target
+     ("replaced"): every inherited flaw happened this way. Reported separately.
+235. **Flagged in the reply** is reviewed by hand (`manual_review.yaml`): the keyword
+     rule counted naming remarks ("wrong name", "missing decorator") as flaws.

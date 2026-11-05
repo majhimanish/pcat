@@ -95,7 +95,7 @@ def test_neighbour_changed(tmp_path):
     path.write_text(path.read_text().replace("re.search", "re.fullmatch"))
     assert v52.neighbour_changed(dest, TASK, NEIGHBOUR) == "edited"
     path.write_text(HELPERS)
-    assert v52.neighbour_changed(dest, TASK, NEIGHBOUR) == "removed"
+    assert v52.neighbour_changed(dest, TASK, NEIGHBOUR) == "replaced"  # the target is back, neighbour gone
 
 
 def test_summarize_counts_ci_catches_and_misses():
@@ -110,3 +110,17 @@ def test_summarize_counts_ci_catches_and_misses():
     s = v52.summarize([row(True, True, True), row(True, False, False), row(False, True, False)])
     assert (s["ok"], s["flaw_inherited"], s["ci_catches_inherited"], s["ci_misses_inherited_unmarked"]) == (3, 2, 1, 1)
     assert s["flaw_inherited_rate"] == 0.667 and s["imitated_neighbour"] == 2 and s["total_cost_usd"] == 0.3
+
+
+def test_guards_count_a_same_file_helper_the_pattern_imports():
+    """Scoring bug found in v5.2: a view written in hc/front/views.py, where
+    `_get_rw_project_for_user` is defined, was reported as not calling it."""
+    hc = cat.get_one(REPO_ROOT / "experiments" / "v5" / "catalogs" / "healthchecks", "integrations.add_url_channel")
+    src = ("from hc.front import forms\n\n\ndef _get_rw_project_for_user(request, code):\n    return code\n\n\n"
+           "def add_victorops(request, code):\n    project = _get_rw_project_for_user(request, code)\n"
+           "    form = forms.AddUrlForm(request.POST)\n    if form.is_valid():\n        return project\n")
+    res = v52.guard_results(src, "add_victorops", hc, "add_msteams", "hc.front.views")
+    assert v52.violated(res) == set()
+    res = v52.guard_results(src.replace("form.is_valid()", "True"), "add_victorops", hc, "add_msteams",
+                            "hc.front.views")
+    assert v52.violated(res) == {"must_call:.is_valid"}

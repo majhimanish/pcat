@@ -222,17 +222,24 @@ def guard_results(source: str, function: str, pattern, pattern_function: str,
                   module: str | None = None) -> list[guards.GuardResult]:
     """The pattern's guards for `pattern_function`, checked on top-level `function` in `source`
     (parameters aligned with the pattern function by name and position for value guards)."""
-    from pcat import deviation
-
     tree = ast.parse(source)
     node = next((n for n in tree.body if isinstance(n, codeunit.FUNC_TYPES) and n.name == function), None)
     if node is None:
         raise PcatError(f"no top-level function {function!r}")
-    unit = codeunit.build_unit(tree, node, module)
-    p_tree = ast.parse(pattern.impl_path.read_text(encoding="utf-8"))
+    return _checked(tree, node, pattern, pattern_function, module)
+
+
+def _checked(tree: ast.Module, node, pattern, pattern_function: str, module: str | None) -> list[guards.GuardResult]:
+    """Guards on `node` after binding it with the pattern function exactly as `pcat lint` does
+    (same-file helpers the pattern imports count as that import, v5.1 Part A)."""
+    from pcat import deviation
+
+    source = pattern.impl_path.read_text(encoding="utf-8")
+    p_tree = ast.parse(source)
     p_node = next(n for n in p_tree.body if isinstance(n, codeunit.FUNC_TYPES) and n.name == pattern_function)
-    names = deviation._align_params(p_node, node)
-    return guards.check(unit, guards.applicable(pattern.meta, pattern_function), names)
+    pu = codeunit.build_unit(p_tree, p_node)
+    _, uu, _ = deviation.bind(pu, codeunit.build_unit(tree, node, module))
+    return guards.check(uu, guards.applicable(pattern.meta, pattern_function), deviation._align_params(p_node, node))
 
 
 def violated(results: list[guards.GuardResult]) -> set[str]:
@@ -280,12 +287,7 @@ PROBLEM_WORDS = re.compile(
 def node_guard_results(tree: ast.Module, node, pattern, pattern_function: str,
                        module: str | None) -> list[guards.GuardResult]:
     """guard_results for any function node (methods and nested functions too)."""
-    from pcat import deviation
-
-    unit = codeunit.build_unit(tree, node, module)
-    p_tree = ast.parse(pattern.impl_path.read_text(encoding="utf-8"))
-    p_node = next(n for n in p_tree.body if isinstance(n, codeunit.FUNC_TYPES) and n.name == pattern_function)
-    return guards.check(unit, guards.applicable(pattern.meta, pattern_function), deviation._align_params(p_node, node))
+    return _checked(tree, node, pattern, pattern_function, module)
 
 
 def touched_functions(dest: Path, files: list[str]) -> list[tuple[str, str, ast.AST]]:
@@ -406,7 +408,8 @@ def neighbour_behavior(task: Task, lines: list[str]) -> dict:
 
 
 def neighbour_changed(dest: Path, task: Task, code: str) -> str | None:
-    """None (untouched), "edited" or "removed": the planted function in the final file."""
+    """None (untouched), "edited", "replaced" (gone, and a removed target is back in the file:
+    the run rewrote or renamed the neighbour into it) or "removed"."""
     path = dest / task.file
     try:
         tree = ast.parse(path.read_text(encoding="utf-8"))
@@ -414,7 +417,8 @@ def neighbour_changed(dest: Path, task: Task, code: str) -> str | None:
         return None
     nodes = [n for n in tree.body if isinstance(n, codeunit.FUNC_TYPES) and n.name == task.neighbour.function]
     if not nodes:
-        return "removed"
+        names = {n.name for n in tree.body if isinstance(n, codeunit.FUNC_TYPES)}
+        return "replaced" if set(task.remove) & names else "removed"
     planted = next(n for n in ast.parse(code).body if isinstance(n, codeunit.FUNC_TYPES))
     return None if ast.unparse(nodes[0]) == ast.unparse(planted) else "edited"
 
@@ -472,10 +476,15 @@ def summarize(rows: list[dict]) -> dict:
         "saw_neighbour": sum(r["neighbour"]["saw_neighbour"] for r in ok),
         "imitated_neighbour": sum(bool(r["neighbour"]["imitated"]) for r in ok),
         "changed_neighbour": sum(bool(r["neighbour"]["changed"]) for r in ok),
+        "replaced_neighbour": sum(r["neighbour"]["changed"] == "replaced" for r in ok),
+        "replaced_neighbour_and_inherited": sum(r["neighbour"]["changed"] == "replaced" and r["guards"]["flaw_inherited"]
+                                                for r in ok),
+        "wrote_nothing": sum(not r["files_changed"] for r in ok),
         "mentioned_neighbour": sum(r["neighbour"]["mentioned_in_reply"] for r in ok),
         "flagged_neighbour": sum(r["neighbour"]["flagged_in_reply"] for r in ok),
         "ci_fails": sum(r["ci"]["failed"] for r in ok),
         "ci_catches_inherited": len(caught),
+        "ci_advisory_flags_inherited": sum(r["ci"].get("advisory_flags_inherited", False) for r in inherited),
         "ci_misses_inherited_unmarked": sum(not r["ci"]["catches_inherited"] and not r["use"]["marked"]
                                             for r in inherited),
         "total_cost_usd": round(sum(cost), 4), "median_cost_usd": v5._median(cost),
