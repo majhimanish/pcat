@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from pcat import linteval
+import pytest
+
+from pcat.serving import CatalogService
+from pcatlab import linteval
+from pcatlab_tests.conftest import REPO_ROOT
 
 
 def dev(code, severity, approved=False):
@@ -72,3 +76,34 @@ def test_approval_census_and_worst_not_proposed():
     analyses = [{"deviations": [{"severity": "high", "approved": False, "approval_state": "proposed"},
                                 {"severity": "medium", "approved": False, "approval_state": None}]}]
     assert linteval.worst_not_proposed(analyses) == "medium" and linteval.worst(analyses) == "high"
+
+
+# Moved from tests/test_provenance.py in v6 (they test pcatlab.linteval).
+@pytest.fixture(scope="module")
+def refs():
+    from pcat import provenance
+
+    return provenance.references(REPO_ROOT)
+
+
+def test_derived_function_labels(refs):
+    own = [r for r in refs if r.pattern_id == "auth.password.pbkdf2"]
+    code = CatalogService(REPO_ROOT).get_pattern("auth.password.pbkdf2", {"f0": "mk"})["code"]
+    code += "\n\ndef unrelated(x):\n    return [x * 2 for x in range(x) if x % 3]\n"
+    labels = linteval.derived_functions(code, own)
+    assert labels == [("mk", "auth.password.pbkdf2:hash_password"),
+                      ("needs_rehash", "auth.password.pbkdf2:needs_rehash"),
+                      ("verify_password", "auth.password.pbkdf2:verify_password")]
+
+
+def test_inference_summary_counts():
+    items = [
+        {"expected": "a:f", "ranked": [("a:f", 0.9)]},
+        {"expected": "a:f", "ranked": [("b:g", 0.9)]},
+        {"expected": "a:f", "ranked": [("a:f", 0.2)]},
+        {"expected": None, "ranked": [("a:f", 0.9)]},
+        {"expected": None, "ranked": [("a:f", 0.1)]},
+    ]
+    s = linteval.inference_summary(items, 0.5)
+    assert (s["derived_inferred_correctly"], s["derived_inferred_wrong_pattern"], s["derived_missed"],
+            s["not_derived_inferred_as_derived"], s["not_derived_correct"]) == (1, 1, 1, 1, 1)

@@ -4,7 +4,7 @@
 
 For each task with a catalog pattern (docs/catalog-review/choices.yaml), compares
 the run's valid samples with the pattern's impl.py at two levels:
-- whole snippet: the v2.1 snippet normalization (pcat.variance), shape and exact
+- whole snippet: the v2.1 snippet normalization (pcatlab.variance), shape and exact
 - entry function: any function in the sample vs the pattern's entry point alone
   (canonicalized like the miner does), shape and exact
 - closest sample: highest similarity of a sample's shape text to the pattern's
@@ -14,6 +14,8 @@ Read-only: experiments/ is not modified. Prints a Markdown table.
 
 from __future__ import annotations
 
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
+
 import argparse
 import ast
 from pathlib import Path
@@ -21,7 +23,8 @@ from pathlib import Path
 import yaml
 
 from pcat import catalog as cat
-from pcat import miner, variance
+from pcat import miner
+from pcatlab import variance
 
 ROOT = Path(__file__).resolve().parents[1]
 

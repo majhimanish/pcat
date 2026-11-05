@@ -5,10 +5,12 @@
     python scripts/mcp_eval.py e2e [--samples N]  # end-to-end samples with the MCP server
     python scripts/mcp_eval.py e2e-analyze        # metrics from the end-to-end samples
 
-Outputs go to experiments/mcp/. Logic lives in src/pcat/evaluation.py.
+Outputs go to experiments/mcp/. Logic lives in experiments/lib/pcatlab/evaluation.py.
 """
 
 from __future__ import annotations
+
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
 
 import argparse
 import datetime as dt
@@ -19,7 +21,8 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from pcat import evaluation, search, variance
+from pcat import search
+from pcatlab import evaluation, variance
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "experiments" / "mcp"

@@ -24,6 +24,8 @@ The lint step only uses APIs that exist in both the v5 and the v5.1 linter.
 
 from __future__ import annotations
 
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
+
 import argparse
 import json
 import os
@@ -43,10 +45,10 @@ APPS = ("ctfd", "healthchecks", "lnbits")
 
 
 def _rescore():
-    """src/pcat/rescore.py of this checkout, also when an older `pcat` is on the path."""
+    """experiments/lib/pcatlab/rescore.py of this checkout, also when an older `pcat` is on the path."""
     import importlib.util
 
-    spec = importlib.util.spec_from_file_location("pcat_v51_rescore", ROOT / "src" / "pcat" / "rescore.py")
+    spec = importlib.util.spec_from_file_location("pcat_v51_rescore", ROOT / "experiments" / "lib" / "pcatlab" / "rescore.py")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
@@ -89,7 +91,8 @@ def e2e_records() -> list[dict]:
 
 
 def lint_run(rec: dict, tasks: dict) -> dict:
-    from pcat import lint, v5
+    from pcat import lint
+    from pcatlab import v5
 
     task = tasks[rec["task"]]
     dest = RUNS / f"{rec['app']}-{rec['task']}-{rec['condition']}-{rec['sample']:02d}"
@@ -116,7 +119,7 @@ def lint_run(rec: dict, tasks: dict) -> dict:
 
 def cmd_lint_e2e(args) -> int:
     import pcat
-    from pcat import v5
+    from pcatlab import v5
 
     tasks = {t.id: t for t in v5.load_tasks(V5 / "tasks.yaml")}
     records = e2e_records()

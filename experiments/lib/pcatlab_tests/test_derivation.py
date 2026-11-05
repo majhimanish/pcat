@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import ast
 
-from conftest import REPO_ROOT
+from pcatlab_tests.conftest import REPO_ROOT
 from pcat import catalog as cat
-from pcat import derivation, provenance
+from pcat import provenance
+from pcatlab import derivation
 
 LNBITS = REPO_ROOT / "experiments" / "v5" / "catalogs" / "lnbits"
 PATTERNS = {p.meta.id: p for p in cat.load_catalog(LNBITS) if p.meta and p.meta.status == "active"}

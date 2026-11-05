@@ -14,6 +14,8 @@ transcript.jsonl.gz,pcat.jsonl}.
 
 from __future__ import annotations
 
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
+
 import argparse
 import gzip
 import json
@@ -38,7 +40,7 @@ TIME_LIMIT = 600
 
 
 def jobs(samples: int, conditions: list[str], apps: list[str], tasks: list[str]) -> list[dict]:
-    from pcat import v5
+    from pcatlab import v5
 
     requests = {r["id"]: r for r in json.loads((V5 / "requests.json").read_text())["items"]}
     out = []
@@ -58,7 +60,7 @@ def out_stem(job: dict) -> Path:
 
 
 def run_job(job: dict, model: str) -> dict:
-    from pcat import v5
+    from pcatlab import v5
 
     task, condition = job["task"], job["condition"]
     stem = out_stem(job)
@@ -114,7 +116,8 @@ def run_job(job: dict, model: str) -> dict:
 
 def score_workdir(workdir: Path, task, files: list[str]) -> dict:
     """Pattern match and derivation of the new function, similarity to the original, lint."""
-    from pcat import lint, provenance, v5
+    from pcat import lint, provenance
+    from pcatlab import v5
     from pcat.serving import CatalogService
 
     catalog_root = V5 / "catalogs" / task.app
@@ -186,7 +189,7 @@ def load_records() -> list[dict]:
 
 
 def cmd_analyze(args) -> int:
-    from pcat import v5
+    from pcatlab import v5
 
     records = load_records()
     out: dict = {"note": "v5 end-to-end; cost is the CLI's estimate and may reflect plan usage",

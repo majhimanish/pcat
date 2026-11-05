@@ -907,9 +907,9 @@ def choose_pattern_function(node: ast.FunctionDef, pattern) -> str:
     best = (-1.0, meta.entry_point)
     for stmt in tree.body:
         if isinstance(stmt, codeunit.FUNC_TYPES) and stmt.name in public and text is not None:
-            from pcat import variance
+            from pcat.similarity import similarity
 
-            sim = variance.similarity(text, provenance.shape_text(stmt) or "")
+            sim = similarity(text, provenance.shape_text(stmt) or "")
             if sim > best[0] or (sim == best[0] and public.index(stmt.name) < public.index(best[1])):
                 best = (sim, stmt.name)
     return best[1]

@@ -7,7 +7,7 @@ import ast
 import pytest
 
 from conftest import REPO_ROOT, edit_yaml, pattern_dir
-from pcat import linteval, provenance
+from pcat import provenance
 from pcat.serving import CatalogService
 
 SOURCE = '''\
@@ -142,26 +142,3 @@ def test_calibrated_threshold_matches_the_constant():
 
     data = json.loads((REPO_ROOT / "experiments/linter/inference_calibration.json").read_text())
     assert data["chosen_threshold"] == provenance.INFERENCE_THRESHOLD
-
-
-def test_derived_function_labels(refs):
-    own = [r for r in refs if r.pattern_id == "auth.password.pbkdf2"]
-    code = CatalogService(REPO_ROOT).get_pattern("auth.password.pbkdf2", {"f0": "mk"})["code"]
-    code += "\n\ndef unrelated(x):\n    return [x * 2 for x in range(x) if x % 3]\n"
-    labels = linteval.derived_functions(code, own)
-    assert labels == [("mk", "auth.password.pbkdf2:hash_password"),
-                      ("needs_rehash", "auth.password.pbkdf2:needs_rehash"),
-                      ("verify_password", "auth.password.pbkdf2:verify_password")]
-
-
-def test_inference_summary_counts():
-    items = [
-        {"expected": "a:f", "ranked": [("a:f", 0.9)]},
-        {"expected": "a:f", "ranked": [("b:g", 0.9)]},
-        {"expected": "a:f", "ranked": [("a:f", 0.2)]},
-        {"expected": None, "ranked": [("a:f", 0.9)]},
-        {"expected": None, "ranked": [("a:f", 0.1)]},
-    ]
-    s = linteval.inference_summary(items, 0.5)
-    assert (s["derived_inferred_correctly"], s["derived_inferred_wrong_pattern"], s["derived_missed"],
-            s["not_derived_inferred_as_derived"], s["not_derived_correct"]) == (1, 1, 1, 1, 1)

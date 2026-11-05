@@ -342,7 +342,7 @@ def _functions_in(path: Path) -> list[tuple[str, ast.AST]]:
 def find_new_function(dest: Path, task: Task, changed: list[str], reference: str) -> dict | None:
     """The function the run wrote for the task: same name in the task's file, else the most
     similar function (to the removed original) in the changed Python files."""
-    from pcat import variance
+    from pcatlab import variance
 
     ref_tree = ast.parse(reference)
     ref_node = next(n for n in ref_tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))
@@ -386,7 +386,7 @@ def _touched(node: ast.AST, lines: set[int]) -> bool:
 
 
 def similarity_to_reference(node: ast.AST, reference: str, entry: str) -> float | None:
-    from pcat import variance
+    from pcatlab import variance
 
     ref_tree = ast.parse(reference)
     ref_node = next(n for n in ref_tree.body if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))

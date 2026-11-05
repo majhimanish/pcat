@@ -3,10 +3,12 @@
     python scripts/v5.py clone          # check out the pinned apps into .bench/apps/<app>
     python scripts/v5.py mine           # pcat mine each app -> experiments/v5/mining/<app>/
 
-Later parts add subcommands. Logic lives in src/pcat/v5.py.
+Later parts add subcommands. Logic lives in experiments/lib/pcatlab/v5.py.
 """
 
 from __future__ import annotations
+
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
 
 import argparse
 import json
@@ -74,7 +76,7 @@ def write_mining_summary() -> None:
 
 
 def cmd_references(args) -> int:
-    from pcat import v5
+    from pcatlab import v5
 
     out = V5 / "references"
     for task in v5.load_tasks(V5 / "tasks.yaml"):
@@ -95,7 +97,7 @@ def cmd_requests(args) -> int:
     import tempfile
     from concurrent.futures import ThreadPoolExecutor
 
-    from pcat import evaluation, v5, variance
+    from pcatlab import evaluation, v5, variance
 
     target = V5 / "requests.json"
     previous = {}
@@ -132,7 +134,8 @@ def cmd_requests(args) -> int:
 
 def cmd_retrieval(args) -> int:
     from pcat import catalog as cat
-    from pcat import evaluation, search, v5
+    from pcat import search
+    from pcatlab import evaluation, v5
 
     requests = json.loads((V5 / "requests.json").read_text())["items"]
     generic = {p.meta.id for p in cat.load_catalog(ROOT)}

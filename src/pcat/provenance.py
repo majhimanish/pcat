@@ -18,7 +18,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from pcat import miner, variance
+from pcat import miner, similarity
 from pcat.errors import PcatError
 
 # Calibrated in v4 Part A on existing data only (scripts/lint_eval.py calibrate;
@@ -215,7 +215,7 @@ def shape_text(node: ast.FunctionDef) -> str | None:
 
 def rank(text: str, refs: list[Reference]) -> list[tuple[float, Reference]]:
     """Similarity to every reference, best first (ties by pattern id and function)."""
-    scored = [(round(variance.similarity(text, r.shape_text), 4), r) for r in refs]
+    scored = [(round(similarity.similarity(text, r.shape_text), 4), r) for r in refs]
     return sorted(scored, key=lambda x: (-x[0], x[1].pattern_id, x[1].version, x[1].function))
 
 

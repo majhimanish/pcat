@@ -1245,3 +1245,31 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      near-identical `authed_only` pattern), 0 of 66 v5 runs, and 5 of 4,031 untouched
      app functions (3 false, 2 debatable). A margin requirement looks like the fix for
      the first kind but was found post hoc, so it is not in the mode.
+
+## v6 — productize
+
+239. **Product vs research (Part A).** The installed `pcat` package keeps the
+     canonicalizer, catalog, schema, shape, miner, report, search, serving/MCP,
+     codeunit, provenance, guards, deviation, requirements, lint, approvals, CLI (and,
+     from v6, audit, init and the starter catalog). Moved to `experiments/lib/pcatlab/`
+     (unchanged code, imports updated): `variance` (v2.1), `evaluation` (v3),
+     `linteval` (v4), `v5`, `rescore` (v5.1), `v52`, `derivation` (v5.2). Their tests
+     moved to `experiments/lib/pcatlab_tests/` (a package with its own conftest; the
+     two `linteval` tests that lived in `tests/test_provenance.py` moved with them) and
+     run in pytest's testpaths and in CI. Scripts import `scripts/_labpath.py`, which
+     puts `experiments/lib` on `sys.path`.
+240. **`similarity` moved into the product.** Inference, pattern-function choice and
+     `check_code` used `variance.similarity`, a one-line difflib ratio; it now lives in
+     `pcat/similarity.py` (same body) and `pcatlab.variance` re-exports it, so every
+     similarity, and the thresholds calibrated on it, are unchanged.
+241. **No CLI command was experiment-only.** Every `pcat` subcommand is product
+     (`new`, `add`, `canonical`, `fingerprint`, `validate`, `index`, `migrate-
+     fingerprints`, `show`, `render`, `find`, `promote`, `search`, `serve`, `lint`,
+     `approvals`, `mine`); the experiment commands were already in `scripts/`.
+242. **Byte-identical check.** Every analysis step that needs no generation (variance
+     analyze/reference/report, catalog coverage and review doc, mcp_eval retrieval and
+     e2e-analyze, lint_eval calibrate/replay/feedback-analyze, v5 mining-summary/
+     references/retrieval, v5_e2e analyze, v5_1 lint-e2e/compare/survey, v5_2
+     prepare/verify/analyze/labels/calibrate) was run in a worktree of the commit
+     before the move and in the moved tree; outputs are compared file by file
+     (`experiments/v6/part_a_identity.md`).

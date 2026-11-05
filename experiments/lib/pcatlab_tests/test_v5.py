@@ -6,8 +6,8 @@ import subprocess
 
 import pytest
 
-from conftest import REPO_ROOT
-from pcat import v5
+from pcatlab_tests.conftest import REPO_ROOT
+from pcatlab import v5
 from pcat.errors import PcatError
 
 SOURCE = '''\

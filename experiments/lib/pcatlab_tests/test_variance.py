@@ -9,11 +9,11 @@ from pathlib import Path
 
 import pytest
 
-from conftest import REPO_ROOT
-from pcat import variance
+from pcatlab_tests.conftest import FIXTURES, REPO_ROOT
+from pcatlab import variance
 from pcat.errors import PcatError
 
-FIXTURE_RUN = REPO_ROOT / "tests" / "fixtures" / "variance" / "run"
+FIXTURE_RUN = FIXTURES / "run"
 
 
 # Extraction and validity --------------------------------------------------- #

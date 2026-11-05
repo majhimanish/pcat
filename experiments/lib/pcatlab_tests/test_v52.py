@@ -8,9 +8,9 @@ import subprocess
 
 import pytest
 
-from conftest import REPO_ROOT
+from pcatlab_tests.conftest import REPO_ROOT
 from pcat import catalog as cat
-from pcat import v5, v52
+from pcatlab import v5, v52
 from pcat.errors import PcatError
 
 V52 = REPO_ROOT / "experiments" / "v5.2"

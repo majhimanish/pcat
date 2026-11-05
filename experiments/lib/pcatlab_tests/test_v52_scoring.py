@@ -5,9 +5,10 @@ from __future__ import annotations
 import ast
 import json
 
-from conftest import REPO_ROOT
+from pcatlab_tests.conftest import REPO_ROOT
 from pcat import catalog as cat
-from pcat import codeunit, v52
+from pcat import codeunit
+from pcatlab import v52
 
 PATTERN = cat.get_one(REPO_ROOT / "experiments" / "v5" / "catalogs" / "lnbits", "validators.regex_match")
 HELPERS = ("import re\n\n\ndef is_valid_label(label: str) -> bool:\n"

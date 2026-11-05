@@ -23,7 +23,7 @@ jobs:
         run: pip install -e ".[dev,catalog,mcp]"
 
       - name: Tool tests
-        run: pytest tests/
+        run: pytest tests/ experiments/lib/pcatlab_tests/
 
       - name: Catalog review variant tests
         run: |

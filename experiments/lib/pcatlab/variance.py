@@ -427,9 +427,7 @@ def distribution_metrics(values: list[str]) -> dict:
 NEAR_SHAPE_THRESHOLD = 0.9
 
 
-def similarity(a: str, b: str) -> float:
-    """difflib ratio of two shape texts (1.0 = identical)."""
-    return difflib.SequenceMatcher(None, a, b, autojunk=False).ratio()
+from pcat.similarity import similarity  # noqa: E402  (moved to the product package in v6)
 
 
 def similarity_metrics(texts: list[str]) -> dict:

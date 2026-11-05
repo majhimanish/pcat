@@ -275,7 +275,7 @@ class CatalogService:
                 for info in infos:
                     text = provenance.shape_text(info.node)
                     if text is not None and id(info.node) not in taken:
-                        pairs.append((provenance.variance.similarity(text, ref.shape_text), info.qualname,
+                        pairs.append((provenance.similarity.similarity(text, ref.shape_text), info.qualname,
                                       ref.function, info))
             pairs.sort(key=lambda p: (-p[0], p[1], p[2]))
             used_f = {t[0].qualname for t in targets}

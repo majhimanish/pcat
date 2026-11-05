@@ -12,6 +12,8 @@ before the baseline commit. Outputs: experiments/v5.2/e2e/<app>/<task>/<conditio
 
 from __future__ import annotations
 
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
+
 import argparse
 import ast
 import json
@@ -26,7 +28,7 @@ APPS_DIR = ROOT / ".bench" / "apps"
 
 
 def tasks():
-    from pcat import v52
+    from pcatlab import v52
 
     return v52.load_tasks(V52 / "tasks.yaml")
 
@@ -51,7 +53,7 @@ def catalog_patterns(app: str) -> dict:
 
 
 def cmd_prepare(args) -> int:
-    from pcat import v5, v52
+    from pcatlab import v5, v52
 
     for t in tasks():
         source = (APPS_DIR / t.app / t.file).read_text(encoding="utf-8")
@@ -70,7 +72,7 @@ def cmd_prepare(args) -> int:
 
 def check_task(t, source_without: str, code: str, reference: str) -> dict:
     """Guards on the planted neighbour and on each removed original, in `source_without`."""
-    from pcat import v52
+    from pcatlab import v52
 
     pattern = catalog_pattern(t.app, t.pattern)
     module = v52.module_from_rel(t.file)
@@ -87,7 +89,7 @@ def check_task(t, source_without: str, code: str, reference: str) -> dict:
 
 
 def cmd_verify(args) -> int:
-    from pcat import v5, v52
+    from pcatlab import v5, v52
 
     bad = 0
     report = {}
@@ -149,7 +151,7 @@ def run_job(job: dict, model: str) -> dict:
     import subprocess
     import time
 
-    from pcat import v5, v52
+    from pcatlab import v5, v52
 
     task, condition = job["task"], job["condition"]
     stem = out_stem(job)
@@ -241,7 +243,7 @@ def cmd_run(args) -> int:
 def rebuild(task, record: dict, plant: bool, dest: Path) -> Path:
     import subprocess
 
-    from pcat import v5, v52
+    from pcatlab import v5, v52
 
     if plant:
         v52.prepare_workdir(APPS_DIR / task.app, dest, task, record["condition"], v52.neighbour_code(ROOT, task))
@@ -259,7 +261,8 @@ def score_run(task, record: dict, plant: bool = True) -> dict:
     import shutil
     import subprocess
 
-    from pcat import codeunit, derivation, lint, provenance, v5, v52
+    from pcat import codeunit, lint, provenance
+    from pcatlab import derivation, v5, v52
     from pcat.serving import CatalogService
 
     catalog_root = V5 / "catalogs" / task.app
@@ -376,7 +379,7 @@ def load_runs(base: Path, task_dir) -> list[dict]:
 def cmd_analyze(args) -> int:
     from concurrent.futures import ThreadPoolExecutor
 
-    from pcat import v5, v52
+    from pcatlab import v5, v52
 
     RUNS.mkdir(parents=True, exist_ok=True)
     jobs_ = [(t, rec, True) for t in tasks() for rec in load_runs(E2E, f"{t.app}/{t.id}")]
@@ -440,7 +443,8 @@ def _function_in(path: Path, qualname: str):
 
 
 def _untouched_item(app, rel, qualname, source, label, label_pattern, ident=None):
-    from pcat import codeunit, derivation, provenance
+    from pcat import codeunit, provenance
+    from pcatlab import derivation
 
     path = APPS_DIR / app / rel
     tree, node = _function_in(path, qualname)
@@ -468,7 +472,8 @@ def _v5_run_item(task, rec):
     """The function a v5 run wrote (v5's own matching), labeled by its task."""
     import shutil
 
-    from pcat import codeunit, derivation, v5
+    from pcat import codeunit
+    from pcatlab import derivation, v5
 
     dest = RUNS / f"label-{task.app}-{task.id}-{rec['condition']}-{rec['sample']:02d}"
     try:
@@ -500,7 +505,7 @@ def build_items(jobs_: int = 4) -> list:
     import random
     from concurrent.futures import ThreadPoolExecutor
 
-    from pcat import derivation, rescore, v5
+    from pcatlab import derivation, rescore, v5
 
     items, seen = [], set()
 
@@ -564,7 +569,7 @@ def build_items(jobs_: int = 4) -> list:
 def cmd_labels(args) -> int:
     from dataclasses import asdict
 
-    from pcat import v5
+    from pcatlab import v5
 
     RUNS.mkdir(parents=True, exist_ok=True)
     items = build_items(args.jobs)
@@ -578,7 +583,7 @@ def cmd_labels(args) -> int:
 
 
 def cmd_calibrate(args) -> int:
-    from pcat import derivation, v5
+    from pcatlab import derivation, v5
 
     raw = json.loads((INF / "labeled.json").read_text())["items"]
     items = [derivation.Item(**r) for r in raw]
@@ -614,7 +619,7 @@ def cmd_requests(args) -> int:
     import tempfile
     from concurrent.futures import ThreadPoolExecutor
 
-    from pcat import evaluation, v5, v52, variance
+    from pcatlab import evaluation, v5, v52, variance
 
     target = V52 / "requests.json"
     previous = {}
@@ -653,7 +658,7 @@ def cmd_requests(args) -> int:
     items = [previous.get(t.id) or fresh[t.id] for t in tasks()]
     v5.write_json(target, {"model": args.model, "prompt_template": v5.REQUEST_PROMPT,
                            "rule": "regenerated (fresh process) when it mentions security words or the "
-                                   "planted function; see src/pcat/v52.py SECURITY_WORDS", "items": items})
+                                   "planted function; see experiments/lib/pcatlab/v52.py SECURITY_WORDS", "items": items})
     for r in items:
         print(f"{r['id']}: {r['request']!r} ({r['words']} words; rejected {len(r['rejected'])})")
     failed = [r["id"] for r in items if not r["request"]]

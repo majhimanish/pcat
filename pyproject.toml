@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pcat"
 version = "0.1.0"
-description = "Organization-specific catalog of verified Python code patterns: canonicalizer, CLI and validation."
+description = "Reviewed code patterns for AI coding agents: a catalog, an MCP server and a CI linter that explains deviations."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -28,14 +28,22 @@ catalog = [
 # `pcat serve`: the catalog as an MCP server for coding agents.
 mcp = ["mcp>=1.2,<2"]
 
+[project.urls]
+Homepage = "https://github.com/majhimanish/pcat"
+
 [project.scripts]
 pcat = "pcat.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# The starter catalog (`pcat init --starter`) ships inside the package.
+[tool.setuptools.package-data]
+pcat = ["starter/catalog/index.json", "starter/catalog/*/*/*.py", "starter/catalog/*/*/*.yaml"]
+
 [tool.pytest.ini_options]
-# The tool's own tests plus the v2.2 catalog-review variants (which skip when
+# The tool's own tests, the research package's tests (experiments/lib, v6), plus the v2.2
+# catalog-review variants (which skip when
 # their third-party libraries are missing). Catalog pattern tests all import a
 # module named `impl`, so they run one folder at a time via `pcat validate`.
-testpaths = ["tests", "docs/catalog-review/variants"]
+testpaths = ["tests", "experiments/lib/pcatlab_tests", "docs/catalog-review/variants"]

@@ -38,7 +38,7 @@ def derived_functions(code: str, refs: list[provenance.Reference]) -> list[tuple
     pairs = []
     for ref in refs:
         for qualname, _, text in funcs:
-            pairs.append((provenance.variance.similarity(text, ref.shape_text), qualname, ref))
+            pairs.append((provenance.similarity.similarity(text, ref.shape_text), qualname, ref))
     pairs.sort(key=lambda p: (-p[0], p[1], p[2].function))
     used_q: set[str] = set()
     used_r: set[str] = set()

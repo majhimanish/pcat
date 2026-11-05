@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from conftest import REPO_ROOT
-from pcat import evaluation
+from pcatlab_tests.conftest import REPO_ROOT
+from pcatlab import evaluation
 
 POS = "auth.jwt.create_access_token"
 

@@ -6,10 +6,12 @@
     python scripts/lint_eval.py feedback         # 60 new runs with the v4 server (claude -p)
     python scripts/lint_eval.py feedback-analyze # metrics for the feedback run vs v3
 
-Outputs go to experiments/linter/. Logic lives in src/pcat/linteval.py.
+Outputs go to experiments/linter/. Logic lives in experiments/lib/pcatlab/linteval.py.
 """
 
 from __future__ import annotations
+
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
 
 import argparse
 import importlib.util
@@ -18,7 +20,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
-from pcat import evaluation, linteval, provenance
+from pcat import provenance
+from pcatlab import evaluation, linteval
 from pcat.serving import CatalogService
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -277,7 +280,7 @@ def cmd_feedback_analyze(args) -> int:
 
 
 def main() -> int:
-    from pcat import variance
+    from pcatlab import variance
 
     parser = argparse.ArgumentParser(description="v4 evaluation")
     sub = parser.add_subparsers(dest="command", required=True)

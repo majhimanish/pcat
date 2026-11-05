@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pcat import rescore
+from pcatlab import rescore
 
 
 def test_survey_files_skip_tests_docs_and_migrations(tmp_path):

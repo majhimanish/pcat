@@ -15,7 +15,8 @@ from pathlib import Path
 
 import yaml
 
-from pcat import codeunit, guards, v5
+from pcat import codeunit, guards
+from pcatlab import v5
 from pcat.errors import PcatError
 
 ROOT_DIR = Path("experiments") / "v5.2"
@@ -309,7 +310,7 @@ def _shape(node) -> str:
 
 
 def similarity(a, b) -> float:
-    from pcat import variance
+    from pcatlab import variance
 
     return round(variance.similarity(_shape(a), _shape(b)), 4)
 
@@ -319,7 +320,8 @@ def literal_similarity(a, b) -> float:
     ignored): breaks ties when two candidates differ only in a literal, like a timeout."""
     import copy
 
-    from pcat import canonical, variance
+    from pcat import canonical
+    from pcatlab import variance
 
     def text(node):
         clone = copy.deepcopy(node)

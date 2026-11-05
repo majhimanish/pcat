@@ -9,10 +9,12 @@
 Samples go to experiments/variance/runs/<run-id>/<task>/<condition>/sample_NN.{py,json}.
 Every sample is generated in a fresh context (one API request or one `claude -p`
 process in a new empty directory). Existing successful samples are skipped, so
-an interrupted run can be resumed. Logic lives in src/pcat/variance.py.
+an interrupted run can be resumed. Logic lives in experiments/lib/pcatlab/variance.py.
 """
 
 from __future__ import annotations
+
+import _labpath  # noqa: F401  (experiments/lib on sys.path)
 
 import argparse
 import datetime as dt
@@ -24,7 +26,8 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from pcat import miner, variance
+from pcat import miner
+from pcatlab import variance
 
 ROOT = Path(__file__).resolve().parents[1]
 EXP = ROOT / "experiments" / "variance"
