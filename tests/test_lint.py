@@ -110,13 +110,17 @@ def test_invalid_approvals_do_not_count(tmp_path, http_code, line, warning):
     assert out.exit_code == 1 and warning in out.output
 
 
-def test_stale_approval_is_a_warning(tmp_path, http_code):
+def test_unnecessary_approval_is_a_warning(tmp_path, http_code):
+    """v6 (DECISIONS 248): an approval whose deviation no longer fires is reported as
+    unnecessary (was: "stale ... no longer occurs")."""
     path = write(tmp_path, approve(http_code, f"# pcat-allow: PC101 #{fetch_hash(http_code)} -- "
                                               "kept from an older version of this code"))
     out = run(str(path))
     assert out.exit_code == 0
-    assert "warning: stale approval: PC101 no longer occurs in `fetch`" in out.output
-    assert as_json(str(path))["findings"][0]["stale_approvals"][0]["code"] == "PC101"
+    assert ("warning: unnecessary approval: PC101 no longer fires in `fetch`; remove this `# pcat-allow` line"
+            in out.output)
+    [item] = as_json(str(path))["findings"][0]["stale_approvals"]
+    assert (item["code"], item["state"]) == ("PC101", "unnecessary")
 
 
 def test_inferred_provenance_never_fails(tmp_path, http_code):

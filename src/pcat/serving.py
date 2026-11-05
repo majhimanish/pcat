@@ -35,7 +35,9 @@ class CatalogService:
         self.log_path = Path(log_path) if log_path else None
         self.repo = Path(repo).resolve() if repo else None  # check_code may read files under it
         self.index = search.SearchIndex.from_root(self.root)
-        self._patterns = {p.meta.key: p for p in cat.load_catalog(self.root) if p.meta}
+        loaded = cat.load_catalog(self.root)
+        cat.require_known_keys(loaded)
+        self._patterns = {p.meta.key: p for p in loaded if p.meta}
         self._function_fps = self._catalog_function_fingerprints()
 
     # ------------------------------------------------------------------ #

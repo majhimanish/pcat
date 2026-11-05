@@ -157,7 +157,10 @@ def functions(source: str, tree: ast.Module | None = None) -> list[FunctionInfo]
     out = []
     for node, qualname, kind, _ in collector.found:
         start = min([node.lineno, *(d.lineno for d in node.decorator_list)])
-        markers, approvals, problems = parse_block(comment_block(lines, start))
+        # v6: also comment lines between the decorators and `def` (agents put markers there)
+        inner = [(n, lines[n - 1].strip()) for n in range(start + 1, node.lineno)
+                 if n - 1 < len(lines) and lines[n - 1].strip().startswith("#")]
+        markers, approvals, problems = parse_block(comment_block(lines, start) + inner)
         out.append(FunctionInfo(node, qualname, kind, start, markers, approvals, problems))
     return out
 
@@ -193,7 +196,9 @@ def references(root: Path, include_deprecated: bool = False) -> list[Reference]:
     from pcat import catalog as cat
 
     out = []
-    for pattern in cat.load_catalog(root):
+    loaded = cat.load_catalog(root)
+    cat.require_known_keys(loaded)
+    for pattern in loaded:
         meta = pattern.meta
         if meta is None or (meta.status != "active" and not include_deprecated):
             continue

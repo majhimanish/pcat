@@ -1313,3 +1313,24 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      approves them in trusted folders; the server's working directory is not
      guaranteed, so paths use `${CLAUDE_PROJECT_DIR:-.}`, which the page allows in
      project-scoped `args`.
+247. **Markers between decorators and `def` (Part E).** Comment lines between the first
+     decorator and `def` are read together with the comment block above the decorators,
+     for markers and approvals alike. Deliberate behavior change: re-scoring v5 data
+     with this linter would count `hc_add_victorops` pcat runs 1–2 as marked (frozen
+     outputs are not regenerated).
+248. **Unnecessary approvals.** An approval whose hash matches but whose deviation no
+     longer fires has state `unnecessary` (was `stale`) and the warning "unnecessary
+     approval: PCxxx no longer fires in `f`; remove this `# pcat-allow` line". It still
+     approves nothing and stays in `stale_approvals` for compatibility. Deliberate test
+     change: `test_stale_approval_is_a_warning` → `test_unnecessary_approval_is_a_warning`.
+249. **Unknown metadata refused.** `lint.Catalog`, `CatalogService` (serve, check_code) and
+     inference references call `catalog.require_known_keys`: a pattern whose
+     `pattern.yaml` (or guard) has keys this pcat's schema lacks makes the command fail
+     with "this catalog uses metadata this pcat (0.1.0) does not know (...); upgrade
+     pcat". Known keys with bad values still go through `pcat validate` as before. Old
+     pcat versions cannot be fixed retroactively; from 0.1.0 on, new keys are refused.
+250. **Module paths.** After the `__init__.py` walk, the path from the project's source
+     root (nearest folder with `pyproject.toml`, `setup.py`, `setup.cfg` or `.git`, or
+     its `src/`) is used when it extends the walked name: `src/ns/inner/views.py` with
+     `ns` a namespace package → `ns.inner.views`. Side effect: plain folders (e.g.
+     `scripts/`) inside a project now get their folder prefix (`scripts.tool`).

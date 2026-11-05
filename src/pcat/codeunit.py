@@ -227,7 +227,29 @@ def module_for_path(path) -> str | None:
             break
         folder = folder.parent
     name = ".".join(parts)
-    return name if name and all(p.isidentifier() for p in parts) else None
+    if not (name and all(p.isidentifier() for p in parts)):
+        return None
+    # v6: namespace packages (folders without __init__.py) and src/ layouts. Take the path
+    # from the project's source root (the folder with pyproject.toml / setup.py / setup.cfg
+    # / .git, or its src/); use it when it extends the __init__.py chain.
+    longer = _from_source_root(path)
+    if longer and len(longer) > len(parts) and longer[-len(parts):] == parts:
+        return ".".join(longer)
+    return name
+
+
+PROJECT_FILES = ("pyproject.toml", "setup.py", "setup.cfg", ".git")
+
+
+def _from_source_root(path) -> list[str] | None:
+    path = path.resolve()
+    for folder in path.parents:
+        if any((folder / f).exists() for f in PROJECT_FILES):
+            base = folder / "src" if (folder / "src") in path.parents else folder
+            rel = path.relative_to(base).with_suffix("").parts
+            rel = list(rel[:-1]) if rel and rel[-1] == "__init__" else list(rel)
+            return rel if rel and all(p.isidentifier() for p in rel) else None
+    return None
 
 
 def _literal_constants(tree: ast.Module) -> tuple[dict[str, ast.stmt], dict[str, object]]:

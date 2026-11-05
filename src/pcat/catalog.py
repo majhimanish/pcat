@@ -159,6 +159,36 @@ def load_catalog(root: Path) -> list[Pattern]:
     return [load_pattern(root, folder) for folder in discover(root)]
 
 
+def unknown_keys(pattern: Pattern) -> list[str]:
+    """Metadata keys of `pattern.yaml` (and of its guards) this pcat does not know."""
+    from pcat.schema import Guard, PatternMeta
+
+    try:
+        data = yaml.safe_load(pattern.yaml_path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return []
+    if not isinstance(data, dict):
+        return []
+    out = sorted(k for k in data if k not in PatternMeta.model_fields)
+    for i, g in enumerate(data.get("guards") or []):
+        if isinstance(g, dict):
+            out += sorted(f"guards[{i}].{k}" for k in g if k not in Guard.model_fields)
+    return out
+
+
+def require_known_keys(patterns: list[Pattern]) -> None:
+    """v6: refuse a catalog written for a newer pcat instead of silently skipping patterns
+    whose metadata it cannot read (an older linter would otherwise lint less)."""
+    from pcat import __version__
+
+    bad = [(p.label, unknown_keys(p)) for p in patterns if p.meta is None]
+    bad = [(label, keys) for label, keys in bad if keys]
+    if bad:
+        listed = "; ".join(f"{label}: {', '.join(keys)}" for label, keys in bad[:5])
+        raise CatalogError(f"this catalog uses metadata this pcat ({__version__}) does not know ({listed}"
+                           f"{'; …' if len(bad) > 5 else ''}); upgrade pcat (e.g. `pipx upgrade pcat`)")
+
+
 def resolve(patterns: list[Pattern], ref: str) -> list[Pattern]:
     """Patterns matching `ref`: "id" (all versions) or "id@vN" (one version)."""
     m = re.fullmatch(r"(.+)@v(\d+)", ref)

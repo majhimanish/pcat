@@ -144,7 +144,9 @@ class Report:
 class Catalog:
     def __init__(self, root: Path):
         self.root = root
-        self.patterns = [p for p in cat.load_catalog(root) if p.meta is not None]
+        loaded = cat.load_catalog(root)
+        cat.require_known_keys(loaded)
+        self.patterns = [p for p in loaded if p.meta is not None]
         self._refs: list[provenance.Reference] | None = None
 
     def resolve(self, marker: provenance.Marker):
@@ -178,8 +180,8 @@ def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviatio
     """Apply the `# pcat-allow` lines of one function (v4.1 states).
 
     An approval is *stale* when it has no hash (v4 format) or its hash differs
-    from the function's current hash, or its code no longer occurs; stale ones
-    approve nothing. A current one is *confirmed* when `base_keys` is None (no
+    from the function's current hash, and *unnecessary* (v6) when its deviation no
+    longer occurs; neither approves anything (both are listed in `stale_approvals`). A current one is *confirmed* when `base_keys` is None (no
     base ref) or the same (function, code, hash) existed at the base ref, else
     *proposed*: it approves nothing unless `confirmed_proposals` (a human
     confirmed the pull request). Returns (deviation dicts, stale approvals,
@@ -209,10 +211,12 @@ def apply_approvals(info: provenance.FunctionInfo, devs: list[deviation.Deviatio
             why = (f"stale approval: {a.code} #{a.hash} in `{info.qualname}` was given for different code "
                    f"(the function's hash is now #{current_hash}); it approves nothing until re-approved")
         elif a.code not in present:
-            why = f"stale approval: {a.code} no longer occurs in `{info.qualname}`"
+            # v6: the approved deviation is gone (fixed, or a rule now accepts the code): say so
+            why = (f"unnecessary approval: {a.code} no longer fires in `{info.qualname}`; "
+                   f"remove this `# pcat-allow` line")
         if why:
             messages.append(Message(path, a.line, "warning", why))
-            item = {**record, "state": "stale", "why": why}
+            item = {**record, "state": "unnecessary" if why.startswith("unnecessary") else "stale", "why": why}
             records.append(item)
             stale.append(item)
             continue
