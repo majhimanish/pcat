@@ -381,3 +381,28 @@ when you fix it; add one whenever you take a shortcut.
   framework-specific starter patterns (FastAPI, Django, Flask) do not exist yet.
 - **Mining output for a whole repo is heavy to review**: `.pcat/candidates.md` lists the
   top 10 clusters only; picking a good candidate still needs reading the HTML report.
+
+## Pitch (v7)
+
+Found while rehearsing the demo; not fixed, because v7 allowed no code changes.
+
+- **`--changed-since` misses a changed constant.** A function counts as changed only when
+  its own lines (and the comment block above it) change. Lowering a module-level
+  constant the function uses (`MIN_ITERATIONS = 1000`, guarded by `min_value`) is caught
+  by `pcat lint app/auth.py` but not by `pcat lint . --changed-since main`, so the
+  pull-request check passes. *Fix:* also treat a function as changed when a line of its
+  code unit (same-file constants and helpers it uses) changed. The getting-started guide
+  used this exact example with invented output; it now uses a change inside the function
+  and states the gap.
+- **`pcat init` says to make both checks required.** `pcat-lint` does not read reviews or
+  `/pcat approve`, so it stays red on a confirmed proposal; requiring it blocks every
+  approved deviation. `pcat-approvals` is the whole gate (it also fails on unproposed
+  deviations). *Fix:* change the next-steps line in `initrepo.py` to require
+  `pcat-approvals` only (the guide and demo script already say so), or let `pcat-lint`
+  skip failing on proposals and leave them to `pcat-approvals`.
+- **The `/pcat approve` → green step has not been observed end to end.** Pull request #1
+  still waits for the owner's comment; the demo script depends on it.
+- **The pitch's evidence is all simulated** (see `docs/pitch/claims.md`, "To verify").
+  Every business-value statement is a hypothesis until a pilot measures it.
+- **The deck build needs `pptxgenjs`** (Node), which is not a project dependency:
+  `npm install pptxgenjs@3.12.0` somewhere and set `NODE_PATH` (`docs/pitch/build_deck.js`).

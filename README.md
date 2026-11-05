@@ -547,6 +547,8 @@ In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern fold
 ## Further reading
 
 - `docs/getting-started.md` — the 30-minute walkthrough; `docs/releasing.md` — install extras, PyPI steps
+- `docs/pitch/` — pitch material for engineering leaders: one-pager, deck (`deck.pptx`, `deck.pdf`),
+  5-minute demo script, FAQ, 4-week pilot plan, and `claims.md` (every number, its source and caveat)
 - `CHANGELOG.md`, `PROJECT_BRIEF.md` — what each phase added; the project's context
 - `CLAUDE.md` — handoff and invariants for future sessions
 - `DECISIONS.md` — every assumption made so far

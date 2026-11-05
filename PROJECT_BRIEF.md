@@ -21,10 +21,10 @@ A tool that makes AI-written code predictable inside an organization. Reviewed c
 
 **Focus:** application glue code (auth, tokens, passwords, pagination, retries, config, rate limiting, imports), not textbook algorithms.
 
-**Numbers:** use only what `docs/benchmarks/summary.md` marks as safe to pitch, with its caveats. Strongest so far:
-- variance: asked 20 times, the model wrote 16–20 structurally different versions; with a reference, about 2 (v2.1)
-- first-time code inside real apps: 2/12 matched the reviewed version without pcat, 12/12 with it (v5)
-- silent high-severity regressions are caught and turned into human decisions (v4–v5.1)
+**Numbers:** use only what `docs/benchmarks/summary.md` marks as safe to pitch, with its caveats; every pitched number is registered in `docs/pitch/claims.md`. The three headlines (wording in `docs/pitch/one-pager.md`):
+- variance: asked for the same function 20 times, 15.7 effectively distinct versions on average; with a reference, 2.0 (v2.1, lab)
+- first-time code inside real apps: 2/12 matched the house version without pcat, 12/12 with it, on the 4 tasks where it existed nowhere else in the repo (v5); where a sibling exists, agents copy it either way
+- every high-severity deviation becomes a human decision: 20 of 60 lab runs broke a guard, all flagged with hashed proposals, 0 uncovered (v4.1 / v5 Part A); no correct code failed CI in 144 in-repo runs (v5.1)
 
 ## Architecture (Python, single package, CLI `pcat`)
 
@@ -52,6 +52,7 @@ Details live in `CLAUDE.md`, `DECISIONS.md`, `KNOWN_GAPS.md`, `docs/specs/` and 
 | v5.1 | Linter fixes for real code | 0/72 false CI failures on marked code; inference is noisy |
 | v5.2 | Unsafe planted neighbour | Inherited flaw 3/54 without catalog, 0/54 with; CI can't catch copied flaws without markers |
 | v6 | Productize: package split, starter catalog, `pcat init`, `pcat audit`, getting-started guide | Installs from a wheel on 3.11/3.13; guide dogfooded on healthchecks (8 frictions, 5 fixed); audit surfaces 10/18 planted neighbours, 5 candidates on 4,086 untouched functions |
+| v7 | Pitch material: one-pager, deck, demo script, FAQ, pilot plan, claims register | Every pitched number sourced and checked by script; demo rehearsal found two product gaps (changed constants, which check to require) |
 
 ## How the owner works
 
@@ -75,11 +76,21 @@ If a session stops partway, a fresh session resumes from git history and the han
 
 ## Status
 
-(Updated at the end of each phase.) Last completed: **v6** (productize). In progress: v7 (pitch material).
+(Updated at the end of each phase.) Last completed: **v7** (pitch material). Next: **a real pilot** with one team (`docs/pitch/pilot-plan.md`); before it, fix the two gaps the demo rehearsal found (KNOWN_GAPS, "Pitch (v7)").
+
+## Where things are
+
+- `docs/getting-started.md`: the 30-minute guide for a team trying pcat
+- `docs/pitch/one-pager.md`, `deck.pptx` / `deck.pdf`: the pitch
+- `docs/pitch/claims.md`: every pitched number with source and caveat, and the "to verify" hypotheses; `check_numbers.py` checks it
+- `docs/pitch/demo-script.md`, `faq.md`, `pilot-plan.md`: the live demo, objections, the next step
+- `docs/benchmarks/summary.md`: all measured results and what is safe to claim
 
 ## Open items
 
-- Pull request #1 (approval demo) is open; the owner should comment `/pcat approve`, confirm the check turns green, then close it without merging.
+- Pull request #1 (approval demo) is open; the owner should comment `/pcat approve`, confirm the check turns green, then close it without merging. The live demo depends on this step, which nobody has seen work end to end yet.
+- Product gaps found in v7: `pcat lint --changed-since` does not flag a changed module constant a marked function uses (a lowered `MIN_ITERATIONS` passes the pull-request check); `pcat init` still tells users to require both checks, but `pcat-lint` stays red on confirmed proposals.
+- Find a pilot team (one Python repository on GitHub, engineers using Claude Code, a pattern owner and approvers); success criteria are already fixed in `docs/pitch/pilot-plan.md`.
 - `main` is not protected; `CODEOWNERS` uses the placeholder `@platform-team`. Fine while solo; set both before anyone else contributes.
 - Install is from git (`pipx install "pcat[mcp] @ git+https://github.com/majhimanish/pcat"`); PyPI publishing needs the owner's account (`docs/releasing.md`).
 - Untested ideas: a margin rule for inference (best pattern clearly ahead of the second); a larger rerun of the "rename the neighbour into the gap" scenario; Argon2id pattern; Pydantic class support in patterns (FastAPI endpoint deferred); languages other than Python.

@@ -1349,3 +1349,49 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      trusted means editing Claude Code's own `~/.claude.json`, which this session must
      not do; the recorded runs pass `--allowedTools mcp__pcat__…` instead, as headless
      users must, and still find the server only through the `.mcp.json` `init` wrote.
+
+## v7 — pitch material
+
+253. **Which numbers.** Only rows `docs/benchmarks/summary.md` marks as safe, worded with
+     their caveat. v6 numbers (audit 10/18 planted neighbours, 5 candidates, dogfood
+     frictions) are not in `summary.md`, so they stay out of the pitch and are listed
+     under "Not used in the pitch" in `claims.md`. The brief's "16–20 versions" is
+     replaced by summary.md's 15.7 (effective shapes, mean over tasks with >= 10 valid
+     samples) and 2.0 with a reference.
+254. **Three headlines.** (1) variance 15.7 of 20 vs 2.0 (v2.1); (2) first-time code
+     12/12 vs 2/12 on the four same-function tasks, with the "agents copy neighbours
+     anyway" limit stated next to it (v5); (3) 20 of 60 lab runs broke a guard, all
+     flagged with hashed proposals, 0 uncovered (v4.1 / v5 Part A), plus "no correct
+     code failed CI in 144 in-repo runs" (v5.1). v5.2 (3/54 vs 0/54) is supporting only.
+     "15.7 effectively distinct versions" paraphrases "effective shapes" for readers
+     and says that 20 would mean all different.
+255. **Number check.** `docs/pitch/check_numbers.py` (standard library) extracts numbers
+     from `one-pager.md`, `faq.md` and the deck (slide text, notes, chart values; not
+     slide-number fields), skipping code spans, list/heading numbers and numbers glued
+     to identifiers (`v5.1`, `PC100`, `top-1`). Each must appear in a **Numbers** cell of
+     the Claims or Product facts tables of `claims.md`; each number in a cell must occur
+     in the cited `file` § section (heading to the next heading). It is a check for the
+     owner, not a pytest test, because v7 allowed no code changes beyond the deck build.
+     It reports 0 problems; a planted "37%" was reported (negative check).
+256. **Deck tooling.** `docs/pitch/build_deck.js` (pptxgenjs 3.12.0, installed outside the
+     repo, not a dependency) builds a 12-slide, 16:9 structured deck: theme, three
+     layouts, sections, speaker notes on every slide, native charts. The theme colors are
+     written by the pptx skill's `apply_theme.js` when its path is passed. The PDF is
+     LibreOffice's export; slides were checked as images at 800 px wide (phone landscape).
+     Numbered step badges were left out because every number on a slide must be a claim.
+257. **Demo rehearsal.** The demo's local steps were run in a scratch repository
+     (`pcat init`, one real `claude -p` run that fetched `auth.password.pbkdf2` and kept
+     the markers, $0.21 CLI estimate, the deviation, the proposal, the audit finding).
+     The first agent run could not reach the server because the venv lacked the `mcp`
+     extra; that became the first "if it fails" row. The GitHub part was not run.
+258. **Guide corrections (docs only).** Rehearsal showed (a) `--changed-since` does not
+     flag a changed module constant, so the guide's `MIN_ITERATIONS` example output was
+     wrong: it now breaks `hmac.compare_digest` inside `verify_password` (real output,
+     hash `#e96d53e0`) and states the gap; (b) `pcat-lint` stays red on a confirmed
+     proposal, so the guide now says to require `pcat-approvals` only. Both product
+     fixes are in KNOWN_GAPS; `pcat init`'s next-steps text still says "both".
+259. **Pilot criteria.** Fixed in `pilot-plan.md` before any pilot: fetch rate >= 70% in
+     covered areas, 0 high deviations merged without a recorded decision, <= 1 false
+     required-check failure per week, <= 2 hours per pattern, team keeps the lint check.
+     Review effort is measured but not a criterion (one team, 4 weeks). These are targets
+     picked as the simplest reasonable bar, not derived from data.

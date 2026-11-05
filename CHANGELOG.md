@@ -3,6 +3,14 @@
 All versions so far are 0.1.0 development phases on `main`; the phase specs are in
 `docs/specs/` and the measured results in `docs/benchmarks/`.
 
+## Unreleased — v7: pitch material (docs only)
+
+- `docs/pitch/`: one-pager, 12-slide deck (pptx + pdf), demo script, FAQ, pilot plan and a
+  claims register with a number check (`check_numbers.py`).
+- Getting-started guide: the deviation example now uses a change inside the function
+  (a changed module constant is not yet caught by `--changed-since`), and only
+  `pcat-approvals` should be a required check.
+
 ## 0.1.0 — v6: productize
 
 - The installed package holds only product code; research harnesses moved to

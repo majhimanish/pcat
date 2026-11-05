@@ -21,8 +21,9 @@ approved patterns instead of producing a new variation per prompt.
   planted neighbours; opt-in `pcat lint --fail-on-inferred-guards` (similarity >= 0.75).
 - **v6 (done):** productized: research code in `experiments/lib/pcatlab` (not packaged),
   `pcat --version` 0.1.0, starter catalog in the package, `pcat init`, `pcat audit`,
-  `docs/getting-started.md` (dogfooded). **v7:** pitch material in `docs/pitch/`.
-- **Next:** a real pilot (`docs/pitch/pilot-plan.md`); margin rule; Argon2id; other languages.
+  `docs/getting-started.md`. **v7 (done):** `docs/pitch/` (every number in `claims.md`,
+  checked by `python docs/pitch/check_numbers.py`; deck built by `build_deck.js`).
+- **Next:** fix the two v7 gaps (KNOWN_GAPS "Pitch (v7)"), then a real pilot (`pilot-plan.md`).
 
 ## Setup and commands
 
@@ -128,15 +129,14 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `catalog/` in tests). Each validation check has a test that triggers it.
 - Pattern tests: `test_impl.py` next to `impl.py`, `from impl import …`, normal/edge/
   failure/security cases; no network or sleeping; `importorskip` for `requires` libs.
-- Commits: imperative subject (≤ 72 chars) saying what; body saying why.
-  One meaningful step per commit; one pattern per PR.
+- Commits: imperative subject (≤ 72 chars), body saying why; one step per commit, one pattern per PR.
 
 ## Where to look
 
 - `DECISIONS.md` (every assumption; read before changing behavior), `KNOWN_GAPS.md` (backlog)
 - `docs/specs/` — phase specs (`v1-catalog.md` … `v4.1-human-approval.md`, `v5-…`)
 - `docs/benchmarks/` — per phase, `v5-open-source.md`, and `summary.md` (all headlines)
-- `README.md` (quickstart, reference), `docs/getting-started.md`, `PROJECT_BRIEF.md` (context)
+- `README.md`, `docs/getting-started.md`, `docs/pitch/`, `PROJECT_BRIEF.md` (context)
 
 ## Rule for later sessions
 
