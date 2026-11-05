@@ -1,0 +1,17 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 58339b3..a05e5ff 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -403,3 +403,12 @@ def daystart_timestamp(dt: datetime | None = None) -> int:
+     dt = dt or datetime.now(timezone.utc)
+     day_start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+     return int(day_start.timestamp())
++
++
++# pcat: auth.lnbits_access_token@v1
++def create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:
++    minutes = token_expire_minutes or settings.auth_token_expire_minutes
++    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
++    to_encode = {k: v for k, v in data.items() if v is not None}
++    to_encode.update({"exp": expire})
++    return jwt.encode(to_encode, settings.auth_secret_key, "HS256")

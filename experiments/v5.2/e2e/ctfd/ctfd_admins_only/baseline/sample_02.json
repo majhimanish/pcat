@@ -1,0 +1,81 @@
+{
+  "app": "ctfd",
+  "baseline": "1fe16d20cb9bb335c44887b555c5dd803bd3449a",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.admins_only",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add an admin-only decorator for the admin pages that redirects non-admins to the login page.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0774701,
+    "duration_ms": 23933,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added the `admins_only` decorator, but I haven't run it or the tests. The command to import it and run `tests/admin/test_views.py` was blocked for approval, so none of this has been tested.\n\nThe admin modules (`CTFd/admin/*.py`, plus the exports and users API) already import and use `admins_only` from `CTFd/utils/decorators`. It wasn't defined there, so they would have failed on import. I defined it in `CTFd/utils/decorators/__init__.py`, next to `authed_only`, which it copies.\n\n- **Admin users:** it runs the view as normal.\n- **Everyone else, on page requests:** it redirects to `auth.login`, with `next` set to the page they asked for so they land back on it after logging in.\n- **JSON and event-stream requests:** it returns a 403 instead of a redirect. This matches `authed_only`.\n\n**Security issue, not changed:** the existing `admins_only_api` checks `authed()` instead of `is_admin()`. That means any logged-in user passes it. `is_admin` is already imported in that file but nothing uses it, so this looks like a mistake. I left it alone since you only asked for the page decorator. It's a one-line change to `is_admin()` if you want it.\n\nOnce you approve the command, I'll run the admin tests."
+  },
+  "task": "ctfd_admins_only",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "command": "git ls-files | head -100 && grep -rniE \"admin|login_required|login\" --include=* -I . --exclude-dir=.git -l | head -30"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"admins_only\" -r CTFd | head -40; sed -n 1,40p CTFd/utils/decorators/__init__.py; grep -n \"def admins_only\" -B3 -A25 CTFd/utils/decorators/__init__.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"admins_only\\b\" CTFd/utils/decorators/__init__.py; git status --short; git log --oneline | head -3; sed -n 100,140p CTFd/utils/decorators/__init__.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 84,102p CTFd/utils/decorators/__init__.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-58a88adad097/repo/CTFd/utils/decorators/__init__.py",
+        "new_string": "def admins_only(f):\n    \"\"\"\n    Decorator that requires the user to be an admin. Non-admins are\n    redirected to the login page (or get a 403 for JSON/event-stream requests).\n    :param f:\n    :return:\n    \"\"\"\n\n    @functools.wraps(f)\n    def admins_only_wrapper(*args, **kwargs):\n        if is_admin():\n            return f(*args, **kwargs)\n        else:\n            if request.is_json or request.accept_mimetypes.best == \"text/event-stream\":\n                abort(403)\n            else:\n                return redirect(url_for(\"auth.login\", next=request.full_path))\n\n    return admins_only_wrapper\n\n\ndef admins_only_api(f):",
+        "old_string": "def admins_only_api(f):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -c \"import CTFd.utils.decorators as d; print(d.admins_only)\" 2>&1 | tail -3; timeout 300 python -m pytest tests/admin/test_views.py -q -x 2>&1 | tail -5"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1
+    }
+  },
+  "wall_seconds": 24.8
+}

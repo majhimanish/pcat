@@ -1,0 +1,108 @@
+{
+  "app": "lnbits",
+  "baseline": "c83943b7cdf974af2c10c33bb51ac0f302a21b3f",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency that requires the wallet invoice key from the X-Api-Key header or query string, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.10504820000000001,
+    "duration_ms": 41602,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added `require_invoice_key` to `lnbits/decorators.py`, but I haven't run any tests. The approval prompt for `make test-api` was declined, so it never ran. I also couldn't confirm that the import now succeeds.\n\n- **What it does:** `require_invoice_key` reads the key from the `X-API-KEY` header, or from the `api-key` query parameter if the header is absent. It looks up the wallet and returns a `WalletTypeInfo`.\n- **Who can call it:** It accepts either the invoice key or the admin key, because `KeyChecker` classifies a matching admin key as `admin`. That is how the existing invoice-key dependency behaves.\n- **Missing or bad keys:** A missing key gives 401, an unknown key gives 404, and the user-access check is also applied.\n- **Why it was needed:** `lnbits/__init__.py` and `lnbits/core/views/wallet_api.py` already imported `require_invoice_key`, but `decorators.py` never defined it. Importing `lnbits` would have failed before this change.\n- **Existing alternative:** `require_base_invoice_key` already did the same job with a cached lookup that returns a lighter `BaseWalletTypeInfo`. Use it if the endpoint doesn't need the full wallet.\n- **Unchanged:** I didn't touch any endpoints, so none of the invoice-creating routes use the new dependency yet. Add `Depends(require_invoice_key)` where you want it.\n\nTo check it, run `make test-api`."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "glob": "*.py",
+        "head_limit": 60,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-55a57307241a/repo/lnbits",
+        "pattern": "invoice_key|APIKeyHeader|APIKeyQuery"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-55a57307241a/repo/lnbits/decorators.py",
+        "limit": 230,
+        "offset": 40
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "command": "sed -n 1,30p lnbits/__init__.py; grep -n \"require_invoice_key\" -r lnbits | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"require_invoice_key\\|^require_\" lnbits/decorators.py; git status --short; git log --oneline -3"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-55a57307241a/repo/lnbits/decorators.py",
+        "new_string": "async def require_invoice_key(\n    request: Request,\n    api_key_header: str = Security(api_key_header),\n    api_key_query: str = Security(api_key_query),\n) -> WalletTypeInfo:\n    check: KeyChecker = KeyChecker(\n        api_key=api_key_header or api_key_query,\n        expected_key_type=KeyType.invoice,\n    )\n    return await check(request)\n\n\nasync def require_base_admin_key(",
+        "old_string": "async def require_base_admin_key(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -c \"import lnbits; print(lnbits.require_invoice_key)\" 2>&1 | tail -3; grep -n \"^test-unit\\|^test-api\\|^check:\" -A3 Makefile | head -20"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^test-api\" -A3 Makefile"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "timeout 500 make test-api 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "make test-api",
+        "timeout": 500000
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 42.4
+}

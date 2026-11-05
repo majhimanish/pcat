@@ -1,0 +1,64 @@
+diff --git a/CTFd/teams.py b/CTFd/teams.py
+index 192d576..2ba03d9 100644
+--- a/CTFd/teams.py
++++ b/CTFd/teams.py
+@@ -56,6 +56,7 @@ def listing():
+ @teams.route("/teams/invite", methods=["GET", "POST"])
+ @registered_only
+ @require_team_mode
++@ratelimit(method="POST", limit=10, interval=5)
+ def invite():
+     infos = get_infos()
+     errors = get_errors()
+@@ -188,6 +189,7 @@ def join():
+ @teams.route("/teams/new", methods=["GET", "POST"])
+ @authed_only
+ @require_team_mode
++@ratelimit(method="POST", limit=10, interval=5)
+ def new():
+     infos = get_infos()
+     errors = get_errors()
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 70206b6..0f7b86c 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -159,11 +159,13 @@ def require_team(f):
+     return require_team_wrapper
+ 
+ 
+-def throttle(method="POST", limit=10, interval=60, key_prefix="th"):
+-    def throttle_decorator(f):
++# pcat: decorators.ratelimit@v1
++def ratelimit(method="POST", limit=50, interval=300, key_prefix="rl"):
++    def ratelimit_decorator(f):
+         @functools.wraps(f)
+-        def throttle_function(*args, **kwargs):
+-            key = "{}:{}:{}".format(key_prefix, request.remote_addr, request.endpoint)
++        def ratelimit_function(*args, **kwargs):
++            ip_address = current_user.get_ip()
++            key = "{}:{}:{}".format(key_prefix, ip_address, request.endpoint)
+             current = cache.get(key)
+ 
+             if request.method == method:
+@@ -177,16 +179,15 @@ def throttle(method="POST", limit=10, interval=60, key_prefix="th"):
+                     )
+                     resp.status_code = 429
+                     return resp
++                elif current is None:
++                    cache.set(key, 1, timeout=interval)
+                 else:
+-                    if current is None:
+-                        cache.set(key, 1, timeout=interval)
+-                    else:
+-                        cache.set(key, int(current) + 1, timeout=interval)
++                    cache.set(key, int(current) + 1, timeout=interval)
+             return f(*args, **kwargs)
+ 
+-        return throttle_function
++        return ratelimit_function
+ 
+-    return throttle_decorator
++    return ratelimit_decorator
+ 
+ 
+ def require_complete_profile(f):

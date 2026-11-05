@@ -1,0 +1,188 @@
+{
+  "app": "lnbits",
+  "baseline": "ff3a24f6c7a9056ec8d6d5b12986240df15fbb09",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.lnbits_access_token",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Create the session JWT access token expiring after configured minutes"
+      },
+      "result": {
+        "ids": [
+          "auth.lnbits_access_token",
+          "auth.jwt.create_access_token"
+        ],
+        "scores": [
+          15.302,
+          9.838
+        ]
+      },
+      "timestamp": "2026-11-05T02:03:58.469+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.lnbits_access_token",
+        "names": null
+      },
+      "result": {
+        "id": "auth.lnbits_access_token@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:04:00.625+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 537,
+        "pattern_id": "auth.lnbits_access_token"
+      },
+      "result": {
+        "deviations": [
+          [
+            "create_access_token",
+            "auth.lnbits_access_token@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "create_access_token",
+            "covered",
+            "auth.lnbits_access_token"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:04:14.712+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a function to create the session JWT access token, expiring after the configured minutes, for the login endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0981212,
+    "duration_ms": 27080,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `create_access_token` to `lnbits/helpers.py`, just above `create_share_token`. I didn't run the tests or start the app. The pcat check against the reviewed pattern `auth.lnbits_access_token@v1` found no deviations.\n\n- **How it works:** it drops any `None` values from the data you pass in. It adds an `exp` claim set to the current UTC time plus `token_expire_minutes`, or `settings.auth_token_expire_minutes` if that isn't given. It signs the result with HS256 using `settings.auth_secret_key`.\n- **Existing callers:** `lnbits/core/views/auth_api.py` already imported `create_access_token` from `lnbits.helpers` and called it in the login endpoints, but the function wasn't defined there. Those calls should now work without any change to the endpoints.\n- **Marker:** I kept the `# pcat: auth.lnbits_access_token@v1` comment above the function."
+  },
+  "task": "lnbits_access_token",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "Create the session JWT access token with house settings"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "-i": true,
+        "output_mode": "files_with_matches",
+        "pattern": "jwt|ACCESS_TOKEN|login"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Create the session JWT access token expiring after configured minutes"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "glob": "lnbits/**/*.py",
+        "output_mode": "content",
+        "pattern": "create_access_token|auth_token_expire|jwt\\.encode"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "id": "auth.lnbits_access_token"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-981275dce842/repo/lnbits/helpers.py",
+        "limit": 40,
+        "offset": 200
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-981275dce842/repo/lnbits/helpers.py",
+        "pattern": "def create_access_token|^import jwt|^from datetime|^import|^from jwt"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "-A": 3,
+        "-B": 3,
+        "head_limit": 20,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-981275dce842/repo/lnbits/core/views/auth_api.py",
+        "pattern": "create_access_token"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-981275dce842/repo/lnbits/helpers.py",
+        "new_string": "# pcat: auth.lnbits_access_token@v1\ndef create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:\n    minutes = token_expire_minutes or settings.auth_token_expire_minutes\n    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    to_encode = {k: v for k, v in data.items() if v is not None}\n    to_encode.update({\"exp\": expire})\n    return jwt.encode(to_encode, settings.auth_secret_key, \"HS256\")\n\n\ndef create_share_token(data: dict, token_expire_minutes: int | None = None) -> str:",
+        "old_string": "def create_share_token(data: dict, token_expire_minutes: int | None = None) -> str:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-981275dce842/repo/lnbits/helpers.py",
+        "limit": 12,
+        "offset": 218
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "code": "from datetime import datetime, timedelta, timezone\n\nimport jwt\n\nfrom lnbits.settings import settings\n\n\n# pcat: auth.lnbits_access_token@v1\ndef create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:\n    minutes = token_expire_minutes or settings.auth_token_expire_minutes\n    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)\n    to_encode = {k: v for k, v in data.items() if v is not None}\n    to_encode.update({\"exp\": expire})\n    return jwt.encode(to_encode, settings.auth_secret_key, \"HS256\")\n",
+        "pattern_id": "auth.lnbits_access_token"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "auth.lnbits_access_token"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 2,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 28.4
+}

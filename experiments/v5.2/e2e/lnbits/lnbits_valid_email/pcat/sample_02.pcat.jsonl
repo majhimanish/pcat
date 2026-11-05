@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Validate an email address string against an anchored regex"}, "result": {"ids": ["validators.regex_match"], "scores": [18.879]}, "timestamp": "2026-11-05T02:06:36.284+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "validators.regex_match", "names": {"f0": "is_valid_email"}}, "result": {"id": "validators.regex_match@v1", "status": "active"}, "timestamp": "2026-11-05T02:06:40.416+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 226, "pattern_id": "validators.regex_match"}, "result": {"deviations": [["is_valid_email", "validators.regex_match@v1", [["PC109", false]]]], "statuses": [["is_valid_email", "near", "validators.regex_match"]]}, "timestamp": "2026-11-05T02:07:04.118+00:00", "tool": "check_code"}

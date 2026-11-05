@@ -1,0 +1,32 @@
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index e5374e9..dea1719 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -139,6 +139,27 @@ def require_team(f):
+     return require_team_wrapper
+ 
+ 
++def admins_only(f):
++    """
++    Decorator that requires the user to be an admin. Non-admins are
++    redirected to the login page (or get a 403 for JSON/event-stream requests).
++    :param f:
++    :return:
++    """
++
++    @functools.wraps(f)
++    def admins_only_wrapper(*args, **kwargs):
++        if is_admin():
++            return f(*args, **kwargs)
++        else:
++            if request.is_json or request.accept_mimetypes.best == "text/event-stream":
++                abort(403)
++            else:
++                return redirect(url_for("auth.login", next=request.full_path))
++
++    return admins_only_wrapper
++
++
+ def admins_only_api(f):
+     """
+     Decorator that requires an admin session for API endpoints

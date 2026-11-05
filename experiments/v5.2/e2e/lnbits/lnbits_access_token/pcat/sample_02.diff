@@ -1,0 +1,20 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 58339b3..9e8476d 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -217,6 +217,15 @@ def decrypt_internal_message(m: str | None = None, urlsafe: bool = False) -> str
+     return AESCipher(key=settings.auth_secret_key).decrypt(m, urlsafe=urlsafe)
+ 
+ 
++# pcat: auth.lnbits_access_token@v1
++def create_access_token(data: dict, token_expire_minutes: int | None = None) -> str:
++    minutes = token_expire_minutes or settings.auth_token_expire_minutes
++    expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)
++    to_encode = {k: v for k, v in data.items() if v is not None}
++    to_encode.update({"exp": expire})
++    return jwt.encode(to_encode, settings.auth_secret_key, "HS256")
++
++
+ def create_share_token(data: dict, token_expire_minutes: int | None = None) -> str:
+     minutes = token_expire_minutes or settings.auth_token_expire_minutes
+     expire = datetime.now(timezone.utc) + timedelta(minutes=minutes)

@@ -1,0 +1,196 @@
+{
+  "app": "healthchecks",
+  "baseline": "12f2312fc32193e3f40162d3a6d9d502a23de13e",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Look up an object by code the current user may access, with read-write variant"
+      },
+      "result": {
+        "ids": [
+          "access.channel_for_user"
+        ],
+        "scores": [
+          22.532
+        ]
+      },
+      "timestamp": "2026-11-05T02:03:06.463+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "access.channel_for_user",
+        "names": {
+          "f0": "_get_rw_check_for_user"
+        }
+      },
+      "result": {
+        "id": "access.channel_for_user@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:03:09.477+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 1020,
+        "pattern_id": "access.channel_for_user"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_get_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ],
+          [
+            "_get_rw_check_for_user",
+            "access.channel_for_user@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "_get_check_for_user",
+            "none",
+            null
+          ],
+          [
+            "_get_rw_check_for_user",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:03:21.136+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add helpers in hc/front/views.py to load a check by code for the current user and block read-only members from writing.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1040353,
+    "duration_ms": 25577,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added two helpers to `hc/front/views.py`, placed just after the channel helpers:\n\n- **`_get_check_for_user(request, code)`** returns `(check, rw)`. It loads the check by `code` with its project, and gives `rw=True` to superusers and the project owner. For anyone else it requires a `Member` row, which gives a 404 if there is none, and `rw` is that member's `is_rw`.\n- **`_get_rw_check_for_user(request, code)`** returns just the check. It raises `PermissionDenied` if `rw` is false, which is how read-only members are blocked from writing.\n\nThe code follows the reviewed `access.channel_for_user@v1` pattern, with the `# pcat:` markers kept. The pcat check found no high-severity deviations. It reported only a low-severity PC110, because the pattern uses `Channel` and these use `Check`. Nothing needs approving.\n\nThere are already about ten calls to these two names in `views.py`, for example at lines 331 and 729, but they weren't defined anywhere in `hc/`. This change defines them. I didn't run the test suite."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "max_results": 3,
+        "query": "select:mcp__pcat__search_patterns,mcp__pcat__get_pattern,mcp__pcat__check_code"
+      },
+      "tool": "ToolSearch"
+    },
+    {
+      "input": {
+        "head_limit": 80,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-82758e5eb2b8/repo/hc/front/views.py",
+        "pattern": "^def _get_check|^def _get_rw|get_object_or_404|^from|^import"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Look up an object by code the current user may access, with read-write variant"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-82758e5eb2b8/repo/hc/front/views.py",
+        "limit": 125,
+        "offset": 66
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "id": "access.channel_for_user",
+        "names": {
+          "f0": "_get_rw_check_for_user"
+        }
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "head_limit": 10,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-82758e5eb2b8/repo/hc",
+        "pattern": "_get_check_for_user|_get_rw_check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-82758e5eb2b8/repo/hc",
+        "pattern": "def _get_(rw_)?check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-82758e5eb2b8/repo/hc/front/views.py",
+        "new_string": "# pcat: access.channel_for_user@v1\ndef _get_check_for_user(request: HttpRequest, code: UUID) -> tuple[Check, bool]:\n    \"\"\"Return specified check if current user has access to it.\"\"\"\n\n    assert request.user.is_authenticated\n\n    check = get_object_or_404(Check.objects.select_related(\"project\"), code=code)\n    if request.user.is_superuser:\n        return check, True\n\n    if request.user.id == check.project.owner_id:\n        return check, True\n\n    membership = get_object_or_404(Member, project=check.project, user=request.user)\n    return check, membership.is_rw\n\n\n# pcat: access.channel_for_user@v1\ndef _get_rw_check_for_user(request: HttpRequest, code: UUID) -> Check:\n    check, rw = _get_check_for_user(request, code)\n    if not rw:\n        raise PermissionDenied\n\n    return check\n\n\ndef _get_notification_for_user(",
+        "old_string": "def _get_notification_for_user(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "from django.core.exceptions import PermissionDenied\nfrom django.http import HttpRequest\nfrom django.shortcuts import get_object_or_404\nfrom hc.accounts.models import Member\nfrom hc.api.models import Check\nfrom uuid import UUID\n\n\n# pcat: access.channel_for_user@v1\ndef _get_check_for_user(request: HttpRequest, code: UUID) -> tuple[Check, bool]:\n    \"\"\"Return specified check if current user has access to it.\"\"\"\n\n    assert request.user.is_authenticated\n\n    check = get_object_or_404(Check.objects.select_related(\"project\"), code=code)\n    if request.user.is_superuser:\n        return check, True\n\n    if request.user.id == check.project.owner_id:\n        return check, True\n\n    membership = get_object_or_404(Member, project=check.project, user=request.user)\n    return check, membership.is_rw\n\n\n# pcat: access.channel_for_user@v1\ndef _get_rw_check_for_user(request: HttpRequest, code: UUID) -> Check:\n    check, rw = _get_check_for_user(request, code)\n    if not rw:\n        raise PermissionDenied\n\n    return check\n",
+        "pattern_id": "access.channel_for_user"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "access.channel_for_user"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 27.0
+}

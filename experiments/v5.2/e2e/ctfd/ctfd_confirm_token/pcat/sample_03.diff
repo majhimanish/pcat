@@ -1,0 +1,31 @@
+diff --git a/CTFd/utils/security/email.py b/CTFd/utils/security/email.py
+index dd2b929..bb2702d 100644
+--- a/CTFd/utils/security/email.py
++++ b/CTFd/utils/security/email.py
+@@ -8,6 +8,26 @@ from CTFd.exceptions.email import (
+ from CTFd.utils.encoding import hexencode
+ 
+ 
++# pcat: security.email_confirm_token@v1
++def generate_email_confirm_token(addr, timeout=1800):
++    nonce = hexencode(os.urandom(32))
++    cache.set(f"confirm_email_{nonce}", addr, timeout=timeout)
++    return nonce
++
++
++# pcat: security.email_confirm_token@v1
++def verify_email_confirm_token(nonce):
++    addr = cache.get(f"confirm_email_{nonce}")
++    if addr is None:
++        raise UserConfirmTokenInvalidException
++    return addr
++
++
++# pcat: security.email_confirm_token@v1
++def remove_email_confirm_token(nonce):
++    cache.delete(f"confirm_email_{nonce}")
++
++
+ def generate_password_reset_token(addr, timeout=1800):
+     nonce = hexencode(os.urandom(32))
+     cache.set(f"reset_password_{nonce}", addr, timeout=timeout)

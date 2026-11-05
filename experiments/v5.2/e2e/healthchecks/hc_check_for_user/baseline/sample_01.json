@@ -1,0 +1,106 @@
+{
+  "app": "healthchecks",
+  "baseline": "5df11d3db865d0bbf484fde5e2b3e0c3fe9257a7",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add helpers in hc/front/views.py to load a check by code for the current user and block read-only members from writing.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0866831,
+    "duration_ms": 33262,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added `_get_check_for_user` and `_get_rw_check_for_user` to `hc/front/views.py`, just above `_get_channel_for_user`. `python -m py_compile` passes, but I haven't run the test suite.\n\n- **`_get_check_for_user(request, code, preload_owner_profile=False)`** returns `(check, rw)`. Superusers and the project owner get `rw=True`. Other users must be a project `Member`, otherwise they get a 404, and `rw` comes from `membership.is_rw`. It follows the same pattern as `_get_channel_for_user`. With `preload_owner_profile=True` it also fetches `project__owner__profile` in the same query.\n- **`_get_rw_check_for_user(request, code)`** calls the first helper and raises `PermissionDenied` if the user is read-only. Otherwise it returns just the check.\n\nThe file already called both helpers in 16 places, for example `check, rw = _get_check_for_user(request, code, preload_owner_profile=True)`, but neither was defined anywhere. The new helpers match those call signatures, so I didn't touch any callers.\n\n`Profile` has a one-to-one link to `User`, so the `project__owner__profile` lookup should resolve."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc/front/views.py",
+        "pattern": "^def _get_check_for_user|^def _get_rw|^def _get_project_for_user|^def _get_check|^from|^import"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc/front/views.py",
+        "limit": 125,
+        "offset": 68
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "count",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc",
+        "pattern": "_get_check_for_user|_get_rw_check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "-A": 14,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc/front/views.py",
+        "pattern": "def _get_(rw_)?check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc/front/views.py",
+        "pattern": "_get_(rw_)?check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ccfaa42a5041/repo/hc/front/views.py",
+        "new_string": "def _get_check_for_user(\n    request: HttpRequest, code: UUID, preload_owner_profile: bool = False\n) -> tuple[Check, bool]:\n    \"\"\"Return specified check if current user has access to it.\n\n    Returns a (check, rw) tuple. Superusers and project owners get rw=True,\n    team members get rw according to their role. Anyone else gets a 404.\n    \"\"\"\n\n    assert request.user.is_authenticated\n\n    fields = [\"project\"]\n    if preload_owner_profile:\n        fields.append(\"project__owner__profile\")\n\n    check = get_object_or_404(Check.objects.select_related(*fields), code=code)\n    if request.user.is_superuser:\n        return check, True\n\n    if request.user.id == check.project.owner_id:\n        return check, True\n\n    membership = get_object_or_404(Member, project=check.project, user=request.user)\n    return check, membership.is_rw\n\n\ndef _get_rw_check_for_user(request: HttpRequest, code: UUID) -> Check:\n    \"\"\"Like _get_check_for_user, but raise PermissionDenied for read-only members.\"\"\"\n\n    check, rw = _get_check_for_user(request, code)\n    if not rw:\n        raise PermissionDenied\n\n    return check\n\n\ndef _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:",
+        "old_string": "def _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -m py_compile hc/front/views.py && echo ok; grep -n \"owner.*profile\\|related_name\" hc/accounts/models.py | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"class Profile\" -A8 hc/accounts/models.py | grep -n \"user\"; sed -n 462,472p hc/accounts/models.py"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 34.0
+}

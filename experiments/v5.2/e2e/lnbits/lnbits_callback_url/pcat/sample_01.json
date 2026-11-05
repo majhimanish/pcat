@@ -1,0 +1,180 @@
+{
+  "app": "lnbits",
+  "baseline": "96f65f3859fb38743aa347b3a525be21d364d86f",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.check_callback_url",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Validate a payment callback URL against allowed origins"
+      },
+      "result": {
+        "ids": [
+          "security.check_callback_url"
+        ],
+        "scores": [
+          19.029
+        ]
+      },
+      "timestamp": "2026-11-05T02:05:05.701+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "security.check_callback_url",
+        "names": null
+      },
+      "result": {
+        "id": "security.check_callback_url@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:05:08.242+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "lnbits/helpers.py",
+        "length": 1003,
+        "pattern_id": "security.check_callback_url"
+      },
+      "result": {
+        "deviations": [
+          [
+            "check_callback_url",
+            "security.check_callback_url@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "check_callback_url",
+            "covered",
+            "security.check_callback_url"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:05:19.209+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a function that rejects payment callback URLs whose origin isn't permitted by the configured callback URL rules.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0954889,
+    "duration_ms": 25238,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `check_callback_url(url)` to `lnbits/helpers.py`, right after the existing `check_webhook_url`. It raises `ValueError` if the URL's origin isn't allowed by `settings.lnbits_callback_url_rules`, and returns `None` if it is allowed. I didn't run the repo's tests or write new ones. The pcat `check_code` check found no deviations from the catalog pattern `security.check_callback_url@v1`.\n\n- **Rejected outright:** non-http(s) schemes, missing hosts, embedded credentials, and invalid ports.\n- **Rule matching:**\n  - The function builds the origin as `scheme://host[:port]`, lowercasing the host and bracketing IPv6 hosts.\n  - It then requires a full regex match against at least one rule, using `re.fullmatch`.\n  - Invalid regex rules are skipped with a debug log.\n  - If no rules are configured, any valid http(s) URL is allowed. That matches how `check_webhook_url` behaves today.\n- **Existing function left alone:** `check_webhook_url` uses `re.match` against the whole URL. A rule like `https://example\\.com` would also match `https://example.com.evil.net`. I didn't change it or any of its callers. Switching callers to `check_callback_url` would close that gap if you want it."
+  },
+  "task": "lnbits_callback_url",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "max_results": 3,
+        "query": "select:mcp__pcat__search_patterns,mcp__pcat__get_pattern,mcp__pcat__check_code"
+      },
+      "tool": "ToolSearch"
+    },
+    {
+      "input": {
+        "-i": true,
+        "output_mode": "files_with_matches",
+        "pattern": "callback|allowed_origins|CALLBACK"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Validate a payment callback URL against allowed origins"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "-i": true,
+        "output_mode": "content",
+        "path": "lnbits/settings.py",
+        "pattern": "callback_url|callback.*(origin|allowed)"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "-i": true,
+        "output_mode": "content",
+        "path": "lnbits/helpers.py",
+        "pattern": "callback"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "id": "security.check_callback_url"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-5d3db22e06aa/repo/lnbits/helpers.py",
+        "limit": 60,
+        "offset": 240
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "command": "sed -n 1,40p lnbits/helpers.py | grep -nE \"^(import|from)\""
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-5d3db22e06aa/repo/lnbits/helpers.py",
+        "new_string": "    raise ValueError(\"Webhook URL is not allowed.\")\n\n\n# pcat: security.check_callback_url@v1\ndef check_callback_url(url: str):\n    u = urlparse(url)\n    try:\n        port = u.port\n    except ValueError as exc:\n        raise ValueError(\"Callback URL is not allowed.\") from exc\n    if (\n        u.scheme not in {\"http\", \"https\"}\n        or not u.hostname\n        or u.username is not None\n        or (u.password is not None)\n    ):\n        raise ValueError(\"Callback URL is not allowed.\")\n    host = u.hostname.lower()\n    if \":\" in host:\n        host = f\"[{host}]\"\n    origin = f\"{u.scheme}://{host}\"\n    if port is not None:\n        origin += f\":{port}\"\n    if not settings.lnbits_callback_url_rules:\n        return\n    for rule in settings.lnbits_callback_url_rules:\n        try:\n            if re.fullmatch(rule, origin) is not None:\n                return\n        except re.error:\n            logger.debug(f\"Invalid regex rule: '{rule}'. \")\n            continue\n    raise ValueError(\n        f\"Callback URL origin '{origin}' is not allowed. \"\n        \"Please check your admin settings.\"\n    )\n\n\ndef download_url(",
+        "old_string": "    raise ValueError(\"Webhook URL is not allowed.\")\n\n\ndef download_url(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "def check_callback_url(url: str):\n    u = urlparse(url)\n    try:\n        port = u.port\n    except ValueError as exc:\n        raise ValueError(\"Callback URL is not allowed.\") from exc\n    if (\n        u.scheme not in {\"http\", \"https\"}\n        or not u.hostname\n        or u.username is not None\n        or (u.password is not None)\n    ):\n        raise ValueError(\"Callback URL is not allowed.\")\n    host = u.hostname.lower()\n    if \":\" in host:\n        host = f\"[{host}]\"\n    origin = f\"{u.scheme}://{host}\"\n    if port is not None:\n        origin += f\":{port}\"\n    if not settings.lnbits_callback_url_rules:\n        return\n    for rule in settings.lnbits_callback_url_rules:\n        try:\n            if re.fullmatch(rule, origin) is not None:\n                return\n        except re.error:\n            logger.debug(f\"Invalid regex rule: '{rule}'. \")\n            continue\n    raise ValueError(\n        f\"Callback URL origin '{origin}' is not allowed. \"\n        \"Please check your admin settings.\"\n    )\n",
+        "file_path": "lnbits/helpers.py",
+        "pattern_id": "security.check_callback_url"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "security.check_callback_url"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 26.9
+}

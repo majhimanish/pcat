@@ -1,0 +1,18 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 3e4abbf..a8167d6 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -173,6 +173,13 @@ def is_valid_tag(tag: str) -> bool:
+     return re.search(tag_regex, tag) is not None
+ 
+ 
++def is_valid_username(username: str) -> bool:
++    if not 2 <= len(username) <= 20:
++        return False
++    username_regex = r"[A-Za-z0-9]+(?:[._][A-Za-z0-9]+)*"
++    return re.fullmatch(username_regex, username) is not None
++
++
+ def is_valid_external_id(external_id: str) -> bool:
+     if len(external_id) > 256:
+         return False

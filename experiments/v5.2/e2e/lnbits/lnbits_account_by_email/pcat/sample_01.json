@@ -1,0 +1,165 @@
+{
+  "app": "lnbits",
+  "baseline": "dce64dafd4c31482071db874335c00f6fb8cbbe1",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/core/crud/users.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.get_account_by_field",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Fetch an account by a case-insensitive unique field"
+      },
+      "result": {
+        "ids": [
+          "crud.get_account_by_field"
+        ],
+        "scores": [
+          19.767
+        ]
+      },
+      "timestamp": "2026-11-05T02:04:28.626+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "crud.get_account_by_field",
+        "names": null
+      },
+      "result": {
+        "id": "crud.get_account_by_field@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:04:30.755+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "context_length": 102,
+        "length": 512,
+        "pattern_id": "crud.get_account_by_field"
+      },
+      "result": {
+        "deviations": [
+          [
+            "get_account_by_email",
+            "crud.get_account_by_field@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "get_account_by_email",
+            "near",
+            "crud.get_account_by_field"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:04:39.059+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an async `get_account_by_email` to the user CRUD that matches email case-insensitively.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0863957,
+    "duration_ms": 19773,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added `get_account_by_email` to `lnbits/core/crud/users.py`, right after `get_account_by_username`. I didn't run it or any tests.\n\nIt's an async function built from the catalog's `crud.get_account_by_field@v1` pattern, with the lookup column changed from `username` to `email`:\n\n- **Match:** it compares `LOWER(email)` against the lowercased input, so the match is case-insensitive.\n- **Empty input:** an empty email returns `None`.\n- **Inactive accounts:** it takes `active_only=True` by default and accepts an optional `conn`, like the other account lookups. Pass `active_only=False` to include inactive accounts.\n- **Pattern check:** `check_code` reported no high-severity deviations. The one low-severity item is the changed query literal (`email` instead of `username`), which is the point of the change.\n\nNothing calls the new function yet."
+  },
+  "task": "lnbits_account_by_email",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {},
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "glob": "**/crud*/**/*.py",
+        "head_limit": 60,
+        "output_mode": "content",
+        "pattern": "async def |^import |^from "
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Fetch an account by a case-insensitive unique field"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "lnbits/core/crud/users.py",
+        "pattern": "async def get_account|lower\\("
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "id": "crud.get_account_by_field"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-f345ba497f6a/repo/lnbits/core/crud/users.py",
+        "limit": 230,
+        "offset": 1
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-f345ba497f6a/repo/lnbits/core/crud/users.py",
+        "new_string": "# pcat: crud.get_account_by_field@v1\nasync def get_account_by_email(\n    email: str, active_only: bool = True, conn: Connection | None = None\n) -> Account | None:\n    if len(email) == 0:\n        return None\n\n    return await (conn or db).fetchone(\n        \"\"\"\n            SELECT * FROM accounts\n            WHERE\n                LOWER(email) = :email\n                AND (activated = true OR activated = :activated)\n        \"\"\",\n        {\"email\": email.lower(), \"activated\": active_only},\n        Account,\n    )\n\n\nasync def get_account_by_pubkey(",
+        "old_string": "async def get_account_by_pubkey(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "# pcat: crud.get_account_by_field@v1\nasync def get_account_by_email(\n    email: str, active_only: bool = True, conn: Connection | None = None\n) -> Account | None:\n    if len(email) == 0:\n        return None\n\n    return await (conn or db).fetchone(\n        \"\"\"\n            SELECT * FROM accounts\n            WHERE\n                LOWER(email) = :email\n                AND (activated = true OR activated = :activated)\n        \"\"\",\n        {\"email\": email.lower(), \"activated\": active_only},\n        Account,\n    )\n",
+        "context": "from lnbits.core.db import db\nfrom lnbits.core.models import Account\nfrom lnbits.db import Connection\n",
+        "pattern_id": "crud.get_account_by_field"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "crud.get_account_by_field"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 21.2
+}

@@ -1,0 +1,192 @@
+{
+  "app": "healthchecks",
+  "baseline": "9365b5c0e554d288a567bcf532fa6b09765abfc9",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/api/decorators.py",
+    "hc/api/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "API-key authorization decorator for read endpoints"
+      },
+      "result": {
+        "ids": [
+          "api.authorize_read"
+        ],
+        "scores": [
+          17.875
+        ]
+      },
+      "timestamp": "2026-11-05T02:02:10.922+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "api.authorize_read",
+        "names": null
+      },
+      "result": {
+        "id": "api.authorize_read@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:02:12.624+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/decorators.py",
+        "length": 779,
+        "pattern_id": "api.authorize_read"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authorize_read",
+            "api.authorize_read@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "authorize_read",
+            "covered",
+            "api.authorize_read"
+          ],
+          [
+            "authorize_read.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:02:28.573+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add an `authorize_read` decorator in hc/api/decorators.py that accepts rw or ro project API keys from X-Api-Key, and apply it to the read-only endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0969843,
+    "duration_ms": 27311,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `authorize_read` to `hc/api/decorators.py` and switched the read-only endpoints in `hc/api/views.py` over to it. I didn't run the test suite. The pcat check on the decorator found no deviations from the reviewed pattern.\n\n- **What it does:** it reads the key from the `X-Api-Key` header only, not the request body. Either a read-write or a read-only key works. It sets `request.project`, `request.readonly` and `request.v`. A missing or wrong key gets a JSON 401.\n- **How it was built:** it follows the reviewed `api.authorize_read@v1` pattern, with its `# pcat:` marker kept above the function. It reuses the file's existing `error` and `_get_api_version` helpers.\n- **Endpoints:**\n  - `views.py` already imported `authorize_read` and used it on `get_checks`, `get_check`, `get_check_by_unique_key`, `flips_by_uuid`, `flips_by_unique_key` and `badges`.\n  - I changed `channels`, `pings` and `ping_body` from `@authorize` to `@authorize_read`, since they only read data.\n  - The write endpoints still use `@authorize`.\n\nOne behaviour change to be aware of: `channels`, `pings` and `ping_body` now accept read-only keys, which they rejected before."
+  },
+  "task": "hc_api_authorize_read",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "API-key authorization decorator for read endpoints"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/decorators.py"
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "request": "API-key authorization decorator for read endpoints"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "id": "api.authorize_read"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/views.py",
+        "pattern": "authorize|^@|^def "
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/decorators.py",
+        "new_string": "# pcat: api.authorize_read@v1\ndef authorize_read(f: ViewFunc) -> ViewFunc:\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = \"\"\n        if len(api_key) != 32:\n            return error(\"missing api key\", 401)\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=True)\n        if project is None:\n            return error(\"wrong api key\", 401)\n        request.project = project\n        request.readonly = (\n            api_key.startswith(\"hcr_\") or api_key == request.project.api_key_readonly\n        )\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n\n\ndef authorize_metrics(",
+        "old_string": "def authorize_metrics(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/views.py",
+        "limit": 12,
+        "offset": 468
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef channels(",
+        "old_string": "@authorize\ndef channels(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef pings(",
+        "old_string": "@authorize\ndef pings(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef ping_body(",
+        "old_string": "@authorize\ndef ping_body(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "def authorize_read(f: ViewFunc) -> ViewFunc:\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = \"\"\n        if len(api_key) != 32:\n            return error(\"missing api key\", 401)\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=True)\n        if project is None:\n            return error(\"wrong api key\", 401)\n        request.project = project\n        request.readonly = (\n            api_key.startswith(\"hcr_\") or api_key == request.project.api_key_readonly\n        )\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fa8e261b8115/repo/hc/api/decorators.py",
+        "pattern_id": "api.authorize_read"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "api.authorize_read"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 4,
+      "Grep": 1,
+      "Read": 2,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 28.8
+}

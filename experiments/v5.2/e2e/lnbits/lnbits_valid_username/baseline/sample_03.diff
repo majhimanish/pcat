@@ -1,0 +1,18 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 3e4abbf..a1e94ea 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -163,6 +163,13 @@ def is_valid_email_address(email: str) -> bool:
+     return re.fullmatch(email_regex, email) is not None
+ 
+ 
++def is_valid_username(username: str) -> bool:
++    if not 2 <= len(username) <= 20:
++        return False
++    username_regex = r"[A-Za-z0-9]+([._][A-Za-z0-9]+)*"
++    return re.fullmatch(username_regex, username) is not None
++
++
+ def is_valid_label(label: str) -> bool:
+     label_regex = r"([A-Za-z0-9 ._-]{1,100}$)"
+     return re.fullmatch(label_regex, label) is not None

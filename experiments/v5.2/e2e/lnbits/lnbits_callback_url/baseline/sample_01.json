@@ -1,0 +1,112 @@
+{
+  "app": "lnbits",
+  "baseline": "9d8c3aac1fe043f24fdec81da3f67ce4eba90f08",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.check_callback_url",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a function that rejects payment callback URLs whose origin isn't permitted by the configured callback URL rules.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11633430000000002,
+    "duration_ms": 31106,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I couldn't run `make test-unit` because the command was blocked pending approval, so the new function is untested.\n\nI added `check_callback_url(url)` to `lnbits/helpers.py`. The callers in `payments.py`, `notifications.py`, `lnurl.py`, `lnurl_api.py` and `generic.py` already import it, and `tests/unit/test_helpers.py` already tests it. Neither had a definition to point at, since `helpers.py` only had the older `check_webhook_url`.\n\n**How it works**\n- **Scheme and host:** it rejects anything that isn't `http` or `https` with a host, and rejects a malformed port. The error is `Callback URL is not allowed.`\n- **Credentials in the URL:** it rejects any URL with credentials, which blocks tricks like `http://ok.example.com@169.254.169.254/`. This also gives `Callback URL is not allowed.`\n- **Origin check:** it builds the origin as `scheme://host[:port]` and requires one of `settings.lnbits_callback_url_rules` to match it in full (`re.fullmatch`). If none does, it raises `Callback URL origin '<origin>' is not allowed.`\n- **No rules:** with an empty rules list, any `http`/`https` origin is allowed.\n\nI left `check_webhook_url` alone. It's now unused, so you may want to remove it. I didn't remove it because it isn't part of this change.\n\n**Not verified:** `make test-unit` is the target to run, ideally just `tests/unit/test_helpers.py`. `make check` (mypy, pyright, ruff, black) hasn't been run either.\n\n**Files touched:** `lnbits/helpers.py`"
+  },
+  "task": "lnbits_callback_url",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "-i": true,
+        "glob": "lnbits/**/*.py",
+        "head_limit": 60,
+        "output_mode": "content",
+        "pattern": "callback_url|callback_origin|CALLBACK"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-03d3ccdaac01/repo/Makefile",
+        "pattern": "^(lint|check|test-unit|format)\\b"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-03d3ccdaac01/repo/lnbits/helpers.py",
+        "limit": 90,
+        "offset": 225
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "pattern": "check_callback_url"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "git status --short && git log --oneline -3 && grep -rn \"def check_callback_url\\|check_webhook_url\" --include=*.py . | head; sed -n 1,30p lnbits/helpers.py; sed -n 36,120p tests/unit/test_helpers.py; sed -n 465,478p lnbits/settings.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-03d3ccdaac01/repo/lnbits/helpers.py",
+        "new_string": "def check_callback_url(url: str):\n    \"\"\"\n    Raise ValueError if the origin (scheme://host[:port]) of the callback URL\n    is not fully matched by one of `settings.lnbits_callback_url_rules`.\n    No rules configured means every http(s) origin is allowed.\n    \"\"\"\n    try:\n        parsed = urlparse(url)\n        port = parsed.port\n    except ValueError as exc:\n        raise ValueError(\"Callback URL is not allowed.\") from exc\n\n    # reject non-http(s), missing host and userinfo (`ok.com@evil.host` tricks)\n    if (\n        parsed.scheme not in (\"http\", \"https\")\n        or not parsed.hostname\n        or \"@\" in parsed.netloc\n    ):\n        raise ValueError(\"Callback URL is not allowed.\")\n\n    host = f\"[{parsed.hostname}]\" if \":\" in parsed.hostname else parsed.hostname\n    origin = f\"{parsed.scheme}://{host}\" + (f\":{port}\" if port else \"\")\n\n    if not settings.lnbits_callback_url_rules:\n        return\n    for rule in settings.lnbits_callback_url_rules:\n        if re.fullmatch(rule, origin) is not None:\n            return\n    raise ValueError(f\"Callback URL origin '{origin}' is not allowed.\")\n\n\ndef download_url(url: str, save_path: Path):",
+        "old_string": "def download_url(url: str, save_path: Path):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "sed -n 45,60p Makefile && poetry run pytest tests/unit/test_helpers.py -q 2>&1 | tail -15 || python -m pytest tests/unit/test_helpers.py -q 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-03d3ccdaac01/repo/Makefile",
+        "limit": 15,
+        "offset": 45
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "command": "make test-unit 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 3,
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 31.8
+}

@@ -1,0 +1,3 @@
+{"arguments": {"limit": 5, "request": "Validate a string against an anchored regex"}, "result": {"ids": ["validators.regex_match"], "scores": [13.59]}, "timestamp": "2026-11-05T02:07:37.521+00:00", "tool": "search_patterns"}
+{"arguments": {"id": "validators.regex_match", "names": null}, "result": {"id": "validators.regex_match@v1", "status": "active"}, "timestamp": "2026-11-05T02:07:40.053+00:00", "tool": "get_pattern"}
+{"arguments": {"length": 226, "pattern_id": "validators.regex_match"}, "result": {"deviations": [["is_valid_username", "validators.regex_match@v1", []]], "statuses": [["is_valid_username", "covered", "validators.regex_match"]]}, "timestamp": "2026-11-05T02:07:45.604+00:00", "tool": "check_code"}

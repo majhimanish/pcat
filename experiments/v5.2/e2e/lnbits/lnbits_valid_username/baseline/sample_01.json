@@ -1,0 +1,75 @@
+{
+  "app": "lnbits",
+  "baseline": "7c1faa652b0c82c91669c32aeeade811fe1b7b85",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "validators.regex_match",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "add is_valid_username to lnbits/helpers.py: 2-20 chars of letters, digits, dots, underscores, no leading, trailing or doubled separators",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0484213,
+    "duration_ms": 14048,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 5,
+    "result_text": "I added `is_valid_username` to `lnbits/helpers.py`, but I haven't run it. The command I tried to run for the quick check needed approval, so I have no test results.\n\nThe function requires 2–20 characters. It accepts only ASCII letters and digits, plus `.` and `_` as separators. A separator can't be first, last or next to another separator. So `a.b` and `a_b.c` pass, while `.ab`, `ab.`, `a..b` and `a._b` fail. Names with spaces or non-ASCII letters like `é` also fail.\n\nI didn't run `make check` or any Makefile targets, and I didn't add unit tests."
+  },
+  "task": "lnbits_valid_username",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e8651e0f4bbd/repo/lnbits/helpers.py",
+        "pattern": "^import|^from|^def is_valid"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e8651e0f4bbd/repo/lnbits/helpers.py",
+        "limit": 35,
+        "offset": 158
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e8651e0f4bbd/repo/lnbits/helpers.py",
+        "new_string": "def is_valid_username(username: str) -> bool:\n    if not 2 <= len(username) <= 20:\n        return False\n    username_regex = r\"[A-Za-z0-9]+(?:[._][A-Za-z0-9]+)*\"\n    return re.fullmatch(username_regex, username) is not None\n\n\ndef is_valid_external_id(",
+        "old_string": "def is_valid_external_id(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -c \"\nfrom lnbits.helpers import is_valid_username as v\nfor s in ['ab','a','a.b','a_b.c','.ab','ab.','a..b','a._b','a'*20,'a'*21,'ab\\n','é1','a b']: print(repr(s),v(s))\""
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 14.9
+}

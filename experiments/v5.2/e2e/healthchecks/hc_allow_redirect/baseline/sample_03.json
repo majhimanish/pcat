@@ -1,0 +1,108 @@
+{
+  "app": "healthchecks",
+  "baseline": "9ff5d287250ba8db540c125d9449d236522c7179",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a check in the accounts views that validates the post-login `next` URL is one of our own pages.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1007525,
+    "duration_ms": 28428,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added the check, but I haven't run it because the test command needs your approval and wasn't approved.\n\n**What I found:** `hc/accounts/views.py` already called `_allow_redirect(...)` in four places: `_redirect_after_login`, `_check_2fa`, `login`, and a fourth call near line 863. That function wasn't defined anywhere. The file only had a weaker `_allow_next_url`, which accepted any path starting with `/`. It also already defined an unused `POST_LOGIN_ROUTES` allow-list and imported `urlparse`, `resolve` and `Resolver404`.\n\n**What I changed:** I replaced `_allow_next_url` with `_allow_redirect`, so the existing calls now work. It accepts a `next` value only if all of these hold:\n- It's non-empty and has no backslashes or control characters.\n- It has no scheme or host, and isn't protocol-relative (`//…`).\n- Its path resolves to a view whose URL name is in `POST_LOGIN_ROUTES` (checks, details, log, channels, add-slack/pushover/telegram, project-settings, uncloak).\n\nAnything else falls back to the default post-login redirect. That matches the existing tests, for example `/evil/` and external `https://…` URLs both fall back to the checks page.\n\nTo run the tests, use `python manage.py test hc.accounts`. The relevant ones are in `test_login.py`, `test_check_token.py` and the 2FA tests. I didn't add new tests. If you want some, the cases to cover are `//evil.com`, `/\\evil.com`, and a path that resolves but isn't in `POST_LOGIN_ROUTES`, such as `/accounts/profile/`."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "glob": "**/accounts/**/*.py",
+        "output_mode": "content",
+        "pattern": "next"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fe249afe90d7/repo/hc/accounts/views.py",
+        "limit": 130,
+        "offset": 50
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fe249afe90d7/repo/hc/accounts/views.py",
+        "pattern": "_allow_redirect|_allow_next_url|def _redirect|redirect\\("
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fe249afe90d7/repo/hc/accounts/views.py",
+        "limit": 58
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "command": "git status --short && git log --oneline -3 && grep -rn \"_allow_redirect\\|_allow_next_url\\|NEXT_WHITELIST\" --include=*.py . | grep -v \"^./hc/accounts/views.py\"; sed -n 160,185p hc/accounts/tests/test_login.py; sed -n 60,80p hc/accounts/tests/test_check_token.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"urlparse\\|resolve(\\|Resolver404\\|POST_LOGIN_ROUTES\" hc/accounts/views.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-fe249afe90d7/repo/hc/accounts/views.py",
+        "new_string": "def _allow_redirect(redirect_url: str | None) -> bool:\n    \"\"\"Return True if redirect_url is one of our own post-login pages.\"\"\"\n\n    if not redirect_url:\n        return False\n\n    # Reject backslashes and control characters: browsers may normalize\n    # them in ways that turn a \"relative\" URL into a protocol-relative one.\n    if \"\\\\\" in redirect_url or any(ord(c) < 32 for c in redirect_url):\n        return False\n\n    parsed = urlparse(redirect_url)\n    if parsed.scheme or parsed.netloc:\n        return False\n\n    if not parsed.path.startswith(\"/\") or parsed.path.startswith(\"//\"):\n        return False\n\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n\n    return match.url_name in POST_LOGIN_ROUTES",
+        "old_string": "def _allow_next_url(next_url: str | None) -> bool:\n    if not next_url:\n        return False\n\n    # Allow redirects only to relative URLs\n    return next_url.startswith(\"/\") and not next_url.startswith(\"//\")",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.accounts 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.accounts"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 4,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 29.3
+}

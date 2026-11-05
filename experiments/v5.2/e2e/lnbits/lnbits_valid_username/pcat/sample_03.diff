@@ -1,0 +1,17 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 3e4abbf..3665cbf 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -168,6 +168,12 @@ def is_valid_label(label: str) -> bool:
+     return re.fullmatch(label_regex, label) is not None
+ 
+ 
++# pcat: validators.regex_match@v1
++def is_valid_username(username: str) -> bool:
++    username_regex = "(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]"
++    return re.fullmatch(username_regex, username) is not None
++
++
+ def is_valid_tag(tag: str) -> bool:
+     tag_regex = r"[a-z0-9][a-z0-9-]{0,31}"
+     return re.search(tag_regex, tag) is not None

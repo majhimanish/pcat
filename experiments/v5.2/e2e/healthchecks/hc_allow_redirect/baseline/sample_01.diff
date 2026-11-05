@@ -1,0 +1,38 @@
+diff --git a/hc/accounts/views.py b/hc/accounts/views.py
+index 8ab80d8..df16761 100644
+--- a/hc/accounts/views.py
++++ b/hc/accounts/views.py
+@@ -56,12 +56,29 @@ POST_LOGIN_ROUTES = (
+ )
+ 
+ 
+-def _allow_next_url(next_url: str | None) -> bool:
+-    if not next_url:
++def _allow_redirect(redirect_url: str | None) -> bool:
++    """Return True if redirect_url points to one of our own post-login pages."""
++
++    if not redirect_url:
++        return False
++
++    # Backslashes and control characters are treated inconsistently by browsers
++    if "\\" in redirect_url or any(ord(c) < 32 for c in redirect_url):
++        return False
++
++    parsed = urlparse(redirect_url)
++    # Only relative, same-site paths: no scheme, no host, no "//host" form
++    if parsed.scheme or parsed.netloc or not redirect_url.startswith("/"):
++        return False
++    if redirect_url.startswith("//"):
++        return False
++
++    try:
++        match = resolve(parsed.path)
++    except Resolver404:
+         return False
+ 
+-    # Allow redirects only to relative URLs
+-    return next_url.startswith("/") and not next_url.startswith("//")
++    return match.url_name in POST_LOGIN_ROUTES
+ 
+ 
+ def _make_user(email: str, tz: str | None = None, with_project: bool = True) -> User:

@@ -1,0 +1,14 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 3e4abbf..7db5a59 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -401,3 +401,9 @@ def daystart_timestamp(dt: datetime | None = None) -> int:
+     dt = dt or datetime.now(timezone.utc)
+     day_start = dt.replace(hour=0, minute=0, second=0, microsecond=0)
+     return int(day_start.timestamp())
++
++
++# pcat: validators.regex_match@v1
++def is_valid_username(username: str) -> bool:
++    username_regex = "(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]"
++    return re.fullmatch(username_regex, username) is not None

@@ -1,0 +1,188 @@
+{
+  "app": "lnbits",
+  "baseline": "be636bbf1bfe3161499bc4fa7c444d6ab5a8510c",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "FastAPI dependency requiring wallet invoice key from X-Api-Key header or query string"
+      },
+      "result": {
+        "ids": [
+          "auth.require_api_key"
+        ],
+        "scores": [
+          27.623
+        ]
+      },
+      "timestamp": "2026-11-05T02:06:02.716+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "auth.require_api_key",
+        "names": null
+      },
+      "result": {
+        "id": "auth.require_api_key@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:06:04.109+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "length": 413,
+        "pattern_id": "auth.require_api_key"
+      },
+      "result": {
+        "deviations": [
+          [
+            "require_invoice_key",
+            "auth.require_api_key@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "require_invoice_key",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:06:22.695+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency that requires the wallet invoice key from the X-Api-Key header or query string, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1100265,
+    "duration_ms": 35153,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `require_invoice_key` to `lnbits/decorators.py`, right after `require_admin_key`. I haven't run it or any tests.\n\n- **What it does:** it reads the key from the `X-API-KEY` header, or the `api-key` query parameter if the header is missing. It checks the key with `KeyChecker` for `KeyType.invoice` and returns the `WalletTypeInfo`. Its structure follows the catalog pattern `auth.require_api_key`, with the `# pcat: auth.require_api_key@v1` marker above it.\n- **Existing references:** `lnbits/__init__.py` and `lnbits/core/views/wallet_api.py` already imported `require_invoice_key`, but it wasn't defined anywhere. Those imports would have failed, and this fixes that.\n- **Pattern check:** `check_code` found no high-severity deviations. The only difference is the key type, `invoice` instead of `admin`, which is what you asked for, so no approval line is needed.\n- **Not wired in yet:** I haven't attached it to any invoice-creating endpoint. Use it as `wallet: WalletTypeInfo = Depends(require_invoice_key)` on the ones you want. The payments endpoints in `payment_api.py` currently use `require_base_invoice_key`, the lighter variant that returns `BaseWalletTypeInfo`. Tell me which endpoints to switch if you want that done."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {},
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "request": "FastAPI dependency requiring wallet invoice key from X-Api-Key header or query string"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "id": "auth.require_api_key"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "pattern": "require_admin_key|require_invoice_key|class KeyType"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "limit": 50,
+        "offset": 165
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/core/views/payment_api.py",
+        "pattern": "invoice_key|Depends\\("
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "-A": 10,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits",
+        "pattern": "def require_invoice_key"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "pattern": "require_invoice_key"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "new_string": "# pcat: auth.require_api_key@v1\nasync def require_invoice_key(\n    request: Request,\n    api_key_header: str = Security(api_key_header),\n    api_key_query: str = Security(api_key_query),\n) -> WalletTypeInfo:\n    check: KeyChecker = KeyChecker(\n        api_key=api_key_header or api_key_query,\n        expected_key_type=KeyType.invoice,\n    )\n    return await check(request)\n\n\nasync def require_base_admin_key(",
+        "old_string": "async def require_base_admin_key(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "limit": 25,
+        "offset": 178
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "code": "from fastapi import Request, Security\n\n# pcat: auth.require_api_key@v1\nasync def require_invoice_key(\n    request: Request,\n    api_key_header: str = Security(api_key_header),\n    api_key_query: str = Security(api_key_query),\n) -> WalletTypeInfo:\n    check: KeyChecker = KeyChecker(\n        api_key=api_key_header or api_key_query,\n        expected_key_type=KeyType.invoice,\n    )\n    return await check(request)\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-eedb05a7fb54/repo/lnbits/decorators.py",
+        "pattern_id": "auth.require_api_key"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "auth.require_api_key"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 4,
+      "Read": 2,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 36.6
+}

@@ -1,0 +1,164 @@
+{
+  "app": "lnbits",
+  "baseline": "60c74d30ce6bc1858d78d782c9bcd3d878fb264c",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "validators.regex_match",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Validate a string against an anchored regex"
+      },
+      "result": {
+        "ids": [
+          "validators.regex_match"
+        ],
+        "scores": [
+          13.59
+        ]
+      },
+      "timestamp": "2026-11-05T02:07:29.857+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "validators.regex_match",
+        "names": null
+      },
+      "result": {
+        "id": "validators.regex_match@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:07:32.243+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "length": 226,
+        "pattern_id": "validators.regex_match"
+      },
+      "result": {
+        "deviations": [
+          [
+            "is_valid_username",
+            "validators.regex_match@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "is_valid_username",
+            "covered",
+            "validators.regex_match"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:07:52.590+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "add is_valid_username to lnbits/helpers.py: 2-20 chars of letters, digits, dots, underscores, no leading, trailing or doubled separators",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.07506950000000001,
+    "duration_ms": 35799,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I added `is_valid_username` at the end of `lnbits/helpers.py`. I didn't run it or write tests for it.\n\nI took it from the catalog pattern `validators.regex_match@v1` and kept the `# pcat` marker above it. `check_code` reports no deviations from the pattern.\n\nIt returns `True` only when the whole string meets all of these:\n- It is 2–20 characters, using only letters, digits, `.` and `_`.\n- It doesn't start or end with `.` or `_`.\n- It contains no two separators in a row (`..`, `__`, `._`, `_.`).\n\nThe file already imported `re`, so I added no new imports."
+  },
+  "task": "lnbits_valid_username",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "Validate a string against an anchored regex"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0ff2144c9716/repo/lnbits/helpers.py",
+        "pattern": "^import|^from"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Validate a string against an anchored regex"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "id": "validators.regex_match"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "command": "printf '\\n\\n# pcat: validators.regex_match@v1\\ndef is_valid_username(username: str) -> bool:\\n    username_regex = \"(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]\"\\n    return re.fullmatch(username_regex, username) is not None\\n' >> lnbits/helpers.py && tail -8 lnbits/helpers.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "tail -5 lnbits/helpers.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0ff2144c9716/repo/lnbits/helpers.py",
+        "new_string": "    return int(day_start.timestamp())\n\n\n# pcat: validators.regex_match@v1\ndef is_valid_username(username: str) -> bool:\n    username_regex = \"(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]\"\n    return re.fullmatch(username_regex, username) is not None",
+        "old_string": "    return int(day_start.timestamp())",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0ff2144c9716/repo/lnbits/helpers.py",
+        "limit": 1,
+        "offset": 1
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "code": "import re\n\n# pcat: validators.regex_match@v1\ndef is_valid_username(username: str) -> bool:\n    username_regex = \"(?=[a-zA-Z0-9._]{2,20}$)(?!.*[_.]{2})[^_.].*[^_.]\"\n    return re.fullmatch(username_regex, username) is not None\n",
+        "pattern_id": "validators.regex_match"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "validators.regex_match"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 2,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 37.2
+}

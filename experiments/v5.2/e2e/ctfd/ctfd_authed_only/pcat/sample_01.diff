@@ -1,0 +1,51 @@
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 062069b..57599f1 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -82,6 +82,24 @@ def require_verified_emails(f):
+     return _require_verified_emails
+ 
+ 
++# pcat: decorators.authed_only@v1
++def login_required(f):
++    @functools.wraps(f)
++    def login_required_wrapper(*args, **kwargs):
++        if authed():
++            return f(*args, **kwargs)
++        elif request.is_json or request.accept_mimetypes.best == "text/event-stream":
++            abort(403)
++        else:
++            return redirect(url_for("auth.login", next=request.full_path))
++
++    return login_required_wrapper
++
++
++# Backwards-compatible name used by existing views and plugins
++authed_only = login_required
++
++
+ def api_authed_only(f):
+     """
+     Decorator that requires the user to be authenticated for API endpoints
+diff --git a/CTFd/views.py b/CTFd/views.py
+index cfa21f2..ccb4422 100644
+--- a/CTFd/views.py
++++ b/CTFd/views.py
+@@ -42,7 +42,7 @@ from CTFd.utils.config import can_send_mail, is_setup, is_teams_mode
+ from CTFd.utils.config.pages import build_markdown, get_page
+ from CTFd.utils.config.visibility import challenges_visible
+ from CTFd.utils.dates import ctf_ended, ctftime, view_after_ctf
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.health import check_config, check_database
+ from CTFd.utils.helpers import get_errors, get_infos, markup
+ from CTFd.utils.modes import USERS_MODE
+@@ -303,7 +303,7 @@ def notifications():
+ 
+ 
+ @views.route("/settings", methods=["GET"])
+-@authed_only
++@login_required
+ def settings():
+     infos = get_infos()
+     errors = get_errors()

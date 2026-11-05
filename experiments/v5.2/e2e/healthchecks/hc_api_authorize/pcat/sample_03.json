@@ -1,0 +1,177 @@
+{
+  "app": "healthchecks",
+  "baseline": "eec58c268b43a1fdb1d7628c7e6fbbdb73268a28",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "API-key authorization decorator for write endpoints (read-write project key)"
+      },
+      "result": {
+        "ids": [
+          "api.authorize_read"
+        ],
+        "scores": [
+          20.692
+        ]
+      },
+      "timestamp": "2026-11-05T02:01:08.727+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "api.authorize_read",
+        "names": null
+      },
+      "result": {
+        "id": "api.authorize_read@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:01:10.579+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-369246693830/repo/hc/api/decorators.py",
+        "length": 1384,
+        "pattern_id": "api.authorize_read"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authorize",
+            "api.authorize_read@v1",
+            [
+              [
+                "PC103",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "authorize",
+            "none",
+            null
+          ],
+          [
+            "authorize.<locals>.wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:01:24.385+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a decorator for write endpoints that accepts a read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.09338250000000001,
+    "duration_ms": 29979,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added the `authorize` decorator and ran the pattern check on it. I haven't run the Django tests, and I didn't add any tests for it.\n\nThe decorator is in `hc/api/decorators.py`, next to `authorize_read`. I based it on the catalog's `api.authorize_read` pattern and kept its `# pcat: api.authorize_read@v1` marker.\n\n- **Key source:** it reads the key from the `X-Api-Key` header. If the JSON body has an `api_key` field, that value is used instead.\n- **Body handling:** a body that doesn't parse returns 400 `could not parse request body`. A body that isn't a JSON object returns 400 `json root must be object`. A parsed body is available to the view as `request.json`, and it is `{}` when there is no body.\n- **Key checks:** a key that is missing, not a string, or not 32 characters returns 401 `missing api key`. A key that matches no project returns 401 `wrong api key`.\n- **Read-only keys:** `accept_ro` is off, so a read-only key gets the same 401 `wrong api key` as an unknown key. For accepted keys it sets `request.project`, `request.readonly = False` and `request.v`.\n\n`check_code` found no high-severity deviations and nothing that needs human approval. It listed five low-severity differences from the read pattern: the added `json` import, the body parsing, and the read-only handling. All of them follow from what you asked for.\n\nI haven't applied the decorator to any view yet."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "API-key authorization decorator for write endpoints"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "request": "API-key authorization decorator for write endpoints (read-write project key)"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "id": "api.authorize_read"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "head_limit": 40,
+        "output_mode": "content",
+        "pattern": "authorize|X-Api-Key|api_key"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-369246693830/repo/hc/api/decorators.py"
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-369246693830/repo/hc/api/decorators.py",
+        "new_string": "# pcat: api.authorize_read@v1\ndef authorize(f: ViewFunc) -> ViewFunc:\n    \"\"\"Authorize write endpoints with a read-write project API key.\n\n    The key is read from the X-Api-Key header, or from the \"api_key\" field\n    of the JSON request body (the body takes precedence). The parsed body\n    is attached as request.json.\n    \"\"\"\n\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = \"\"\n\n        request.json = {}\n        if request.body:\n            try:\n                data = json.loads(request.body.decode())\n            except ValueError:\n                return error(\"could not parse request body\")\n\n            if not isinstance(data, dict):\n                return error(\"json root must be object\")\n\n            request.json = data\n            if \"api_key\" in data:\n                api_key = data[\"api_key\"]\n\n        if not isinstance(api_key, str) or len(api_key) != 32:\n            return error(\"missing api key\", 401)\n\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)\n        if project is None:\n            return error(\"wrong api key\", 401)\n\n        request.project = project\n        request.readonly = False\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n\n\n# pcat: api.authorize_read@v1\ndef authorize_read(f: ViewFunc) -> ViewFunc:",
+        "old_string": "def authorize_read(f: ViewFunc) -> ViewFunc:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "import json\nfrom functools import wraps\nfrom typing import Any\n\nfrom django.http import HttpRequest, HttpResponse, JsonResponse\n\nfrom hc.accounts.models import Project\nfrom hc.lib.typealias import ViewFunc\n\n\n# pcat: api.authorize_read@v1\ndef authorize(f: ViewFunc) -> ViewFunc:\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = \"\"\n\n        request.json = {}\n        if request.body:\n            try:\n                data = json.loads(request.body.decode())\n            except ValueError:\n                return error(\"could not parse request body\")\n\n            if not isinstance(data, dict):\n                return error(\"json root must be object\")\n\n            request.json = data\n            if \"api_key\" in data:\n                api_key = data[\"api_key\"]\n\n        if not isinstance(api_key, str) or len(api_key) != 32:\n            return error(\"missing api key\", 401)\n\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)\n        if project is None:\n            return error(\"wrong api key\", 401)\n\n        request.project = project\n        request.readonly = False\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-369246693830/repo/hc/api/decorators.py",
+        "pattern_id": "api.authorize_read"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "api.authorize_read"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 31.7
+}

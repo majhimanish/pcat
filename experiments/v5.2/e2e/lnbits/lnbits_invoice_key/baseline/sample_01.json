@@ -1,0 +1,63 @@
+{
+  "app": "lnbits",
+  "baseline": "b725a7be5fa145b4f7608ecf82e9ee168b2daf2a",
+  "condition": "baseline",
+  "files_changed": [],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency that requires the wallet invoice key from the X-Api-Key header or query string, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0506518,
+    "duration_ms": 15199,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "This dependency already exists, so I haven't changed anything.\n\n`require_base_invoice_key` in `lnbits/decorators.py:204` already does what you described:\n- It reads the key from the `X-API-KEY` header or the `api-key` query parameter. The header wins if both are present.\n- It returns 401 if no key is given and 404 if no wallet matches the key.\n- It returns a `BaseWalletTypeInfo` and uses the cached `LightKeyChecker`.\n\nIt accepts the admin key as well as the invoice key. That is how the existing checker works: only `expected_key_type=KeyType.admin` rejects the other key type, and invoice mode doesn't. That makes sense for invoice-creating endpoints, since an admin key is a superset.\n\nThere is also `require_wallet_key` (line 216). It returns the full `WalletTypeInfo`, but it does no user-access check and it raises 401 on a bad key instead of 404.\n\nThe two decisions are yours to make:\n- **Invoice-only:** if you need a dependency that accepts only the invoice key and rejects the admin key, I can add one. It would need a new `KeyType` check in `BaseKeyChecker._extract_key_type`.\n- **Full wallet:** if you need the full `Wallet` object rather than `BaseWallet`, I can add a `require_invoice_key` variant built on `KeyChecker`.\n\nI didn't run any Makefile targets because nothing changed."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ee2829160e3e/repo/lnbits/decorators.py",
+        "pattern": "invoice_key|X-Api-Key|APIKeyHeader|APIKeyQuery"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^test\\|^check\\|^format\" Makefile | head -20"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ee2829160e3e/repo/lnbits/decorators.py",
+        "limit": 230,
+        "offset": 40
+      },
+      "tool": "Read"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 16.0
+}

@@ -1,0 +1,77 @@
+{
+  "app": "healthchecks",
+  "baseline": "2e572c3c0121c882fff7487f04069b2802ccab62",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add helpers in hc/front/views.py to load a check by code for the current user and block read-only members from writing.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0561586,
+    "duration_ms": 21145,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 5,
+    "result_text": "I added two helpers to `hc/front/views.py`, just above `_get_channel_for_user`. I haven't run the tests or the app.\n\n- **`_get_check_for_user(request, code)`** returns `(check, rw)`. It returns 404 if the check doesn't exist or the user isn't a member of its project. Superusers and the project owner get `rw=True`. Other members get `rw` from `membership.is_rw`.\n- **`_get_rw_check_for_user(request, code)`** calls the first helper and returns just the check. It raises `PermissionDenied` for read-only members.\n\nThey follow the same pattern as the existing `_get_channel_for_user` and `_get_rw_channel_for_user`.\n\n`views.py` already calls both helpers in many places (for example lines 331, 544 and 729), but neither was defined. Those views would have raised a `NameError` before this change."
+  },
+  "task": "hc_check_for_user",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6ef532222a16/repo/hc/front/views.py",
+        "pattern": "^def _get_check_for_user|^def _get_rw|^def _get_project_for_user|^def _get_channel_for_user|^from|^import"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6ef532222a16/repo/hc/front/views.py",
+        "limit": 125,
+        "offset": 68
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "head_limit": 10,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6ef532222a16/repo/hc/front/views.py",
+        "pattern": "_get_check_for_user|_get_rw_check_for_user"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6ef532222a16/repo/hc/front/views.py",
+        "new_string": "def _get_check_for_user(request: HttpRequest, code: UUID) -> tuple[Check, bool]:\n    \"\"\"Return specified check if current user has access to it.\"\"\"\n\n    assert request.user.is_authenticated\n\n    check = get_object_or_404(Check.objects.select_related(\"project\"), code=code)\n    if request.user.is_superuser:\n        return check, True\n\n    if request.user.id == check.project.owner_id:\n        return check, True\n\n    membership = get_object_or_404(Member, project=check.project, user=request.user)\n    return check, membership.is_rw\n\n\ndef _get_rw_check_for_user(request: HttpRequest, code: UUID) -> Check:\n    \"\"\"Return specified check, or raise PermissionDenied for read-only members.\"\"\"\n\n    check, rw = _get_check_for_user(request, code)\n    if not rw:\n        raise PermissionDenied\n\n    return check\n\n\ndef _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:",
+        "old_string": "def _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 21.9
+}

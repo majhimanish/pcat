@@ -1,0 +1,29 @@
+diff --git a/lnbits/core/crud/users.py b/lnbits/core/crud/users.py
+index 9517cdb..93cf083 100644
+--- a/lnbits/core/crud/users.py
++++ b/lnbits/core/crud/users.py
+@@ -168,6 +168,24 @@ async def get_account_by_username(
+     )
+ 
+ 
++async def get_account_by_email(
++    email: str, active_only: bool = True, conn: Connection | None = None
++) -> Account | None:
++    if len(email) == 0:
++        return None
++
++    return await (conn or db).fetchone(
++        """
++            SELECT * FROM accounts
++            WHERE
++                LOWER(email) = :email
++                AND (activated = true OR activated = :activated)
++        """,
++        {"email": email.lower(), "activated": active_only},
++        Account,
++    )
++
++
+ async def get_account_by_pubkey(
+     pubkey: str, active_only: bool = True, conn: Connection | None = None
+ ) -> Account | None:

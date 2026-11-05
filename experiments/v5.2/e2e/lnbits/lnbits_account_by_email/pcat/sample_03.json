@@ -1,0 +1,165 @@
+{
+  "app": "lnbits",
+  "baseline": "d8bc4eb0dc03421f82b53a36f37c7d8f10643c23",
+  "condition": "pcat",
+  "files_changed": [
+    "lnbits/core/crud/users.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "crud.get_account_by_field",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Fetch an account by a case-insensitive unique field (email)"
+      },
+      "result": {
+        "ids": [
+          "crud.get_account_by_field"
+        ],
+        "scores": [
+          22.323
+        ]
+      },
+      "timestamp": "2026-11-05T02:04:45.368+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "crud.get_account_by_field",
+        "names": {
+          "f0": "get_account_by_email"
+        }
+      },
+      "result": {
+        "id": "crud.get_account_by_field@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:04:47.710+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "lnbits/core/crud/users.py",
+        "length": 512,
+        "pattern_id": "crud.get_account_by_field"
+      },
+      "result": {
+        "deviations": [
+          [
+            "get_account_by_email",
+            "crud.get_account_by_field@v1",
+            [
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "get_account_by_email",
+            "near",
+            "crud.get_account_by_field"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:04:53.352+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an async `get_account_by_email` to the user CRUD that matches email case-insensitively.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0914468,
+    "duration_ms": 18874,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added `get_account_by_email` to `lnbits/core/crud/users.py`, right after `get_account_by_username`. I haven't run it or any tests.\n\nIt lowercases both the stored email and the input before comparing. It also takes `active_only` and `conn` like the other lookups, and returns `None` for an empty string.\n\nI built it from the catalog pattern `crud.get_account_by_field@v1` and swapped the username column for email. The `check_code` run reported no high-severity deviations. It reported one low-severity note, which is the SQL change from username to email that the request called for.\n\nI didn't export it from `lnbits/core/crud/__init__.py`. Say if you want that added."
+  },
+  "task": "lnbits_account_by_email",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "max_results": 5,
+        "query": "select:mcp__pcat__search_patterns,mcp__pcat__get_pattern,mcp__pcat__check_code"
+      },
+      "tool": "ToolSearch"
+    },
+    {
+      "input": {
+        "glob": "**/crud*/**/*.py",
+        "output_mode": "content",
+        "pattern": "async def |^import |^from "
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Fetch an account by a case-insensitive unique field (email)"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e8bf9bc96e7c/repo/lnbits/core/crud/users.py",
+        "limit": 70,
+        "offset": 150
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "id": "crud.get_account_by_field",
+        "names": {
+          "f0": "get_account_by_email"
+        }
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e8bf9bc96e7c/repo/lnbits/core/crud/users.py",
+        "new_string": "# pcat: crud.get_account_by_field@v1\nasync def get_account_by_email(\n    email: str, active_only: bool = True, conn: Connection | None = None\n) -> Account | None:\n    if len(email) == 0:\n        return None\n\n    return await (conn or db).fetchone(\n        \"\"\"\n            SELECT * FROM accounts\n            WHERE\n                LOWER(email) = :email\n                AND (activated = true OR activated = :activated)\n        \"\"\",\n        {\"email\": email.lower(), \"activated\": active_only},\n        Account,\n    )\n\n\nasync def get_account_by_pubkey(",
+        "old_string": "async def get_account_by_pubkey(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "# pcat: crud.get_account_by_field@v1\nasync def get_account_by_email(\n    email: str, active_only: bool = True, conn: Connection | None = None\n) -> Account | None:\n    if len(email) == 0:\n        return None\n\n    return await (conn or db).fetchone(\n        \"\"\"\n            SELECT * FROM accounts\n            WHERE\n                LOWER(email) = :email\n                AND (activated = true OR activated = :activated)\n        \"\"\",\n        {\"email\": email.lower(), \"activated\": active_only},\n        Account,\n    )\n",
+        "file_path": "lnbits/core/crud/users.py",
+        "pattern_id": "crud.get_account_by_field"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "crud.get_account_by_field"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 20.3
+}

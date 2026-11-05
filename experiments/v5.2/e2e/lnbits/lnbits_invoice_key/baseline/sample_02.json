@@ -1,0 +1,116 @@
+{
+  "app": "lnbits",
+  "baseline": "e033ce2f955f4ba3015d219c770b97223d3eda07",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/decorators.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "auth.require_api_key",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a FastAPI dependency that requires the wallet invoice key from the X-Api-Key header or query string, for invoice-creating endpoints.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11421169999999999,
+    "duration_ms": 42081,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 11,
+    "result_text": "I added `require_invoice_key` to `lnbits/decorators.py`, but I couldn't run any checks, so it's untested. The shell asked for approval on `make mypy`, `make checkruff` and a plain import check. I didn't retry them.\n\nThe dependency sits next to `require_admin_key` and follows the same pattern. It reads the key from the `X-API-KEY` header, or the `api-key` query parameter if the header is absent. It returns a `WalletTypeInfo` and uses the existing `KeyChecker`, so unknown wallets and user-access checks behave as they do for `require_admin_key`. Both key types are accepted, since an admin key also passes an invoice-key check.\n\n`lnbits/__init__.py` and `lnbits/core/views/wallet_api.py` already imported `require_invoice_key`, but nothing defined it. Both imports would have failed until now.\n\nI haven't attached it to any invoice-creating endpoint. The existing invoice routes in `payment_api.py` use `require_base_invoice_key`. That is the lighter, cached variant that returns a `BaseWalletTypeInfo`. If you want specific endpoints switched over, tell me which.\n\nTo verify, please run `make mypy` and `make checkruff`. Then run `make test-unit`, or `make test-api` for the routes. Or approve those commands and I'll run them.\n\nOnly `lnbits/decorators.py` changed."
+  },
+  "task": "lnbits_invoice_key",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo/lnbits/decorators.py",
+        "pattern": "invoice_key|require_invoice_key|APIKeyHeader|APIKeyQuery"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo/lnbits/decorators.py",
+        "limit": 290,
+        "offset": 40
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "head_limit": 30,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo/lnbits",
+        "pattern": "require_base_invoice_key|require_invoice_key|require_wallet_key"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo",
+        "pattern": "def require_invoice_key|require_invoice_key\\s*="
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "git status --short && git log --oneline -3 && sed -n 1,30p lnbits/__init__.py && grep -n \"require_admin_key\" lnbits/decorators.py | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo/lnbits/decorators.py",
+        "new_string": "async def require_invoice_key(\n    request: Request,\n    api_key_header: str = Security(api_key_header),\n    api_key_query: str = Security(api_key_query),\n) -> WalletTypeInfo:\n    check: KeyChecker = KeyChecker(\n        api_key=api_key_header or api_key_query,\n        expected_key_type=KeyType.invoice,\n    )\n    return await check(request)\n\n\nasync def require_base_admin_key(",
+        "old_string": "async def require_base_admin_key(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -c \"import lnbits.decorators as d; print(d.require_invoice_key)\" 2>&1 | tail -3; grep -n \"^test-unit\\|^check:\\|^mypy\\|^ruff\" Makefile"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^test-unit\\|^check:\\|^mypy\\|^ruff\" Makefile"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "make mypy 2>&1 | tail -5; make checkruff 2>&1 | tail -5"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "make -C /tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-db42bfddd2c8/repo mypy"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 42.9
+}

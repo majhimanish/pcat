@@ -1,0 +1,162 @@
+{
+  "app": "ctfd",
+  "baseline": "daa5e4ca18ffeb2102d6fb7457fa2b2bb70b4779",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.authed_only",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Require a logged-in user Flask view decorator"
+      },
+      "result": {
+        "ids": [
+          "decorators.authed_only",
+          "decorators.admins_only"
+        ],
+        "scores": [
+          12.728,
+          10.262
+        ]
+      },
+      "timestamp": "2026-11-05T01:58:15.307+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "decorators.authed_only",
+        "names": null
+      },
+      "result": {
+        "id": "decorators.authed_only@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T01:58:17.479+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-72cccfe622c7/repo/CTFd/utils/decorators/__init__.py",
+        "length": 460,
+        "pattern_id": "decorators.authed_only"
+      },
+      "result": {
+        "deviations": [
+          [
+            "authed_only_register",
+            "decorators.authed_only@v1",
+            [
+              [
+                "PC109",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "authed_only_register",
+            "near",
+            "decorators.authed_only"
+          ],
+          [
+            "authed_only_register.<locals>.authed_only_register_wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T01:58:24.867+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add a decorator in CTFd utils that redirects non-logged-in users to the registration page instead of login.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0735105,
+    "duration_ms": 20644,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added `authed_only_register` to `CTFd/utils/decorators/__init__.py`, just above `members_only`. It sends anonymous users to `auth.register`, with `next=request.full_path` so they return to the page after signing up. I didn't run it or the test suite.\n\nJSON and event-stream requests get a 403 instead of a redirect, the same as the existing `authed_only`. The function is built from the catalog's `decorators.authed_only` pattern, and its `# pcat` marker is kept.\n\nThe pcat check found one low-severity deviation, the redirect target changing from `auth.login` to `auth.register`. That change is what you asked for, so no approval is needed.\n\nI didn't apply it to any routes. Use it with `@authed_only_register` on whichever views you want.\n\nCTFd already has `members_only`, which also redirects to registration. It only checks that a session cookie exists, so it doesn't confirm the user is logged in. The new decorator uses the real `authed()` check."
+  },
+  "task": "ctfd_registered_only",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {},
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-72cccfe622c7/repo",
+        "pattern": "def (authed_only|require_verified_emails|admins_only)"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Require a logged-in user Flask view decorator"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-72cccfe622c7/repo/CTFd/utils/decorators/__init__.py",
+        "limit": 150
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "id": "decorators.authed_only"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-72cccfe622c7/repo/CTFd/utils/decorators/__init__.py",
+        "new_string": "# pcat: decorators.authed_only@v1\ndef authed_only_register(f):\n    \"\"\"\n    Decorator that requires the user to be authenticated, redirecting\n    anonymous users to the registration page instead of login\n    :param f:\n    :return:\n    \"\"\"\n\n    @functools.wraps(f)\n    def authed_only_register_wrapper(*args, **kwargs):\n        if authed():\n            return f(*args, **kwargs)\n        elif request.is_json or request.accept_mimetypes.best == \"text/event-stream\":\n            abort(403)\n        else:\n            return redirect(url_for(\"auth.register\", next=request.full_path))\n\n    return authed_only_register_wrapper\n\n\ndef members_only(f):",
+        "old_string": "def members_only(f):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "@functools.wraps\n# pcat: decorators.authed_only@v1\ndef authed_only_register(f):\n    @functools.wraps(f)\n    def authed_only_register_wrapper(*args, **kwargs):\n        if authed():\n            return f(*args, **kwargs)\n        elif request.is_json or request.accept_mimetypes.best == \"text/event-stream\":\n            abort(403)\n        else:\n            return redirect(url_for(\"auth.register\", next=request.full_path))\n\n    return authed_only_register_wrapper\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-72cccfe622c7/repo/CTFd/utils/decorators/__init__.py",
+        "pattern_id": "decorators.authed_only"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "decorators.authed_only"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 22.0
+}

@@ -1,0 +1,33 @@
+diff --git a/hc/front/views.py b/hc/front/views.py
+index 8a64029..1201e05 100644
+--- a/hc/front/views.py
++++ b/hc/front/views.py
+@@ -178,6 +178,28 @@ def _get_rw_project_for_user(request: HttpRequest, code: UUID) -> Project:
+     return project
+ 
+ 
++# pcat: access.channel_for_user@v1
++def _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:
++    """Check access, return (channel, rw) tuple."""
++
++    assert request.user.is_authenticated
++    channel = get_object_or_404(Channel.objects.select_related("project"), code=code)
++    if request.user.is_superuser:
++        return (channel, True)
++    if request.user.id == channel.project.owner_id:
++        return (channel, True)
++    membership = get_object_or_404(Member, project=channel.project, user=request.user)
++    return (channel, membership.is_rw)
++
++
++# pcat: access.channel_for_user@v1
++def _get_rw_channel_for_user(request: HttpRequest, code: UUID) -> Channel:
++    channel, rw = _get_channel_for_user(request, code)
++    if not rw:
++        raise PermissionDenied
++    return channel
++
++
+ def _refresh_last_active_date(request: AuthenticatedHttpRequest) -> None:
+     """Update last_active_date if it is more than a day old."""
+ 

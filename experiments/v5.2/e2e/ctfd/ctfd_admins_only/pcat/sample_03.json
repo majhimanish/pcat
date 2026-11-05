@@ -1,0 +1,158 @@
+{
+  "app": "ctfd",
+  "baseline": "c47c2a40775dde375749543a8ab488290db9227b",
+  "condition": "pcat",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.admins_only",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Require an admin Flask view decorator redirecting non-admins to login"
+      },
+      "result": {
+        "ids": [
+          "decorators.admins_only",
+          "decorators.authed_only",
+          "decorators.require_verified_emails"
+        ],
+        "scores": [
+          16.394,
+          12.916,
+          10.833
+        ]
+      },
+      "timestamp": "2026-11-05T01:54:47.111+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "decorators.admins_only",
+        "names": null
+      },
+      "result": {
+        "id": "decorators.admins_only@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T01:54:49.345+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "context_length": 160,
+        "length": 359,
+        "pattern_id": "decorators.admins_only"
+      },
+      "result": {
+        "deviations": [
+          [
+            "admins_only",
+            "decorators.admins_only@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "admins_only",
+            "covered",
+            "decorators.admins_only"
+          ],
+          [
+            "admins_only.<locals>.admins_only_wrapper",
+            "none",
+            null
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T01:54:54.868+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add an admin-only decorator for the admin pages that redirects non-admins to the login page.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.08805160000000001,
+    "duration_ms": 16298,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 8,
+    "result_text": "I added an `admins_only` decorator to `CTFd/utils/decorators/__init__.py`, just above `admins_only_api`. It follows the catalog pattern `decorators.admins_only@v1`, and `check_code` reported no deviations. I didn't run the test suite or try the decorator on a route.\n\n- **Admins:** they get through to the view.\n- **Non-admin JSON requests:** they get a 403.\n- **Everyone else:** they are redirected to `auth.login`, with `next` set to the page they asked for so they return there after logging in.\n\nI haven't applied it to any admin views. I can apply it to the routes in `CTFd/admin/*` if you'd like."
+  },
+  "task": "ctfd_admins_only",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {},
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "request": "Require an admin Flask view decorator redirecting non-admins to login"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "-i": true,
+        "output_mode": "files_with_matches",
+        "pattern": "admin|login_required|def .*required"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "id": "decorators.admins_only"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6632d2228bb9/repo/CTFd/utils/decorators/__init__.py"
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-6632d2228bb9/repo/CTFd/utils/decorators/__init__.py",
+        "new_string": "# pcat: decorators.admins_only@v1\ndef admins_only(f):\n    @functools.wraps(f)\n    def admins_only_wrapper(*args, **kwargs):\n        if is_admin():\n            return f(*args, **kwargs)\n        elif request.is_json:\n            abort(403)\n        else:\n            return redirect(url_for(\"auth.login\", next=request.full_path))\n\n    return admins_only_wrapper\n\n\ndef admins_only_api(f):",
+        "old_string": "def admins_only_api(f):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "# pcat: decorators.admins_only@v1\ndef admins_only(f):\n    @functools.wraps(f)\n    def admins_only_wrapper(*args, **kwargs):\n        if is_admin():\n            return f(*args, **kwargs)\n        elif request.is_json:\n            abort(403)\n        else:\n            return redirect(url_for(\"auth.login\", next=request.full_path))\n\n    return admins_only_wrapper\n",
+        "context": "import functools\n\nfrom flask import abort, jsonify, redirect, request, url_for\nfrom CTFd.utils.user import authed, get_current_team, get_current_user, is_admin\n",
+        "pattern_id": "decorators.admins_only"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "decorators.admins_only"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 17.8
+}

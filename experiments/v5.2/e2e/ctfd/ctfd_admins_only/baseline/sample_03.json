@@ -1,0 +1,81 @@
+{
+  "app": "ctfd",
+  "baseline": "1fe16d20cb9bb335c44887b555c5dd803bd3449a",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.admins_only",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add an admin-only decorator for the admin pages that redirects non-admins to the login page.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0766098,
+    "duration_ms": 20545,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 7,
+    "result_text": "I added `admins_only` to `CTFd/utils/decorators/__init__.py`. It sends anyone who isn't an admin to `auth.login`, with `next` set to the requested path so they come back after logging in.\n\nEvery admin module (`users.py`, `challenges.py`, `pages.py`, `teams.py` and `admin/__init__.py`) already imported and used `admins_only`, but it wasn't defined anywhere. The admin package couldn't be imported before this. No other files needed changes.\n\nI haven't run the tests. The test command needed your approval and didn't run. `tests/admin/test_views.py` is the quickest check.\n\n`admins_only_api` in the same file only checks `authed()`, not `is_admin()`, so any logged-in user passes it. Nothing uses it right now. I left it alone, but you should fix it before anyone relies on it."
+  },
+  "task": "ctfd_admins_only",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "command": "git ls-files | head -100 && grep -rniE \"admin|login\" --include=* -l . 2>/dev/null | grep -v '^./.git/' | head -30"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "cat CTFd/utils/decorators/__init__.py | head -120; grep -n \"admins_only\" -r CTFd/admin | head -20; sed -n 1,60p CTFd/admin/__init__.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"def admins_only\" -B2 -A18 CTFd/utils/decorators/__init__.py; git status --short"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 118,158p CTFd/utils/decorators/__init__.py; git log --oneline -3 -- CTFd/utils/decorators/__init__.py; grep -rn \"admins_only_api\" CTFd | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-62f064177a21/repo/CTFd/utils/decorators/__init__.py",
+        "new_string": "def admins_only(f):\n    \"\"\"\n    Decorator that requires the user to be an admin. Non-admins are\n    redirected to the login page.\n    :param f:\n    :return:\n    \"\"\"\n\n    @functools.wraps(f)\n    def admins_only_wrapper(*args, **kwargs):\n        if is_admin():\n            return f(*args, **kwargs)\n        else:\n            return redirect(url_for(\"auth.login\", next=request.full_path))\n\n    return admins_only_wrapper\n\n\ndef admins_only_api(f):",
+        "old_string": "def admins_only_api(f):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -m pytest tests/admin/test_views.py -q -x 2>&1 | tail -8"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 1
+    }
+  },
+  "wall_seconds": 21.4
+}

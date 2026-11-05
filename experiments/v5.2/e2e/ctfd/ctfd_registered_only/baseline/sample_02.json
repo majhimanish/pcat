@@ -1,0 +1,67 @@
+{
+  "app": "ctfd",
+  "baseline": "9208a19895349a9fd8fe8beede4f7fdf1030ad51",
+  "condition": "baseline",
+  "files_changed": [
+    "CTFd/utils/decorators/__init__.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "decorators.authed_only",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a decorator in CTFd utils that redirects non-logged-in users to the registration page instead of login.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.046313599999999996,
+    "duration_ms": 14035,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I added `authed_or_register` to `CTFd/utils/decorators/__init__.py`, right after `authed_only`. I haven't run it or any tests.\n\n- **Logged-in users:** the view runs as normal.\n- **Anyone else:** they are redirected to `auth.register`, with `next=request.full_path` so they return to the page afterwards.\n- **API and event-stream requests:** these still get a `403`, as in `authed_only`, since a redirect to an HTML page is no use there.\n\nUse it like any other decorator:\n```python\nfrom CTFd.utils.decorators import authed_or_register\n\n@authed_or_register\ndef my_view(): ...\n```\n\n`members_only` already redirects to registration, but it only checks that a `session` cookie exists. This one checks `authed()`, which is the real login check. I didn't change `members_only`.\n\nI didn't apply the new decorator to any routes. Tell me which ones if you want that."
+  },
+  "task": "ctfd_registered_only",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-28864d8714d4/repo",
+        "pattern": "def (authed_only|ratelimit|admins_only|during_ctf_time_only)"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-28864d8714d4/repo/CTFd/utils/decorators/__init__.py",
+        "limit": 125
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-28864d8714d4/repo/CTFd/utils/decorators/__init__.py",
+        "new_string": "    return authed_only_wrapper\n\n\ndef authed_or_register(f):\n    \"\"\"\n    Decorator that requires the user to be authenticated, redirecting\n    non-authenticated users to the registration page instead of login\n    :param f:\n    :return:\n    \"\"\"\n\n    @functools.wraps(f)\n    def authed_or_register_wrapper(*args, **kwargs):\n        if authed():\n            return f(*args, **kwargs)\n        else:\n            if request.is_json or request.accept_mimetypes.best == \"text/event-stream\":\n                abort(403)\n            else:\n                return redirect(url_for(\"auth.register\", next=request.full_path))\n\n    return authed_or_register_wrapper\n\n",
+        "old_string": "    return authed_only_wrapper\n\n",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 14.9
+}

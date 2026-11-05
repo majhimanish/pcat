@@ -1,0 +1,32 @@
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index e5374e9..ce12f8f 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -102,6 +102,27 @@ def authed_only(f):
+     return authed_only_wrapper
+ 
+ 
++def admins_only(f):
++    """
++    Decorator that requires the user to be an admin. Non-admins are redirected
++    to the login page (or receive a 403 for JSON/event-stream requests).
++    :param f:
++    :return:
++    """
++
++    @functools.wraps(f)
++    def admins_only_wrapper(*args, **kwargs):
++        if is_admin():
++            return f(*args, **kwargs)
++        else:
++            if request.is_json or request.accept_mimetypes.best == "text/event-stream":
++                abort(403)
++            else:
++                return redirect(url_for("auth.login", next=request.full_path))
++
++    return admins_only_wrapper
++
++
+ def registered_only(f):
+     """
+     Decorator that requires the user to have a registered account

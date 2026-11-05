@@ -1,0 +1,93 @@
+{
+  "app": "healthchecks",
+  "baseline": "4b9528f461bab4d29110f6c7c6227d8acf4c937f",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/api/decorators.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [],
+  "relation": "sibling",
+  "request": "Add a decorator for write endpoints that accepts a read-write project API key from the X-Api-Key header or JSON body.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11819249999999999,
+    "duration_ms": 33696,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 9,
+    "result_text": "I added the `authorize` decorator to `hc/api/decorators.py`, but I haven't run the tests. Both attempts to run `python manage.py test hc.api` were blocked pending approval, so it's untested.\n\n`hc/api/views.py` already imported `authorize` and used it on about ten write endpoints (`create_check`, `channels` and others). The name didn't exist, so the module couldn't import. The new decorator fills that gap.\n\nHow it behaves:\n- **Key source:** it reads the `X-Api-Key` header, or the `api_key` field of the JSON body if the header is absent.\n- **Parsed body:** it parses the body into `request.json`, which the views already read. An empty body gives `{}`.\n- **Key type:** it accepts read-write keys only, both plain-text and hashed `hcw_…` keys. Read-only keys get a 401 \"wrong api key\".\n- **Request attributes:** it sets `request.project`, `request.readonly = False` and `request.v`, as `authorize_read` does.\n- **Errors:**\n  - Invalid JSON, or JSON that isn't an object, gets a 400.\n  - A missing, non-string or wrong-length key gets a 401 \"missing api key\".\n  - A key that matches no project gets a 401 \"wrong api key\".\n\nIf you approve the command, `python manage.py test hc.api` will check it. The existing `test_pause.py` and `test_auth.py` already cover the header, body and read-only-key cases."
+  },
+  "task": "hc_api_authorize",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "command": "git ls-files | head -100 && grep -rniE \"api.?key|x-api-key\" --include=*.py . | head -40"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "cat hc/api/decorators.py && grep -n \"authorize\" hc/api/views.py | head -30"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "git status --short && git log --oneline -3 && git log -S\"def authorize(\" --oneline -- hc/api/decorators.py | head; sed -n 25,50p hc/api/tests/test_pause.py; sed -n 430,475p hc/api/views.py; grep -n \"def for_api_key\" -A25 hc/accounts/models.py; grep -n \"request.json\\|ApiRequest.json\\|\\.json = \" -r hc/api/*.py | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 427,450p hc/accounts/models.py; sed -n 1,25p hc/api/tests/test_auth.py; sed -n 45,64p hc/api/tests/test_auth.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "python - <<'EOF'\np=\"hc/api/decorators.py\"\ns=open(p).read()\nnew='''def authorize(f: ViewFunc) -> ViewFunc:\n    \"\"\"Authorize a write endpoint using a read-write project API key.\n\n    The key is read from the X-Api-Key header, or, if the header is absent, from\n    the \"api_key\" field of the JSON request body. The parsed body is stored in\n    `request.json` for the view to use. Read-only keys are rejected.\n    \"\"\"\n\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if request.body:\n            try:\n                request.json = json.loads(request.body.decode())\n            except (ValueError, UnicodeDecodeError):\n                return error(\"could not parse request body\")\n            if not isinstance(request.json, dict):\n                return error(\"json root must be an object\")\n        else:\n            request.json = {}\n\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = request.json.get(\"api_key\", \"\")\n\n        if not isinstance(api_key, str) or len(api_key) != 32:\n            return error(\"missing api key\", 401)\n\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)\n        if project is None:\n            return error(\"wrong api key\", 401)\n\n        request.project = project\n        request.readonly = False\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n\n\ndef authorize_read('''\ns=s.replace(\"def authorize_read(\",new,1)\nopen(p,\"w\").write(s)\nEOF\npython manage.py test hc.api 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e24eca8184aa/repo/hc/api/decorators.py",
+        "new_string": "def authorize(f: ViewFunc) -> ViewFunc:\n    \"\"\"Authorize a write endpoint using a read-write project API key.\n\n    The key is read from the X-Api-Key header or, if the header is absent, from\n    the \"api_key\" field of the JSON request body. The parsed body is stored in\n    `request.json` for the view to use. Read-only keys are rejected.\n    \"\"\"\n\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        if request.body:\n            try:\n                request.json = json.loads(request.body.decode())\n            except (ValueError, UnicodeDecodeError):\n                return error(\"could not parse request body\")\n            if not isinstance(request.json, dict):\n                return error(\"json root must be an object\")\n        else:\n            request.json = {}\n\n        if \"X-Api-Key\" in request.headers:\n            api_key = request.headers[\"X-Api-Key\"]\n        else:\n            api_key = request.json.get(\"api_key\", \"\")\n\n        if not isinstance(api_key, str) or len(api_key) != 32:\n            return error(\"missing api key\", 401)\n\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)\n        if project is None:\n            return error(\"wrong api key\", 401)\n\n        request.project = project\n        request.readonly = False\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n\n\ndef authorize_read(f: ViewFunc) -> ViewFunc:",
+        "old_string": "def authorize_read(f: ViewFunc) -> ViewFunc:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.api 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.api"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 7,
+      "Edit": 1
+    }
+  },
+  "wall_seconds": 34.7
+}

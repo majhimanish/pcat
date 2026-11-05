@@ -1,0 +1,213 @@
+{
+  "app": "healthchecks",
+  "baseline": "4096ac2d69c4cd41437d839a34cbbd7c11a64514",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "integrations.add_url_channel",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Add a URL-based notification integration Django view"
+      },
+      "result": {
+        "ids": [
+          "integrations.add_url_channel"
+        ],
+        "scores": [
+          18.37
+        ]
+      },
+      "timestamp": "2026-11-05T01:59:20.167+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "integrations.add_url_channel",
+        "names": null
+      },
+      "result": {
+        "id": "integrations.add_url_channel@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T01:59:22.749+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "hc/front/views.py",
+        "length": 747,
+        "pattern_id": "integrations.add_url_channel"
+      },
+      "result": {
+        "deviations": [
+          [
+            "add_victorops",
+            "integrations.add_url_channel@v1",
+            [
+              [
+                "PC108",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC109",
+                false
+              ],
+              [
+                "PC110",
+                false
+              ]
+            ]
+          ]
+        ],
+        "statuses": [
+          [
+            "add_victorops",
+            "near",
+            "integrations.add_url_channel"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T01:59:44.683+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "sibling",
+  "request": "Add an `add_victorops` view in hc/front/views.py for adding a VictorOps webhook URL to a project, like the other integrations.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1542764,
+    "duration_ms": 36257,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 14,
+    "result_text": "I added `add_victorops` to `hc/front/views.py`, just above `add_check`. I haven't run the Django tests or started the server.\n\nIt follows the catalog's `integrations.add_url_channel` pattern, the same shape as `add_msteams`. The view:\n- needs a logged-in user and the `VICTOROPS_ENABLED` setting;\n- gets the project through `_get_rw_project_for_user`, so only users with write access can add the integration;\n- validates the URL with `forms.AddUrlForm`;\n- creates a `victorops` channel, assigns all the project's checks to it, and redirects to `hc-channels`.\n\nThe pcat check found no high-severity deviations. It flagged only low-severity items, which are the changed setting name, kind and template name. It also listed `_get_project_for_user` from `views.py` as \"added\" code, but I didn't change that function.\n\nThere are two things to know:\n- **Existing view:** `hc/integrations/victorops/views.py` already has `add_splunk_oncall`. It saves `request.POST[\"value\"]` without validating it. The URL name `hc-add-victorops` is routed to a function called `views.add` in `hc/integrations/victorops/urls.py`, and that function doesn't exist in the file, so the route looks broken.\n- **Not wired in:** the new view isn't connected to any URL yet. If you want it to replace the old view, change `hc/integrations/victorops/urls.py` to point `hc-add-victorops` at `hc.front.views.add_victorops`. I can make that change if you want."
+  },
+  "task": "hc_add_victorops",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "max_results": 3,
+        "query": "select:mcp__pcat__search_patterns,mcp__pcat__get_pattern,mcp__pcat__check_code"
+      },
+      "tool": "ToolSearch"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-7b68c4dfe8ee/repo/hc/front/views.py",
+        "pattern": "def add_(pushover|slack|webhook|discord|victorops|opsgenie)|^def add_"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "Add a URL-based notification integration Django view"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "-i": true,
+        "head_limit": 40,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-7b68c4dfe8ee/repo/hc/front",
+        "pattern": "victorops|VictorOps|def add_\\w+_complete|^def add_|webhook"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "id": "integrations.add_url_channel"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "command": "grep -rn -i \"victorops\" --include=*.py --include=*.html . | grep -v tests | head -30; sed -n 1,80p hc/front/views.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -rn \"msteams\\|victorops\\|AddUrlForm\\|def _get_rw_project_for_user\\|def require_setting\" hc --include=*.py | grep -v \"migrations\\|tests/\" | head -30; ls hc/integrations | head -50; ls templates/integrations | grep -i \"victor\\|msteams\""
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "cat hc/integrations/victorops/views.py hc/integrations/msteamsw/views.py; grep -n \"_get_rw_project_for_user\" hc/front/views.py | head -3; git status --short"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "cat hc/front/decorators.py | head -30; sed -n 525,560p hc/front/views.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "python3 - <<'E'\np='hc/front/views.py'\ns=open(p).read()\ns=s.replace(\"from hc.front import forms\\n\",\"from hc.front import forms\\nfrom hc.front.decorators import require_setting\\n\",1)\nnew='''@require_setting(\"VICTOROPS_ENABLED\")\n@login_required\n# pcat: integrations.add_url_channel@v1\ndef add_victorops(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:\n    project = _get_rw_project_for_user(request, code)\n\n    if request.method == \"POST\":\n        form = forms.AddUrlForm(request.POST)\n        if form.is_valid():\n            channel = Channel(project=project, kind=\"victorops\")\n            channel.value = form.cleaned_data[\"value\"]\n            channel.save()\n\n            channel.assign_all_checks()\n            return redirect(\"hc-channels\", project.code)\n    else:\n        form = forms.AddUrlForm()\n\n    ctx = {\"page\": \"channels\", \"project\": project, \"form\": form}\n    return render(request, \"add_victorops.html\", ctx)\n\n\n'''\nm=\"@require_POST\\n@login_required\\ndef add_check(\"\nassert m in s\ns=s.replace(m,new+m,1)\nopen(p,'w').write(s)\nE\npython -c \"import ast;ast.parse(open('hc/front/views.py').read())\"; sed -n '/^@require_setting(\"VICTOROPS/,/^@require_POST/p' hc/front/views.py > /dev/null"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-7b68c4dfe8ee/repo/hc/front/views.py",
+        "new_string": "from hc.front import forms\nfrom hc.front.decorators import require_setting\n",
+        "old_string": "from hc.front import forms\n",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-7b68c4dfe8ee/repo/hc/front/views.py",
+        "new_string": "@require_setting(\"VICTOROPS_ENABLED\")\n@login_required\n# pcat: integrations.add_url_channel@v1\ndef add_victorops(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:\n    project = _get_rw_project_for_user(request, code)\n\n    if request.method == \"POST\":\n        form = forms.AddUrlForm(request.POST)\n        if form.is_valid():\n            channel = Channel(project=project, kind=\"victorops\")\n            channel.value = form.cleaned_data[\"value\"]\n            channel.save()\n\n            channel.assign_all_checks()\n            return redirect(\"hc-channels\", project.code)\n    else:\n        form = forms.AddUrlForm()\n\n    ctx = {\"page\": \"channels\", \"project\": project, \"form\": form}\n    return render(request, \"add_victorops.html\", ctx)\n\n\n@require_POST\n@login_required\ndef add_check(",
+        "old_string": "@require_POST\n@login_required\ndef add_check(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "@require_setting(\"VICTOROPS_ENABLED\")\n@login_required\n# pcat: integrations.add_url_channel@v1\ndef add_victorops(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:\n    project = _get_rw_project_for_user(request, code)\n\n    if request.method == \"POST\":\n        form = forms.AddUrlForm(request.POST)\n        if form.is_valid():\n            channel = Channel(project=project, kind=\"victorops\")\n            channel.value = form.cleaned_data[\"value\"]\n            channel.save()\n\n            channel.assign_all_checks()\n            return redirect(\"hc-channels\", project.code)\n    else:\n        form = forms.AddUrlForm()\n\n    ctx = {\"page\": \"channels\", \"project\": project, \"form\": form}\n    return render(request, \"add_victorops.html\", ctx)\n",
+        "file_path": "hc/front/views.py",
+        "pattern_id": "integrations.add_url_channel"
+      },
+      "tool": "mcp__pcat__check_code"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "integrations.add_url_channel"
+    ],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 5,
+      "Edit": 2,
+      "Grep": 2,
+      "ToolSearch": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 1
+    }
+  },
+  "wall_seconds": 37.7
+}

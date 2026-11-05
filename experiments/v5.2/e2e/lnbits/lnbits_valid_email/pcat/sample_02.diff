@@ -1,0 +1,52 @@
+diff --git a/lnbits/core/models/users.py b/lnbits/core/models/users.py
+index e1821b6..afe801f 100644
+--- a/lnbits/core/models/users.py
++++ b/lnbits/core/models/users.py
+@@ -336,6 +336,7 @@ class CreateUser(BaseModel):
+ class UpdateUser(BaseModel):
+     user_id: str
+     username: str | None = Query(default=..., min_length=2, max_length=20)
++    email: str | None = None
+     extra: UserExtra | None = None
+ 
+ 
+diff --git a/lnbits/core/views/auth_api.py b/lnbits/core/views/auth_api.py
+index 504bfc5..31f52be 100644
+--- a/lnbits/core/views/auth_api.py
++++ b/lnbits/core/views/auth_api.py
+@@ -45,6 +45,7 @@ from lnbits.helpers import (
+     decrypt_internal_message,
+     encrypt_internal_message,
+     get_api_routes,
++    is_valid_email,
+     is_valid_email_address,
+     is_valid_username,
+     sha256s,
+@@ -573,6 +574,10 @@ async def update(
+     if data.user_id != account.id:
+         raise HTTPException(HTTPStatus.BAD_REQUEST, "Invalid user ID.")
+ 
++    if data.email:
++        if not is_valid_email(data.email):
++            raise HTTPException(HTTPStatus.BAD_REQUEST, "Invalid email.")
++        account.email = data.email
+     if data.username:
+         account.username = data.username
+     if data.extra:
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 0303de5..a8fc068 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -163,6 +163,12 @@ def is_valid_username(username: str) -> bool:
+     return re.fullmatch(username_regex, username) is not None
+ 
+ 
++# pcat: validators.regex_match@v1
++def is_valid_email(email: str) -> bool:
++    email_regex = r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}"
++    return re.fullmatch(email_regex, email) is not None
++
++
+ def is_valid_label(label: str) -> bool:
+     label_regex = r"([A-Za-z0-9 ._-]{1,100}$)"
+     return re.fullmatch(label_regex, label) is not None

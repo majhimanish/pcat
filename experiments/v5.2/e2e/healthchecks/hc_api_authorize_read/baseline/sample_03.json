@@ -1,0 +1,125 @@
+{
+  "app": "healthchecks",
+  "baseline": "53d0d067f180456dcfbaefbc57a9c6f3061bec1b",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/api/decorators.py",
+    "hc/api/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "api.authorize_read",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add an `authorize_read` decorator in hc/api/decorators.py that accepts rw or ro project API keys from X-Api-Key, and apply it to the read-only endpoints.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11186249999999999,
+    "duration_ms": 48725,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I couldn't run the test suite. The sandbox asked for approval on the `python manage.py test hc.api` command, and I didn't get it, so none of this has been tested.\n\n**What I changed**\n- **New decorator:** I added `authorize_read` in `hc/api/decorators.py`.\n  - It reads the key from the `X-Api-Key` header only, not from the request body.\n  - It looks up a read-write key first, then a read-only key, using `Project.objects.for_api_key`. It sets `request.readonly = True` only when the read-only key matched.\n  - A missing or malformed key returns 401 \"missing api key\", and an unknown key returns 401 \"wrong api key\".\n- **Views already using it:** `hc/api/views.py` already imported `authorize_read`, and `get_checks`, `get_check`, `get_check_by_unique_key`, `flips_by_uuid`, `flips_by_unique_key` and `badges` already used it. Until now the decorator didn't exist, so those views couldn't import.\n- **Views I switched over:** I changed `channels`, `pings` and `ping_body` from `@authorize` to `@authorize_read`. They are the GET endpoints that were still read-write only.\n\n**Please check:** a read-only key can now list a project's channels and read ping bodies, and `ping_body` can return sensitive payloads. If you want read-only keys kept away from those, revert `channels` and `ping_body` to `@authorize`.\n\nI left `authorize_metrics` in place. Nothing in the repo uses it.\n\nPlease run `python manage.py test hc.api` to confirm."
+  },
+  "task": "hc_api_authorize_read",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/decorators.py"
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/views.py",
+        "pattern": "@authorize|^def |^@"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "git status --short && grep -rn \"authorize_read\\|authorize_metrics\" --include=*.py . | grep -v \"^./hc/api/views.py:.*@\" ; grep -n \"def for_api_key\" -A22 hc/accounts/models.py; sed -n 405,436p hc/api/views.py; sed -n 590,600p hc/api/views.py; sed -n 640,672p hc/api/views.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 466,500p hc/api/views.py; sed -n 850,872p hc/api/views.py; grep -n \"readonly\" hc/api/views.py | head -30"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 426,445p hc/accounts/models.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/decorators.py",
+        "new_string": "def authorize_read(f: ViewFunc) -> ViewFunc:\n    \"\"\"Authorize a read-only endpoint using a read-write or read-only API key.\n\n    The key must be sent in the X-Api-Key request header. Sets request.readonly\n    to True if the key was a read-only key.\n    \"\"\"\n\n    @wraps(f)\n    def wrapper(request: ApiRequest, *args: Any, **kwds: Any) -> HttpResponse:\n        request.json = {}\n\n        api_key = request.headers.get(\"X-Api-Key\", \"\")\n        if len(api_key) != 32 and not api_key.startswith((\"hcw_\", \"hcr_\")):\n            return error(\"missing api key\", 401)\n\n        # Try the read-write key first, then the read-only key. Doing two\n        # lookups lets us tell which kind of key matched.\n        readonly = False\n        project = Project.objects.for_api_key(api_key, accept_rw=True, accept_ro=False)\n        if project is None:\n            readonly = True\n            project = Project.objects.for_api_key(\n                api_key, accept_rw=False, accept_ro=True\n            )\n        if project is None:\n            return error(\"wrong api key\", 401)\n\n        request.project = project\n        request.readonly = readonly\n        request.v = _get_api_version(request)\n        return f(request, *args, **kwds)\n\n    return wrapper\n\n\ndef authorize_metrics(",
+        "old_string": "def authorize_metrics(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python - <<'E'\nimport re\np='hc/api/views.py'\ns=open(p).read()\nfor fn in [\"channels\",\"pings\",\"ping_body\"]:\n    s=s.replace(\"@authorize\\ndef %s(\"%fn,\"@authorize_read\\ndef %s(\"%fn)\nopen(p,'w').write(s)\nE\ngit diff --stat; python manage.py test hc.api 2>&1 | tail -8"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef channels(",
+        "old_string": "@authorize\ndef channels(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef pings(",
+        "old_string": "@authorize\ndef pings(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-81e69257b005/repo/hc/api/views.py",
+        "new_string": "@authorize_read\ndef ping_body(",
+        "old_string": "@authorize\ndef ping_body(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.api 2>&1 | tail -8"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 5,
+      "Edit": 4,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 49.5
+}

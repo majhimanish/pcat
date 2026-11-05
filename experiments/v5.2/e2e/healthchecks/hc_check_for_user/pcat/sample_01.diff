@@ -1,0 +1,37 @@
+diff --git a/hc/front/views.py b/hc/front/views.py
+index 6e34b3b..ae71c85 100644
+--- a/hc/front/views.py
++++ b/hc/front/views.py
+@@ -133,6 +133,32 @@ def _get_rw_channel_for_user(request: HttpRequest, code: UUID) -> Channel:
+     return channel
+ 
+ 
++# pcat: access.channel_for_user@v1
++def _get_check_for_user(request: HttpRequest, code: UUID) -> tuple[Check, bool]:
++    """Return specified check if current user has access to it."""
++
++    assert request.user.is_authenticated
++
++    check = get_object_or_404(Check.objects.select_related("project"), code=code)
++    if request.user.is_superuser:
++        return check, True
++
++    if request.user.id == check.project.owner_id:
++        return check, True
++
++    membership = get_object_or_404(Member, project=check.project, user=request.user)
++    return check, membership.is_rw
++
++
++# pcat: access.channel_for_user@v1
++def _get_rw_check_for_user(request: HttpRequest, code: UUID) -> Check:
++    check, rw = _get_check_for_user(request, code)
++    if not rw:
++        raise PermissionDenied
++
++    return check
++
++
+ def _get_notification_for_user(
+     request: HttpRequest, code: UUID
+ ) -> tuple[Notification, bool]:

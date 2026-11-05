@@ -1,0 +1,126 @@
+{
+  "app": "lnbits",
+  "baseline": "f21796c5e1542b952e47d289a6faf24a0695a7f6",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.check_callback_url",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a function that rejects payment callback URLs whose origin isn't permitted by the configured callback URL rules.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.11709969999999999,
+    "duration_ms": 32637,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I added `check_callback_url_origin(url)` to `lnbits/helpers.py`, but I haven't run it or any checks. Python snippets and `make` targets (`checkruff`, `checkblack`, `mypy`) were all held for approval, and I didn't try to get around that.\n\n**What it does**\n- It raises `ValueError(\"Callback URL is not allowed.\")` for:\n  - a non-http(s) scheme,\n  - a missing host,\n  - an invalid port,\n  - credentials in the URL (`user@host`),\n  - an origin that no rule fully matches.\n- It builds the origin as `scheme://host[:port]` and matches it against each rule in `settings.lnbits_callback_url_rules` with `re.fullmatch`.\n- If no rules are configured, any http(s) URL without credentials is accepted.\n\n**Why a new function**\n- `check_webhook_url` already exists. It uses `re.match` on the whole URL, which only anchors the start. A rule like `https://example\\.com` would therefore also accept `https://example.com.evil.net`.\n- I left `check_webhook_url` unchanged. `grep` found nothing that calls it, and `_post_webhook` in `lnbits/core/services/notifications.py` doesn't use either function. I didn't wire the new function in because you didn't ask for that. If you want it enforced on payment webhooks, it would be a one-line call in `_post_webhook`. Say so and I'll add it.\n\n**Not verified:** behaviour and lint. Approving the check commands, or running `make checkruff checkblack mypy` yourself, would cover lint and typing. I also haven't added unit tests.\n\n**Files touched:** `lnbits/helpers.py` only."
+  },
+  "task": "lnbits_callback_url",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "-i": true,
+        "glob": "*.py",
+        "head_limit": 50,
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-c46d179f17a4/repo/lnbits",
+        "pattern": "callback_url|callback_rules|CALLBACK"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^[a-z-]*:\" Makefile | head -40"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "-i": true,
+        "glob": "*.py",
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-c46d179f17a4/repo/lnbits",
+        "pattern": "url_rules|allowed_.*url|callback.*(allow|rule)|(allow|rule).*callback|webhook.*(allow|block)"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-c46d179f17a4/repo/lnbits/helpers.py",
+        "limit": 60,
+        "offset": 235
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-c46d179f17a4/repo/lnbits/core/services/notifications.py",
+        "limit": 40,
+        "offset": 455
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "command": "sed -n 468,478p lnbits/settings.py; grep -rn \"check_webhook_url\" --include=*.py . | head"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-c46d179f17a4/repo/lnbits/helpers.py",
+        "new_string": "def check_callback_url_origin(url: str) -> None:\n    \"\"\"\n    Raise ValueError if the origin (scheme://host[:port]) of the callback url\n    is not fully matched by any of `settings.lnbits_callback_url_rules`.\n    Unlike `check_webhook_url`, the rules are matched against the origin only\n    and must match all of it, so \"https://example.com\" does not permit\n    \"https://example.com.evil.net\".\n    \"\"\"\n    try:\n        parsed = urlparse(url)\n        port = parsed.port\n    except ValueError as exc:\n        raise ValueError(\"Callback URL is not allowed.\") from exc\n    if parsed.scheme not in (\"http\", \"https\") or not parsed.hostname:\n        raise ValueError(\"Callback URL is not allowed.\")\n    if parsed.username or parsed.password:\n        raise ValueError(\"Callback URL is not allowed.\")\n    if not settings.lnbits_callback_url_rules:\n        return\n\n    host = f\"[{parsed.hostname}]\" if \":\" in parsed.hostname else parsed.hostname\n    origin = f\"{parsed.scheme}://{host}\" + (f\":{port}\" if port else \"\")\n    for rule in settings.lnbits_callback_url_rules:\n        if re.fullmatch(rule, origin) is not None:\n            return\n    raise ValueError(\"Callback URL is not allowed.\")\n\n\ndef download_url(url: str, save_path: Path):",
+        "old_string": "def download_url(url: str, save_path: Path):",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "grep -n \"urlparse\\|^import re\" lnbits/helpers.py | head -3"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "python - <<'E'\nfrom lnbits.helpers import check_callback_url_origin as c\nfrom lnbits.settings import settings\nfor u in [\"https://example.com/cb?x=1\",\"http://example.com:8080/x\",\"https://user@example.com/\",\"ftp://example.com\",\"https://localhost/\",\"https://example.com:99999/\"]:\n    try: c(u); print(\"ok  \",u)\n    except ValueError as e: print(\"deny\",u)\nsettings.lnbits_callback_url_rules=[\"https://example\\\\.com\"]\nfor u in [\"https://example.com/a\",\"https://example.com.evil.net/a\",\"http://example.com/a\"]:\n    try: c(u); print(\"ok  \",u)\n    except ValueError: print(\"deny\",u)\nE\nmake checkruff checkblack mypy 2>&1 | tail -8"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "make checkruff checkblack mypy 2>&1 | tail -8"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "make checkruff"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 2
+    }
+  },
+  "wall_seconds": 33.4
+}

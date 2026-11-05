@@ -1,0 +1,42 @@
+diff --git a/lnbits/helpers.py b/lnbits/helpers.py
+index 6065905..5427d7a 100644
+--- a/lnbits/helpers.py
++++ b/lnbits/helpers.py
+@@ -271,6 +271,37 @@ def check_webhook_url(url: str):
+     raise ValueError("Webhook URL is not allowed.")
+ 
+ 
++def check_callback_url(url: str):
++    """
++    Raise ValueError if the origin (scheme://host[:port]) of the callback URL
++    is not fully matched by one of `settings.lnbits_callback_url_rules`.
++    No rules configured means every http(s) origin is allowed.
++    """
++    try:
++        parsed = urlparse(url)
++        port = parsed.port
++    except ValueError as exc:
++        raise ValueError("Callback URL is not allowed.") from exc
++
++    # reject non-http(s), missing host and userinfo (`ok.com@evil.host` tricks)
++    if (
++        parsed.scheme not in ("http", "https")
++        or not parsed.hostname
++        or "@" in parsed.netloc
++    ):
++        raise ValueError("Callback URL is not allowed.")
++
++    host = f"[{parsed.hostname}]" if ":" in parsed.hostname else parsed.hostname
++    origin = f"{parsed.scheme}://{host}" + (f":{port}" if port else "")
++
++    if not settings.lnbits_callback_url_rules:
++        return
++    for rule in settings.lnbits_callback_url_rules:
++        if re.fullmatch(rule, origin) is not None:
++            return
++    raise ValueError(f"Callback URL origin '{origin}' is not allowed.")
++
++
+ def download_url(url: str, save_path: Path):
+     if not url.startswith(("http:", "https:")):
+         raise ValueError(f"Invalid URL: {url}. Must start with 'http' or 'https'.")

@@ -1,0 +1,169 @@
+{
+  "app": "healthchecks",
+  "baseline": "58e2c8538e124ffc3823e870f3bd932060c9fcd3",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "Safe post-login redirect check"
+      },
+      "result": {
+        "ids": [
+          "accounts.allow_redirect"
+        ],
+        "scores": [
+          15.309
+        ]
+      },
+      "timestamp": "2026-11-05T02:00:19.833+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "accounts.allow_redirect",
+        "names": null
+      },
+      "result": {
+        "id": "accounts.allow_redirect@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:00:21.740+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo/hc/accounts/views.py",
+        "length": 353,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:00:30.172+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a check in the accounts views that validates the post-login `next` URL is one of our own pages.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.10396990000000002,
+    "duration_ms": 25021,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "The accounts views now check that the post-login `next` URL is one of our own pages. I haven't run the test suite.\n\nThe change is in `hc/accounts/views.py`. The three places that read `?next=` already called `_allow_redirect`: `_redirect_after_login`, `_check_2fa` and the magic-link branch of `login`. A fourth call is at line 863, which I didn't open. That function wasn't defined anywhere, and the only check in the file was `_allow_next_url`, which accepted any path starting with `/`. I replaced it with the reviewed `accounts.allow_redirect@v1` pattern.\n\nThe new check:\n- **Rejects** a URL with a host, such as `https://evil.com/...`.\n- **Accepts** only paths that resolve to one of the routes in `POST_LOGIN_ROUTES`: checks, details, log, channels, the add-Slack/Pushover/Telegram pages, project settings and uncloak.\n- **Keeps** the `# pcat: accounts.allow_redirect@v1` marker above the function.\n\n`check_code` reported no deviations from the pattern. Nothing else in the repo referenced `_allow_next_url`.\n\nThe existing tests `test_it_ignores_bad_next_parameter` and `test_it_handles_bad_next_parameter` should cover this, but they haven't been run."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "safe post-login redirect check next URL"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "glob": "**/accounts/**/*.py",
+        "output_mode": "content",
+        "pattern": "next"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo/hc/accounts/views.py",
+        "limit": 180
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "request": "Safe post-login redirect check"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "id": "accounts.allow_redirect"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "glob": "**/accounts/views.py",
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo/hc",
+        "pattern": "_allow_redirect|_allow_next_url|urlparse|resolve\\(|Resolver404"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo/hc/accounts/views.py",
+        "new_string": "# pcat: accounts.allow_redirect@v1\ndef _allow_redirect(redirect_url: str | None) -> bool:\n    if not redirect_url:\n        return False\n    parsed = urlparse(redirect_url)\n    if parsed.netloc:\n        return False\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n    return match.url_name in POST_LOGIN_ROUTES",
+        "old_string": "def _allow_next_url(next_url: str | None) -> bool:\n    if not next_url:\n        return False\n\n    # Allow redirects only to relative URLs\n    return next_url.startswith(\"/\") and not next_url.startswith(\"//\")",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "code": "# pcat: accounts.allow_redirect@v1\ndef _allow_redirect(redirect_url: str | None) -> bool:\n    if not redirect_url:\n        return False\n    parsed = urlparse(redirect_url)\n    if parsed.netloc:\n        return False\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n    return match.url_name in POST_LOGIN_ROUTES\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo/hc/accounts/views.py",
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "tool": "mcp__pcat__check_code"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-91b4b7340511/repo",
+        "pattern": "_allow_next_url"
+      },
+      "tool": "Grep"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "accounts.allow_redirect"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 26.7
+}

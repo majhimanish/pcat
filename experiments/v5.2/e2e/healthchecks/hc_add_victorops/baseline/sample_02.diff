@@ -1,0 +1,13 @@
+diff --git a/hc/integrations/victorops/views.py b/hc/integrations/victorops/views.py
+index 29a38b5..ce91197 100644
+--- a/hc/integrations/victorops/views.py
++++ b/hc/integrations/victorops/views.py
+@@ -15,7 +15,7 @@ from hc.front.views import _get_rw_project_for_user
+ 
+ @require_setting("VICTOROPS_ENABLED")
+ @login_required
+-def add_splunk_oncall(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:
++def add(request: AuthenticatedHttpRequest, code: UUID) -> HttpResponse:
+     project = _get_rw_project_for_user(request, code)
+ 
+     if request.method == "POST":

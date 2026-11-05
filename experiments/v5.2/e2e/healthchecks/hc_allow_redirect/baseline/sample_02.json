@@ -1,0 +1,82 @@
+{
+  "app": "healthchecks",
+  "baseline": "f42bc45530dd0370419409dd9d17aef670fa2b13",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a check in the accounts views that validates the post-login `next` URL is one of our own pages.",
+  "returncode": 0,
+  "sample": 2,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0758392,
+    "duration_ms": 18132,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 6,
+    "result_text": "I added the check in `hc/accounts/views.py`, but I haven't run the tests. The test command needed approval and I didn't get it.\n\nThe login views already called `_allow_redirect()` in four places (after login, the 2FA redirect, the magic-link request and the profile view). That function didn't exist. The file only had `_allow_next_url()`, which accepted any path starting with a single `/`, and nothing called it. I replaced it with `_allow_redirect()`, so the existing calls now work.\n\n`_allow_redirect()` accepts a `next` URL only if all of these hold:\n- It is non-empty, starts with `/`, and has no backslash.\n- It has no scheme or host, so `//evil.com`, `https://…` and `/\\evil.com` are all rejected.\n- Its path resolves to one of the routes in the existing `POST_LOGIN_ROUTES` list (checks, details, log, channels, the Slack, Pushover and Telegram add pages, project settings, uncloak). That is why the existing tests treat `?next=/evil/` as invalid.\n\nTo run the tests: `python manage.py test hc.accounts.tests.test_login hc.accounts.tests.test_check_token hc.accounts.tests.test_login_totp hc.accounts.tests.test_login_webauthn`"
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "glob": "**/accounts/**/*.py",
+        "output_mode": "content",
+        "pattern": "next"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-a96532e7a085/repo/hc/accounts/views.py",
+        "limit": 200,
+        "offset": 1
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "pattern": "_allow_redirect|_allow_next_url"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-a96532e7a085/repo/hc/accounts/views.py",
+        "new_string": "def _allow_redirect(redirect_url: str | None) -> bool:\n    \"\"\"Return True if redirect_url points to one of our own post-login pages.\"\"\"\n\n    if not redirect_url:\n        return False\n\n    # Reject absolute URLs, scheme-relative URLs (\"//evil.com\") and backslash tricks\n    if \"\\\\\" in redirect_url or not redirect_url.startswith(\"/\"):\n        return False\n\n    parsed = urlparse(redirect_url)\n    if parsed.scheme or parsed.netloc:\n        return False\n\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n\n    return match.url_name in POST_LOGIN_ROUTES",
+        "old_string": "def _allow_next_url(next_url: str | None) -> bool:\n    if not next_url:\n        return False\n\n    # Allow redirects only to relative URLs\n    return next_url.startswith(\"/\") and not next_url.startswith(\"//\")",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.accounts.tests.test_login hc.accounts.tests.test_check_token hc.accounts.tests.test_login_totp hc.accounts.tests.test_login_webauthn 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 18.9
+}

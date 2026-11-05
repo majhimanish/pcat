@@ -1,0 +1,428 @@
+diff --git a/CTFd/api/v1/challenges.py b/CTFd/api/v1/challenges.py
+index b33fabd..d608b94 100644
+--- a/CTFd/api/v1/challenges.py
++++ b/CTFd/api/v1/challenges.py
+@@ -54,8 +54,8 @@ from CTFd.utils.config.visibility import (
+ from CTFd.utils.dates import ctf_ended, ctf_paused, ctftime, isoformat
+ from CTFd.utils.decorators import (
+     admins_only,
+-    authed_only,
+     during_ctf_time_only,
++    login_required,
+     require_verified_emails,
+ )
+ from CTFd.utils.decorators.visibility import (
+@@ -1220,7 +1220,7 @@ class ChallengeRatings(Resource):
+ 
+     @check_challenge_visibility
+     @during_ctf_time_only
+-    @authed_only
++    @login_required
+     @require_verified_emails
+     def put(self, challenge_id):
+         """Create or update a rating for a challenge"""
+@@ -1317,7 +1317,7 @@ class ChallengeRatings(Resource):
+ class ChallengeSolution(Resource):
+     @check_challenge_visibility
+     @during_ctf_time_only
+-    @authed_only
++    @login_required
+     @require_verified_emails
+     def get(self, challenge_id):
+         challenge = Challenges.query.filter_by(id=challenge_id).first_or_404()
+diff --git a/CTFd/api/v1/shares.py b/CTFd/api/v1/shares.py
+index e66ef4e..065d33c 100644
+--- a/CTFd/api/v1/shares.py
++++ b/CTFd/api/v1/shares.py
+@@ -2,7 +2,7 @@ from flask import abort, request
+ from flask_restx import Namespace, Resource
+ 
+ from CTFd.utils import get_config
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.social import get_social_share
+ from CTFd.utils.user import get_current_user_attrs
+ 
+@@ -11,7 +11,7 @@ shares_namespace = Namespace("shares", description="Endpoint to create Share lin
+ 
+ @shares_namespace.route("")
+ class Share(Resource):
+-    @authed_only
++    @login_required
+     def post(self):
+         if bool(get_config("social_shares", default=True)) is False:
+             abort(403)
+diff --git a/CTFd/api/v1/solutions.py b/CTFd/api/v1/solutions.py
+index df1847a..c6b4c59 100644
+--- a/CTFd/api/v1/solutions.py
++++ b/CTFd/api/v1/solutions.py
+@@ -13,8 +13,8 @@ from CTFd.schemas.solutions import SolutionSchema
+ from CTFd.utils.challenges import get_solve_ids_for_user_id
+ from CTFd.utils.decorators import (
+     admins_only,
+-    authed_only,
+     during_ctf_time_only,
++    login_required,
+     require_verified_emails,
+ )
+ from CTFd.utils.helpers.models import build_model_filters
+@@ -146,7 +146,7 @@ class SolutionList(Resource):
+ class Solution(Resource):
+     @during_ctf_time_only
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @solutions_namespace.doc(
+         description="Endpoint to get a solution object",
+         responses={
+diff --git a/CTFd/api/v1/teams.py b/CTFd/api/v1/teams.py
+index 10cba24..a465126 100644
+--- a/CTFd/api/v1/teams.py
++++ b/CTFd/api/v1/teams.py
+@@ -21,7 +21,7 @@ from CTFd.schemas.awards import AwardSchema
+ from CTFd.schemas.submissions import SubmissionSchema
+ from CTFd.schemas.teams import TeamSchema
+ from CTFd.utils import get_config
+-from CTFd.utils.decorators import admins_only, authed_only, require_team
++from CTFd.utils.decorators import admins_only, login_required, require_team
+ from CTFd.utils.decorators.modes import require_team_mode
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+@@ -273,7 +273,7 @@ class TeamPublic(Resource):
+ class TeamPrivate(Resource):
+     method_decorators = [require_team_mode]
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     @teams_namespace.doc(
+         description="Endpoint to get the current user's Team object",
+@@ -299,7 +299,7 @@ class TeamPrivate(Resource):
+         response.data["score"] = team.get_score(admin=True)
+         return {"success": True, "data": response.data}
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     @teams_namespace.doc(
+         description="Endpoint to edit the current user's Team object",
+@@ -336,7 +336,7 @@ class TeamPrivate(Resource):
+ 
+         return {"success": True, "data": response.data}
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     @teams_namespace.doc(
+         description="Endpoint to disband your current team. Can only be used if the team has performed no actions in the CTF.",
+@@ -408,7 +408,7 @@ class TeamPrivate(Resource):
+ class TeamPrivateMembers(Resource):
+     method_decorators = [require_team_mode]
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     def post(self):
+         team = get_current_team()
+@@ -521,7 +521,7 @@ class TeamMembers(Resource):
+ class TeamPrivateSolves(Resource):
+     method_decorators = [require_team_mode]
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     def get(self):
+         team = get_current_team()
+@@ -542,7 +542,7 @@ class TeamPrivateSolves(Resource):
+ class TeamPrivateFails(Resource):
+     method_decorators = [require_team_mode]
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     def get(self):
+         team = get_current_team()
+@@ -572,7 +572,7 @@ class TeamPrivateFails(Resource):
+ class TeamPrivateAwards(Resource):
+     method_decorators = [require_team_mode]
+ 
+-    @authed_only
++    @login_required
+     @require_team
+     def get(self):
+         team = get_current_team()
+diff --git a/CTFd/api/v1/tokens.py b/CTFd/api/v1/tokens.py
+index 975b870..a4bd864 100644
+--- a/CTFd/api/v1/tokens.py
++++ b/CTFd/api/v1/tokens.py
+@@ -8,7 +8,7 @@ from CTFd.api.v1.helpers.schemas import sqlalchemy_to_pydantic
+ from CTFd.api.v1.schemas import APIDetailedSuccessResponse, APIListSuccessResponse
+ from CTFd.models import Tokens, db
+ from CTFd.schemas.tokens import TokenSchema
+-from CTFd.utils.decorators import authed_only, require_verified_emails
++from CTFd.utils.decorators import login_required, require_verified_emails
+ from CTFd.utils.security.auth import generate_user_token
+ from CTFd.utils.user import get_current_user, get_current_user_type, is_admin
+ 
+@@ -47,7 +47,7 @@ tokens_namespace.schema_model(
+ @tokens_namespace.route("")
+ class TokenList(Resource):
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @tokens_namespace.doc(
+         description="Endpoint to get token objects in bulk",
+         responses={
+@@ -71,7 +71,7 @@ class TokenList(Resource):
+         return {"success": True, "data": response.data}
+ 
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @tokens_namespace.doc(
+         description="Endpoint to create a token object",
+         responses={
+@@ -108,7 +108,7 @@ class TokenList(Resource):
+ @tokens_namespace.param("token_id", "A Token ID")
+ class TokenDetail(Resource):
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @tokens_namespace.doc(
+         description="Endpoint to get an existing token object",
+         responses={
+@@ -137,7 +137,7 @@ class TokenDetail(Resource):
+         return {"success": True, "data": response.data}
+ 
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @tokens_namespace.doc(
+         description="Endpoint to delete an existing token object",
+         responses={200: ("Success", "APISimpleSuccessResponse")},
+diff --git a/CTFd/api/v1/unlocks.py b/CTFd/api/v1/unlocks.py
+index 6366dc5..d9e3d68 100644
+--- a/CTFd/api/v1/unlocks.py
++++ b/CTFd/api/v1/unlocks.py
+@@ -21,8 +21,8 @@ from CTFd.schemas.unlocks import UnlockSchema
+ from CTFd.utils.challenges import get_solve_ids_for_user_id
+ from CTFd.utils.decorators import (
+     admins_only,
+-    authed_only,
+     during_ctf_time_only,
++    login_required,
+     require_verified_emails,
+ )
+ from CTFd.utils.helpers.models import build_model_filters
+@@ -94,7 +94,7 @@ class UnlockList(Resource):
+ 
+     @during_ctf_time_only
+     @require_verified_emails
+-    @authed_only
++    @login_required
+     @unlocks_namespace.doc(
+         description="Endpoint to create an unlock object. Used to unlock hints.",
+         responses={
+diff --git a/CTFd/api/v1/users.py b/CTFd/api/v1/users.py
+index 647aa13..b8824f9 100644
+--- a/CTFd/api/v1/users.py
++++ b/CTFd/api/v1/users.py
+@@ -26,7 +26,7 @@ from CTFd.schemas.submissions import SubmissionSchema
+ from CTFd.schemas.users import UserSchema
+ from CTFd.utils.challenges import get_submissions_for_user_id_for_challenge_id
+ from CTFd.utils.config import get_config, get_mail_provider
+-from CTFd.utils.decorators import admins_only, authed_only, ratelimit
++from CTFd.utils.decorators import admins_only, login_required, ratelimit
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+     check_score_visibility,
+@@ -295,7 +295,7 @@ class UserPublic(Resource):
+ 
+ @users_namespace.route("/me")
+ class UserPrivate(Resource):
+-    @authed_only
++    @login_required
+     @users_namespace.doc(
+         description="Endpoint to get the User object for the current user",
+         responses={
+@@ -318,7 +318,7 @@ class UserPrivate(Resource):
+ 
+         return {"success": True, "data": response}
+ 
+-    @authed_only
++    @login_required
+     @users_namespace.doc(
+         description="Endpoint to edit the User object for the current user",
+         responses={
+@@ -353,7 +353,7 @@ class UserPrivate(Resource):
+ 
+ @users_namespace.route("/me/submissions")
+ class UserPrivateSubmissions(Resource):
+-    @authed_only
++    @login_required
+     def get(self):
+         # TODO: CTFd 4.0 Self viewing submissions should not be enabled by default until further notice
+         if bool(get_config("view_self_submissions")) is False:
+@@ -373,7 +373,7 @@ class UserPrivateSubmissions(Resource):
+ 
+ @users_namespace.route("/me/solves")
+ class UserPrivateSolves(Resource):
+-    @authed_only
++    @login_required
+     def get(self):
+         user = get_current_user()
+         solves = user.get_solves(admin=True)
+@@ -390,7 +390,7 @@ class UserPrivateSolves(Resource):
+ 
+ @users_namespace.route("/me/fails")
+ class UserPrivateFails(Resource):
+-    @authed_only
++    @login_required
+     def get(self):
+         user = get_current_user()
+         fails = user.get_fails(admin=True)
+@@ -416,7 +416,7 @@ class UserPrivateFails(Resource):
+ @users_namespace.route("/me/awards")
+ @users_namespace.param("user_id", "User ID")
+ class UserPrivateAwards(Resource):
+-    @authed_only
++    @login_required
+     def get(self):
+         user = get_current_user()
+         awards = user.get_awards(admin=True)
+diff --git a/CTFd/events/__init__.py b/CTFd/events/__init__.py
+index 57c8cab..cd6ab41 100644
+--- a/CTFd/events/__init__.py
++++ b/CTFd/events/__init__.py
+@@ -2,13 +2,13 @@ from flask import Blueprint, Response, current_app, stream_with_context
+ 
+ from CTFd.models import db
+ from CTFd.utils import get_app_config
+-from CTFd.utils.decorators import authed_only, ratelimit
++from CTFd.utils.decorators import login_required, ratelimit
+ 
+ events = Blueprint("events", __name__)
+ 
+ 
+ @events.route("/events")
+-@authed_only
++@login_required
+ @ratelimit(method="GET", limit=150, interval=60)
+ def subscribe():
+     @stream_with_context
+diff --git a/CTFd/teams.py b/CTFd/teams.py
+index 192d576..6026e70 100644
+--- a/CTFd/teams.py
++++ b/CTFd/teams.py
+@@ -5,7 +5,7 @@ from CTFd.exceptions import TeamTokenExpiredException, TeamTokenInvalidException
+ from CTFd.models import Brackets, TeamFieldEntries, TeamFields, Teams, db
+ from CTFd.utils import config, get_config, validators
+ from CTFd.utils.crypto import verify_password
+-from CTFd.utils.decorators import authed_only, ratelimit, registered_only
++from CTFd.utils.decorators import login_required, ratelimit, registered_only
+ from CTFd.utils.decorators.modes import require_team_mode
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+@@ -122,7 +122,7 @@ def invite():
+ 
+ 
+ @teams.route("/teams/join", methods=["GET", "POST"])
+-@authed_only
++@login_required
+ @require_team_mode
+ @ratelimit(method="POST", limit=10, interval=5)
+ def join():
+@@ -186,7 +186,7 @@ def join():
+ 
+ 
+ @teams.route("/teams/new", methods=["GET", "POST"])
+-@authed_only
++@login_required
+ @require_team_mode
+ def new():
+     infos = get_infos()
+@@ -334,7 +334,7 @@ def new():
+ 
+ 
+ @teams.route("/team")
+-@authed_only
++@login_required
+ @require_team_mode
+ def private():
+     infos = get_infos()
+diff --git a/CTFd/users.py b/CTFd/users.py
+index 9295164..a3191e1 100644
+--- a/CTFd/users.py
++++ b/CTFd/users.py
+@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, url_for
+ 
+ from CTFd.models import Users
+ from CTFd.utils import config
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+     check_score_visibility,
+@@ -47,7 +47,7 @@ def listing():
+ 
+ @users.route("/profile")
+ @users.route("/user")
+-@authed_only
++@login_required
+ def private():
+     infos = get_infos()
+     errors = get_errors()
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 062069b..949a649 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -99,6 +99,27 @@ def api_authed_only(f):
+     return api_authed_only_wrapper
+ 
+ 
++def login_required(f):
++    """
++    Decorator that redirects unauthenticated users to the login page.
++    API (JSON) and event-stream requests get a 403 instead of a redirect.
++    :param f:
++    :return:
++    """
++
++    @functools.wraps(f)
++    def login_required_wrapper(*args, **kwargs):
++        if authed():
++            return f(*args, **kwargs)
++        else:
++            if request.is_json or request.accept_mimetypes.best == "text/event-stream":
++                abort(403)
++            else:
++                return redirect(url_for("auth.login", next=request.full_path))
++
++    return login_required_wrapper
++
++
+ def registered_only(f):
+     """
+     Decorator that requires the user to have a registered account
+diff --git a/CTFd/views.py b/CTFd/views.py
+index cfa21f2..ccb4422 100644
+--- a/CTFd/views.py
++++ b/CTFd/views.py
+@@ -42,7 +42,7 @@ from CTFd.utils.config import can_send_mail, is_setup, is_teams_mode
+ from CTFd.utils.config.pages import build_markdown, get_page
+ from CTFd.utils.config.visibility import challenges_visible
+ from CTFd.utils.dates import ctf_ended, ctftime, view_after_ctf
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.health import check_config, check_database
+ from CTFd.utils.helpers import get_errors, get_infos, markup
+ from CTFd.utils.modes import USERS_MODE
+@@ -303,7 +303,7 @@ def notifications():
+ 
+ 
+ @views.route("/settings", methods=["GET"])
+-@authed_only
++@login_required
+ def settings():
+     infos = get_infos()
+     errors = get_errors()

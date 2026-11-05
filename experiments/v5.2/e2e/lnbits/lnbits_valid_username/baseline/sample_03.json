@@ -1,0 +1,75 @@
+{
+  "app": "lnbits",
+  "baseline": "65e16aa37b144f219241ee2f1507fca7694c8e06",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "validators.regex_match",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "add is_valid_username to lnbits/helpers.py: 2-20 chars of letters, digits, dots, underscores, no leading, trailing or doubled separators",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0483202,
+    "duration_ms": 20684,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 5,
+    "result_text": "I added `is_valid_username` to `lnbits/helpers.py`, next to the other `is_valid_*` helpers, but I haven't run it. The Bash call I used to test it needed approval and didn't go through. I also haven't run any Makefile checks such as `make check`.\n\n- **Length:** the name must be 2–20 characters.\n- **Characters:** it may contain ASCII letters and digits, with `.` and `_` as separators. Accented letters like `é` are rejected.\n- **Separators:** a separator can't be first or last. No two separators can sit next to each other, so `a..b` and `a._b` are both rejected.\n\nI wrote a small check covering these cases, such as `ab`, `a.b_c`, `.ab`, `ab.`, `a..b`, a 21-character name and a trailing newline. If you approve the command, I can run it."
+  },
+  "task": "lnbits_valid_username",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0fb3f37ddc3a/repo/lnbits/helpers.py",
+        "pattern": "^import|^from|^def is_valid"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0fb3f37ddc3a/repo/lnbits/helpers.py",
+        "limit": 35,
+        "offset": 158
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-0fb3f37ddc3a/repo/lnbits/helpers.py",
+        "new_string": "def is_valid_username(username: str) -> bool:\n    if not 2 <= len(username) <= 20:\n        return False\n    username_regex = r\"[A-Za-z0-9]+([._][A-Za-z0-9]+)*\"\n    return re.fullmatch(username_regex, username) is not None\n\n\ndef is_valid_label(label: str) -> bool:",
+        "old_string": "def is_valid_label(label: str) -> bool:",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "python -c \"\nfrom lnbits.helpers import is_valid_username as v\nfor s,e in [('ab',1),('a',0),('a'*21,0),('a'*20,1),('a.b_c',1),('.ab',0),('ab.',0),('a..b',0),('a._b',0),('a b',0),('é1',0),('ab\\n',0)]: assert v(s)==bool(e),s\nprint('ok')\""
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 21.5
+}

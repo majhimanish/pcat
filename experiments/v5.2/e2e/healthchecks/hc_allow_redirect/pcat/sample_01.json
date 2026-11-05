@@ -1,0 +1,167 @@
+{
+  "app": "healthchecks",
+  "baseline": "622feea708276228819840fb1c95f14fa43583dd",
+  "condition": "pcat",
+  "files_changed": [
+    "hc/accounts/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "accounts.allow_redirect",
+  "pcat_calls": [
+    {
+      "arguments": {
+        "limit": 5,
+        "request": "safe post-login redirect check"
+      },
+      "result": {
+        "ids": [
+          "accounts.allow_redirect"
+        ],
+        "scores": [
+          15.309
+        ]
+      },
+      "timestamp": "2026-11-05T02:00:07.541+00:00",
+      "tool": "search_patterns"
+    },
+    {
+      "arguments": {
+        "id": "accounts.allow_redirect",
+        "names": null
+      },
+      "result": {
+        "id": "accounts.allow_redirect@v1",
+        "status": "active"
+      },
+      "timestamp": "2026-11-05T02:00:09.385+00:00",
+      "tool": "get_pattern"
+    },
+    {
+      "arguments": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ab3645d3352a/repo/hc/accounts/views.py",
+        "length": 353,
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "result": {
+        "deviations": [
+          [
+            "_allow_redirect",
+            "accounts.allow_redirect@v1",
+            []
+          ]
+        ],
+        "statuses": [
+          [
+            "_allow_redirect",
+            "covered",
+            "accounts.allow_redirect"
+          ]
+        ]
+      },
+      "timestamp": "2026-11-05T02:00:15.516+00:00",
+      "tool": "check_code"
+    }
+  ],
+  "relation": "same",
+  "request": "Add a check in the accounts views that validates the post-login `next` URL is one of our own pages.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.1018273,
+    "duration_ms": 21062,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 10,
+    "result_text": "I couldn't run the tests because the test command needs your approval and didn't get it, so none of this has been run.\n\n**What I changed** in `hc/accounts/views.py`: the file defined an unused `_allow_next_url`, which only checked that the URL started with `/` and not `//`. The callers (`_redirect_after_login`, `_check_2fa`, and the magic-link branch of `login`) were already calling `_allow_redirect`, which didn't exist. I replaced the unused function with the reviewed `accounts.allow_redirect@v1` pattern from the catalog. It rejects any URL with a host part, and it only accepts paths that resolve to one of the `POST_LOGIN_ROUTES` (checks, details, log, channels, add-slack, add-pushover, add-telegram, project-settings, uncloak). I kept the pattern's `# pcat:` marker above the function. The existing imports and the route list already matched, so nothing else changed.\n\n**Check:** `check_code` against the pattern reported no deviations and no unapproved high-severity issues.\n\n**To verify:** run `python manage.py test hc.accounts.tests.test_login hc.accounts.tests.test_check_token`. The tests `test_it_handles_bad_next_parameter` and `test_it_ignores_bad_next_parameter` cover rejected URLs."
+  },
+  "task": "hc_allow_redirect",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "query": "safe post-login redirect check"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "glob": "**/accounts/**/*.py",
+        "output_mode": "content",
+        "pattern": "next"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "request": "safe post-login redirect check"
+      },
+      "tool": "mcp__pcat__search_patterns"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ab3645d3352a/repo/hc/accounts/views.py",
+        "limit": 190
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "id": "accounts.allow_redirect"
+      },
+      "tool": "mcp__pcat__get_pattern"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ab3645d3352a/repo/hc/accounts/views.py",
+        "new_string": "# pcat: accounts.allow_redirect@v1\ndef _allow_redirect(redirect_url: str | None) -> bool:\n    if not redirect_url:\n        return False\n    parsed = urlparse(redirect_url)\n    if parsed.netloc:\n        return False\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n    return match.url_name in POST_LOGIN_ROUTES",
+        "old_string": "def _allow_next_url(next_url: str | None) -> bool:\n    if not next_url:\n        return False\n\n    # Allow redirects only to relative URLs\n    return next_url.startswith(\"/\") and not next_url.startswith(\"//\")",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "pattern": "_allow_next_url"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "code": "# pcat: accounts.allow_redirect@v1\ndef _allow_redirect(redirect_url: str | None) -> bool:\n    if not redirect_url:\n        return False\n    parsed = urlparse(redirect_url)\n    if parsed.netloc:\n        return False\n    try:\n        match = resolve(parsed.path)\n    except Resolver404:\n        return False\n    return match.url_name in POST_LOGIN_ROUTES\n",
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-ab3645d3352a/repo/hc/accounts/views.py",
+        "pattern_id": "accounts.allow_redirect"
+      },
+      "tool": "mcp__pcat__check_code"
+    },
+    {
+      "input": {
+        "command": "python manage.py test hc.accounts.tests.test_login hc.accounts.tests.test_check_token 2>&1 | tail -15",
+        "description": "Run login and check_token tests"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 1,
+    "fetched": [
+      "accounts.allow_redirect"
+    ],
+    "read_before_search": false,
+    "read_repo": true,
+    "searched": true,
+    "tools": {
+      "Bash": 1,
+      "Edit": 1,
+      "Grep": 2,
+      "Read": 1,
+      "mcp__pcat__check_code": 1,
+      "mcp__pcat__get_pattern": 1,
+      "mcp__pcat__search_patterns": 2
+    }
+  },
+  "wall_seconds": 22.4
+}

@@ -1,0 +1,109 @@
+diff --git a/CTFd/teams.py b/CTFd/teams.py
+index 192d576..6026e70 100644
+--- a/CTFd/teams.py
++++ b/CTFd/teams.py
+@@ -5,7 +5,7 @@ from CTFd.exceptions import TeamTokenExpiredException, TeamTokenInvalidException
+ from CTFd.models import Brackets, TeamFieldEntries, TeamFields, Teams, db
+ from CTFd.utils import config, get_config, validators
+ from CTFd.utils.crypto import verify_password
+-from CTFd.utils.decorators import authed_only, ratelimit, registered_only
++from CTFd.utils.decorators import login_required, ratelimit, registered_only
+ from CTFd.utils.decorators.modes import require_team_mode
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+@@ -122,7 +122,7 @@ def invite():
+ 
+ 
+ @teams.route("/teams/join", methods=["GET", "POST"])
+-@authed_only
++@login_required
+ @require_team_mode
+ @ratelimit(method="POST", limit=10, interval=5)
+ def join():
+@@ -186,7 +186,7 @@ def join():
+ 
+ 
+ @teams.route("/teams/new", methods=["GET", "POST"])
+-@authed_only
++@login_required
+ @require_team_mode
+ def new():
+     infos = get_infos()
+@@ -334,7 +334,7 @@ def new():
+ 
+ 
+ @teams.route("/team")
+-@authed_only
++@login_required
+ @require_team_mode
+ def private():
+     infos = get_infos()
+diff --git a/CTFd/users.py b/CTFd/users.py
+index 9295164..a3191e1 100644
+--- a/CTFd/users.py
++++ b/CTFd/users.py
+@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, url_for
+ 
+ from CTFd.models import Users
+ from CTFd.utils import config
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.decorators.visibility import (
+     check_account_visibility,
+     check_score_visibility,
+@@ -47,7 +47,7 @@ def listing():
+ 
+ @users.route("/profile")
+ @users.route("/user")
+-@authed_only
++@login_required
+ def private():
+     infos = get_infos()
+     errors = get_errors()
+diff --git a/CTFd/utils/decorators/__init__.py b/CTFd/utils/decorators/__init__.py
+index 062069b..179b169 100644
+--- a/CTFd/utils/decorators/__init__.py
++++ b/CTFd/utils/decorators/__init__.py
+@@ -99,6 +99,20 @@ def api_authed_only(f):
+     return api_authed_only_wrapper
+ 
+ 
++# pcat: decorators.authed_only@v1
++def login_required(f):
++    @functools.wraps(f)
++    def authed_only_wrapper(*args, **kwargs):
++        if authed():
++            return f(*args, **kwargs)
++        elif request.is_json or request.accept_mimetypes.best == "text/event-stream":
++            abort(403)
++        else:
++            return redirect(url_for("auth.login", next=request.full_path))
++
++    return authed_only_wrapper
++
++
+ def registered_only(f):
+     """
+     Decorator that requires the user to have a registered account
+diff --git a/CTFd/views.py b/CTFd/views.py
+index cfa21f2..ccb4422 100644
+--- a/CTFd/views.py
++++ b/CTFd/views.py
+@@ -42,7 +42,7 @@ from CTFd.utils.config import can_send_mail, is_setup, is_teams_mode
+ from CTFd.utils.config.pages import build_markdown, get_page
+ from CTFd.utils.config.visibility import challenges_visible
+ from CTFd.utils.dates import ctf_ended, ctftime, view_after_ctf
+-from CTFd.utils.decorators import authed_only
++from CTFd.utils.decorators import login_required
+ from CTFd.utils.health import check_config, check_database
+ from CTFd.utils.helpers import get_errors, get_infos, markup
+ from CTFd.utils.modes import USERS_MODE
+@@ -303,7 +303,7 @@ def notifications():
+ 
+ 
+ @views.route("/settings", methods=["GET"])
+-@authed_only
++@login_required
+ def settings():
+     infos = get_infos()
+     errors = get_errors()

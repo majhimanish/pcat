@@ -1,0 +1,125 @@
+{
+  "app": "lnbits",
+  "baseline": "3adda6098ce65f27165b25edb20789e3f37c2b72",
+  "condition": "baseline",
+  "files_changed": [
+    "lnbits/helpers.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "security.check_callback_url",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add a function that rejects payment callback URLs whose origin isn't permitted by the configured callback URL rules.",
+  "returncode": 0,
+  "sample": 3,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.12120360000000001,
+    "duration_ms": 36234,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 12,
+    "result_text": "I couldn't run the tests. The shell asked for approval on the `uv run pytest` command, and I haven't been given that approval.\n\nI added `check_callback_url(url)` in `lnbits/helpers.py`. It replaces `check_webhook_url`, which nothing else used. The callers (payments, notifications, lnurl, generic and lnurl_api views) and the existing tests already import `check_callback_url`, and `helpers.py` had no function by that name.\n\n- **Invalid URLs:** it raises `ValueError(\"Callback URL is not allowed.\")` for anything that isn't a well-formed http(s) URL with a host. That covers a bad scheme, a bad port, a missing host and `user@host` credentials. The credentials case blocks spoofs like `http://ok.example.com@169.254.169.254/...`.\n- **Origin check:** it builds the origin as `scheme://host[:port]` and requires a full match (`re.fullmatch`) against at least one entry in `lnbits_callback_url_rules`. If none match, it raises `Callback URL origin '<origin>' is not allowed.`\n- **No rules configured:** any valid http(s) URL is accepted.\n- **Behavior change:** the old function used `re.match` against the whole URL. A rule like `https://good.com` would have let `https://good.com.evil.com/x` through. The new check closes that.\n\nTo check it, run `make test-unit`, or just `tests/unit/test_helpers.py`. I wrote the function against what those tests expect, so they should pass, but I haven't seen them run. I also haven't run `make check`."
+  },
+  "task": "lnbits_callback_url",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "-i": true,
+        "glob": "lnbits/**/*.py",
+        "head_limit": 40,
+        "output_mode": "content",
+        "pattern": "callback_url|callback_rules|CALLBACK"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^[a-z-]*:\" Makefile | head -40"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "-i": true,
+        "glob": "*.py",
+        "output_mode": "content",
+        "path": "lnbits",
+        "pattern": "callback_url_rules|url_rules|webhook.*(allow|rule)|allowed_(origins|hosts)"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-17921644c4fe/repo/lnbits/helpers.py",
+        "limit": 60,
+        "offset": 235
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "output_mode": "content",
+        "path": ".",
+        "pattern": "check_callback_url|validate_callback"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "command": "git status --short; git log --oneline -3; grep -rn \"check_webhook_url\" --include=*.py . | head; sed -n 35,120p tests/unit/test_helpers.py"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "grep -n \"^import\\|^from\" lnbits/helpers.py | head -30"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-17921644c4fe/repo/lnbits/helpers.py",
+        "new_string": "def check_callback_url(url: str):\n    \"\"\"\n    Reject callback URLs whose origin (scheme://host[:port]) is not fully matched\n    by at least one of `lnbits_callback_url_rules`. No rules means any http(s) URL.\n    \"\"\"\n    try:\n        parsed = urlparse(url)\n        hostname = parsed.hostname\n        parsed.port  # noqa: B018 - raises ValueError on an invalid port\n    except ValueError as exc:\n        raise ValueError(\"Callback URL is not allowed.\") from exc\n\n    # userinfo (\"user@host\") is rejected: it can disguise the real target host.\n    if parsed.scheme not in (\"http\", \"https\") or not hostname or \"@\" in parsed.netloc:\n        raise ValueError(\"Callback URL is not allowed.\")\n\n    if not settings.lnbits_callback_url_rules:\n        return\n\n    origin = f\"{parsed.scheme}://{parsed.netloc}\"\n    for rule in settings.lnbits_callback_url_rules:\n        if re.fullmatch(rule, origin) is not None:\n            return\n    raise ValueError(f\"Callback URL origin '{origin}' is not allowed.\")",
+        "old_string": "def check_webhook_url(url: str):\n    if not url.startswith((\"http://\", \"https://\")):\n        raise ValueError(\"Webhook URL is not allowed.\")\n    if not settings.lnbits_callback_url_rules:\n        return\n    for rule in settings.lnbits_callback_url_rules:\n        if re.match(rule, url) is not None:\n            return\n    raise ValueError(\"Webhook URL is not allowed.\")",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    },
+    {
+      "input": {
+        "command": "sed -n 44,52p Makefile; poetry run pytest tests/unit/test_helpers.py -q 2>&1 | tail -15 || uv run pytest tests/unit/test_helpers.py -q 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "sed -n 51,57p Makefile"
+      },
+      "tool": "Bash"
+    },
+    {
+      "input": {
+        "command": "LNBITS_DATA_FOLDER=\"./tests/data\" LNBITS_BACKEND_WALLET_CLASS=\"FakeWallet\" DEBUG=true uv run pytest tests/unit/test_helpers.py tests/unit/test_services_notifications.py tests/unit/test_services_payments.py -q 2>&1 | tail -15"
+      },
+      "tool": "Bash"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Bash": 6,
+      "Edit": 1,
+      "Grep": 3,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 37.1
+}

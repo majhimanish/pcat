@@ -1,0 +1,68 @@
+{
+  "app": "healthchecks",
+  "baseline": "706fba075d54153551d63b92dd4e3affb42532b2",
+  "condition": "baseline",
+  "files_changed": [
+    "hc/front/views.py"
+  ],
+  "leaks": [],
+  "model": "claude-sonnet-5-5",
+  "pattern": "access.channel_for_user",
+  "pcat_calls": [],
+  "relation": "same",
+  "request": "Add `_get_channel_for_user` and `_get_rw_channel_for_user` helpers to hc/front/views.py: load channel by code for owner/member/superuser, reject read-only members on write.",
+  "returncode": 0,
+  "sample": 1,
+  "status": "ok",
+  "stderr_tail": "",
+  "summary": {
+    "cost_usd": 0.0510167,
+    "duration_ms": 15692,
+    "finished": true,
+    "is_error": false,
+    "num_turns": 4,
+    "result_text": "I added `_get_channel_for_user` and `_get_rw_channel_for_user` to `hc/front/views.py`, right after `_get_rw_project_for_user`. I haven't run the tests or the type checker, and I didn't write any new tests for them.\n\n- **`_get_channel_for_user(request, code)`**:\n  - It returns `(channel, rw)`.\n  - It loads the channel by `code` with `select_related(\"project\")`, and returns a 404 if there's no such channel.\n  - Superusers and the project owner get `rw=True`.\n  - Anyone else must be a `Member` of the project, otherwise they get a 404. A member's `rw` is their `is_rw` value.\n- **`_get_rw_channel_for_user(request, code)`**: calls the function above and raises `PermissionDenied` if `rw` is false. Otherwise it returns the channel.\n\nBoth helpers follow the same pattern as `_get_check_for_user` and `_get_project_for_user`. I haven't changed any existing views to use them yet."
+  },
+  "task": "hc_channel_for_user",
+  "timed_out": false,
+  "tool_calls": [
+    {
+      "input": {
+        "output_mode": "content",
+        "path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e1239f296bd4/repo/hc/front/views.py",
+        "pattern": "def _get_check_for_user|def _get_project_for_user|def _get_rw_project_for_user|def _get_channel_for_user|^from|^import"
+      },
+      "tool": "Grep"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e1239f296bd4/repo/hc/front/views.py",
+        "limit": 150,
+        "offset": 42
+      },
+      "tool": "Read"
+    },
+    {
+      "input": {
+        "file_path": "/tmp/claude-0/-home-user-pcat/0ba369f1-7376-51dc-a4f6-4354f76fd48a/scratchpad/v52runs/run-e1239f296bd4/repo/hc/front/views.py",
+        "new_string": "    return project\n\n\ndef _get_channel_for_user(request: HttpRequest, code: UUID) -> tuple[Channel, bool]:\n    \"\"\"Check access, return (channel, rw) tuple.\"\"\"\n\n    assert request.user.is_authenticated\n\n    channel = get_object_or_404(Channel.objects.select_related(\"project\"), code=code)\n    if request.user.is_superuser:\n        return channel, True\n\n    if request.user.id == channel.project.owner_id:\n        return channel, True\n\n    membership = get_object_or_404(Member, project=channel.project, user=request.user)\n    return channel, membership.is_rw\n\n\ndef _get_rw_channel_for_user(request: HttpRequest, code: UUID) -> Channel:\n    \"\"\"Return the channel, or raise PermissionDenied for read-only members.\"\"\"\n\n    channel, rw = _get_channel_for_user(request, code)\n    if not rw:\n        raise PermissionDenied\n\n    return channel\n\n\ndef _refresh_last_active_date(",
+        "old_string": "    return project\n\n\ndef _refresh_last_active_date(",
+        "replace_all": false
+      },
+      "tool": "Edit"
+    }
+  ],
+  "tool_order": {
+    "checked": 0,
+    "fetched": [],
+    "read_before_search": true,
+    "read_repo": true,
+    "searched": false,
+    "tools": {
+      "Edit": 1,
+      "Grep": 1,
+      "Read": 1
+    }
+  },
+  "wall_seconds": 16.5
+}
