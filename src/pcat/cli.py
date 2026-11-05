@@ -60,6 +60,14 @@ def _guard(fn):
     return wrapper
 
 
+def _version(value: bool) -> None:
+    if value:
+        from pcat import __version__
+
+        typer.echo(f"pcat {__version__}")
+        raise typer.Exit()
+
+
 @app.callback()
 def main(
     root: Optional[Path] = typer.Option(
@@ -67,6 +75,9 @@ def main(
         "--root",
         envvar="PCAT_ROOT",
         help="Repository root containing catalog/ (default: nearest parent that has one).",
+    ),
+    version: bool = typer.Option(
+        False, "--version", callback=_version, is_eager=True, help="Print the pcat version and exit."
     ),
 ) -> None:
     _state["root"] = root.resolve() if root else None

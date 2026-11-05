@@ -1,0 +1,51 @@
+id: db.pagination.select_page
+version: 1
+title: Paginate a SQLAlchemy 2.0 select (page dict)
+summary: Return one 1-based page of a SQLAlchemy 2.0 select as {"items", "total", "page", "page_size", "pages"}, counting over a subquery; page size is capped at 100.
+category: db
+variant_of: db.pagination
+behavior:
+  api: sqlalchemy_2_select_and_session
+  returns: dict_items_total_page_page_size_pages
+  page_numbering: one_based
+  max_page_size: 100
+  bad_page_or_size: raises_value_error
+  past_last_page: empty_items_real_totals
+  count: subquery_without_order_by
+entry_point: paginate
+owner: "@platform-team"
+status: active
+replaced_by: null
+keep_annotations: true
+requires:
+  - sqlalchemy>=2.0,<3
+fingerprint: 109903bf01b7b00f9b60a9644e9b3fbb8593af9b6faf72af5f5086101496233f
+keywords:
+- paginate
+- pagination
+- page
+- page size
+- offset
+- limit
+- sqlalchemy
+- select
+- total count
+- listing
+- results
+- query
+use_when: Return one page of a SQLAlchemy 2.0 select together with the total row count and page metadata
+  for a paginated API response.
+usage: |-
+  page = paginate(session, select(User).order_by(User.id), page=2, page_size=20)
+  return {"items": [u.to_dict() for u in page["items"]], "total": page["total"], "pages": page["pages"]}
+guards:
+- kind: must_raise
+  names: [ValueError]
+  reason: rejects page < 1 and page sizes outside 1..MAX_PAGE_SIZE
+- kind: max_value
+  target: MAX_PAGE_SIZE
+  value: 100
+  reason: the page-size cap bounds the rows one request can load
+- kind: must_call
+  names: [.limit, .offset, sqlalchemy.func.count]
+  reason: LIMIT/OFFSET run in SQL, and the total is a COUNT over the same statement

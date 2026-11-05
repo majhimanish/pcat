@@ -1,0 +1,289 @@
+{
+  "canonical_version": 2,
+  "patterns": [
+    {
+      "behavior": {
+        "algorithm": "HS256",
+        "claims": "sub+iss+aud+iat+nbf+exp+jti",
+        "clock": "injectable_aware_datetime",
+        "default_lifetime_minutes": 15,
+        "returns": "str",
+        "secret": "parameter_min_32_bytes"
+      },
+      "category": "auth",
+      "entry_point": "create_access_token",
+      "exports": [],
+      "fingerprint": "85b3a9a425177cf2ee9cff9c64070a6d50455b44095644ae0b98d63d1964a084",
+      "id": "auth.jwt.create_access_token",
+      "keywords": [
+        "jwt",
+        "json web token",
+        "access token",
+        "bearer token",
+        "sign",
+        "hs256",
+        "expiry",
+        "claims",
+        "audience",
+        "issuer",
+        "authentication",
+        "login",
+        "pyjwt"
+      ],
+      "path": "catalog/auth/jwt.create_access_token",
+      "requires": [
+        "pyjwt>=2.8,<3"
+      ],
+      "status": "active",
+      "summary": "Return an HS256-signed JWT for a user id with sub, iss, aud, iat, nbf, exp and a random jti; the secret, issuer, audience, lifetime and clock are parameters.",
+      "title": "Create a signed JWT access token (registered claims)",
+      "usage": "token = create_access_token(user.id, secret=settings[\"jwt_secret\"],\n                            issuer=\"auth.example.com\", audience=\"orders-api\")",
+      "use_when": "Issue a short-lived signed access token for an authenticated user that other services verify with the shared secret, audience and issuer.",
+      "variant_of": "auth.jwt",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "algorithm": "pbkdf2_hmac_sha256",
+        "compare": "constant_time",
+        "exports": "hash_password+verify_password+needs_rehash",
+        "format": "pbkdf2_sha256$iterations$salt_b64$key_b64",
+        "iterations_stored_in_hash": true,
+        "malformed_hash": "returns_false",
+        "min_iterations": 600000,
+        "salt_bytes": 16
+      },
+      "category": "auth",
+      "entry_point": "hash_password",
+      "exports": [
+        "verify_password",
+        "needs_rehash"
+      ],
+      "fingerprint": "6aa1d0682d282360563b4669d7adec56e4f1f916617d70096a3b8c76ee9686d7",
+      "id": "auth.password.pbkdf2",
+      "keywords": [
+        "password",
+        "hash",
+        "hashing",
+        "verify",
+        "login",
+        "credentials",
+        "pbkdf2",
+        "salt",
+        "signup",
+        "store password",
+        "rehash",
+        "authentication"
+      ],
+      "path": "catalog/auth/password.pbkdf2",
+      "requires": [],
+      "status": "active",
+      "summary": "hash_password stores a salted PBKDF2-HMAC-SHA256 hash with its iteration count (at least 600,000); verify_password checks it in constant time; needs_rehash says when to upgrade an old hash.",
+      "title": "Hash and verify passwords (PBKDF2-HMAC-SHA256)",
+      "usage": "stored = hash_password(plain_password)          # at sign-up\nif verify_password(attempt, stored):             # at login\n    if needs_rehash(stored):\n        stored = hash_password(attempt)",
+      "use_when": "Store user passwords as salted PBKDF2 hashes at sign-up, check them at login in constant time, and upgrade old hashes after a successful login.",
+      "variant_of": "auth.password",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "errors": "collect_all_then_value_error",
+        "exports": "load_settings+parse_bool",
+        "required_marker": "ellipsis",
+        "result_keys": "lower_case_variable_names",
+        "secret_values_in_errors": "never",
+        "source": "injectable_mapping_default_os_environ",
+        "style": "caller_supplied_schema"
+      },
+      "category": "config",
+      "entry_point": "load_settings",
+      "exports": [
+        "parse_bool"
+      ],
+      "fingerprint": "714b9e2489e151c5464aad756e97eb8ca007edd963b12e82bd940ccc9d15879f",
+      "id": "config.env.load_settings",
+      "keywords": [
+        "environment variables",
+        "env",
+        "config",
+        "configuration",
+        "settings",
+        "os.environ",
+        "defaults",
+        "validate",
+        "startup",
+        "parse",
+        "secrets"
+      ],
+      "path": "catalog/config/env.load_settings",
+      "requires": [],
+      "status": "active",
+      "summary": "Parse environment variables described by a caller-supplied schema of (parser, default) pairs; defaults for missing values, ... marks required ones, every problem is reported at once and secret values are never echoed.",
+      "title": "Load settings from environment variables with a schema",
+      "usage": "settings = load_settings({\"DATABASE_URL\": (str, ...), \"PORT\": (int, 8000),\n                          \"DEBUG\": (parse_bool, False)}, secret_names=(\"DATABASE_URL\",))",
+      "use_when": "Load an application's settings from environment variables at startup with defaults, type parsing and required values, reporting every invalid value at once.",
+      "variant_of": "config.env",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "api": "sqlalchemy_2_select_and_session",
+        "bad_page_or_size": "raises_value_error",
+        "count": "subquery_without_order_by",
+        "max_page_size": 100,
+        "page_numbering": "one_based",
+        "past_last_page": "empty_items_real_totals",
+        "returns": "dict_items_total_page_page_size_pages"
+      },
+      "category": "db",
+      "entry_point": "paginate",
+      "exports": [],
+      "fingerprint": "109903bf01b7b00f9b60a9644e9b3fbb8593af9b6faf72af5f5086101496233f",
+      "id": "db.pagination.select_page",
+      "keywords": [
+        "paginate",
+        "pagination",
+        "page",
+        "page size",
+        "offset",
+        "limit",
+        "sqlalchemy",
+        "select",
+        "total count",
+        "listing",
+        "results",
+        "query"
+      ],
+      "path": "catalog/db/pagination.select_page",
+      "requires": [
+        "sqlalchemy>=2.0,<3"
+      ],
+      "status": "active",
+      "summary": "Return one 1-based page of a SQLAlchemy 2.0 select as {\"items\", \"total\", \"page\", \"page_size\", \"pages\"}, counting over a subquery; page size is capped at 100.",
+      "title": "Paginate a SQLAlchemy 2.0 select (page dict)",
+      "usage": "page = paginate(session, select(User).order_by(User.id), page=2, page_size=20)\nreturn {\"items\": [u.to_dict() for u in page[\"items\"]], \"total\": page[\"total\"], \"pages\": page[\"pages\"]}",
+      "use_when": "Return one page of a SQLAlchemy 2.0 select together with the total row count and page metadata for a paginated API response.",
+      "variant_of": "db.pagination",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "backoff": "capped_exponential_full_jitter",
+        "client_errors": "raised_without_retry",
+        "default_attempts": 4,
+        "library": "requests",
+        "on_exhausted": "raises_last_error",
+        "retries_on": "connection_errors+timeouts+429+500+502+503+504",
+        "retry_after": "numeric_seconds_capped_at_max_delay",
+        "timeout_always_set": true
+      },
+      "category": "http",
+      "entry_point": "get_with_retry",
+      "exports": [],
+      "fingerprint": "c2c4cba6ff35d174d4530a86c78cc7a8ce0976c0e2d631682b93f664889ac4d0",
+      "id": "http.get_with_retry.requests",
+      "keywords": [
+        "http",
+        "get",
+        "url",
+        "request",
+        "retry",
+        "backoff",
+        "download",
+        "fetch",
+        "requests",
+        "retry-after",
+        "timeout",
+        "flaky api",
+        "429",
+        "503"
+      ],
+      "path": "catalog/http/get_with_retry.requests",
+      "requires": [
+        "requests>=2.31,<3"
+      ],
+      "status": "active",
+      "summary": "GET with requests, retrying connection errors, timeouts, 429 and 5xx with capped exponential backoff, full jitter and numeric Retry-After; session, sleep and randomness are injectable.",
+      "title": "GET a URL with retries and exponential backoff (requests)",
+      "usage": "response = get_with_retry(\"https://api.example.com/items\", session=http_session, attempts=4)\nitems = response.json()",
+      "use_when": "Fetch a URL over HTTP when the server or network can fail transiently: retry connection errors, timeouts, 429 and 5xx with backoff, but fail fast on other 4xx.",
+      "variant_of": "http.get_with_retry",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "duplicate_emails": "rejected_case_insensitive",
+        "email_check": "structural_no_regex",
+        "error_record": "row_line_number_and_messages",
+        "input": "str_or_text_stream",
+        "max_rows_default": 10000,
+        "required_columns": "name+email",
+        "returns": "valid_rows_and_row_errors",
+        "values_in_errors": "never"
+      },
+      "category": "importers",
+      "entry_point": "import_users",
+      "exports": [],
+      "fingerprint": "6309caa9bb3d5838ac61d407ffc8d31d594b76f5bf0c815845bccc25621bfec7",
+      "id": "importers.users_csv.parse",
+      "keywords": [
+        "csv",
+        "import",
+        "users",
+        "upload",
+        "parse",
+        "validate rows",
+        "spreadsheet",
+        "email",
+        "bulk import",
+        "row errors"
+      ],
+      "path": "catalog/importers/users_csv.parse",
+      "requires": [],
+      "status": "active",
+      "summary": "Read users (name, email, optional age) from CSV text or a text stream and return (valid users, errors), each error being {\"row\", \"errors\"}; no regex, values never echoed, row count capped.",
+      "title": "Parse and validate a users CSV with per-row errors",
+      "usage": "valid_users, errors = import_users(uploaded_file.read().decode(\"utf-8\"))\nfor problem in errors:\n    print(problem[\"row\"], problem[\"errors\"])",
+      "use_when": "Import users from an uploaded or local CSV (name, email, optional age), keeping valid rows and reporting every problem per row with its line number.",
+      "variant_of": "importers.users_csv",
+      "version": 1
+    },
+    {
+      "behavior": {
+        "clock": "monotonic_injectable_now",
+        "clock_going_backwards": "no_refill",
+        "concurrency": "single_process_not_thread_safe",
+        "cost_over_capacity": "raises_value_error",
+        "new_key": "starts_full",
+        "returns": "allowed_and_retry_after_seconds",
+        "state": "dict_key_to_tokens_and_last"
+      },
+      "category": "ratelimit",
+      "entry_point": "check_rate_limit",
+      "exports": [],
+      "fingerprint": "db071827f76c8404571e5048036b7cac39c7d822bc2a3dd23944d54b941f3015",
+      "id": "ratelimit.token_bucket.check",
+      "keywords": [
+        "rate limit",
+        "rate limiting",
+        "throttle",
+        "token bucket",
+        "quota",
+        "requests per second",
+        "burst",
+        "retry-after",
+        "429",
+        "limiter"
+      ],
+      "path": "catalog/ratelimit/token_bucket.check",
+      "requires": [],
+      "status": "active",
+      "summary": "Refill a per-key token bucket kept in a dict for the elapsed time, take the request's cost if available, and return (allowed, seconds until it would be allowed).",
+      "title": "Token-bucket rate limit check with retry-after",
+      "usage": "allowed, retry_after = check_rate_limit(buckets, client_ip, capacity=20, refill_rate=5.0)\nif not allowed:\n    return 429, {\"Retry-After\": str(math.ceil(retry_after))}",
+      "use_when": "Decide per client key whether a request is allowed under a rate limit, and how long to wait if not (for a 429 Retry-After), with state in a dict.",
+      "variant_of": "ratelimit.token_bucket",
+      "version": 1
+    }
+  ]
+}

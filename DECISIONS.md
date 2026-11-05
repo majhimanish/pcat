@@ -1273,3 +1273,13 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      prepare/verify/analyze/labels/calibrate) was run in a worktree of the commit
      before the move and in the moved tree; outputs are compared file by file
      (`experiments/v6/part_a_identity.md`).
+243. **Packaging (Part B).** Version 0.1.0 (already in `pyproject.toml`), `pcat --version`,
+     `CHANGELOG.md`. The starter catalog is a copy of the 7 generic application patterns
+     under `src/pcat/starter/catalog/` (package data, with its own `index.json`), kept
+     identical to `catalog/` by `scripts/sync_starter_catalog.py` and a test. Install
+     from git (`pipx install "pcat[mcp] @ git+https://github.com/majhimanish/pcat"`);
+     PyPI steps for the owner in `docs/releasing.md` (not published: needs credentials;
+     the name may be taken). Verified: a wheel built with `pip wheel` installs in fresh
+     Python 3.11 and 3.13 virtualenvs, `pcat --version` prints `pcat 0.1.0`, the wheel
+     contains no research module, `pcat init --starter --apply`, `validate`, `search`
+     and the MCP server import work from the wheel alone.
