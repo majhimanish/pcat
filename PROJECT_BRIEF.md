@@ -51,6 +51,7 @@ Details live in `CLAUDE.md`, `DECISIONS.md`, `KNOWN_GAPS.md`, `docs/specs/` and 
 | v5 | Three real open-source apps as simulated orgs | Agents already copy neighbours; catalog wins for first-time code |
 | v5.1 | Linter fixes for real code | 0/72 false CI failures on marked code; inference is noisy |
 | v5.2 | Unsafe planted neighbour | Inherited flaw 3/54 without catalog, 0/54 with; CI can't catch copied flaws without markers |
+| v6 | Productize: package split, starter catalog, `pcat init`, `pcat audit`, getting-started guide | Installs from a wheel on 3.11/3.13; guide dogfooded on healthchecks (8 frictions, 5 fixed); audit surfaces 10/18 planted neighbours, 5 candidates on 4,086 untouched functions |
 
 ## How the owner works
 
@@ -74,10 +75,11 @@ If a session stops partway, a fresh session resumes from git history and the han
 
 ## Status
 
-(Updated at the end of each phase.) Last completed: **v5.2**. In progress: v6 (productize), then v7 (pitch material).
+(Updated at the end of each phase.) Last completed: **v6** (productize). In progress: v7 (pitch material).
 
 ## Open items
 
 - Pull request #1 (approval demo) is open; the owner should comment `/pcat approve`, confirm the check turns green, then close it without merging.
 - `main` is not protected; `CODEOWNERS` uses the placeholder `@platform-team`. Fine while solo; set both before anyone else contributes.
+- Install is from git (`pipx install "pcat[mcp] @ git+https://github.com/majhimanish/pcat"`); PyPI publishing needs the owner's account (`docs/releasing.md`).
 - Untested ideas: a margin rule for inference (best pattern clearly ahead of the second); a larger rerun of the "rename the neighbour into the gap" scenario; Argon2id pattern; Pydantic class support in patterns (FastAPI endpoint deferred); languages other than Python.

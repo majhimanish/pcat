@@ -15,26 +15,25 @@ approved patterns instead of producing a new variation per prompt.
   variance study, 7 app patterns from `docs/catalog-review/choices.yaml` (+ 6 seeds).
 - **v3:** MCP `pcat serve`, BM25 `pcat search`. **v4:** linter: markers `# pcat: <id>@vN`,
   inference (0.56), `guards` (check 11), PC100–PC110, `pcat lint`.
-- **v4.1:** hashed approvals (`# pcat-allow: PC100 #<hash> -- reason`), confirmed/proposed/
-  stale; proposals need a human (`pcat approvals check`); PC111; `must_include`. PR #1: demo, open.
-- **v5:** CTFd, healthchecks, LNbits as orgs with own catalogs (`experiments/v5/catalogs/`,
-  self-reviewed); 144 in-repo runs: matches 0.72 vs 0.46, baseline copies siblings.
-- **v5.1:** linter on real code: per-unit symbol table, partial code in `check_code`
-  (`context`, `file_path`), check 12 (`requires` vs imports, `first_party`), `match: any`.
-- **v5.2 (done):** planted flawed neighbours (18 tasks, 108 runs): flaw inherited 3/54
-  baseline vs 0/54 pcat; default CI caught 0/3; opt-in `pcat lint --fail-on-inferred-guards`
-  (similarity >= 0.75) catches them, still noisy. Headlines: `docs/benchmarks/summary.md`.
-- **Next ideas:** margin rule for sibling patterns (test on new data); markers in decorators.
+- **v4.1:** hashed approvals `# pcat-allow: PC100 #<hash> -- reason`, human-confirmed
+  proposals (`pcat approvals check`), PC111. **v5–v5.2:** three OSS apps as orgs
+  (`experiments/v5/catalogs/`); linter on real code (symbol table, check 12, `match: any`);
+  planted neighbours; opt-in `pcat lint --fail-on-inferred-guards` (similarity >= 0.75).
+- **v6 (done):** productized: research code in `experiments/lib/pcatlab` (not packaged),
+  `pcat --version` 0.1.0, starter catalog in the package, `pcat init`, `pcat audit`,
+  `docs/getting-started.md` (dogfooded). **v7:** pitch material in `docs/pitch/`.
+- **Next:** a real pilot (`docs/pitch/pilot-plan.md`); margin rule; Argon2id; other languages.
 
 ## Setup and commands
 
 ```bash
 python3.11 -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev,catalog,mcp]"  # catalog = pattern libraries; mcp = pcat serve (CI: all)
-pytest                      # tool tests + review variants; validates the real catalog
+pytest                      # tool tests + research tests (experiments/lib) + review variants
+pcat init [--path REPO] [--starter | --catalog P] [--apply]   # set pcat up in a repo (dry run default)
+pcat audit <path> [--out DIR]   # one-time report: code like a pattern that breaks its guards
 pcat validate               # all checks incl. every pattern's tests
-pcat validate --skip-tests  # fast
-pcat validate --skip-tests --base origin/main   # approved versions unchanged
+pcat validate --skip-tests [--base origin/main]   # fast; --base: approved versions unchanged
 pcat index                  # regenerate catalog/index.json (commit it)
 pcat fingerprint <id> --write; pcat migrate-fingerprints   # the latter after a CANONICAL_VERSION bump
 pcat mine <path>... --out <dir> [--jobs N]   # report.json + report.html; cache in .pcat-cache/
@@ -47,9 +46,7 @@ pcat lint <path>... [--changed-since REF] [--format text|json|github] [--fail-on
           [--fail-on-inferred-guards]   # opt-in: PC100 on inferred code (sim >= 0.75) fails
 pcat approvals check --repo OWNER/REPO --pr N   # GITHUB_TOKEN; fails while proposals wait
 python scripts/lint_eval.py calibrate|replay|feedback|feedback-analyze   # v4 evaluation
-python scripts/v5.py clone|mine|references|requests|retrieval; python scripts/v5_e2e.py run|analyze
-python scripts/v5_1.py lint-e2e|compare-e2e|compare-samples|survey   # re-score, no agent runs
-python scripts/v5_2.py prepare|verify|requests|run|analyze|labels|calibrate   # v5.2
+python scripts/v5.py …; v5_e2e.py run|analyze; v5_1.py lint-e2e|…; v5_2.py prepare|…|calibrate; v6_audit.py
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -74,7 +71,7 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `MATCH_THRESHOLD` (recalibrate only on the dev set; `mcp_eval.py retrieval`).
 - `src/pcat/serving.py` — `CatalogService` (the three tools, instructions, JSONL
   log); `mcp_server.py` wraps it with FastMCP (only module importing `mcp`).
-  `evaluation.py` + `scripts/mcp_eval.py` — v3 evaluation.
+  `scripts/mcp_eval.py` — v3 evaluation.
 - `src/pcat/codeunit.py` — a function + same-file helpers/constants/imports, symbol
   table (imports, same-file defs → module path, unknown names), `target_matches`.
 - `src/pcat/provenance.py` — markers/approvals in the comment block above a function,
@@ -83,15 +80,18 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `requirements.py` — `requires` ↔ import names, check 12.
   `lint.py` — `pcat lint` (approval states, PC111, `--changed-since`, text/json/github).
   `approvals.py` — approver config, CODEOWNERS, GitHub client, confirmation gate.
-  `linteval.py` + `scripts/lint_eval.py` — v4 evaluation; data in `experiments/linter/`.
-- `src/pcat/v5.py` — v5 tasks, working copies, scoring. `rescore.py` + `scripts/v5_1.py` — v5.1.
-  `v52.py` (neighbours, planting, guard scoring) + `derivation.py` (Part E) + `scripts/v5_2.py`.
+  `scripts/lint_eval.py` — v4 evaluation; data in `experiments/linter/`.
+- `src/pcat/initrepo.py` — `pcat init` (detect, plan, apply, mine candidates); `audit.py` —
+  `pcat audit`; `starter/catalog/` — the 7 starter patterns (`scripts/sync_starter_catalog.py`).
+  `similarity.py` — shape similarity (inference). `.pcat/config.yaml` locates a repo's catalog.
+- `experiments/lib/pcatlab/` — research only (never packaged): `variance`, `evaluation`,
+  `linteval`, `v5`, `rescore`, `v52`, `derivation`; tests in `experiments/lib/pcatlab_tests/`;
+  scripts import `scripts/_labpath.py` first.
 - `src/pcat/cli.py` — typer app, thin; errors → `error: …` + exit 1. `errors.py`: `PcatError`.
 - `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`, v3 fields, `guards`),
   `impl.py`, `test_impl.py`; `catalog/index.json` is generated. App patterns + 6 seeds.
 - `tests/` — tool tests; `root` fixture = temp copy of the catalog.
-- `src/pcat/variance.py` — variance logic (`claude -p` backends, similarity). Frozen data:
-  `experiments/{variance,mcp,linter,v5,v5.1,v5.2}/`.
+- Frozen data: `experiments/{variance,mcp,linter,v5,v5.1,v5.2,v6}/`.
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
   `docs/ci/pcat-{lint,approvals}.yml` — workflows for client repositories; this repo
   runs `.github/workflows/pcat-approvals.yml` with `.pcat/approvers.yaml` (solo mode).
@@ -136,7 +136,7 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
 - `DECISIONS.md` (every assumption; read before changing behavior), `KNOWN_GAPS.md` (backlog)
 - `docs/specs/` — phase specs (`v1-catalog.md` … `v4.1-human-approval.md`, `v5-…`)
 - `docs/benchmarks/` — per phase, `v5-open-source.md`, and `summary.md` (all headlines)
-- `README.md` — user-facing docs: adding patterns, review flow, versioning
+- `README.md` (quickstart, reference), `docs/getting-started.md`, `PROJECT_BRIEF.md` (context)
 
 ## Rule for later sessions
 

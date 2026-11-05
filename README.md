@@ -546,11 +546,13 @@ In-package commands (`validate`, `mine`, `serve`, `lint`) also read pattern fold
 
 ## Further reading
 
+- `docs/getting-started.md` — the 30-minute walkthrough; `docs/releasing.md` — install extras, PyPI steps
+- `CHANGELOG.md`, `PROJECT_BRIEF.md` — what each phase added; the project's context
 - `CLAUDE.md` — handoff and invariants for future sessions
 - `DECISIONS.md` — every assumption made so far
 - `KNOWN_GAPS.md` — limitations and suggested fixes
 - `docs/specs/` — phase specs (`v1-catalog.md`, `v1.1-canonicalizer-fix.md`, `v2-miner.md`,
   `v2.1-variance-experiment.md`, `v2.2-app-catalog.md`, `v3-mcp-server.md`, `v4-linter.md`,
-  `v4.1-human-approval.md`, `v5-open-source-simulation.md`)
+  `v4.1-human-approval.md`, `v5-…`, `v5.1-…`, `v5.2-…`, `v6-productize.md`, `v7-pitch.md`)
 - `docs/benchmarks/` — results per phase and `summary.md` (all headline numbers)
 - `docs/ci/pcat-lint.yml` — reusable workflow that lints client pull requests
