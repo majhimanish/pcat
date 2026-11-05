@@ -106,30 +106,39 @@ The marker is what CI checks. If nothing fits, the agent writes normal code.
 
 ## 5. See a deviation on a pull request (7 minutes)
 
-On a branch, change a marked function so it breaks one of its guards, for example lower
-the PBKDF2 iteration count, or catch fewer exceptions in the HTTP retry. Check locally:
+On a branch, change a marked function so it breaks one of its guards, for example compare
+the password hash with `==` instead of `hmac.compare_digest`, or catch fewer exceptions in
+the HTTP retry. Check locally:
 
 ```bash
 pcat lint . --changed-since origin/main
 ```
 
 ```
-app/auth.py:12: PC100 high #3f9a1c2e: `MIN_ITERATIONS` is 1000, below the reviewed minimum 600000 ... [fails]
+app/auth.py:20: verify_password <- auth.password.pbkdf2@v1 verify_password (marked)
+  app/auth.py:20: PC100 high #e96d53e0: `verify_password` no longer calls `hmac.compare_digest`, which the reviewed pattern requires (constant-time comparison of the derived key) [guard must_call] [fails]
 ```
+
+`--changed-since` checks the functions whose own lines changed. A change to a module-level
+constant alone (say `MIN_ITERATIONS = 1000`) is caught by `pcat lint app/auth.py`, but not
+yet by the pull-request check (see `KNOWN_GAPS.md`).
 
 Push and open a pull request: the `pcat-lint` check fails with the same message on the
 diff. If the change is intended, approve it in the code, with the hash shown in the message
 and a reason:
 
 ```python
-# pcat-allow: PC100 #3f9a1c2e -- legacy hashes are migrated in a background job
+# pcat-allow: PC100 #e96d53e0 -- legacy hashes are migrated in a background job
 # pcat: auth.password.pbkdf2@v1
-def hash_password(password: str) -> str:
+def verify_password(password: str, stored: str) -> bool:
 ```
 
 That is only a **proposal**: `pcat-approvals` stays red until someone in
-`.pcat/approvers.yaml` approves the pull request or comments `/pcat approve`. Make both
-checks required in your branch protection, or a red check can still be merged.
+`.pcat/approvers.yaml` approves the pull request or comments `/pcat approve`. Make
+`pcat-approvals` a required check in your branch protection, or a red check can still be
+merged. It is the whole gate: it also fails on deviations nobody proposed to approve.
+Keep `pcat-lint` as an advisory check for its annotations on the diff: it does not read
+reviews, so it stays red on a confirmed proposal.
 
 ## 6. Run a one-time audit (5 minutes)
 
