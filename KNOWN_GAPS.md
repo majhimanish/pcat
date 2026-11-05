@@ -342,3 +342,23 @@ when you fix it; add one whenever you take a shortcut.
 - **Old linters reject new metadata.** A v5 linter loading a catalog with `match: any` or
   `import_names` treats that pattern as invalid and silently skips it in inference.
 
+
+## Unsafe neighbour (v5.2)
+
+- **Copied flaws in unmarked code pass default CI** (0/3 in v5.2). The opt-in
+  `--fail-on-inferred-guards` catches them but fails correct code too: sibling patterns
+  with near-identical shapes (`authed_only` vs `admins_only`) attract each other's guards
+  (2/108 runs), and on untouched apps guards over-apply to siblings (5/4,031 functions).
+  *Next:* a margin rule (best pattern clearly ahead of the second), tested on new data.
+- **The effect rests on 6 runs.** Only 2 of 18 neighbours were tempting (they could be
+  renamed into the missing function). A stronger test plants neighbours that are the
+  natural template, or several flawed siblings, and uses more samples.
+- **Agents almost never fix or report the neighbour** (3/108 replies named the flaw, no run
+  fixed it). pcat has no "this existing function deviates from a pattern" signal for code
+  the agent did not write; `pcat lint` without `--changed-since` would show it only as
+  advisory inference.
+- **The labeled set is not a codebase.** It is 57% derived, so its precision (0.962 held
+  out) overstates precision on real CI failures (3 of 10 real). Labels for random app
+  functions are assumed, and one was wrong.
+- **Requests drift towards security words** for security-shaped needs (9/10 for the
+  redirect check said "safe"); filtering keeps them neutral but makes them less natural.

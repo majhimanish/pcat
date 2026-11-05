@@ -1,4 +1,4 @@
-# pcat benchmark summary (v2 – v5.1)
+# pcat benchmark summary (v2 – v5.2)
 
 Every headline number, the rule set it was measured under, and whether it is safe to
 use in a pitch. "Rule set" = canonicalization v2 / shape v1 throughout; linter rules
@@ -22,6 +22,8 @@ are the CLI's estimates and may reflect plan usage rather than billing.
 | v5 end to end | Inside real repos: search 71/72, right pattern 54/54, matches pattern **0.72 vs 0.46** baseline; similarity to the house original **1.00 in both**; same-function tasks **12/12 vs 2/12**; negatives forced 0/36; $14.59 for 144 runs; pcat runs that would fail CI 5/72 **[v5.1 re-score: 0/72]** | linter v4.1, restricted shell | Yes, framed correctly (below) |
 | v5.1 re-score | v5 runs that would fail CI 5/72 → **0/72** (3 exact LNbits reproductions, 2 safe CTFd siblings); high deviations pcat 16 → 7, baseline 16 → 9, all left advisory; lab data unchanged | linter v5.1 | Yes: "no correct code failed CI in 144 in-repo runs" |
 | v5.1 survey | Untouched app code, inferred findings: 0 true deviations, 15 debatable, 75 false positives in 90 sampled medium/high findings | linter v5.1 | Yes, as a caveat: inferred findings are advisory noise |
+| v5.2 neighbour | A flawed sibling planted next to the work: flaw inherited **3/54 baseline vs 0/54 pcat** (all 3 in the 2 tasks where the neighbour could be renamed into the missing function: 3/6 vs 0/6); 0/66 in v5 without the neighbour; 48/49 pcat runs that saw it used the pattern | linter v5.1, restricted shell | Yes, with "planted by us, 6 runs carry the effect" |
+| v5.2 CI | Default CI caught **0/3** inherited flaws (unmarked); opt-in `--fail-on-inferred-guards` (similarity >= 0.75, held-out P 0.962 / R 0.884) catches 3/3 but also fails 2/108 correct runs and 5/4,031 untouched functions | linter v5.2 | Only as "opt-in, still noisy" |
 
 ## Safe claims, with caveats
 
@@ -65,3 +67,20 @@ v4 / v4.1 feedback runs and the v3 samples were re-scored, and untouched app cod
   out of required checks.
 - **Do not claim** a general false-positive rate for marked code: 144 runs, 3 apps,
   self-reviewed catalogs, one model.
+
+## v5.2 — catalog versus an unsafe neighbour
+
+Details: `docs/benchmarks/v5.2-unsafe-neighbour.md`. 108 runs, $11.71 (CLI estimate).
+
+- **Safe:** "with the catalog, no agent inherited a planted flaw (0/54); without it, 3/54
+  did" — with the caveats that we wrote the flawed code, catalogs are self-reviewed, one
+  model, and the effect sits in 2 tasks (3/6 vs 0/6) where the neighbour was the obvious
+  stand-in for the missing function.
+- **Safe:** "a copied flaw in unmarked code passes default CI" (0/3 caught; all three were
+  flagged only as advisory).
+- **Safe, as a limit:** the opt-in high-confidence mode catches copied flaws (3/3) but is
+  not quiet: 2 false failures in 108 runs and 5 in 4,031 untouched app functions.
+- **Do not claim** that bad neighbours are usually copied: 51/54 baseline runs did not;
+  or a codebase-level precision for inference from the 0.962 (the labeled set is 57%
+  derived; on real CI failures 3 of 10 were real).
+

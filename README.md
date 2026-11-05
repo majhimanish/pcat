@@ -483,11 +483,26 @@ Actions workflow that installs pcat from the catalog repository and runs
 `pcat lint --format github --changed-since origin/<base>` on pull requests, so
 deviations appear as annotations on the diff.
 
+**Unmarked copies (v5.2, `docs/benchmarks/v5.2-unsafe-neighbour.md`):** code an agent
+copied from a flawed neighbour carries no marker, so the default check never fails it. The
+opt-in `pcat lint --changed-since <base> --fail-on-inferred-guards` also fails guard
+violations (`PC100`) of unmarked code that matches a pattern with similarity >= 0.75. On
+v5.2's data it caught every copied flaw (3/3) but failed 2 correct runs of 108 and 5 of
+4,031 untouched app functions, so treat it as a strict, noisier gate. With the catalog
+served, no agent copied the planted flaw (0/54; 3/54 without it).
+
 **Required check or not (v5.1, `docs/benchmarks/v5.1-linter.md`):** on v5's 144 in-repo
 runs the v5.1 linter fails no correct code (v5: 5 false or over-strict failures, all
 fixed). Make `pcat lint --changed-since <base> --fail-on high` (marked code only) a
 required check; keep `--include-inferred` advisory: on untouched app code 75 of 90
 sampled medium/high inferred findings were false positives.
+
+## Unsafe neighbour (v5.2)
+
+`docs/benchmarks/v5.2-unsafe-neighbour.md` plants a flawed sibling (a guard violation such
+as `==` instead of `fullmatch`, a 7-day token, `remote_addr` instead of `get_ip()`) next to
+each of 18 tasks in the three v5 apps: with the catalog served no run inherited the flaw
+(0/54), without it 3/54 did, always by renaming the neighbour into the missing function.
 
 ## Tools outside this package
 

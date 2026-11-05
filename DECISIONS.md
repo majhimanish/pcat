@@ -1202,7 +1202,7 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      one task that needed it); rejected attempts are kept in `requests.json`.
      `hc_allow_redirect`'s need was reworded once more ("points to one of the app's
      own post-login pages"): the model wrote "safe" 9 times in 10 before one clean
-     request. Median length 18.5 words; "usually under 15" is again overshot.
+     request. Median length 19 words; "usually under 15" is again overshot.
 232. **Runs (Part C).** 3 samples per task per condition (108 runs) fit the cap: smoke
      test $0.90 for 4 runs; total $11.71 (CLI estimate, may reflect plan usage). All
      108 finished, none touched paths outside the working copy. The 4 smoke runs are

@@ -13,19 +13,18 @@ approved patterns instead of producing a new variation per prompt.
 
 - **v1–v2.2:** catalog, canonicalizer (`CANONICAL_VERSION = 2`), CLI, validation, CI, miner,
   variance study, 7 app patterns from `docs/catalog-review/choices.yaml` (+ 6 seeds).
-- **v3:** MCP server `pcat serve` (`search_patterns`, `get_pattern`, `check_code`),
-  BM25 `pcat search`. **v4:** linter: markers `# pcat: <id>@vN`, inference (0.56),
-  `guards` (check 11), PC100–PC110, `pcat lint`, `check_code(code, pattern_id)`.
+- **v3:** MCP `pcat serve`, BM25 `pcat search`. **v4:** linter: markers `# pcat: <id>@vN`,
+  inference (0.56), `guards` (check 11), PC100–PC110, `pcat lint`.
 - **v4.1:** hashed approvals (`# pcat-allow: PC100 #<hash> -- reason`), confirmed/proposed/
   stale; proposals need a human (`pcat approvals check`); PC111; `must_include`. PR #1: demo, open.
 - **v5:** CTFd, healthchecks, LNbits as orgs with own catalogs (`experiments/v5/catalogs/`,
   self-reviewed); 144 in-repo runs: matches 0.72 vs 0.46, baseline copies siblings.
-- **v5.1 (done):** linter on real code: per-unit symbol table (same-file names →
-  `<module>.<name>`), partial code in `check_code` (`context`, `file_path`, `resolution`),
-  check 12 (`requires` vs imports, `import_names`, `first_party` in `catalog/catalog.yaml`),
-  guard `match: any`, graded PC102; re-score 0/72 false CI failures (was 5); survey:
-  inferred findings on app code mostly noise. Headlines: `docs/benchmarks/summary.md`.
-- **Next ideas:** inference calibration on app code; markers inside decorator blocks.
+- **v5.1:** linter on real code: per-unit symbol table, partial code in `check_code`
+  (`context`, `file_path`), check 12 (`requires` vs imports, `first_party`), `match: any`.
+- **v5.2 (done):** planted flawed neighbours (18 tasks, 108 runs): flaw inherited 3/54
+  baseline vs 0/54 pcat; default CI caught 0/3; opt-in `pcat lint --fail-on-inferred-guards`
+  (similarity >= 0.75) catches them, still noisy. Headlines: `docs/benchmarks/summary.md`.
+- **Next ideas:** margin rule for sibling patterns (test on new data); markers in decorators.
 
 ## Setup and commands
 
@@ -40,16 +39,17 @@ pcat index                  # regenerate catalog/index.json (commit it)
 pcat fingerprint <id> --write; pcat migrate-fingerprints   # the latter after a CANONICAL_VERSION bump
 pcat mine <path>... --out <dir> [--jobs N]   # report.json + report.html; cache in .pcat-cache/
 pcat promote <fn-cluster-id> --report <dir>/report.json --id <pattern-id> [--member N]
-python scripts/benchmark.py # clones pinned OSS repos into .bench/ and mines them (not in CI)
-python scripts/variance.py generate|analyze|reference|report --run-id <id>  # needs API key or `claude`
+python scripts/benchmark.py; python scripts/variance.py generate|analyze|reference|report --run-id <id>
 pcat search "<request>" [--limit N]          # BM25 over index.json; below threshold = no match
 pcat serve [--catalog PATH] [--log FILE] [--repo DIR]  # MCP stdio server (claude mcp add pcat -- pcat serve …)
 python scripts/mcp_eval.py heldout|retrieval|e2e|e2e-analyze   # v3 evaluation (heldout/e2e need `claude`)
 pcat lint <path>... [--changed-since REF] [--format text|json|github] [--fail-on high] [--catalog P]
+          [--fail-on-inferred-guards]   # opt-in: PC100 on inferred code (sim >= 0.75) fails
 pcat approvals check --repo OWNER/REPO --pr N   # GITHUB_TOKEN; fails while proposals wait
 python scripts/lint_eval.py calibrate|replay|feedback|feedback-analyze   # v4 evaluation
 python scripts/v5.py clone|mine|references|requests|retrieval; python scripts/v5_e2e.py run|analyze
 python scripts/v5_1.py lint-e2e|compare-e2e|compare-samples|survey   # re-score, no agent runs
+python scripts/v5_2.py prepare|verify|requests|run|analyze|labels|calibrate   # v5.2
 ```
 
 ## Canonicalization rules (version 2, summary)
@@ -85,17 +85,17 @@ placeholders; unmatched `**kwargs` keywords stay). Full list: `DECISIONS.md`.
   `approvals.py` — approver config, CODEOWNERS, GitHub client, confirmation gate.
   `linteval.py` + `scripts/lint_eval.py` — v4 evaluation; data in `experiments/linter/`.
 - `src/pcat/v5.py` — v5 tasks, working copies, scoring. `rescore.py` + `scripts/v5_1.py` — v5.1.
+  `v52.py` (neighbours, planting, guard scoring) + `derivation.py` (Part E) + `scripts/v5_2.py`.
 - `src/pcat/cli.py` — typer app, thin; errors → `error: …` + exit 1. `errors.py`: `PcatError`.
 - `catalog/<category>/<pattern_id>[@vN]/` — `pattern.yaml` (optional `requires`, v3 fields, `guards`),
   `impl.py`, `test_impl.py`; `catalog/index.json` is generated. App patterns + 6 seeds.
 - `tests/` — tool tests; `root` fixture = temp copy of the catalog.
 - `src/pcat/variance.py` — variance logic (`claude -p` backends, similarity). Frozen data:
-  `experiments/{variance,mcp,linter,v5,v5.1}/`.
+  `experiments/{variance,mcp,linter,v5,v5.1,v5.2}/`.
 - `scripts/benchmark.py`, `docs/benchmarks/` — benchmarks and their results.
   `docs/ci/pcat-{lint,approvals}.yml` — workflows for client repositories; this repo
   runs `.github/workflows/pcat-approvals.yml` with `.pcat/approvers.yaml` (solo mode).
-- `docs/catalog-review/` — v2.2 comparison doc, `choices.yaml`, `variants/<task>/`
-  (+ tests, in pytest testpaths; skip without `requirements.txt` libraries).
+- `docs/catalog-review/` — v2.2 comparison, `choices.yaml`, `variants/<task>/` (+ tests).
 
 ## Invariants (never break these)
 
