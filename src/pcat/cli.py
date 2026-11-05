@@ -36,7 +36,18 @@ DEFAULT_OWNER = "@platform-team"
 
 
 def _root() -> Path:
-    return _state["root"] or cat.find_root()
+    return _state["root"] or _config_root() or cat.find_root()
+
+
+def _config_root() -> Optional[Path]:
+    """The catalog named by the nearest .pcat/config.yaml (written by `pcat init`)."""
+    from pcat import initrepo
+
+    found = initrepo.load_config(Path.cwd())
+    if found is None or not found[1].get("catalog"):
+        return None
+    root = (found[0] / str(found[1]["catalog"])).resolve()
+    return root if (root / cat.CATALOG_DIR).is_dir() else None
 
 
 def _fail(message: str) -> None:
@@ -540,6 +551,32 @@ def lint(
         typer.echo(lint_mod.format_text(report, show_diff=diff), nl=False)
     if report.failed:
         raise typer.Exit(1)
+
+
+@app.command()
+@_guard
+def init(
+    path: Path = typer.Option(Path("."), "--path", help="Repository to set up (default: current directory)."),
+    catalog: Optional[Path] = typer.Option(None, "--catalog", help="Use an existing catalog (folder holding catalog/)."),
+    starter_catalog: bool = typer.Option(False, "--starter", help="Seed pcat-catalog/ with the starter patterns."),
+    apply_: bool = typer.Option(False, "--apply", help="Make the changes (default: only show them)."),
+) -> None:
+    """Set pcat up in a repository: config, catalog, Claude Code MCP config, CI workflows."""
+    from pcat import initrepo
+
+    plan = initrepo.plan(path, catalog, starter_catalog)
+    typer.echo(initrepo.format_plan(plan, applied=apply_))
+    if not apply_:
+        typer.echo("dry run: nothing was changed. Run again with --apply to make these changes"
+                   + (" (pcat mine runs then too)." if plan.facts["python"] else "."))
+        return
+    initrepo.apply(plan)
+    if plan.facts["python"]:
+        summary, changed = initrepo.mine_candidates(plan)
+        typer.echo(summary + ("" if changed else " (unchanged)"))
+    typer.echo("next steps:")
+    for n, step in enumerate(initrepo.next_steps(plan), 1):
+        typer.echo(f"  {n}. {step}")
 
 
 @app.command()

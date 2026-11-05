@@ -51,4 +51,4 @@ def test_wheel_has_product_code_and_the_starter_only(tmp_path):
         category, rest = pid.split(".", 1)
         for name in starter.FILES:
             assert f"pcat/starter/catalog/{category}/{rest}/{name}" in names
-    assert "pcat/starter/catalog/index.json" in names
+    assert "pcat/starter/catalog/index.json" in names and "pcat/audit.py" in names and "pcat/initrepo.py" in names

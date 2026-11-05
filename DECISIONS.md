@@ -1290,3 +1290,26 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      (PC100) fails, with the margin to the best function of a *different* pattern
      (displayed only). Paths are relative to the scanned folder; no timestamps; exit 0.
      Measured on the v5 apps and the planted v5.2 copies: `experiments/v6/audit/`.
+245. **`pcat init` (Part D).** Dry run by default; every planned file is compared with
+     what exists, so a second `--apply` plans nothing. The mining report keeps
+     `inputs: [{"path": "."}]` (the miner records the absolute path and git commit, which
+     change with every commit). Detection: Python (files or project files), framework by
+     counting `fastapi`/`django`/`flask` imports, git, CI (`.github/` or a github.com
+     remote → GitHub Actions; GitLab, CircleCI, Jenkins, Azure → printed instructions).
+     Files: `.pcat/config.yaml` (catalog, approvers, lint settings; every CLI command
+     run inside the repo finds the catalog through it), `pcat-catalog/catalog/` (starter
+     copy, an existing `--catalog`, or empty with an index), `.mcp.json` +
+     `.claude/settings.json` (`enabledMcpjsonServers`), the v5 CLAUDE.md line (tested in
+     v5), `.github/workflows/pcat-lint.yml` (v5.1 settings: `--changed-since`,
+     `--fail-on high`, marked code only) and `pcat-approvals.yml` (the v4.1 workflow,
+     installing pcat from git), `.pcat/approvers.yaml` (empty template; never
+     overwritten). Then `pcat mine` → `.pcat/mining/` and `.pcat/candidates.md` with
+     `pcat --root <catalog> promote …` commands, and a numbered next-steps list.
+246. **Claude Code MCP config source.** https://code.claude.com/docs/en/mcp, "Project
+     scope": project servers live in `.mcp.json` at the project root under
+     `mcpServers` (the format `claude mcp add --scope project` writes, checked with
+     Claude Code 2.1.318); interactive sessions ask once to approve them, `claude -p`
+     loads them without asking; `enabledMcpjsonServers` in `.claude/settings.json`
+     approves them in trusted folders; the server's working directory is not
+     guaranteed, so paths use `${CLAUDE_PROJECT_DIR:-.}`, which the page allows in
+     project-scoped `args`.
