@@ -1,0 +1,806 @@
+{
+  "ctfd_admins_only": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.is_admin"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.is_admin"
+        ]
+      },
+      "originals": {
+        "admins_only": {
+          "checked": 1,
+          "pattern_function": "admins_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.is_admin"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.is_admin"
+        ]
+      },
+      "originals": {
+        "admins_only": {
+          "checked": 1,
+          "pattern_function": "admins_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "ctfd_authed_only": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.authed"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.authed"
+        ]
+      },
+      "originals": {
+        "authed_only": {
+          "checked": 1,
+          "pattern_function": "authed_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.authed"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.authed"
+        ]
+      },
+      "originals": {
+        "authed_only": {
+          "checked": 1,
+          "pattern_function": "authed_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "ctfd_confirm_token": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_raise:CTFd.exceptions.email.UserConfirmTokenInvalidException | CTFd.exceptions.email.UserResetPasswordTokenInvalidException"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_raise:CTFd.exceptions.email.UserConfirmTokenInvalidException | CTFd.exceptions.email.UserResetPasswordTokenInvalidException"
+        ]
+      },
+      "originals": {
+        "generate_email_confirm_token": {
+          "checked": 2,
+          "pattern_function": "generate_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "remove_email_confirm_token": {
+          "checked": 0,
+          "pattern_function": "remove_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "verify_email_confirm_token": {
+          "checked": 1,
+          "pattern_function": "verify_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_raise:CTFd.exceptions.email.UserConfirmTokenInvalidException | CTFd.exceptions.email.UserResetPasswordTokenInvalidException"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_raise:CTFd.exceptions.email.UserConfirmTokenInvalidException | CTFd.exceptions.email.UserResetPasswordTokenInvalidException"
+        ]
+      },
+      "originals": {
+        "generate_email_confirm_token": {
+          "checked": 2,
+          "pattern_function": "generate_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "remove_email_confirm_token": {
+          "checked": 0,
+          "pattern_function": "remove_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "verify_email_confirm_token": {
+          "checked": 1,
+          "pattern_function": "verify_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "ctfd_ratelimit": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.get_ip"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.get_ip"
+        ]
+      },
+      "originals": {
+        "ratelimit": {
+          "checked": 3,
+          "pattern_function": "ratelimit",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.get_ip"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.get_ip"
+        ]
+      },
+      "originals": {
+        "ratelimit": {
+          "checked": 3,
+          "pattern_function": "ratelimit",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "ctfd_registered_only": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.authed"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.authed"
+        ]
+      },
+      "originals": {
+        "registered_only": {
+          "checked": 1,
+          "pattern_function": "authed_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:CTFd.utils.user.authed"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:CTFd.utils.user.authed"
+        ]
+      },
+      "originals": {
+        "registered_only": {
+          "checked": 1,
+          "pattern_function": "authed_only",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "ctfd_reset_token": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "max_value:timeout"
+        ],
+        "skipped": [],
+        "violated": [
+          "max_value:timeout"
+        ]
+      },
+      "originals": {
+        "generate_password_reset_token": {
+          "checked": 2,
+          "pattern_function": "generate_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "remove_reset_password_token": {
+          "checked": 0,
+          "pattern_function": "remove_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "verify_reset_password_token": {
+          "checked": 1,
+          "pattern_function": "verify_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "max_value:timeout"
+        ],
+        "skipped": [],
+        "violated": [
+          "max_value:timeout"
+        ]
+      },
+      "originals": {
+        "generate_password_reset_token": {
+          "checked": 2,
+          "pattern_function": "generate_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "remove_reset_password_token": {
+          "checked": 0,
+          "pattern_function": "remove_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        },
+        "verify_reset_password_token": {
+          "checked": 1,
+          "pattern_function": "verify_email_confirm_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_add_victorops": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:.is_valid"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:.is_valid"
+        ]
+      },
+      "originals": {
+        "add": {
+          "checked": 2,
+          "pattern_function": "add_msteams",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:.is_valid"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:.is_valid"
+        ]
+      },
+      "originals": {
+        "add": {
+          "checked": 2,
+          "pattern_function": "add_msteams",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_allow_redirect": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:urllib.parse.urlparse",
+          "must_call:django.urls.resolve",
+          "must_catch:django.urls.Resolver404"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:django.urls.resolve",
+          "must_call:urllib.parse.urlparse",
+          "must_catch:django.urls.Resolver404"
+        ]
+      },
+      "originals": {
+        "_allow_redirect": {
+          "checked": 3,
+          "pattern_function": "_allow_redirect",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:urllib.parse.urlparse",
+          "must_call:django.urls.resolve",
+          "must_catch:django.urls.Resolver404"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:django.urls.resolve",
+          "must_call:urllib.parse.urlparse",
+          "must_catch:django.urls.Resolver404"
+        ]
+      },
+      "originals": {
+        "_allow_redirect": {
+          "checked": 3,
+          "pattern_function": "_allow_redirect",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_api_authorize": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ]
+      },
+      "originals": {
+        "authorize": {
+          "checked": 1,
+          "pattern_function": "authorize_read",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ]
+      },
+      "originals": {
+        "authorize": {
+          "checked": 1,
+          "pattern_function": "authorize_read",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_api_authorize_read": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ]
+      },
+      "originals": {
+        "authorize_read": {
+          "checked": 1,
+          "pattern_function": "authorize_read",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:hc.accounts.models.Project.objects.for_api_key"
+        ]
+      },
+      "originals": {
+        "authorize_read": {
+          "checked": 1,
+          "pattern_function": "authorize_read",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_channel_for_user": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_raise:django.core.exceptions.PermissionDenied"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_raise:django.core.exceptions.PermissionDenied"
+        ]
+      },
+      "originals": {
+        "_get_channel_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_channel_for_user",
+          "skipped": [],
+          "violated": []
+        },
+        "_get_rw_channel_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_rw_channel_for_user",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_raise:django.core.exceptions.PermissionDenied"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_raise:django.core.exceptions.PermissionDenied"
+        ]
+      },
+      "originals": {
+        "_get_channel_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_channel_for_user",
+          "skipped": [],
+          "violated": []
+        },
+        "_get_rw_channel_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_rw_channel_for_user",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "hc_check_for_user": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:django.shortcuts.get_object_or_404"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:django.shortcuts.get_object_or_404"
+        ]
+      },
+      "originals": {
+        "_get_check_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_channel_for_user",
+          "skipped": [],
+          "violated": []
+        },
+        "_get_rw_check_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_rw_channel_for_user",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:django.shortcuts.get_object_or_404"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:django.shortcuts.get_object_or_404"
+        ]
+      },
+      "originals": {
+        "_get_check_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_channel_for_user",
+          "skipped": [],
+          "violated": []
+        },
+        "_get_rw_check_for_user": {
+          "checked": 1,
+          "pattern_function": "_get_rw_channel_for_user",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_access_token": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:jwt.encode"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:jwt.encode"
+        ]
+      },
+      "originals": {
+        "create_access_token": {
+          "checked": 1,
+          "pattern_function": "create_access_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:jwt.encode"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:jwt.encode"
+        ]
+      },
+      "originals": {
+        "create_access_token": {
+          "checked": 1,
+          "pattern_function": "create_access_token",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_account_by_email": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:.lower"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:.lower"
+        ]
+      },
+      "originals": {
+        "get_account_by_email": {
+          "checked": 2,
+          "pattern_function": "get_account_by_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:.lower"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:.lower"
+        ]
+      },
+      "originals": {
+        "get_account_by_email": {
+          "checked": 2,
+          "pattern_function": "get_account_by_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_callback_url": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:urllib.parse.urlparse",
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch",
+          "must_call:urllib.parse.urlparse"
+        ]
+      },
+      "originals": {
+        "check_callback_url": {
+          "checked": 3,
+          "pattern_function": "check_callback_url",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:urllib.parse.urlparse",
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch",
+          "must_call:urllib.parse.urlparse"
+        ]
+      },
+      "originals": {
+        "check_callback_url": {
+          "checked": 3,
+          "pattern_function": "check_callback_url",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_invoice_key": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:lnbits.decorators.KeyChecker"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:lnbits.decorators.KeyChecker"
+        ]
+      },
+      "originals": {
+        "require_invoice_key": {
+          "checked": 1,
+          "pattern_function": "require_admin_key",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:lnbits.decorators.KeyChecker"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:lnbits.decorators.KeyChecker"
+        ]
+      },
+      "originals": {
+        "require_invoice_key": {
+          "checked": 1,
+          "pattern_function": "require_admin_key",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_valid_email": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch"
+        ]
+      },
+      "originals": {
+        "is_valid_email_address": {
+          "checked": 1,
+          "pattern_function": "is_valid_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch"
+        ]
+      },
+      "originals": {
+        "is_valid_email_address": {
+          "checked": 1,
+          "pattern_function": "is_valid_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  },
+  "lnbits_valid_username": {
+    "context": {
+      "neighbour": {
+        "intended": [
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch"
+        ]
+      },
+      "originals": {
+        "is_valid_username": {
+          "checked": 1,
+          "pattern_function": "is_valid_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    },
+    "real_file": {
+      "neighbour": {
+        "intended": [
+          "must_call:re.fullmatch"
+        ],
+        "skipped": [],
+        "violated": [
+          "must_call:re.fullmatch"
+        ]
+      },
+      "originals": {
+        "is_valid_username": {
+          "checked": 1,
+          "pattern_function": "is_valid_username",
+          "skipped": [],
+          "violated": []
+        }
+      }
+    }
+  }
+}

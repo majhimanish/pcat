@@ -126,11 +126,13 @@ def _git(cwd: Path, *args: str) -> str:
     return proc.stdout
 
 
-def prepare_workdir(app_dir: Path, dest: Path, task: Task, condition: str) -> dict:
+def prepare_workdir(app_dir: Path, dest: Path, task: Task, condition: str,
+                    edit=None) -> dict:
     """Fresh copy of the app with the task's functions removed, committed as the baseline.
 
     condition "pcat" also adds the repo note to CLAUDE.md (created if absent) before the
-    baseline commit, so neither change shows in the run's diff.
+    baseline commit, so neither change shows in the run's diff. `edit(dest)` (v5.2: plant
+    a neighbour) runs after the removal, also before the baseline commit.
     """
     if dest.exists():
         shutil.rmtree(dest)
@@ -138,6 +140,8 @@ def prepare_workdir(app_dir: Path, dest: Path, task: Task, condition: str) -> di
     target = dest / task.file
     new, _ = remove_functions(target.read_text(encoding="utf-8"), task.remove)
     target.write_text(new, encoding="utf-8")
+    if edit is not None:
+        edit(dest)
     if condition == "pcat":
         note = dest / "CLAUDE.md"
         text = note.read_text(encoding="utf-8") if note.exists() else ""

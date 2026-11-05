@@ -1152,3 +1152,46 @@ bottom; add to this file whenever you make a call the spec does not dictate.
      the unchanged `lint_eval.py` commands writing to `experiments/v5.1/rescore/`;
      no earlier file is rewritten. Only lint-derived metrics are re-scored; match,
      similarity and retrieval metrics do not depend on the linter.
+
+## v5.2 — catalog versus an unsafe neighbour
+
+226. **Tasks (Part A).** 18 tasks, 6 per app, each on a pattern with guards: the 12 v5
+     tasks whose pattern has a guard and still fits, plus 6 "same function" tasks on
+     guarded house patterns (CTFd `authed_only`, `admins_only`, `confirm_token`;
+     healthchecks `_get_channel_for_user`, `authorize_read`; LNbits
+     `check_callback_url`, `is_valid_username`). The v5 tasks on unguarded patterns
+     are out. Tasks in the same file each plant their own neighbour; in a run, the
+     file holds the target's other siblings (unchanged, good) plus that one neighbour.
+227. **`lnbits_super_user` dropped.** Its neighbour refused non-admins with `assert`,
+     but `must_raise HTTPException` still held: the function depends on
+     `Depends(check_account_exists)`, a same-file dependency that raises
+     `HTTPException`, and guards count same-file helpers. No guard was changed;
+     the task was replaced by `lnbits_valid_username` (`re.search` instead of
+     `re.fullmatch`).
+228. **Neighbours.** Each is one function, inserted after or before an existing
+     top-level function (or appended), separated PEP 8 style, using only names the
+     file already imports: no import line or other code changes. Names, comments
+     and docstrings carry no hint (a test greps for old/legacy/insecure/deprecated
+     and similar). The neighbour is planted before the baseline commit, so the run's
+     diff never shows it. Flaws are real and guard-expressible: cookie-presence or
+     header-presence instead of `authed()`, an "admin" decorator checking only
+     `authed()`, `request.remote_addr` instead of `get_ip()`, a 7-day token timeout,
+     a verify that returns `None`, a lookup without `get_object_or_404` that gives
+     non-members read access, an "rw" helper that ignores the rw flag, API keys
+     compared by hand with no length check (empty key matches blank columns), a
+     `startswith("/")` redirect filter, a view without form validation, `re.match`
+     / `re.search` instead of `re.fullmatch`, a case-sensitive account lookup,
+     wallet lookup bypassing `KeyChecker`, home-made `sha256(payload + secret)`
+     signing, and a webhook check with `re.match` on the raw URL.
+229. **Verification.** `scripts/v5_2.py verify` runs the pattern's guards for the
+     neighbour's analogous pattern function on the neighbour, and for each removed
+     function's pattern function on the original, both in the real file and in a
+     committed skeleton (imports, literal constants, called functions verbatim,
+     stubs for other names: `tests/test_v52.py` uses it). All 18 neighbours violate
+     their intended guards; all originals pass (none skipped). Value guards align
+     parameters with the pattern function as in deviation analysis.
+230. **Same need sentences, new requests.** Need sentences follow v5's where the
+     task is shared, reworded where v5's mentioned safety (`hc_allow_redirect`:
+     "is safe to follow" → "may be followed"); all requests are generated fresh
+     (Part B), so the v5 comparison differs by the request as well as by the
+     neighbour.
